@@ -35,7 +35,7 @@ const executeQueries = async () => {
     await queryWithdrawals(chain);
     await queryClaims(chain);
     let wallets = formatWallets(chain);
-    await queryWalletBalances(chain, wallets);
+    // await queryWalletBalances(chain, wallets);
   })());
   await Promise.all(promises);
 }
@@ -161,6 +161,7 @@ const formatWallets = (chain) => {
 
   // Initializations:
   const fileName = `${chain}Wallets`;
+  const chainName = getChainName(chain);
   const deposits = readJSON(`${chain}Deposits`);
   const withdrawals = readJSON(`${chain}Withdrawals`);
   const claims = readJSON(`${chain}Claims`);
