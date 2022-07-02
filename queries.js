@@ -2,20 +2,17 @@
 // Imports:
 import { parseBN } from 'weaverfi/dist/functions.js';
 import { prizePoolABI, prizeDistributorABI } from './ABIs.js';
-import { getChainName, queryBlocks, writeJSON, getLatestBlock } from './functions.js';
+import { getChainName, queryBlocks, writeJSON, readJSON, getLatestBlock } from './functions.js';
 
-// Chains:
-const chains = [
-  'eth',
-  'poly',
-  'avax'
-];
-
-// Contract Addresses:
+// Ethereum Contract Addresses:
 const ethPrizePool = '0xd89a09084555a7D0ABe7B111b1f78DFEdDd638Be';
 const ethPrizeDistributor = '0xb9a179DcA5a7bf5f8B9E088437B3A85ebB495eFe';
+
+// Polygon Contract Addresses:
 const polyPrizePool = '0x19DE635fb3678D8B8154E37d8C9Cdf182Fe84E60';
 const polyPrizeDistributor = '0x8141BcFBcEE654c5dE17C4e2B2AF26B67f9B9056';
+
+// Avalanche Contract Addresses:
 const avaxPrizePool = '0xF830F5Cb2422d555EC34178E27094a816c8F95EC';
 const avaxPrizeDistributor = '0x83332F908f403ce795D90f677cE3f382FE73f3D1';
 
@@ -23,10 +20,20 @@ const avaxPrizeDistributor = '0x83332F908f403ce795D90f677cE3f382FE73f3D1';
 
 // Function to execute queries:
 const executeQueries = async () => {
+
+  // Chain Selection:
+  const chains = [
+    'eth',
+    'poly',
+    'avax'
+  ];
+
+  // Query Selection:
   let promises = chains.map(chain => (async () => {
     await queryDeposits(chain);
     await queryWithdrawals(chain);
     await queryClaims(chain);
+    formatWallets(chain);
   })());
   await Promise.all(promises);
 }
@@ -143,6 +150,70 @@ const queryClaims = async (chain) => {
 
   // Saving Formatted Data:
   writeJSON(claims, fileName);
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to format wallet data on a specific chain:
+const formatWallets = (chain) => {
+
+  // Initializations:
+  const fileName = `${chain}Wallets`;
+  const deposits = readJSON(`${chain}Deposits`);
+  const withdrawals = readJSON(`${chain}Withdrawals`);
+  const claims = readJSON(`${chain}Claims`);
+  let wallets = [];
+
+  // Filtering Deposits Data:
+  deposits.forEach(deposit => {
+    let depositTX = { tx: deposit.txHash, block: deposit.block, amount: deposit.amount };
+    let existingWallet = wallets.map(wallet => wallet.address).indexOf(deposit.wallet);
+    if(existingWallet === -1) {
+      wallets.push({
+        address: deposit.wallet,
+        deposits: [depositTX],
+        withdrawals: [],
+        claims: []
+      })
+    } else {
+      wallets[existingWallet].deposits.push(depositTX);
+    }
+  });
+
+  // Filtering Withdrawals Data:
+  withdrawals.forEach(withdrawal => {
+    let withdrawalTX = { tx: withdrawal.txHash, block: withdrawal.block, amount: withdrawal.amount };
+    let existingWallet = wallets.map(wallet => wallet.address).indexOf(withdrawal.wallet);
+    if(existingWallet === -1) {
+      wallets.push({
+        address: withdrawal.wallet,
+        deposits: [],
+        withdrawals: [withdrawalTX],
+        claims: []
+      })
+    } else {
+      wallets[existingWallet].withdrawals.push(withdrawalTX);
+    }
+  });
+
+  // Filtering Claims Data:
+  claims.forEach(claim => {
+    let claimTX = { tx: claim.txHash, block: claim.block, prizes: claim.prizes };
+    let existingWallet = wallets.map(wallet => wallet.address).indexOf(claim.wallet);
+    if(existingWallet === -1) {
+      wallets.push({
+        address: claim.wallet,
+        deposits: [],
+        withdrawals: [],
+        claims: [claimTX]
+      })
+    } else {
+      wallets[existingWallet].claims.push(claimTX);
+    }
+  });
+
+  // Saving Wallet Data:
+  writeJSON(wallets, fileName, true);
 }
 
 /* ====================================================================================================================================================== */

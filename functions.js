@@ -70,17 +70,19 @@ export const queryBlocks = async (chain, address, abi, event, querySize, info, s
 /* ====================================================================================================================================================== */
 
 // Function to write data to JSON file:
-export const writeJSON = (data, file) => {
+export const writeJSON = (data, file, overwrite) => {
 
   // Initializations:
   let fileContents = [];
 
   // Including Existing Data:
-  try {
-    const existingRawData = fs.readFileSync(`${fileRoute}${file}.json`);
-    const existingData = JSON.parse(existingRawData);
-    fileContents.push(...existingData);
-  } catch {}
+  if(!overwrite) {
+    try {
+      const existingRawData = fs.readFileSync(`${fileRoute}${file}.json`);
+      const existingData = JSON.parse(existingRawData);
+      fileContents.push(...existingData);
+    } catch {}
+  }
 
   // Writing New Data:
   fileContents.push(...data);
@@ -95,11 +97,22 @@ export const writeJSON = (data, file) => {
 
 /* ====================================================================================================================================================== */
 
+// Function to read JSON file:
+export const readJSON = (file) => {
+  try {
+    const rawData = fs.readFileSync(`${fileRoute}${file}.json`);
+    return JSON.parse(rawData);
+  } catch {
+    return [];
+  }
+}
+
+/* ====================================================================================================================================================== */
+
 // Function to get last queried block in JSON file:
 export const getLatestBlock = (file) => {
   try {
-    const rawData = fs.readFileSync(`${fileRoute}${file}.json`);
-    const data = JSON.parse(rawData);
+    const data = readJSON(file);
     return data[data.length - 1].block;
   } catch {
     return 1;
