@@ -16,24 +16,17 @@
 
 <!-- SvelteKit Dynamic Header -->
 <svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Home Page" />
+	<title>PoolTogether Stats</title>
+	<meta name="description" content="An app for querying and analyzing some PoolTogether statistics." />
 </svelte:head>
 
 <!-- Page Content -->
-<section>
-	<span>Home Page</span>
-</section>
+<span>Temp Content</span>
 
 <!-- #################################################################################################### -->
 
 <style>
 
-	section {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		height: calc(100vh - 105px);
-	}
+	/* CSS Goes Here */
 	
 </style>

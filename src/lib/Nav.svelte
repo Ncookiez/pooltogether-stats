@@ -2,8 +2,7 @@
 
 	// Initializations:
 	const links = [
-		{ route: '/', name: 'Home' },
-		{ route: '/about', name: 'About' }
+		{ route: '/', name: 'Home' }
 	];
 
 </script>
@@ -28,23 +27,21 @@
 	nav {
 		display: flex;
 		align-items: center;
-		height: 53px;
+		height: 60px;
 		width: 100%;
 		padding: 0 32px;
-		background: #263238;
-		border-bottom: 2px solid rgba(34,40,49,0.3);
 	}
 
-	.links {
+	ul {
 		display: flex;
 	}
 	
-	.links li {
+	li {
 		margin: 0 2em 0 0;
 		list-style: none;
 	}
 
-	.links a {
+	a {
 		color: inherit;
 		text-decoration: none;
 	}

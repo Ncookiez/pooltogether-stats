@@ -22,6 +22,9 @@
 
 <style>
 
-	/* CSS Goes Here */
+	main {
+		display: flex;
+		flex-direction: column;
+	}
 
 </style>

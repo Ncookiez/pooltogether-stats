@@ -38,12 +38,12 @@
 		border-top: 2px solid rgba(34,40,49,0.3);
 	}
 	
-	footer span a {
+	a {
 		color: inherit;
 		transition: color;
 	}
 	
-	footer a:hover {
+	a:hover {
 		color: rgba(255, 255, 255, 1);
 	}
 	
