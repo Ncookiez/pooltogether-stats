@@ -255,6 +255,7 @@ const queryWalletBalances = async (chain, wallets) => {
 
   // Saving Wallet Data:
   writeJSON(wallets, `${chain}Wallets`, true);
+  console.log(`${chainName}: Added wallet balance data for ${walletAddresses.length} wallets.`);
 }
 
 /* ====================================================================================================================================================== */
