@@ -1,5 +1,6 @@
 
 // Imports:
+import weaver from 'weaverfi';
 import { parseBN } from 'weaverfi/dist/functions.js';
 import { prizePoolABI, prizeDistributorABI } from './ABIs.js';
 import { getChainName, queryBlocks, writeJSON, readJSON, getLatestBlock } from './functions.js';
@@ -33,7 +34,8 @@ const executeQueries = async () => {
     await queryDeposits(chain);
     await queryWithdrawals(chain);
     await queryClaims(chain);
-    formatWallets(chain);
+    let wallets = formatWallets(chain);
+    await queryWalletBalances(chain, wallets);
   })());
   await Promise.all(promises);
 }
@@ -214,6 +216,45 @@ const formatWallets = (chain) => {
 
   // Saving Wallet Data:
   writeJSON(wallets, fileName, true);
+  console.log(`${chainName}: Formatted wallet data for ${wallets.length} wallets.`);
+
+  // Returning Wallets List:
+  return wallets;
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to query wallet balances on a specific chain:
+const queryWalletBalances = async (chain, wallets) => {
+
+  // Initializations:
+  const walletAddresses = wallets.map(wallet => wallet.address);
+  let walletsQueried = 0;
+
+  // Percentages:
+  let percentages = {
+    10: false,
+    25: false,
+    50: false,
+    75: false,
+    90: false
+  }
+
+  // Querying Wallet Balances In All Projects:
+  console.log(`${chainName}: Querying project balances for ${walletAddresses.length} wallets...`);
+  for(let wallet of walletAddresses) {
+    wallets[wallet].balances = await weaver[chain.toUpperCase()].getAllProjectBalances(wallet);
+    walletsQueried++;
+    for(let percentage in percentages) {
+      if(percentages[percentage] === false && ((walletsQueried / walletAddresses.length) * 100) > parseInt(percentage)) {
+        percentages[percentage] = true;
+        console.log(`${chainName}: Wallet queries ${percentage}% done...`);
+      }
+    }
+  }
+
+  // Saving Wallet Data:
+  writeJSON(wallets, `${chain}Wallets`, true);
 }
 
 /* ====================================================================================================================================================== */
