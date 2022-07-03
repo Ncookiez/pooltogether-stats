@@ -9,7 +9,7 @@ const poly = new ethers.providers.StaticJsonRpcProvider('https://polygon-rpc.com
 const avax = new ethers.providers.StaticJsonRpcProvider('https://avax-mainnet.gateway.pokt.network/v1/lb/605238bf6b986eea7cf36d5e/ext/bc/C/rpc');
 
 // Data Files' Route:
-const fileRoute = './static/data/';
+const fileRoute = './src/lib/data/';
 
 /* ====================================================================================================================================================== */
 
