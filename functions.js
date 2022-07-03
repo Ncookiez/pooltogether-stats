@@ -54,7 +54,7 @@ export const queryBlocks = async (chain, address, abi, event, querySize, info, s
       results.push(...result);
       lastQueriedBlock = targetBlock;
       for(let percentage in percentages) {
-        if(percentages[percentage] === false && (((lastQueriedBlock - startBlock) / (endBlock - startBlock)) * 100) > parseInt(percentage)) {
+        if(lastQueriedBlock < endBlock && percentages[percentage] === false && (((lastQueriedBlock - startBlock) / (endBlock - startBlock)) * 100) > parseInt(percentage)) {
           percentages[percentage] = true;
           console.log(`${chainName}: Queries ${percentage}% done...`);
         }
@@ -78,21 +78,15 @@ export const writeJSON = (data, file, overwrite) => {
   // Including Existing Data:
   if(!overwrite) {
     try {
-      const existingRawData = fs.readFileSync(`${fileRoute}${file}.json`);
-      const existingData = JSON.parse(existingRawData);
+      const existingData = readJSON(file);
       fileContents.push(...existingData);
     } catch {}
   }
 
   // Writing New Data:
   fileContents.push(...data);
-  fs.writeFile(`${fileRoute}${file}.json`, JSON.stringify(fileContents, null, ' '), 'utf8', (err) => {
-    if(err) {
-      console.error(err);
-      process.exit(1);
-    }
-    console.log(`Saved data to ${file}.json`);
-  });
+  fs.writeFileSync(`${fileRoute}${file}.json`, JSON.stringify(fileContents, null, ' '), 'utf8');
+  console.log(`Saved data to ${file}.json`);
 }
 
 /* ====================================================================================================================================================== */

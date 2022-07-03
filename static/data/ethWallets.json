@@ -114,7 +114,24 @@
     "amount": 309.999968
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x15c382c4c18ddd32860c5063acb185be8cc086d125b454685c09c521d3bbfc28",
+    "block": 13473888,
+    "prizes": [
+     100
+    ]
+   },
+   {
+    "tx": "0x694bba34cf6094df8f19e8f3b823db5f5528e24b7d94e6ad93ad0609c05fb2eb",
+    "block": 13749532,
+    "prizes": [
+     110,
+     100,
+     100
+    ]
+   }
+  ]
  },
  {
   "address": "0x09528b6c6fC792EFF0C70563c9b4C4c6E38DA61D",
@@ -132,7 +149,20 @@
     "amount": 33808.715395
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x19fa4c59543778cb65a334d3248eee06609f6afe47de072bae5a3780b958efe1",
+    "block": 13730236,
+    "prizes": [
+     200,
+     2510,
+     200,
+     200,
+     200,
+     200
+    ]
+   }
+  ]
  },
  {
   "address": "0x5EDCf547eCE0EA1765D6C02e9E5bae53b52E09D4",
@@ -182,7 +212,16 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xcfd9521fb7851aee03e607913da476c56908dac21468e5fdb61c38f713baf641",
+    "block": 13837369,
+    "prizes": [
+     100,
+     100
+    ]
+   }
+  ]
  },
  {
   "address": "0x68cd01E2aD989497A479a318B58d891375E036be",
@@ -408,7 +447,40 @@
     "amount": 21647.999786
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xbecb8247ceb7f2c69273a7f81f78e89748d81537b175640e4a145c62e0798a37",
+    "block": 13768342,
+    "prizes": [
+     110,
+     110,
+     110,
+     110,
+     110,
+     110,
+     110,
+     200,
+     110
+    ]
+   },
+   {
+    "tx": "0x172c00107ded0bdfc1dc07d629845d96a178c7a4c0736adae86386578577fdd9",
+    "block": 13876747,
+    "prizes": [
+     201,
+     55
+    ]
+   },
+   {
+    "tx": "0x3f5f88e0a9bf22bd748ed6a25298e4032646dd84d6449af5854116e27fe0ec7c",
+    "block": 14060251,
+    "prizes": [
+     51,
+     51,
+     210
+    ]
+   }
+  ]
  },
  {
   "address": "0xCDABd291CbbF36488a649Dc240Fa5B5C648377d2",
@@ -420,7 +492,15 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x936702afac9971ab6e299e0742e4596789bc1f5c9afd52c5ae8a4467c5369932",
+    "block": 13523513,
+    "prizes": [
+     10
+    ]
+   }
+  ]
  },
  {
   "address": "0x501d66e0B4254dE6187443B9CDB744E2752F489e",
@@ -486,7 +566,73 @@
     "amount": 157359.999836
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x6b4c21adc2d60cfbb1ebc68eea2185f985d86a103a1eb38b7df787ba401f7b2e",
+    "block": 13554742,
+    "prizes": [
+     200
+    ]
+   },
+   {
+    "tx": "0xa812c5761a651252bf6319e64305d115967ff6c2134d6bc08f6dc777ac2ad938",
+    "block": 13689213,
+    "prizes": [
+     2600,
+     2600
+    ]
+   },
+   {
+    "tx": "0x1ae053fd65d213c0155f9f453cd67f0df5e7f999e897d11b0c341a13676cc959",
+    "block": 13790451,
+    "prizes": [
+     200
+    ]
+   },
+   {
+    "tx": "0x6ee07a5fdc12d56eccf78ed9fcddd693b9b031a6050086c7d542325f604a5f25",
+    "block": 13790451,
+    "prizes": [
+     200
+    ]
+   },
+   {
+    "tx": "0xb88fe28936f764d6288580e121dee25717d15e0e40c3a6b760ffda3e74397950",
+    "block": 13790451,
+    "prizes": [
+     200
+    ]
+   },
+   {
+    "tx": "0xf0999acbbd4c5da5be76442fac713b1167ca2a5bba1f7ab57b7353114994b968",
+    "block": 13790451,
+    "prizes": [
+     200
+    ]
+   },
+   {
+    "tx": "0x5191194c2e278c2eabe1c6f79e87f913762fdecbd2dfa43dd09707bf4f320349",
+    "block": 13790451,
+    "prizes": [
+     200
+    ]
+   },
+   {
+    "tx": "0xf45f8f6db814cf9cb9b3180f313aa583d907b46857c94f3bf884850b389a83b4",
+    "block": 13796657,
+    "prizes": [
+     200
+    ]
+   },
+   {
+    "tx": "0xcb97298fd61825f55c7b11d99b5350418467dcc621d01071523f8518ab0326e5",
+    "block": 13834873,
+    "prizes": [
+     250,
+     510
+    ]
+   }
+  ]
  },
  {
   "address": "0x961D63F796Aa1fb2218fa8B5d9c06d3354773Ccd",
@@ -504,7 +650,23 @@
     "amount": 10400.999962
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x718036335a6a2283cda6f59d5a2a1abd7e4a41d92496036b440737787cce132e",
+    "block": 13481416,
+    "prizes": [
+     100
+    ]
+   },
+   {
+    "tx": "0x9f214bbd4da9a64f840b3d240b18aa5e380aac851a3f873da1df165c83a0ff66",
+    "block": 14218137,
+    "prizes": [
+     201,
+     100
+    ]
+   }
+  ]
  },
  {
   "address": "0xa14aC1A9B3D52aBD0652C5Aca346099A6eb16b54",
@@ -568,7 +730,15 @@
     "amount": 150000
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x4b726b095d303a321c162306d39c8089dc3f5256bd4c40e8b1ec8c795f593dd7",
+    "block": 13480122,
+    "prizes": [
+     110
+    ]
+   }
+  ]
  },
  {
   "address": "0x52C8FF44260056f896e20D8A43610Dd88f05701B",
@@ -603,7 +773,20 @@
     "amount": 359.99991
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x2cc4743c494ea1a2ff4c9e26d29d6804cfae66c11f578c9677b313f88fabff9e",
+    "block": 13834291,
+    "prizes": [
+     110,
+     110,
+     110,
+     10,
+     10,
+     10
+    ]
+   }
+  ]
  },
  {
   "address": "0xA03Bf5A4c40fC9a23C52f106Ee41A6950b5b473d",
@@ -881,7 +1064,20 @@
     "amount": 749.999897
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x7f2577d3309e2743ed246afb0b23dbe4606789e9e09027c168ec9e412f2674c1",
+    "block": 13846127,
+    "prizes": [
+     110,
+     110,
+     200,
+     110,
+     110,
+     110
+    ]
+   }
+  ]
  },
  {
   "address": "0xB89f354FC48c1EDC490c9Ef06f243caCa727065f",
@@ -1029,7 +1225,35 @@
     "amount": 203409.99966
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xc9ab14d0bf89dab6e9c7039b8f5b9bf51afdee877e1ef23ac6323f1b74d16b26",
+    "block": 13743723,
+    "prizes": [
+     200,
+     110,
+     110,
+     110,
+     110,
+     200,
+     110,
+     200,
+     110,
+     200,
+     200,
+     200,
+     200,
+     110,
+     110,
+     110,
+     110,
+     110,
+     200,
+     200,
+     400
+    ]
+   }
+  ]
  },
  {
   "address": "0x9515cdD94c322c83155Fe00467C077F929CF9Fb3",
@@ -1052,7 +1276,27 @@
     "amount": 202329.999816
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x749ebd0faa0cca4172ea871761d5856cfd352ca805f3e32ac6a9600c6fd34ab3",
+    "block": 13730236,
+    "prizes": [
+     200,
+     200,
+     110,
+     200,
+     110,
+     200,
+     110,
+     200,
+     200,
+     200,
+     200,
+     200,
+     200
+    ]
+   }
+  ]
  },
  {
   "address": "0x4A64a336a2F16299340d1b40AEdF5994DeD1F021",
@@ -1207,7 +1451,32 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xcaae9cb46db72e1c0e304186b53bc7132a8e8f39c7ea0942013e892cddde9e37",
+    "block": 14840379,
+    "prizes": [
+     5,
+     5,
+     5
+    ]
+   },
+   {
+    "tx": "0x617e79ee2908c7ff5ca28cb006e20831b1cf1ffd662c64a19efd4e070f84616f",
+    "block": 14903046,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0xd221a626858583aa9bf44272a58d63116df393ffbd5ecbd633b4b0b0bb4acfac",
+    "block": 15022126,
+    "prizes": [
+     5,
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0x5EFa2fC9F84fED6516689887805C344066763B91",
@@ -1254,7 +1523,16 @@
     "amount": 9666.182443
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x289e3a7f86afcf4b3194175e47f12e49acded4b4427657509dc91d984cdf2405",
+    "block": 13831730,
+    "prizes": [
+     100,
+     51
+    ]
+   }
+  ]
  },
  {
   "address": "0x721Ca5428eC12b148b34458E0f8557F4C9624630",
@@ -1380,7 +1658,20 @@
     "amount": 118171.309355
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x551c093ed44a3ccb00be0da33877f7f1b24c6cd277567274e50a9e56b44e85d6",
+    "block": 13801483,
+    "prizes": [
+     110,
+     110,
+     110,
+     110,
+     200,
+     2510
+    ]
+   }
+  ]
  },
  {
   "address": "0x012E168ACb9fdc90a4ED9fd6cA2834D9bF5b579e",
@@ -1428,7 +1719,16 @@
     "amount": 1988.999976
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x238cf1486bd3ade20d66c58fd06e6dc3f9ef002ac6123e86d9319aef792c100c",
+    "block": 13716155,
+    "prizes": [
+     10,
+     10
+    ]
+   }
+  ]
  },
  {
   "address": "0xacBE0C3B624AE05ED32BBa0C9873213aD3951021",
@@ -1659,7 +1959,15 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x9d8a05b424c7535b7dac8b7684c6ac7084d69742f9756814d7408aa1f2cb377a",
+    "block": 14691867,
+    "prizes": [
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0x5080FdA2a93078DED890D8591AeBCEA7F345c492",
@@ -1805,7 +2113,141 @@
     "amount": 186387.218682
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xae8e089611fe3aa246a1b0a33256ebd8c09dec1c2db1aae7da4a580a27ea29de",
+    "block": 13641133,
+    "prizes": [
+     2600
+    ]
+   },
+   {
+    "tx": "0x519596dd7a5c2260cf5669926881bb66a24127d937754495cacead8392821831",
+    "block": 14211695,
+    "prizes": [
+     1000,
+     60,
+     2550,
+     700,
+     250,
+     550,
+     100,
+     60,
+     250,
+     400,
+     210,
+     100,
+     550,
+     100,
+     60,
+     550,
+     100,
+     60,
+     250,
+     250,
+     250,
+     210,
+     510,
+     60,
+     100,
+     100,
+     60,
+     400,
+     100,
+     60,
+     210,
+     60,
+     100,
+     100,
+     1010,
+     100,
+     60,
+     60,
+     60,
+     1010,
+     60,
+     60,
+     1010,
+     100,
+     55
+    ]
+   },
+   {
+    "tx": "0x220f5ccb7bbce58194eb39860a6485c6dd4a01e834036919ff5eeab765c500f6",
+    "block": 14293640,
+    "prizes": [
+     100,
+     60,
+     60,
+     1005,
+     100,
+     100,
+     100,
+     100
+    ]
+   },
+   {
+    "tx": "0x4476a2274b181392e70288f872b642dc5e865f8fd7aeef8502d43ed5519940b5",
+    "block": 14352742,
+    "prizes": [
+     20,
+     20,
+     20,
+     20,
+     10,
+     20,
+     20,
+     20,
+     15,
+     20,
+     20,
+     15,
+     15,
+     20,
+     15,
+     60,
+     15,
+     15,
+     10,
+     20,
+     20
+    ]
+   },
+   {
+    "tx": "0xbd50958134f3b28d8df25ac0ac8694a217c50652f0efc3278bf44019ac78380c",
+    "block": 14596280,
+    "prizes": [
+     15,
+     15,
+     20,
+     15,
+     20,
+     15,
+     15,
+     20,
+     100,
+     15,
+     15,
+     15,
+     15,
+     60,
+     10,
+     15,
+     20,
+     15,
+     60,
+     20,
+     20,
+     15,
+     20,
+     15,
+     15,
+     20,
+     20,
+     1010
+    ]
+   }
+  ]
  },
  {
   "address": "0x697478E5f23848C0AF624DEEa3A7c7e1Ff20621B",
@@ -1900,7 +2342,15 @@
     "amount": 12479
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xf24a7f7bbfda82c7449a3732f2aa0d22a29669a869a2929b75e9675e18e6fcb7",
+    "block": 15042150,
+    "prizes": [
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0xaBb9393AD789b638e1A4d994899c19a7F5893900",
@@ -2001,7 +2451,22 @@
     "amount": 1845.99
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x7c995c49bf7ea93145219324ad19cc5e99b308ea044a89f8ce287f80ae2777b6",
+    "block": 13739680,
+    "prizes": [
+     1
+    ]
+   },
+   {
+    "tx": "0x0f5c32406050213f71a0678803d7f263114729bce3be3ea666016708f79802c5",
+    "block": 13742924,
+    "prizes": [
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0xDcFa2dF4d2F469F4c204b703391378731d16bC88",
@@ -2289,7 +2754,15 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x24c95a12c7f75351de47f7d57703d3ce7ffc77a919dfef5e2576a1faa07dac6c",
+    "block": 14562948,
+    "prizes": [
+     10
+    ]
+   }
+  ]
  },
  {
   "address": "0xdE04Ff7282715dAE198e6295Ec1300d8670eBED3",
@@ -2336,7 +2809,124 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x915c8dfbf0c5c6f64933fbb8305dcbc2a0654f39153f9faf966273a3124b168a",
+    "block": 13736293,
+    "prizes": [
+     1
+    ]
+   },
+   {
+    "tx": "0x99dc69721586bad8ea026238c4744a798a3095b2b8ffea68c18cbc5584d8f88c",
+    "block": 13755321,
+    "prizes": [
+     2
+    ]
+   },
+   {
+    "tx": "0x274833b7dcbf687b88a7df754a9991a7ba90317860a57eb5b4fd0777fdffade7",
+    "block": 13781742,
+    "prizes": [
+     1,
+     1,
+     10
+    ]
+   },
+   {
+    "tx": "0xa76045157b481e02cf34188cbd2a3f354cff840a7098c850b80d7c746bb1c736",
+    "block": 13855453,
+    "prizes": [
+     2,
+     6,
+     1,
+     5
+    ]
+   },
+   {
+    "tx": "0xd6cd2c3948d1da13d3d4190f77e766770eb256019daa3195d1f161b618901211",
+    "block": 13970229,
+    "prizes": [
+     2,
+     5,
+     1,
+     1,
+     1
+    ]
+   },
+   {
+    "tx": "0xf48de337cf248a77d2ad813acbe14694727bc5a2da1c1aa99e44b6bfd5a3324b",
+    "block": 14049353,
+    "prizes": [
+     1,
+     5,
+     2,
+     5
+    ]
+   },
+   {
+    "tx": "0xe6cd967b7ed4817a1f69d4b24b10d025e838e846ba3e1b28583d36dfb562bee4",
+    "block": 14133968,
+    "prizes": [
+     6,
+     1,
+     1,
+     1,
+     5
+    ]
+   },
+   {
+    "tx": "0xec415d5b840e038d3b00038663e21d078d8d4fef4a18f706e89c291165e32264",
+    "block": 14172099,
+    "prizes": [
+     5,
+     10
+    ]
+   },
+   {
+    "tx": "0x6e5a52c90d6f527d8644fb9015110ce3724ea50a82d49cac18f9b5c3a5d7af82",
+    "block": 14235778,
+    "prizes": [
+     10
+    ]
+   },
+   {
+    "tx": "0xe64dd2e9b475b7f8a7a4a42ad152f0f9575cbd943613f685dc3ba81705a51132",
+    "block": 14397575,
+    "prizes": [
+     5,
+     5
+    ]
+   },
+   {
+    "tx": "0x220a25c1d50d89ed3946746cb45a18f15e9f91309eeb4a475d85e6a3eb5f4735",
+    "block": 14458967,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0x411a00f73940064564a9d6a93de0044b25bf09248262348e57c7c8a04af27443",
+    "block": 14551907,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0x0a2bf77015116b12c34641b5b2066850d3f02b21e1b0b7fa40e8374647ab12c9",
+    "block": 14739979,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0x83fbc717ae8a4d65f8ac8654af0e97eb95d592931fe1ee01f9ad6f4e66ff5b88",
+    "block": 15029456,
+    "prizes": [
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0x155b22dEa44ADB21F94BB9b5D41af3f225CC6D7b",
@@ -2354,7 +2944,15 @@
     "amount": 3826.826902
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x4242d4838f41f5a3439092545050619cecdc3ef72a6eb3565bdb928b2ba2dab2",
+    "block": 14146106,
+    "prizes": [
+     200
+    ]
+   }
+  ]
  },
  {
   "address": "0xd8856cCe3F878d3Ea03964F80B18987fF1919272",
@@ -2444,7 +3042,15 @@
     "amount": 178
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x89289c214d1a4d5aa9cb168de1b6fe77a17c404d88f67dd9c6c8295b4db948c4",
+    "block": 14274732,
+    "prizes": [
+     1
+    ]
+   }
+  ]
  },
  {
   "address": "0xc83F9b03EE6c6AbEFE1CbF988e99A8E22549F53c",
@@ -2498,7 +3104,15 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x7d64668c766f16dd31ba03264a15ef5c6647ad65347f06aeadcfed8ed902331c",
+    "block": 14862579,
+    "prizes": [
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0x5D9209436e158aF5Fb35454decb97b8ABee0B73b",
@@ -2606,7 +3220,16 @@
     "amount": 49628.290476
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x04bd829a17d48ed7f60018ca8494285d9fc63237027ece74da7f485d65085a48",
+    "block": 13807711,
+    "prizes": [
+     51,
+     210
+    ]
+   }
+  ]
  },
  {
   "address": "0x650BFAe4Fa1431641c64C3878B725dD91730af41",
@@ -2714,7 +3337,15 @@
     "amount": 1449.99
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x408fa6dd48e8748846f1332f7348eb6f80c0c2c3c9e5c884b3492b7bf25526df",
+    "block": 14382277,
+    "prizes": [
+     50
+    ]
+   }
+  ]
  },
  {
   "address": "0x6f81D192E17316562bFD19C244484446d2F0d75c",
@@ -2858,7 +3489,22 @@
     "amount": 1668.24
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x000ca26e2fd2888cf2e3a39fcb4deee30f73c9a1efb6f7505a56a27a8a719a6c",
+    "block": 14150208,
+    "prizes": [
+     1,
+     2,
+     5,
+     6,
+     2,
+     5,
+     1,
+     1
+    ]
+   }
+  ]
  },
  {
   "address": "0xc6B4A4DB97cc81C20616b95A6351bBA3AdB93f24",
@@ -2876,7 +3522,34 @@
     "amount": 14478.999861
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x8a5dfaf1f3507e81501983113b6a53054326e79a3c835b6f33c51dd25d9cbff1",
+    "block": 14236539,
+    "prizes": [
+     201,
+     50,
+     51,
+     55
+    ]
+   },
+   {
+    "tx": "0x73b2c9db48ec05bec4ba91ff46e5d9dba2eade6f1f4b8b8be0ac5929ba1956ea",
+    "block": 14371834,
+    "prizes": [
+     11,
+     15,
+     11,
+     15,
+     10,
+     10,
+     15,
+     10,
+     15,
+     10
+    ]
+   }
+  ]
  },
  {
   "address": "0xbD80904840c6756D3CcC49CE2A38bB0aA8A18de1",
@@ -3007,7 +3680,18 @@
     "amount": 203.99998
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xd5474b878e904f6df51d529c15a590256164fdf03d6f5e0eee0f59361dfacfc5",
+    "block": 14203950,
+    "prizes": [
+     201,
+     1,
+     1,
+     1
+    ]
+   }
+  ]
  },
  {
   "address": "0x40Bc0D240660Cc5896ba19180CBb329f3CFB58a4",
@@ -3233,7 +3917,15 @@
     "amount": 131008.896401
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x26c0d63e814148e685533e36735077e41674bfd6a111107f128dc4d7d26579cb",
+    "block": 13844223,
+    "prizes": [
+     250
+    ]
+   }
+  ]
  },
  {
   "address": "0x9212FA3b1D0ac855684Af18889d2180D741Ca07d",
@@ -3245,7 +3937,16 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xa47b96b4144cc7317d05604d90dad6aeef5b924b47a86fca5efef477f18e2e1d",
+    "block": 14346436,
+    "prizes": [
+     5,
+     10
+    ]
+   }
+  ]
  },
  {
   "address": "0x6ce184eE11810E7E54c37239E289C7d8d544A338",
@@ -3352,7 +4053,32 @@
     "amount": 2573.7
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xe275e3adddea1986d072d3b9b80f5b047506360163b58edcbd9ac0dcc3edcd95",
+    "block": 14599213,
+    "prizes": [
+     10,
+     5,
+     10,
+     55,
+     5
+    ]
+   },
+   {
+    "tx": "0xf2614c4c590cfebb85d4bf807579fac9be1d38aeb0d317610a54c70ab5c2eaaf",
+    "block": 14981256,
+    "prizes": [
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0x3817eDafF61037aFFbA78EB7f8d177a14602564F",
@@ -3634,7 +4360,20 @@
     "amount": 9913.507919
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xee5612c1171c9c7d9645f91c1090edd768d31eb43907cd1ab647bb95d2e2835e",
+    "block": 13907640,
+    "prizes": [
+     6,
+     1,
+     6,
+     1,
+     1,
+     1
+    ]
+   }
+  ]
  },
  {
   "address": "0x48B72465FeD54964a9a0bb2FB95DBc89571604eC",
@@ -3652,7 +4391,15 @@
     "amount": 200504.99998
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xc67313ae5434b16fede425ec600b58607d7a0999daf4407434b4c768bc807a0c",
+    "block": 13894056,
+    "prizes": [
+     505
+    ]
+   }
+  ]
  },
  {
   "address": "0x00ECc67f523A1A5E4053eEBA328228A9A2b5FEFE",
@@ -3750,7 +4497,24 @@
     "amount": 3389.999829
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x7242e1ab3ddabf7057a0b9434aa4f0a248e5786e8107ff56e42da3b4c4c545a4",
+    "block": 14009310,
+    "prizes": [
+     60,
+     60,
+     60,
+     250,
+     60,
+     20,
+     60,
+     100,
+     2700,
+     20
+    ]
+   }
+  ]
  },
  {
   "address": "0x417372e4d116B6AF9e6FBD0d1D16f1483F52f6e8",
@@ -3768,7 +4532,36 @@
     "amount": 5012.9999
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x1dfd8aa603bc1757c3b9c92483946f583d57dc8bbbf6b75d299603b553308ff7",
+    "block": 13873646,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0x18eb5295134ddbef32264d663a431f7a8d8ac92022b4440402d96c5843583706",
+    "block": 13876353,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0x3e3f74a21298dbde4bd42a9688deb85994377e9312d062523a6134977dc9ef4b",
+    "block": 13896140,
+    "prizes": [
+     2
+    ]
+   },
+   {
+    "tx": "0x16351ccee62feaf904dd348a4ef26aa6973276f898ce22b43b689dd014f707ed",
+    "block": 13908666,
+    "prizes": [
+     1
+    ]
+   }
+  ]
  },
  {
   "address": "0x9e092d0e2a18A7Fe54Da9A69DA50780c1bE5b8c0",
@@ -3834,7 +4627,26 @@
     "amount": 1015.57
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x6af501ba3ac5a3e5bc8011f3d20b9352534bf45faf9e93f0799cc8a799e88224",
+    "block": 13890924,
+    "prizes": [
+     1
+    ]
+   },
+   {
+    "tx": "0xb25b6abbc279bc95291f5a9be2d41d9e34a083be373ea460526eea841212d26c",
+    "block": 14214268,
+    "prizes": [
+     1,
+     5,
+     1,
+     1,
+     1
+    ]
+   }
+  ]
  },
  {
   "address": "0xd24fa211e03E82873980296D11f0318BdD329fbd",
@@ -3857,7 +4669,33 @@
     "amount": 1604.120591
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xa57864ad1ccb6f937d02da4f9c4745e5685cd021c2ab5ae75480fcccde3ef881",
+    "block": 13977558,
+    "prizes": [
+     1,
+     1,
+     1,
+     1
+    ]
+   },
+   {
+    "tx": "0x4df94368ef9ceaa810b1f6d32b8fbc8b8823ec87bc4782b14b8de9f5b2d3dd9e",
+    "block": 14340194,
+    "prizes": [
+     5,
+     1,
+     1,
+     6,
+     10,
+     1,
+     1,
+     10,
+     10
+    ]
+   }
+  ]
  },
  {
   "address": "0x9ef42869929714747136566d8772a9B7a8Dd2D79",
@@ -3923,7 +4761,15 @@
     "amount": 5252.649951
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xa2e0b03ad1a020290b5a7f62b443f11d12200a38e3b0dd17316f4139d0e813c8",
+    "block": 14326328,
+    "prizes": [
+     2501
+    ]
+   }
+  ]
  },
  {
   "address": "0x40354e6EF6981c88340EA80ce66321D9eADA1f77",
@@ -3964,7 +4810,17 @@
     "amount": 186821.814321
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x23be4f16291daab8b6048dbd193ac47c0844cec13dc6accb786f903ac2b12c58",
+    "block": 14022277,
+    "prizes": [
+     205,
+     250,
+     250
+    ]
+   }
+  ]
  },
  {
   "address": "0x47A2F8367E6777421E3915e617A3c3B38bAD4921",
@@ -4017,7 +4873,15 @@
     "amount": 246.780992
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x0db90c48b2f935938f432e2df51426c9ae1be34426ef2a2f335714c4663e706e",
+    "block": 14097500,
+    "prizes": [
+     50
+    ]
+   }
+  ]
  },
  {
   "address": "0xBe013252A48f223E0B3976223b1b5D7418Cdb659",
@@ -4274,7 +5138,15 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x0a4a119b1ef7f7365b692f6d9bf40c7ea9b7853733ccaa59f2c0bce92a31d362",
+    "block": 14318382,
+    "prizes": [
+     1000
+    ]
+   }
+  ]
  },
  {
   "address": "0x46427b0eD4beE4B44Ed957Bc89340C21CE69CB92",
@@ -4376,7 +5248,15 @@
     "amount": 1000.1
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x49b1b8629c79df68f6a8f4f49fdbcd029d80a909950eadac371e35f771f8ae2a",
+    "block": 14167094,
+    "prizes": [
+     1
+    ]
+   }
+  ]
  },
  {
   "address": "0x1e76eb39D4407eAB5a0357572fBd9F73540278d7",
@@ -4513,7 +5393,15 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xba83c627de9093a0aa7bc347aa0a54c3f8ed65195ccacd5e1fbe5c8b7aec06ef",
+    "block": 14593049,
+    "prizes": [
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0x02dF788aD577B16b3fb9B5C97B49c480291fc65A",
@@ -4685,7 +5573,15 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xfd1ff392f73fb15349851627ea5bf793f121eab4b49c3bfe82914e3f6d7f61eb",
+    "block": 14079806,
+    "prizes": [
+     1
+    ]
+   }
+  ]
  },
  {
   "address": "0x11Cc2981dB9Af5Bb4C02238E37F4b7D6A331835d",
@@ -4852,7 +5748,15 @@
     "amount": 125
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x7e592a77586b8b06e121aa95affe2407d02976908014bf3c8759809841a401f5",
+    "block": 14361291,
+    "prizes": [
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0x2E5DA4A2DC27BA5D01c41Ea9Fac088007d743276",
@@ -4915,7 +5819,133 @@
     "amount": 500949.999852
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x6060d98d68eee6c6b0a82db0801b757a1963e4d260900244ade8bdc82e9bd2fe",
+    "block": 14306309,
+    "prizes": [
+     60,
+     60,
+     100,
+     60,
+     100,
+     60,
+     100,
+     60,
+     60,
+     60,
+     100,
+     100,
+     60,
+     1050
+    ]
+   },
+   {
+    "tx": "0xbcfb58faa51e2b3467417f6235ac3da03e081bfac8fcb5d9b7b45661101f3d4f",
+    "block": 14319203,
+    "prizes": [
+     60,
+     60,
+     60
+    ]
+   },
+   {
+    "tx": "0x88ee93acbf9cece666569e8325ce9921aa0cb9d3cb11689ce1ac189245e6ff17",
+    "block": 14324674,
+    "prizes": [
+     1050
+    ]
+   },
+   {
+    "tx": "0x7b9125d477c731a66e2e0f878f5621577a9cdc247f95503b18d804adeb0ebfc2",
+    "block": 14363649,
+    "prizes": [
+     60,
+     100,
+     1050,
+     100,
+     20
+    ]
+   },
+   {
+    "tx": "0xcf6fba8663fe9292e88879364adbf4228c6f07c3391b96827cc9c7264cb9b489",
+    "block": 14371067,
+    "prizes": [
+     15,
+     20,
+     20,
+     20,
+     20,
+     20,
+     20,
+     60
+    ]
+   },
+   {
+    "tx": "0x6d1686b0ec476bd9748152ef707a579db1d72bdeb4eefb368cd5089f4c0b86e0",
+    "block": 14396247,
+    "prizes": [
+     60,
+     100,
+     100
+    ]
+   },
+   {
+    "tx": "0x364efda3657e80697c680f82047babaeaedb1119ce3cf2a4c092d17064c21dae",
+    "block": 14415896,
+    "prizes": [
+     100,
+     60,
+     100
+    ]
+   },
+   {
+    "tx": "0xcf10623b6db5fb454661e9517c65cd0cfb51ef40a5f462d20f80faddd313a1e1",
+    "block": 14480956,
+    "prizes": [
+     100,
+     100,
+     100,
+     100,
+     60,
+     100
+    ]
+   },
+   {
+    "tx": "0x89c3407d24503fcb8ac5230fbba49cfd59fa7d141aa8fd7df4735f658eb47ac4",
+    "block": 14510722,
+    "prizes": [
+     100,
+     100,
+     1050
+    ]
+   },
+   {
+    "tx": "0xf7ea79f79a42f890a5c3dd8a79914c1e08df18a7c77e0ae0a197c182953ef405",
+    "block": 14647272,
+    "prizes": [
+     60,
+     100,
+     60,
+     100,
+     60,
+     60,
+     60,
+     60,
+     60,
+     60
+    ]
+   },
+   {
+    "tx": "0x44be31d75baa9ae42232d00c6c863eda3f605cb45ebea77faea5cc9053e2ae01",
+    "block": 14685382,
+    "prizes": [
+     110,
+     100,
+     60
+    ]
+   }
+  ]
  },
  {
   "address": "0xeFB9FD723B3a074AaF1FEbD3e24FC65eB1130946",
@@ -5134,7 +6164,64 @@
     "amount": 15085.851947
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xc2158c51f3b7bd199867acddb1ad390601fb8e31575a9f1a4d15e9b1371980c7",
+    "block": 14283686,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0x33f19f88e143be583ab803d05a2797fb7eb4071d895549794fb866519093a634",
+    "block": 14309462,
+    "prizes": [
+     10
+    ]
+   },
+   {
+    "tx": "0x5fd98f77f9a83b2a387fd05ff6d14e75459d81b668f561b827ef49780ac3fe61",
+    "block": 14386619,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0x4ea150f7a3f4de2a2cf65530943e3b1ecd5a4f14660d829752f211f5ef85f0d5",
+    "block": 14418841,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0x3fa928229c3cb3dd1578a9e5dcaca64387520770910d1f68361a538ced38c8d3",
+    "block": 14425151,
+    "prizes": [
+     50
+    ]
+   },
+   {
+    "tx": "0x72eba1e329a73827d79ff3506d173b5d3ba928bc3f034c327fe10315158ef9ba",
+    "block": 14431610,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0xd4bc5971b8b1c5962da048fc58e5f4171bd5c553af7633466711e9d596159c5a",
+    "block": 14459808,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0xc4374704148cba4eb8f7fe94b021f68c2be80ea914f8ce4c23d9f865ed7d7a61",
+    "block": 14485228,
+    "prizes": [
+     15
+    ]
+   }
+  ]
  },
  {
   "address": "0xf65Dbea375AEE8e7cfA678Aee776C32F14d52328",
@@ -5259,7 +6346,22 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x122d7b3f2b28f7f4d7b32b15abeb71bc49cf4a0abad3072e49dc5711e773252d",
+    "block": 14628959,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0x609ffb424c696009170c519824ea8c9512d7f2a25d5fed43c24cae616c3a0090",
+    "block": 14846819,
+    "prizes": [
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0x184964942456E5820f629396c9094c3dA3aD8E49",
@@ -5277,7 +6379,22 @@
     "amount": 1043.79
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xc34dec97389bf155c0bfc587c43f4b16773ea6374fb7941f77c9fa5ba7b9930a",
+    "block": 14482710,
+    "prizes": [
+     50
+    ]
+   },
+   {
+    "tx": "0x0e45d5952555d10089f3e09686b148a24e014a6f9a769e590d99ed8ff0a6faa2",
+    "block": 14675572,
+    "prizes": [
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0x927fb85861b734d91266c493E96571915Bb657CF",
@@ -5289,7 +6406,23 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x949c60af870ab304412841e467a464a842a93e0abccda44d7e8000081a43989c",
+    "block": 14780248,
+    "prizes": [
+     5,
+     5
+    ]
+   },
+   {
+    "tx": "0xdbbcb3f6b01cd025f40250fe30cb71c09de8f73b09ad39d3aa7c08c30e9a8a40",
+    "block": 14952790,
+    "prizes": [
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0x13a477fD91cA18A8d366440A5726227E0bBff4b8",
@@ -5334,7 +6467,56 @@
     "amount": 170000
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xbc2bffdc8e487d5c119c7f23c599e9d9a16d7c5175c0f2c024e99a66e2095830",
+    "block": 14909290,
+    "prizes": [
+     110
+    ]
+   },
+   {
+    "tx": "0x87b59949b27216ed70c4036208eda0ba7dd3b236f0b7417863adccad85791937",
+    "block": 14942527,
+    "prizes": [
+     20,
+     15,
+     60,
+     15,
+     20,
+     110
+    ]
+   },
+   {
+    "tx": "0xcc7ceddf3ffceefb17208f7a64d73f3ce10f5c90db89eb8a801287059c532b5e",
+    "block": 14964198,
+    "prizes": [
+     20,
+     55,
+     55,
+     15
+    ]
+   },
+   {
+    "tx": "0x18f90ccfe11934f398684ca7b19758ce05460085176a994fb2d66fe99ec6cc9a",
+    "block": 15040372,
+    "prizes": [
+     55,
+     20,
+     20,
+     55,
+     15,
+     105,
+     20,
+     15,
+     10,
+     55,
+     10,
+     20,
+     10
+    ]
+   }
+  ]
  },
  {
   "address": "0x7867Fad75C5e033bcdc84de6ffC3104ee6922297",
@@ -5546,7 +6728,15 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xa9d494fd5038de515c89248ed3f04f003b4ff96afd7642bf47ae4b413470ad38",
+    "block": 15059218,
+    "prizes": [
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0x43B0D17cad8a44AB824823F8fFd12CbE36d59728",
@@ -5636,7 +6826,15 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xce123954b20560eb759a21c4ace6ba03e6ac0866691f17547b9d09f3038ef45e",
+    "block": 14803271,
+    "prizes": [
+     50
+    ]
+   }
+  ]
  },
  {
   "address": "0x1a99C8c86923127B714A4A8E4FD2C7cB4572F84C",
@@ -5672,7 +6870,70 @@
     "amount": 200343.066069
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x1508d25d9e83d65bb98d4b798b79e095d79730c90c9ed2d54539aa7945134e19",
+    "block": 14687652,
+    "prizes": [
+     15,
+     15,
+     10,
+     60,
+     55,
+     20,
+     60,
+     20,
+     20,
+     10,
+     20,
+     20,
+     20,
+     20,
+     60,
+     15,
+     15,
+     1010,
+     15,
+     15,
+     55,
+     15,
+     60,
+     15,
+     10,
+     20,
+     10,
+     60,
+     20,
+     60,
+     55,
+     15,
+     15,
+     60,
+     15,
+     60,
+     15,
+     15,
+     10,
+     15,
+     20,
+     10,
+     10,
+     10,
+     10,
+     10,
+     20,
+     10,
+     10,
+     10,
+     15,
+     10,
+     15,
+     10,
+     10,
+     60
+    ]
+   }
+  ]
  },
  {
   "address": "0xc554a3965DCadBE97Bd480ec28917Fd8992BF859",
@@ -5726,7 +6987,46 @@
     "amount": 121579.999578
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x80f92f8ba48bdb3abc768b96694462995b2877e8e5561583c756ff9389167441",
+    "block": 14556096,
+    "prizes": [
+     10,
+     15,
+     10,
+     20,
+     15,
+     10,
+     55,
+     15,
+     55,
+     10,
+     55,
+     20,
+     15,
+     10,
+     20,
+     10,
+     20,
+     15,
+     10,
+     10,
+     20,
+     5,
+     1010,
+     15,
+     15,
+     60,
+     10,
+     10,
+     5,
+     10,
+     10,
+     10
+    ]
+   }
+  ]
  },
  {
   "address": "0x699E17c0FD4608eCa4FF8866e93621fC68835881",
@@ -5798,7 +7098,16 @@
     "amount": 3737.626928
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x387c4bc40e2e67ca69d475573edae0913cf4253ec53d2f67374c9ef0fa5c37de",
+    "block": 14486528,
+    "prizes": [
+     10,
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0xDcEAC046974561148549EA45B7Ebf3680B802bb8",
@@ -5933,7 +7242,48 @@
     "amount": 579.999592
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xdecbe7bd21d2d90c47164eed26e3dab96f717882faa9a1714c3b43f0b76ff154",
+    "block": 14608098,
+    "prizes": [
+     10,
+     15,
+     15,
+     60,
+     10,
+     10,
+     10,
+     55,
+     5,
+     20,
+     15,
+     15,
+     10,
+     15,
+     5,
+     15,
+     10,
+     100,
+     15,
+     20,
+     15,
+     10,
+     5,
+     5,
+     10,
+     20,
+     10,
+     10,
+     20,
+     10,
+     10,
+     10,
+     10,
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0xdb30CBAf473C2145b28f0db3F17cA9f6c6933692",
@@ -5997,7 +7347,22 @@
     "amount": 11009.478377
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x58af08be4e113622e38095e9329935d056962c6384c6e888761d2d3ebcdc5bba",
+    "block": 14741132,
+    "prizes": [
+     15,
+     20,
+     15,
+     5,
+     15,
+     5,
+     5,
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0x676EaC048236AD9eA5026e75D4290ee181d7F571",
@@ -6073,7 +7438,20 @@
     "amount": 304.999923
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x78b18cbbeea120a033d11bd0b4f1674a6f4255a13a90996717d2f7897ed2117d",
+    "block": 14704598,
+    "prizes": [
+     55,
+     60,
+     55,
+     60,
+     55,
+     20
+    ]
+   }
+  ]
  },
  {
   "address": "0xD07523b44a272B9856a9f771558F044479bB55DE",
@@ -6132,7 +7510,15 @@
     "amount": 54.999984
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x9bdf58ae84f5a03271c77bf8e4b6cdd8af5f01688994e0ec2ff50202555d6eb6",
+    "block": 14486938,
+    "prizes": [
+     55
+    ]
+   }
+  ]
  },
  {
   "address": "0x616A4b9Eb8Bc62cb9fa091D913221E9eCE9973ed",
@@ -6303,7 +7689,18 @@
     "amount": 149.999968
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xc899deeb01b12c0a70ac24488cefe46571aa38816b5aaa73874c274c79e273e6",
+    "block": 14782123,
+    "prizes": [
+     20,
+     20,
+     60,
+     50
+    ]
+   }
+  ]
  },
  {
   "address": "0x06fa4031b979C87Ebc3053E81D437064a7beEB0d",
@@ -6333,7 +7730,15 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x1d86a97373377a35c0bc32e5e86f9396b95fa4c4b9e1d7ef9cbf39070664a333",
+    "block": 14564066,
+    "prizes": [
+     50
+    ]
+   }
+  ]
  },
  {
   "address": "0xae3e8B084128854b05313f56563Bc1446A3d7e13",
@@ -6578,7 +7983,47 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x618237d8b4c57fd476593ee13501231081262e22f18b0d5c1e1e998d2d70b4d7",
+    "block": 14787838,
+    "prizes": [
+     5,
+     10,
+     15,
+     10,
+     10,
+     15,
+     5,
+     5,
+     5,
+     5,
+     5,
+     5,
+     10,
+     10,
+     10,
+     10,
+     10,
+     15,
+     55,
+     10,
+     10,
+     10,
+     1005,
+     10,
+     10,
+     5,
+     5,
+     10,
+     10,
+     5,
+     10,
+     10,
+     10
+    ]
+   }
+  ]
  },
  {
   "address": "0xC0Fdbe488f4FBEB2f389F6c52b984aA795AAe158",
@@ -6632,7 +8077,23 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x030676f80b2e7badbe8dc6e961f415c81058b37cb759627210c2202b3f33363a",
+    "block": 14999004,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0xecb8a2d4d654cf940d725b71383433fa1398888e313bebba8180a008daadde16",
+    "block": 15041898,
+    "prizes": [
+     5,
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0x0726F5633b1Cd024D41632d13E530945683144A0",
@@ -6851,7 +8312,95 @@
     "amount": 5306.94
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xb242169b7dd4a6e79d19e1e676567134296807a04bda36b7f28e744bbb6ea5f5",
+    "block": 14613568,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0x0760167087b74a2058275ba517356638278e1b28b507f7b39620140870d7156e",
+    "block": 14636489,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0x8a69bbdafab36fe17844c86cf3a3ddb05bb18c60dfe7ed077a96bf1c6b6d3503",
+    "block": 14678214,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0x413421d5fdf50fe1fe452640cb963356b407a94985d1cbc0eda8084987e9f942",
+    "block": 14700534,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0xf211bfe762a8323644ceb53916e38195c8023bb192ba5a96599b5c90fabdfce2",
+    "block": 14719265,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0x447b17556724dc58b5b1815d615748249739308358556f38327dc09119ca69fe",
+    "block": 14740454,
+    "prizes": [
+     5,
+     10
+    ]
+   },
+   {
+    "tx": "0xae02db888010637c4731d01cbc18ff56f343060227b752a65ff2b8b80a73981c",
+    "block": 14788977,
+    "prizes": [
+     5,
+     5,
+     5
+    ]
+   },
+   {
+    "tx": "0x0d16316f769c0aa767cdc9bcf9a647062a7f4ea7a0d7c7e456e7f002cbd63763",
+    "block": 14836693,
+    "prizes": [
+     10
+    ]
+   },
+   {
+    "tx": "0x7266c4c87a57d7def21dd672baba9097588a04d0ba89e3e25b72f7eebf61b15d",
+    "block": 14866291,
+    "prizes": [
+     5,
+     5
+    ]
+   },
+   {
+    "tx": "0x181d678bcf1d856e8186223f4e9ee9dfc4220f0ce01d2fd0ee1e672fab960ac1",
+    "block": 14918540,
+    "prizes": [
+     5,
+     10
+    ]
+   },
+   {
+    "tx": "0x9dab8f7f74743cab0fc62ec36792ef6cf50876491e849fd381ae3870932f6258",
+    "block": 15062115,
+    "prizes": [
+     5,
+     5,
+     5,
+     5,
+     5,
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0x4cBd885555906f60Ab4E13CB873e2314C438F8B9",
@@ -6928,7 +8477,19 @@
     "amount": 24.99997
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xcaab04290564d576c709352954695ceab44eddfd579ffc68727b7b5cecb31674",
+    "block": 15011217,
+    "prizes": [
+     5,
+     5,
+     5,
+     5,
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0xB5355Dd0de891ed7D7D2f54d9b1695Bd38D81485",
@@ -7040,7 +8601,28 @@
     "amount": 1000
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xc2336c34ba67afe919fecb327a73b134430910128fe75802e839e16f292ac950",
+    "block": 14779808,
+    "prizes": [
+     10,
+     10,
+     5,
+     5,
+     10,
+     10,
+     10,
+     5,
+     5,
+     5,
+     10,
+     15,
+     5,
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0x5A22F49e520FF44516330eFBA868cCeD309cDf5D",
@@ -7261,7 +8843,19 @@
     "amount": 238537.325124
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x6ca3a473010b847ebbc67e60804a5e73851f4a14dcc059324693711e5e838cf5",
+    "block": 14769294,
+    "prizes": [
+     10,
+     10,
+     15,
+     20,
+     55
+    ]
+   }
+  ]
  },
  {
   "address": "0x633e99DF176d63c1109DaB56566F09508169eBff",
@@ -7279,7 +8873,60 @@
     "amount": 40434.999621
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x597a833ed14a2585d21279c47f5951cfaf0340e253412a34f02a9cacc684f3f3",
+    "block": 15031696,
+    "prizes": [
+     5,
+     10,
+     10,
+     5,
+     15,
+     10,
+     10,
+     10,
+     10,
+     5,
+     5,
+     5,
+     10,
+     10,
+     5,
+     10,
+     55,
+     10,
+     10,
+     5,
+     5,
+     60,
+     10,
+     10,
+     5,
+     5,
+     10,
+     5,
+     10,
+     10,
+     10,
+     5,
+     5,
+     10,
+     10,
+     10,
+     15
+    ]
+   },
+   {
+    "tx": "0xc867fb03bca525be3f5ba09401a258679d7c86aa5600af5067ad257d6f30a4c8",
+    "block": 15056539,
+    "prizes": [
+     5,
+     10,
+     10
+    ]
+   }
+  ]
  },
  {
   "address": "0x88e99B179f25248163874E2b5dC5AAc0e2d455B9",
@@ -7326,7 +8973,53 @@
     "amount": 259.999688
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x2d160997d9388f67b920a21a65ba1513aaf3c6ebfd7da6f451cd7eeb985257d3",
+    "block": 14943118,
+    "prizes": [
+     60,
+     15,
+     15,
+     15,
+     15,
+     15
+    ]
+   },
+   {
+    "tx": "0x6f1322d1d85f1d580334d5a8301a460e45dcb0174f57e91bed2e4c782c9aa275",
+    "block": 14992255,
+    "prizes": [
+     10,
+     10,
+     5,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     5,
+     10,
+     10,
+     10
+    ]
+   }
+  ]
  },
  {
   "address": "0x1BeCe8C246E30d9067C9B0975651429E4d59C880",
@@ -7450,7 +9143,18 @@
     "amount": 2000154.999964
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x808f01cd27704bf21a9d1177c802ec6873ad4a128dc707faf0060a3717395c2e",
+    "block": 14819041,
+    "prizes": [
+     15,
+     20,
+     100,
+     20
+    ]
+   }
+  ]
  },
  {
   "address": "0xeF30926C28769A6ea1Fa260e096884C917CA3EE9",
@@ -7551,7 +9255,16 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x940520fa0cd888cc994d4b7568447cbbb5204c9cc2523fdc2fde9406b2cb3b10",
+    "block": 14873045,
+    "prizes": [
+     5,
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0x8EF6ae18bAEc08b2E2326A39e60670490F254A87",
@@ -7700,7 +9413,30 @@
     "amount": 60159.999829
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xd2666c98bfc0fc12e77c3d893221ae0dbe0bdf39490066908b3c784e2045dedb",
+    "block": 14978673,
+    "prizes": [
+     5,
+     15,
+     5,
+     10,
+     10,
+     15,
+     10,
+     10,
+     5,
+     15,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10
+    ]
+   }
+  ]
  },
  {
   "address": "0x2809a4e75cf664A006476D7ec4f414bC7f498aD4",
@@ -7844,7 +9580,26 @@
     "amount": 10034.999958
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xa0a939ce371561660b73fc264012acfd4136b73c3f48efcce7a050faab8e3980",
+    "block": 14909523,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0x8577ab31733f50aeae86c37209c195c230a6a61432350fe7916df5c1ca3bc395",
+    "block": 15019401,
+    "prizes": [
+     5,
+     10,
+     5,
+     5,
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0xaD65d9dc54A464aF3db7C5AE51E1EED65B65761D",
@@ -7874,7 +9629,15 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x8be15f3e4207504a4e3a5c59d3bb333efe13e68fddee8a9dc06f71fc38dc4dcd",
+    "block": 15005313,
+    "prizes": [
+     5
+    ]
+   }
+  ]
  },
  {
   "address": "0xf2F9f4b0C1b63E511D9E62E9502E1629eded2E59",
@@ -7909,7 +9672,15 @@
     "amount": 49.99
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xb3ab45ec3255f88674a7bd7c4c637d5801faa61fdfaa77ad3b0d870ad3a875d2",
+    "block": 14978138,
+    "prizes": [
+     50
+    ]
+   }
+  ]
  },
  {
   "address": "0xe3522d2704a55Ba0C7cfa5a5D704eca604FC0Cd7",
@@ -8126,7 +9897,25 @@
     "amount": 120204.055775
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xff04614ba14c68d902143d7407d9d8cfb5952a5d260511fb19c49ff05b0ffba5",
+    "block": 15011143,
+    "prizes": [
+     10,
+     55,
+     15,
+     10,
+     10,
+     10,
+     10,
+     15,
+     15,
+     15,
+     10
+    ]
+   }
+  ]
  },
  {
   "address": "0x3fC4538941466EF90DDb2C3251616B19C2D82c58",
@@ -8176,7 +9965,21 @@
     "amount": 400000
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x5d2f71bad8dbae15dc13a84d0b1a0bbcd314e459e76197bc85519332efe8b9af",
+    "block": 15002153,
+    "prizes": [
+     10,
+     105,
+     15,
+     10,
+     15,
+     15,
+     60
+    ]
+   }
+  ]
  },
  {
   "address": "0x12a8d8B1Ad14dE9757755dfc3E62Ff0bd1147041",
@@ -8295,7 +10098,27 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x9509d4a554ef9afe5ed4adf2a00ff666e1af91d2fd14f5f2c7bd668cf73204f2",
+    "block": 15062461,
+    "prizes": [
+     15,
+     20,
+     200,
+     20,
+     15,
+     15,
+     60,
+     20,
+     60,
+     60,
+     10,
+     60,
+     60
+    ]
+   }
+  ]
  },
  {
   "address": "0x9482B421B876d213C11135c8D488B9FcFb48bb4A",
@@ -8307,7 +10130,27 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0xf40552f67a4cfd7f1489871741b88a9e63065fd353c2c69dd80e28a6eb024475",
+    "block": 15062355,
+    "prizes": [
+     100,
+     60,
+     1050,
+     60,
+     15,
+     60,
+     20,
+     20,
+     20,
+     20,
+     20,
+     60,
+     15
+    ]
+   }
+  ]
  },
  {
   "address": "0x89Dc27491d286771f72819D805d3Acc8A43E2638",
@@ -8558,7 +10401,15 @@
     "amount": 30504.99998
    }
   ],
-  "claims": []
+  "claims": [
+   {
+    "tx": "0x9589e364f8b8baaae618b74fbdca4ca8ba29e180f3dcf0a94df5eef2724a7fe8",
+    "block": 13745312,
+    "prizes": [
+     505
+    ]
+   }
+  ]
  },
  {
   "address": "0x1db6aD3344F1Ae0A495b28B031B80cDDd99f2FD0",
