@@ -20,7 +20,8 @@
     "amount": 20000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 31497.470007
  },
  {
   "address": "0xA57D294c3a11fB542D524062aE4C5100E0E373Ec",
@@ -32,7 +33,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 300
  },
  {
   "address": "0xBBA1C542e8F0675C0cDCBB277A640312bd8184cc",
@@ -50,7 +52,8 @@
     "amount": 2000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x53228e6C98756ac3B09B23A30C645382f158cDaF",
@@ -68,7 +71,8 @@
     "amount": 4000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x5B78AE09929C53C77Ba29a13265e35a2f62Dd89F",
@@ -86,7 +90,8 @@
     "amount": 79966.431079
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xf7b34b89b2261e31fC0aD6aB6210adc51B6fC9B6",
@@ -131,7 +136,8 @@
      100
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x09528b6c6fC792EFF0C70563c9b4C4c6E38DA61D",
@@ -162,7 +168,8 @@
      200
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x5EDCf547eCE0EA1765D6C02e9E5bae53b52E09D4",
@@ -200,7 +207,8 @@
     "amount": 200000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xdd45CA901067d65860b54d4310e37371CD92Fb09",
@@ -221,7 +229,8 @@
      100
     ]
    }
-  ]
+  ],
+  "balance": 2699.999986
  },
  {
   "address": "0x68cd01E2aD989497A479a318B58d891375E036be",
@@ -239,7 +248,8 @@
     "amount": 299
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 1.32
  },
  {
   "address": "0x797BC498EdEE4357a16a1054dB0323CbD04C84c3",
@@ -251,7 +261,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 62.5
  },
  {
   "address": "0x77511E047A3BAFa205eD839F5aF56F0b99341c26",
@@ -269,7 +280,8 @@
     "amount": 4071.702994
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x66b355cc6765c860cEcE0B00736e6A832b163cD3",
@@ -287,7 +299,8 @@
     "amount": 2787.265538
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x2fcDa75f0038D54BD0f0d88D5Db2a62EA298AF36",
@@ -310,7 +323,8 @@
     "amount": 4000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xDa63D70332139E6A8eCA7513f4b6E2E0Dc93b693",
@@ -363,7 +377,8 @@
     "amount": 100000.69
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 199999.31
  },
  {
   "address": "0xEc64a2a41A2c6aC971a835d57188b103171447d7",
@@ -375,7 +390,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 250
  },
  {
   "address": "0xF89bb80788a728688015765c8F4b75f96a87A5b3",
@@ -393,7 +409,8 @@
     "amount": 21094.781578
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x27dFA6Ba1dD770A675791c528d0346885CeE982F",
@@ -411,7 +428,8 @@
     "amount": 1501
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x11b6A5fE2906F3354145613DB0d99CEB51f604C9",
@@ -429,7 +447,8 @@
     "amount": 1504.568666
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xD442DeB96B90E3B3135653705c3ef1FeefB346BE",
@@ -480,7 +499,8 @@
      210
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0xCDABd291CbbF36488a649Dc240Fa5B5C648377d2",
@@ -500,7 +520,8 @@
      10
     ]
    }
-  ]
+  ],
+  "balance": 1948.160655
  },
  {
   "address": "0x501d66e0B4254dE6187443B9CDB744E2752F489e",
@@ -512,7 +533,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 407.557551
  },
  {
   "address": "0x89c46e4b8a76A252F574406bc8CeA1b70772EF69",
@@ -530,7 +552,8 @@
     "amount": 1832
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xCBc5cF551bA75496D10727E62dD660efc6A5B347",
@@ -548,7 +571,8 @@
     "amount": 37346.468866
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xd18236Cd213F39d078177b6F6908F0e44E88e4Aa",
@@ -632,7 +656,8 @@
      510
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x961D63F796Aa1fb2218fa8B5d9c06d3354773Ccd",
@@ -666,7 +691,8 @@
      100
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0xa14aC1A9B3D52aBD0652C5Aca346099A6eb16b54",
@@ -684,7 +710,8 @@
     "amount": 7478.715018
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x44bcd89D8534970351969CAbdb82D9CDAe07F9c0",
@@ -712,7 +739,8 @@
     "amount": 443413.039424
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x636baE3F76B4cCb486f50BF192EA2A8d22d1a79A",
@@ -738,7 +766,8 @@
      110
     ]
    }
-  ]
+  ],
+  "balance": 109.999982
  },
  {
   "address": "0x52C8FF44260056f896e20D8A43610Dd88f05701B",
@@ -750,7 +779,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 1000
  },
  {
   "address": "0xaB5a193A11f779fe105E8edf9815a0b514B013CA",
@@ -786,7 +816,8 @@
      10
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0xA03Bf5A4c40fC9a23C52f106Ee41A6950b5b473d",
@@ -804,7 +835,8 @@
     "amount": 500
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x80A1140bc9b6aDD519057Cce54e02AC25B5Fb44F",
@@ -822,7 +854,8 @@
     "amount": 1500
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xd29DCbd273D73714Eb6bEA7Bd4F8d99D0fBc3398",
@@ -845,7 +878,8 @@
     "amount": 3557.752699
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x040a5514CB7d779B3B4EA9240d4bD20a234c416d",
@@ -863,7 +897,8 @@
     "amount": 1254.592831
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xDE3a2CbA92942CF2dA0BB8551A5DCdd2480c0A4f",
@@ -881,7 +916,8 @@
     "amount": 128209.389077
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xC9A2bA82b78Fd8d85AA265F6a6cd3A1054350cA4",
@@ -893,7 +929,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 300
  },
  {
   "address": "0x4704Ae2E39522A053c76f427aE1E42EB170a7E0D",
@@ -911,7 +948,8 @@
     "amount": 100055.37364
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x94367c03F36CF21263823613FE8011E50A5cdd3a",
@@ -923,7 +961,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 800.535231
  },
  {
   "address": "0xD92693c39d3231B96379b636c3BBC9Bb73969343",
@@ -941,7 +980,8 @@
     "amount": 16664.258446
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x0a3AB61D912048814fEA1B4F5cC6985623540111",
@@ -953,7 +993,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 137
  },
  {
   "address": "0x5797eE7a4D2c9FDb57A9b97eD93bD072481E32a2",
@@ -971,7 +1012,8 @@
     "amount": 1698.200416
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xF27e7ce47B8c79464fc7D44c6ce00727705Cce39",
@@ -983,7 +1025,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x883e5BEF307B99fBa45335a612A40bC3D5A8b9C3",
@@ -995,7 +1038,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 310
  },
  {
   "address": "0xd90ec9dc6f220BE43ad88F3eFf78fBD00d8Fd1D6",
@@ -1013,7 +1057,8 @@
     "amount": 997.89
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xCfbCDC0b671eF859Ad98BBc35E2031bC8c1aeaE5",
@@ -1036,7 +1081,8 @@
     "amount": 9328.750624
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xB0b0F6F13A5158eB67724282F586a552E75b5728",
@@ -1077,7 +1123,8 @@
      110
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0xB89f354FC48c1EDC490c9Ef06f243caCa727065f",
@@ -1089,7 +1136,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 124.98
  },
  {
   "address": "0x8c740F5cD0c49E852DD691D55C86E49c82dC960C",
@@ -1106,7 +1154,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 1433.67787
  },
  {
   "address": "0xd50B0485E1ba29Fb1E9E4418ebD47194c4bdDe9A",
@@ -1118,7 +1167,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 109.80856
  },
  {
   "address": "0x7998bcB66e51A49Be8e31A31b957BCD02c8DED6e",
@@ -1130,7 +1180,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 4117.600182
  },
  {
   "address": "0x44a529F72C9F5888C69e0F4A2614D91fd289aF7a",
@@ -1148,7 +1199,8 @@
     "amount": 1000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x0D3d681762f9eda9541faB6AcfB17c50025b630B",
@@ -1166,7 +1218,8 @@
     "amount": 3623.300231
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x0243bedb3e2D8E174F8BDb2a868F034190b1B290",
@@ -1178,7 +1231,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 99
  },
  {
   "address": "0xEEF8016ee3A5688622490C2FA91A1Fc139c6B1D0",
@@ -1190,7 +1244,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 400
  },
  {
   "address": "0x430aB1c41c848b886931D75789723D217a4B8ABA",
@@ -1202,7 +1257,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 99.662329
  },
  {
   "address": "0xB7b9Be0A20E31c0b1b973b78993569dB9eF09906",
@@ -1253,7 +1309,8 @@
      400
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x9515cdD94c322c83155Fe00467C077F929CF9Fb3",
@@ -1296,7 +1353,8 @@
      200
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x4A64a336a2F16299340d1b40AEdF5994DeD1F021",
@@ -1314,7 +1372,8 @@
     "amount": 749.99
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xe1801698b98FB5b04Ea080511aF369e597cE443e",
@@ -1332,7 +1391,8 @@
     "amount": 492.14
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xdD4aE29beb5E64a51F483AbFAa43028327cCb810",
@@ -1350,7 +1410,8 @@
     "amount": 986.736198
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x7d05819303dDF01Fe7d8186cDA6D5a9C051F3e68",
@@ -1368,7 +1429,8 @@
     "amount": 511.2
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xEe1215D52b147946AEEe5257A0CB99B0941C18fA",
@@ -1380,7 +1442,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 375
  },
  {
   "address": "0x97795c95367a83f14E03FaaD9D1e5A68C4F7D8AC",
@@ -1398,7 +1461,8 @@
     "amount": 952
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x4079746814B304A5Abff7A73E842562CdDd77e3f",
@@ -1416,7 +1480,8 @@
     "amount": 1000.000685
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x0F262853a5a3baeCb7a4407B6Bc0812D3e3360D8",
@@ -1434,7 +1499,8 @@
     "amount": 520.832056
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xd0e121Ca242010C187F708140Ce7a9B48331474b",
@@ -1476,7 +1542,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 2029.999962
  },
  {
   "address": "0x5EFa2fC9F84fED6516689887805C344066763B91",
@@ -1488,7 +1555,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 43.72
  },
  {
   "address": "0x41Cf91bADF7Fedd2dc343bBa38a22F9aA5a037Cd",
@@ -1500,7 +1568,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 1819.351009
  },
  {
   "address": "0x0CF30daf2Fb962Ed1d5D19C97F5f6651F3b691c1",
@@ -1532,7 +1601,8 @@
      51
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x721Ca5428eC12b148b34458E0f8557F4C9624630",
@@ -1550,7 +1620,8 @@
     "amount": 10000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x4587Bec7f6CA2705a79c68E3457f98cEEffDb4a4",
@@ -1562,7 +1633,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0x0941Ae5A513CC77c99dF2b8f9F35281003d49510",
@@ -1580,7 +1652,8 @@
     "amount": 954.021443
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x1b07bF73690DFCb332e3E554DF49c5314Abe5A79",
@@ -1592,7 +1665,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 200
  },
  {
   "address": "0xF833Ff01E3baF31eee28E3f8ABf5122f894c57C9",
@@ -1604,7 +1678,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 239.180444
  },
  {
   "address": "0xb077526F6656e49bD97b4D254A3DBe99Af5c9328",
@@ -1622,7 +1697,8 @@
     "amount": 101801.397678
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x458B82FC4f64a22d00d936d11f81716cce333a2C",
@@ -1640,7 +1716,8 @@
     "amount": 861
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0.31
  },
  {
   "address": "0x848C2506aFf2512569a9ccD63CBE2CF07195123e",
@@ -1671,7 +1748,8 @@
      2510
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x012E168ACb9fdc90a4ED9fd6cA2834D9bF5b579e",
@@ -1689,7 +1767,8 @@
     "amount": 20000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x1a9Ee9C703F91fEcB7E9261BB6e75eb0B43F6E69",
@@ -1701,7 +1780,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 200
  },
  {
   "address": "0xDb95A053f18c98C43A130cCfCEa439473F867645",
@@ -1728,7 +1808,8 @@
      10
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0xacBE0C3B624AE05ED32BBa0C9873213aD3951021",
@@ -1756,7 +1837,8 @@
     "amount": 19100
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xB1aF13b2E4Be55cA69829A23C09a1f5663Adf8D0",
@@ -1774,7 +1856,8 @@
     "amount": 4757.028669
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x1c956943024dD561ad820a75aC374922d21dbCDa",
@@ -1792,7 +1875,8 @@
     "amount": 70995.313255
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xb432FDaF07aBC21E56566E638eBa68188a4fb6F0",
@@ -1810,7 +1894,8 @@
     "amount": 2047.036031
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xE864166688e95618920e32619753E23175f189ce",
@@ -1828,7 +1913,8 @@
     "amount": 645253.182244
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xa9a58CaA8b6FE0b277C1549032408034939D197E",
@@ -1845,7 +1931,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 135.12
  },
  {
   "address": "0xCB33844b365c53D3462271cEe9B719B6Fc8bA06A",
@@ -1863,7 +1950,8 @@
     "amount": 2101456.453615
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x0e9dD59448f53Fa240DFD7A217F58D4D5EfaFf16",
@@ -1881,7 +1969,8 @@
     "amount": 19938
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xB375E0c12bFA084d269DcBf412EA1D6b100Aae5d",
@@ -1899,7 +1988,8 @@
     "amount": 10528.529377
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x7c9932eEd5Aa0604FF417B2372B0AA76C5971bD3",
@@ -1917,7 +2007,8 @@
     "amount": 1200
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x36ED2BB6862dB2F29a50aD3f04d24E38c54489cc",
@@ -1935,7 +2026,8 @@
     "amount": 9000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x5ef432973BE45906d8904C03e2e5D45368121796",
@@ -1947,7 +2039,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 500
  },
  {
   "address": "0x26d6eE5fF61e92287A2ec293D57850a6E37f0178",
@@ -1967,7 +2060,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 397.999992
  },
  {
   "address": "0x5080FdA2a93078DED890D8591AeBCEA7F345c492",
@@ -1985,7 +2079,8 @@
     "amount": 10068.392343
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x52e07Ba340644F153a78cBa5883bC7d1Aca68038",
@@ -2008,7 +2103,8 @@
     "amount": 616
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x9c2ed091E88AA7e0252b66d43568FDE89419F0F4",
@@ -2020,7 +2116,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 1886.295995
  },
  {
   "address": "0xb7CaA03cEEe974089E622B437e485D880729884d",
@@ -2037,7 +2134,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 995.163969
  },
  {
   "address": "0xfB424B3c08e5D1205C66d5140781BD718f7F9860",
@@ -2055,7 +2153,8 @@
     "amount": 30148.492416
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x2024F13B2Fdb7957FEb422Af38eDd5218e79cE05",
@@ -2247,7 +2346,8 @@
      1010
     ]
    }
-  ]
+  ],
+  "balance": 1
  },
  {
   "address": "0x697478E5f23848C0AF624DEEa3A7c7e1Ff20621B",
@@ -2259,7 +2359,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 300
  },
  {
   "address": "0x606e697A20AD2a1DEac287A1679087037279fF1f",
@@ -2277,7 +2378,8 @@
     "amount": 47962.344394
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x1305622Be76F38C0B27dAA814a21791a2B60E6Ac",
@@ -2294,7 +2396,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0x192F9E3A2fbB020f4c91E61c409b5E3e8177005F",
@@ -2312,7 +2415,8 @@
     "amount": 520
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x8Af2C3c577fda5f0d683a66300C804C2282483EE",
@@ -2324,7 +2428,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 515.18
  },
  {
   "address": "0x11116EDe80D09dC14A24a744EA08b07F6AA263aD",
@@ -2350,7 +2455,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 5.754308
  },
  {
   "address": "0xaBb9393AD789b638e1A4d994899c19a7F5893900",
@@ -2373,7 +2479,8 @@
     "amount": 1023.02
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xcCB23a9bbae99909b1102549f9a96c2b137a60Ec",
@@ -2385,7 +2492,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 4
  },
  {
   "address": "0x81A0Cf53E9d0d0B50f4BEFDe5AbB6C20453751A0",
@@ -2397,7 +2505,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 6
  },
  {
   "address": "0x7f8c1877Ed0DA352F78be4Fe4CdA58BB804a30dF",
@@ -2415,7 +2524,8 @@
     "amount": 1000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x79c758cEcDE838e7E49E9FC29e822E1E8F795b5b",
@@ -2433,7 +2543,8 @@
     "amount": 992.87
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x1fe4259875E21cF8ac2EE49D1A9C774dF6427dF7",
@@ -2466,7 +2577,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 0.009992
  },
  {
   "address": "0xDcFa2dF4d2F469F4c204b703391378731d16bC88",
@@ -2484,7 +2596,8 @@
     "amount": 100000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x155787591178110e212f7596985166D93EE68716",
@@ -2496,7 +2609,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 380
  },
  {
   "address": "0x7aE964226A83b951547FDd1509F02aDF20449CaD",
@@ -2514,7 +2628,8 @@
     "amount": 47494
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xa5c3A513645A9a00cB561fED40438E9DFE0D6a69",
@@ -2562,7 +2677,8 @@
     "amount": 7000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 105079.937491
  },
  {
   "address": "0x4D19373834eB9D3e5d46f341Fb20E539E8Ba3E1f",
@@ -2580,7 +2696,8 @@
     "amount": 2500
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x691C6793d2c7dBe03bd6b0183CBaAB0F8277D5f6",
@@ -2592,7 +2709,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 61
  },
  {
   "address": "0x82CB00E22AA9c1bd57f197a34B997BE6C025D08F",
@@ -2610,7 +2728,8 @@
     "amount": 14019.00441
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x4f6505F78DbaC4A235f775e5a89EFc2cCb882A11",
@@ -2622,7 +2741,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 952.37
  },
  {
   "address": "0x3b9a847ac8643E819a4cc76D981C2d222488a4EB",
@@ -2640,7 +2760,8 @@
     "amount": 2320
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0x72f5cb7b2f0DB77422EcFdbb72f7d1460eE6422a",
@@ -2658,7 +2779,8 @@
     "amount": 1242
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x815E60f2Ac840DcaA0b0BD6f9d1d9C3779Ef103D",
@@ -2670,7 +2792,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 54.99
  },
  {
   "address": "0xC1C79C6378e5A72895C8eA15fc6Dd59fFddc8dee",
@@ -2688,7 +2811,8 @@
     "amount": 488.136821
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x24110Cb956C12e7aa4672ca005226C3b960C8726",
@@ -2706,7 +2830,8 @@
     "amount": 3929
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x8Df12ac1dd2F56BEF0b43b91AA812A88Fd1d19EA",
@@ -2718,7 +2843,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0xe34e1FD01F5D2d5533a586941F22dC8D4894a0D3",
@@ -2730,7 +2856,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0xbb4C557E9b0418726Df66007869e5bE4f124FcB5",
@@ -2742,7 +2869,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 200
  },
  {
   "address": "0x47e4Aa7066E3a6dc3c674c51F832ABA4AEE2B1b6",
@@ -2762,7 +2890,8 @@
      10
     ]
    }
-  ]
+  ],
+  "balance": 158.999996
  },
  {
   "address": "0xdE04Ff7282715dAE198e6295Ec1300d8670eBED3",
@@ -2774,7 +2903,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 80
  },
  {
   "address": "0x1B30b552F3D4E7B46eC9d700A026685c1062722b",
@@ -2792,7 +2922,8 @@
     "amount": 10000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x2225b32aebf89888821EC7dd59dCBC653b49F6Aa",
@@ -2926,7 +3057,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 2986.999848
  },
  {
   "address": "0x155b22dEa44ADB21F94BB9b5D41af3f225CC6D7b",
@@ -2952,7 +3084,8 @@
      200
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0xd8856cCe3F878d3Ea03964F80B18987fF1919272",
@@ -2970,7 +3103,8 @@
     "amount": 64585.856077
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x4aa0EF9B815AdA4550F0f0AE2a83386BaA769999",
@@ -2982,7 +3116,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 701.553603
  },
  {
   "address": "0x5914518C928f8Eef5D563307400A86B041813F47",
@@ -2994,7 +3129,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 485.451094
  },
  {
   "address": "0x134FD89319F1fd0C8f2B5ab6e03Ec5B9D55A8946",
@@ -3012,7 +3148,8 @@
     "amount": 20000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x1De1e073CC9C564f0b5E2f3d71736D472490956B",
@@ -3024,7 +3161,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 10000
  },
  {
   "address": "0xa8b5C87A0566539bb954254D2E7fCC63B43Ef5d6",
@@ -3050,7 +3188,8 @@
      1
     ]
    }
-  ]
+  ],
+  "balance": 0.999998
  },
  {
   "address": "0xc83F9b03EE6c6AbEFE1CbF988e99A8E22549F53c",
@@ -3062,7 +3201,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 217.473786
  },
  {
   "address": "0x7385Bd7Da15a4bf5B59866Cb0b111e207Fe069Ad",
@@ -3080,7 +3220,8 @@
     "amount": 7000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x0e97Ee7CBbc8771b12c4727A057b1B3a5b90E52d",
@@ -3092,7 +3233,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 300
  },
  {
   "address": "0x72fb692ba0670d795c9858C45B389f23E33fbA66",
@@ -3112,7 +3254,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 104.999994
  },
  {
   "address": "0x5D9209436e158aF5Fb35454decb97b8ABee0B73b",
@@ -3124,7 +3267,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 200
  },
  {
   "address": "0xC6e6E15b7C04393a4C5908bEF9328219F6c56dED",
@@ -3142,7 +3286,8 @@
     "amount": 1225
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xCf39ea1cCB1E43a3899519859677CF8D301E603e",
@@ -3160,7 +3305,8 @@
     "amount": 27174.196803
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xE29f81045C805e4870d79290a8221F331288Db57",
@@ -3172,7 +3318,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 200
  },
  {
   "address": "0x08E08762Cc1449e77C6e50dc9A075EDa202887d9",
@@ -3184,7 +3331,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0x8a3219AF1aFC928E3d062dB4599e0B24e96151Ca",
@@ -3202,7 +3350,8 @@
     "amount": 558
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x8A0aC1e541E706C900Bc3A544AcdB90434FD57D4",
@@ -3229,7 +3378,8 @@
      210
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x650BFAe4Fa1431641c64C3878B725dD91730af41",
@@ -3247,7 +3397,8 @@
     "amount": 500
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x6fe5Fc57fE29b2f950941cc25b7eEacd52F1Bb64",
@@ -3259,7 +3410,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 1010
  },
  {
   "address": "0x28Cf27cA3572F2250baEB9220CeBEE0E7e2168F8",
@@ -3277,7 +3429,8 @@
     "amount": 1077.61
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x5168CD3A28b5569048F4e9baeCC6Cb0Ec969caca",
@@ -3289,7 +3442,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 303.022745
  },
  {
   "address": "0x69E84C0D8222fCbCF67D144c14e6053194a5837F",
@@ -3301,7 +3455,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 250
  },
  {
   "address": "0x1fc7D7D865AF3C28070126141F9a586d528D3460",
@@ -3319,7 +3474,8 @@
     "amount": 9537.31
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0.009
  },
  {
   "address": "0x7b9ddB8eCFc0399BABd66eC72976d94777Bc3B39",
@@ -3345,7 +3501,8 @@
      50
     ]
    }
-  ]
+  ],
+  "balance": 0.009991
  },
  {
   "address": "0x6f81D192E17316562bFD19C244484446d2F0d75c",
@@ -3357,7 +3514,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0xcbf3C9b38003fa550A7bfF5206366c1f62480bA7",
@@ -3375,7 +3533,8 @@
     "amount": 10000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xd6f072119426c8d487C2E794983A1922eF5600FB",
@@ -3387,7 +3546,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 4
  },
  {
   "address": "0xbE13f5C354aF0276c7fB1855F41E235d03F27888",
@@ -3405,7 +3565,8 @@
     "amount": 400.681133
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x15aCE3121918c35F7c6541E888e92Aa87b1254A2",
@@ -3423,7 +3584,8 @@
     "amount": 454.59651
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x5ECb7bEDc7F65d9956C5Ad2Bf54aa8c80C0d2AeD",
@@ -3435,7 +3597,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 360
  },
  {
   "address": "0x5344cD4302ca2a3bD8313E3431EC39D1B091849a",
@@ -3447,7 +3610,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 2500
  },
  {
   "address": "0x906b2A0B0806360dAc05d74c9C0bE4D693aBDEe3",
@@ -3459,7 +3623,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 98
  },
  {
   "address": "0xb1367CDc71a3d9643D09D7F5D76435B4a0f9475f",
@@ -3471,7 +3636,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 940
  },
  {
   "address": "0xe0278D1F44659e9ffb27906A045dC73ECe631F31",
@@ -3504,7 +3670,8 @@
      1
     ]
    }
-  ]
+  ],
+  "balance": 0.004139
  },
  {
   "address": "0xc6B4A4DB97cc81C20616b95A6351bBA3AdB93f24",
@@ -3549,7 +3716,8 @@
      10
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0xbD80904840c6756D3CcC49CE2A38bB0aA8A18de1",
@@ -3567,7 +3735,8 @@
     "amount": 200
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xeb2d617194553b844C8B535BE285F993B40f9f2d",
@@ -3585,7 +3754,8 @@
     "amount": 5000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x3BbB9f875493045113705fC2d4B14aaaf457E520",
@@ -3603,7 +3773,8 @@
     "amount": 8704.768108
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x6c85e0c9D254EC60CcC88B2Cb0f275289e194aB9",
@@ -3615,7 +3786,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0xA9A8270CC15F81D35408619828e0D829e6B55958",
@@ -3633,7 +3805,8 @@
     "amount": 413.08
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x978BCd855DB3122C4aC9A08844793c0939DEFe07",
@@ -3645,7 +3818,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 519.23
  },
  {
   "address": "0xF890c71a0E97E30b49b503c6A3c4270eA2d043Cf",
@@ -3657,7 +3831,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 89
  },
  {
   "address": "0x6e2B5725F1B2222a9ACF63742b4A98A11ADBb204",
@@ -3691,7 +3866,8 @@
      1
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x40Bc0D240660Cc5896ba19180CBb329f3CFB58a4",
@@ -3709,7 +3885,8 @@
     "amount": 399
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xe3f24cFE0dc64873f9BEE6AB7e7C42312E678FEc",
@@ -3721,7 +3898,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 199.59
  },
  {
   "address": "0xf7d304D1e2406146acB7ba8954DEe4c64E3812F9",
@@ -3733,7 +3911,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 136
  },
  {
   "address": "0x818346Bbd23dd1e74c326c2E23659055edC56eC8",
@@ -3745,7 +3924,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 150
  },
  {
   "address": "0x70D82c59FDa64E46917F88Bae781cA388d138e9C",
@@ -3757,7 +3937,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0xD87585B1c1B5D5a31A21000f5484E3CBbB2eafd3",
@@ -3774,7 +3955,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 153
  },
  {
   "address": "0xB71347765f653e030b9Fe892DEcFccE97518810e",
@@ -3792,7 +3974,8 @@
     "amount": 492
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xE13395c47Fa58ffc16539207749e4ca400E197b5",
@@ -3804,7 +3987,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 145.644047
  },
  {
   "address": "0xdC7Aa225964267c7E0EfB35f4931426209E90312",
@@ -3822,7 +4006,8 @@
     "amount": 172136.23466
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x9e8e124A8099f08477cA8325255Fd357d790Ce2d",
@@ -3840,7 +4025,8 @@
     "amount": 700
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xf0530595239aA73b48c900dB5723F67F4DF09Ace",
@@ -3858,7 +4044,8 @@
     "amount": 2976.798191
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xc2F82A1F287B5b5AEBff7C19e83e0a16Cf3bD041",
@@ -3876,7 +4063,8 @@
     "amount": 9999
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 1
  },
  {
   "address": "0x17C65468F4493B53E4e242A9671C91bbF445C1B9",
@@ -3894,7 +4082,8 @@
     "amount": 373.235533
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xa0Ebf87De04fF8185575E59ec907bA1D329eb83a",
@@ -3908,6 +4097,11 @@
     "tx": "0xe7acddb23b9e4fc583f6fa50e04c3d9d2a89b4c9439ae5dd6db0ada9ac1f13cf",
     "block": 13831533,
     "amount": 125000
+   },
+   {
+    "tx": "0x41adcd8154e86270bf49eba6afa82f3f89d0b05e557bb30fe040855d1e781c02",
+    "block": 15070187,
+    "amount": 270000
    }
   ],
   "withdrawals": [
@@ -3925,7 +4119,8 @@
      250
     ]
    }
-  ]
+  ],
+  "balance": 270000
  },
  {
   "address": "0x9212FA3b1D0ac855684Af18889d2180D741Ca07d",
@@ -3946,7 +4141,8 @@
      10
     ]
    }
-  ]
+  ],
+  "balance": 198.60401
  },
  {
   "address": "0x6ce184eE11810E7E54c37239E289C7d8d544A338",
@@ -3958,7 +4154,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 10
  },
  {
   "address": "0x59220979D662bb96B40B5B47c5CC8939254f4d72",
@@ -3976,7 +4173,8 @@
     "amount": 1100
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x71f1300300B0b804627BC6F090849E0c0CaD2812",
@@ -3988,7 +4186,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0x982E10ea780DC6FeE5b8d11500db294a161388F9",
@@ -4000,7 +4199,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 700
  },
  {
   "address": "0x75d077CA9C587D31063A8f97Dd0B72AA624f9aDF",
@@ -4018,7 +4218,8 @@
     "amount": 25972.392598
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x980c5f6Eb6DE8F157EBCAa9D46BA528B5578e5fd",
@@ -4030,7 +4231,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 500
  },
  {
   "address": "0xB176497C102F6cb1AA64a9de684108db018D5123",
@@ -4078,7 +4280,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 0.009026
  },
  {
   "address": "0x3817eDafF61037aFFbA78EB7f8d177a14602564F",
@@ -4096,7 +4299,8 @@
     "amount": 5323.092734
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xE86b96968BA5326B87f994A87A27dEFb5bAE449d",
@@ -4108,7 +4312,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 4
  },
  {
   "address": "0xC5A2f28BAcF1425BFAEA14834486F0e9d0832155",
@@ -4120,7 +4325,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 200
  },
  {
   "address": "0xd94603cDEA4B6B06aEB6235b34DAEC5675014921",
@@ -4138,7 +4344,8 @@
     "amount": 32433.076113
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x68C0b2aC21baBDAFbC42A837b2A259e21b825cDe",
@@ -4156,7 +4363,8 @@
     "amount": 3000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x1813A06D40BEc75f1D6d9EFA4C1e0E06275fC4Df",
@@ -4168,7 +4376,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0xe4F3A37e4eDcBd22bb6227DaB58E640E64891971",
@@ -4180,7 +4389,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 304.503496
  },
  {
   "address": "0x8bB9F6E6A5538962CA28ACC6F205f0C36d99CE0C",
@@ -4198,7 +4408,8 @@
     "amount": 90
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x4E4b3E7728dfB10B61cda6502bdAb67df805582c",
@@ -4210,7 +4421,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 99.98
  },
  {
   "address": "0x9AC75Bdde980a5B46689C4b8864d640697c60Bc4",
@@ -4222,7 +4434,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 472.72
  },
  {
   "address": "0x2edfd0C529528B01b40E569dd42Fb033f6B0e79a",
@@ -4240,7 +4453,8 @@
     "amount": 30000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x898735d460C6682A39cEB6459B8d84d91f7abC90",
@@ -4258,7 +4472,8 @@
     "amount": 413242.386001
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x1260b08C95BE06db2f0fe0C38C3B1c353e00ca6C",
@@ -4276,7 +4491,8 @@
     "amount": 702.76
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xdC99de2B50984269D5DD976766cAD8D9eb9Cff94",
@@ -4294,7 +4510,8 @@
     "amount": 8343.579632
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x54402d83859dAa699f334fb51487C4a90A64972a",
@@ -4312,7 +4529,8 @@
     "amount": 100
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x70Eb207bE21b66c28E4fd93D49c8A1Eb5836545a",
@@ -4330,7 +4548,8 @@
     "amount": 90319
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x2f69069766BaA76a2189c9BB15F64F3ab8947EA9",
@@ -4342,7 +4561,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 76.784634
  },
  {
   "address": "0xAB390d7eEb6Fe1F2c3B38d63E4766805808Bb7B2",
@@ -4373,7 +4593,8 @@
      1
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x48B72465FeD54964a9a0bb2FB95DBc89571604eC",
@@ -4399,7 +4620,8 @@
      505
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x00ECc67f523A1A5E4053eEBA328228A9A2b5FEFE",
@@ -4417,7 +4639,8 @@
     "amount": 2500
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x3254211f8Ca71C09f35C980030784d69A2E83b30",
@@ -4435,7 +4658,8 @@
     "amount": 69986.281722
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x8C65987759451d68F9Be35a8579E972ed23A5D2f",
@@ -4452,7 +4676,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 9
  },
  {
   "address": "0xE7F843fF0bF93001Cc593f33f3B32d253Bf1d52a",
@@ -4464,7 +4689,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 39
  },
  {
   "address": "0x79b56a1429a94e133EA30836B7bc298348F246A2",
@@ -4514,7 +4740,8 @@
      20
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x417372e4d116B6AF9e6FBD0d1D16f1483F52f6e8",
@@ -4561,7 +4788,8 @@
      1
     ]
    }
-  ]
+  ],
+  "balance": 0.000083
  },
  {
   "address": "0x9e092d0e2a18A7Fe54Da9A69DA50780c1bE5b8c0",
@@ -4579,7 +4807,8 @@
     "amount": 1003.452938
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x98844642AB4FE199A5331330B5418847caA5653a",
@@ -4591,7 +4820,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 250
  },
  {
   "address": "0x9f26CA35F7a745df059F74d497b16dF106380291",
@@ -4609,7 +4839,8 @@
     "amount": 518.977752
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xc749C118E060bb1aC4db4794C56241c2AB559A22",
@@ -4646,7 +4877,8 @@
      1
     ]
    }
-  ]
+  ],
+  "balance": 0.009984
  },
  {
   "address": "0xd24fa211e03E82873980296D11f0318BdD329fbd",
@@ -4695,7 +4927,8 @@
      10
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x9ef42869929714747136566d8772a9B7a8Dd2D79",
@@ -4707,7 +4940,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 3900
  },
  {
   "address": "0x811b3c2be94d09D7142Dc4BB88A9cB15F225B40C",
@@ -4725,7 +4959,8 @@
     "amount": 400000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x99945B0381d2D985C41A3F7EE2e88a17D149f8dA",
@@ -4743,7 +4978,8 @@
     "amount": 725.08
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xD45B7892C3C6eE475133065855c1b0087FdB76D9",
@@ -4769,7 +5005,8 @@
      2501
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x40354e6EF6981c88340EA80ce66321D9eADA1f77",
@@ -4787,7 +5024,8 @@
     "amount": 297.74606
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x2004E60f61D5c8490f2A20379a90C4f630A22517",
@@ -4820,7 +5058,8 @@
      250
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x47A2F8367E6777421E3915e617A3c3B38bAD4921",
@@ -4837,7 +5076,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 650
  },
  {
   "address": "0x1bC0ab1fc3d1bF890013A1C27be53B3bd67c752c",
@@ -4855,7 +5095,8 @@
     "amount": 201.426896
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x9B839Ab0cE5d936Ddd0D2a90a65B8E1F92b33FE5",
@@ -4881,7 +5122,8 @@
      50
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0xBe013252A48f223E0B3976223b1b5D7418Cdb659",
@@ -4893,7 +5135,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 197.568804
  },
  {
   "address": "0xE4a555DAF0c71aBeF7b2d725EEFAe41deaD4D8dD",
@@ -4911,7 +5154,8 @@
     "amount": 499.619653
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x82e4D78C6c62D461251fA5A1D4Deb9F0fE378E30",
@@ -4929,7 +5173,8 @@
     "amount": 200000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x82fbEAeBDD5975fA9804B15D599C6ebea122af2c",
@@ -4941,7 +5186,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 164.06
  },
  {
   "address": "0x871c86287906647737e260f647f1D9E3987Ff009",
@@ -4953,7 +5199,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 10317.384373
  },
  {
   "address": "0x56244bA4Bf3047029D3734dfe90154C70c47350E",
@@ -4971,7 +5218,8 @@
     "amount": 10000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x51Fb095c8D7FF783cF884d011834192c46Bd9398",
@@ -4983,7 +5231,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 2848
  },
  {
   "address": "0x923D2f38fd86Bc66478b990168b8E0D4D64d1FC8",
@@ -5001,7 +5250,8 @@
     "amount": 350236.524031
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xf366F483ECa964aE79d0db0db8eF2aAF42f9a31E",
@@ -5013,7 +5263,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 118.259158
  },
  {
   "address": "0x4AB0103A2e38D7152A212C373Fb432480F9A11ED",
@@ -5025,7 +5276,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 125.259151
  },
  {
   "address": "0x905c12DE5DbaAF722Be1aB261e4dFdE1D451c496",
@@ -5037,7 +5289,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 99.19
  },
  {
   "address": "0x76B52A954518CE5CE56270eA49E7f0BA5a8cf782",
@@ -5049,7 +5302,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 98.29
  },
  {
   "address": "0x5dC122F194bE3D9EF903ec1e91397Bc0b40de65D",
@@ -5072,7 +5326,8 @@
     "amount": 1269.29543
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x9b8d60a66aA2e4b419368c8109f369B31CdE9F20",
@@ -5084,7 +5339,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 29.964273
  },
  {
   "address": "0x26Bd13398abc1103C3b31C7465Fd13E58Dfe386E",
@@ -5102,7 +5358,8 @@
     "amount": 579.83
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x15dE7aB33041fc0Ec85AE634b4B19097410634e4",
@@ -5114,7 +5371,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 600
  },
  {
   "address": "0xB7266ed7AB41E793Bb00756DC8Aec522eEC7b5D6",
@@ -5126,7 +5384,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 562.1
  },
  {
   "address": "0xFC9Ca7e990CB63C6f94729401cd35409bEd304C4",
@@ -5146,7 +5405,8 @@
      1000
     ]
    }
-  ]
+  ],
+  "balance": 3307.323651
  },
  {
   "address": "0x46427b0eD4beE4B44Ed957Bc89340C21CE69CB92",
@@ -5164,7 +5424,8 @@
     "amount": 1650
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x62a8f3330Ac21A28160bA3C7079B95E657faa7d7",
@@ -5176,7 +5437,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 875
  },
  {
   "address": "0xB5440dcBDD87288a761Be817628Fa342ec1E07A6",
@@ -5188,7 +5450,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 25
  },
  {
   "address": "0x35709Fa8dAFb19e0F8b2d44980716DCCcED50E3A",
@@ -5206,7 +5469,8 @@
     "amount": 857500
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x48F35740736e5381f99026b0fa9803ccA46f96e9",
@@ -5218,7 +5482,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 10000
  },
  {
   "address": "0x792ed10436766a7AEAFB44e89bb314801fB3bEFf",
@@ -5230,7 +5495,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 4
  },
  {
   "address": "0x728dcaB85c11E6578010A9356e2Ed3EB40000F38",
@@ -5256,7 +5522,8 @@
      1
     ]
    }
-  ]
+  ],
+  "balance": 0.899998
  },
  {
   "address": "0x1e76eb39D4407eAB5a0357572fBd9F73540278d7",
@@ -5273,7 +5540,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 486.372474
  },
  {
   "address": "0x2f6578F526F9929aDc8e4e73B70225C4BeF889BB",
@@ -5291,7 +5559,8 @@
     "amount": 450.03
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x600c5dcD1B0dfAF7c65486A3430c99AF997D8449",
@@ -5303,7 +5572,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 949.77
  },
  {
   "address": "0x26159A9B84D19B859f23fD263FAd7C4563452c5D",
@@ -5321,7 +5591,8 @@
     "amount": 420
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xc4a2799E32EE6fa8C213B5eb0fFc666010b7c8Cd",
@@ -5333,7 +5604,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 400
  },
  {
   "address": "0xb86CD2eFC1F461Beee8deEC2c3F053CCb2781EF9",
@@ -5351,7 +5623,8 @@
     "amount": 361467.095992
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x60bFC74B1B276CF576C4E36Aae5663c9F4d25249",
@@ -5363,7 +5636,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 300.403866
  },
  {
   "address": "0x18D73229DBb930161454BD541A057754966fA563",
@@ -5381,7 +5655,8 @@
     "amount": 1000.594466
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x96a77560146501eAEB5e6D5B7d8DD1eD23DEfa23",
@@ -5401,7 +5676,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 204.999994
  },
  {
   "address": "0x02dF788aD577B16b3fb9B5C97B49c480291fc65A",
@@ -5429,7 +5705,8 @@
     "amount": 21500
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x9B5cbC873840b2eAB03a556044175A9D89ced468",
@@ -5447,7 +5724,8 @@
     "amount": 1001.06
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0.000527
  },
  {
   "address": "0xFFBb3BA3E2f5eBAb57CBf25A8DEa932b477EccF4",
@@ -5465,7 +5743,8 @@
     "amount": 472.81
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x8C587AEf2d20eC06810967784D2b48f311a3dC6B",
@@ -5483,7 +5762,8 @@
     "amount": 1100
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xbcA6f2Dd4F34C9C2F0Dad1c771D2Ce65B65C24f3",
@@ -5501,7 +5781,8 @@
     "amount": 1333.84
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0.006855
  },
  {
   "address": "0x7e53AF93688908D67fc3ddcE3f4B033dBc257C20",
@@ -5513,7 +5794,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 7.3
  },
  {
   "address": "0x3994E1872b7912B542492Dc01DC757F9C0F71DF1",
@@ -5531,7 +5813,8 @@
     "amount": 41382.822159
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x5AF855fF5bd9595F52D9fDcA8b0cfEFbfde67b37",
@@ -5549,7 +5832,8 @@
     "amount": 500
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x996A020faEACb6E73B14254dbd39946Bf5aeA267",
@@ -5561,7 +5845,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 178.355688
  },
  {
   "address": "0xaEfCdDD70cAf9D6f4dfc2A598bE5D28163FCBE39",
@@ -5581,7 +5866,8 @@
      1
     ]
    }
-  ]
+  ],
+  "balance": 500.999998
  },
  {
   "address": "0x11Cc2981dB9Af5Bb4C02238E37F4b7D6A331835d",
@@ -5604,7 +5890,8 @@
     "amount": 1500
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xE932b8030bD8B420A1050dE21a2dE5Fb748248EF",
@@ -5616,7 +5903,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 130.7403
  },
  {
   "address": "0x3E0998E9FCbD992d36239D5c5ad182D2B5CfB00b",
@@ -5634,7 +5922,8 @@
     "amount": 10000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xBeA2492859A1A6a1E3bE4F64C4774Acb41386d6c",
@@ -5652,7 +5941,8 @@
     "amount": 74590.76398
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x7Fc1222Fe63F51d7C25784CD8aa50ed91bE330A3",
@@ -5670,7 +5960,8 @@
     "amount": 800
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x96C28F1BC8E4f08a5e98c402A9D9750517C4301b",
@@ -5718,7 +6009,8 @@
     "amount": 8780.513718
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x0e821442B4F2A21474db0ae87E9FAbaA35CF2408",
@@ -5730,7 +6022,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0x54e0CCBaB2b6864aaaac95a49b68bB4344b202a0",
@@ -5756,7 +6049,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 29.999992
  },
  {
   "address": "0x2E5DA4A2DC27BA5D01c41Ea9Fac088007d743276",
@@ -5768,7 +6062,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0x29f51AB308454403eAe3Af491A3B45b20b536D93",
@@ -5786,7 +6081,8 @@
     "amount": 156
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x1F28F10176F89F4E9985873B84d14e75751BB3D1",
@@ -5945,7 +6241,8 @@
      60
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0xeFB9FD723B3a074AaF1FEbD3e24FC65eB1130946",
@@ -5957,7 +6254,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 689.966891
  },
  {
   "address": "0x68F33890D29B889b8546E27E288Cb470DCA6fE81",
@@ -5969,7 +6267,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 20
  },
  {
   "address": "0x424a1d4a95947d969EF09f8d3AaC97F943E14488",
@@ -5987,7 +6286,8 @@
     "amount": 12148
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x6369cbE2172cf2347C218140D60F9ff2148dEf09",
@@ -6005,7 +6305,8 @@
     "amount": 32784.980531
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x08198f5718121BB4b025d5e345cEceB114f40179",
@@ -6023,7 +6324,8 @@
     "amount": 325
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x43E6D56aE035eFc95BDac16a60aB157654c77103",
@@ -6035,7 +6337,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 99.078706
  },
  {
   "address": "0xEe3372cd30cB1207B1ADAc09962025CEb4855521",
@@ -6058,7 +6361,8 @@
     "amount": 541804.860975
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xf5b6Bb25f5BEaEA03Dd014c6eF9fA9F3926bf36C",
@@ -6070,7 +6374,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 900
  },
  {
   "address": "0xEd498E75d471C3b874461a87Bb7146453CC8175A",
@@ -6088,7 +6393,8 @@
     "amount": 5900
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x27ce723dafd80A7Ac3fF408a7466c0aD4799Aa37",
@@ -6111,7 +6417,8 @@
     "amount": 6459.077077
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xb8ce9c722507949732b7730Bd81DA5760327B879",
@@ -6221,7 +6528,8 @@
      15
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0xf65Dbea375AEE8e7cfA678Aee776C32F14d52328",
@@ -6239,7 +6547,8 @@
     "amount": 100
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x2758e4Db91DCc6B6bB834083D0657A020F188166",
@@ -6262,7 +6571,8 @@
     "amount": 3228.75
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xE603D26627Ed3980056b510868ffec20d3A197a6",
@@ -6280,7 +6590,8 @@
     "amount": 337.68
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xC189989fe4AA2C8f458E1b7BE69DCD1c9871229c",
@@ -6298,7 +6609,8 @@
     "amount": 9985.463
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xD56b544D7b7b0c8A63A0F8f7B3A163fDfc4E499D",
@@ -6310,7 +6622,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 151
  },
  {
   "address": "0x87a53ad75ecC2A53a4042043FfEeD9007f5183c6",
@@ -6322,7 +6635,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x05a55C9e467d3032267aEA018534D9cD9A1a1Ae2",
@@ -6334,7 +6648,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 199.595
  },
  {
   "address": "0xF531fe47cfEc94fDE704d7020E321A70255a8F7F",
@@ -6361,7 +6676,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 282.229988
  },
  {
   "address": "0x184964942456E5820f629396c9094c3dA3aD8E49",
@@ -6394,7 +6710,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 0.002659
  },
  {
   "address": "0x927fb85861b734d91266c493E96571915Bb657CF",
@@ -6422,7 +6739,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 814.99998
  },
  {
   "address": "0x13a477fD91cA18A8d366440A5726227E0bBff4b8",
@@ -6434,7 +6752,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 16.724599
  },
  {
   "address": "0x8558f502887a9a52c4B265d72327E0E529Ff790d",
@@ -6516,7 +6835,8 @@
      10
     ]
    }
-  ]
+  ],
+  "balance": 679759.136226
  },
  {
   "address": "0x7867Fad75C5e033bcdc84de6ffC3104ee6922297",
@@ -6528,7 +6848,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 262
  },
  {
   "address": "0xb1DA903018023C6097cB39A64E4aDD5d9E8b0a3C",
@@ -6546,7 +6867,8 @@
     "amount": 110
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xB00EE0cA88a79151A75D57Df08b24cFC90b210C2",
@@ -6564,7 +6886,8 @@
     "amount": 556
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x42cd8312D2BCe04277dD5161832460e95b24262E",
@@ -6587,7 +6910,8 @@
     "amount": 350559.66
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 2584232.34
  },
  {
   "address": "0xaDe5423ba4FA386ce8f23C0515D29ae05D3Fa360",
@@ -6599,7 +6923,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0x174eDE7a7B9B693b1c073d2D6D91ca7dFefDd728",
@@ -6617,7 +6942,8 @@
     "amount": 499.94
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x0D97fB9f4f153490fB4FADa7D2b9C50Df082034d",
@@ -6629,7 +6955,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 131.779195
  },
  {
   "address": "0x2b52089fe0ba6982c41E7D4e4544FE5564Be7Cd7",
@@ -6641,7 +6968,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 110
  },
  {
   "address": "0x3A4A3307fd2131261F3D2Dc58D6b136E9B685eCc",
@@ -6653,7 +6981,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 25
  },
  {
   "address": "0xa0494F12AE5CD8fb93813c047D47A8F3E2DD227f",
@@ -6665,7 +6994,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 1000
  },
  {
   "address": "0xe9b94a7843264781aCf867Dc1BD713662812a78b",
@@ -6683,7 +7013,8 @@
     "amount": 450
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xaA5cb8B10990a51FBd8a647d61C370282C42C976",
@@ -6716,7 +7047,8 @@
     "amount": 50
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 50
  },
  {
   "address": "0x9Bac09298995Ca08e3B2145E20808B054224Da6E",
@@ -6736,7 +7068,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 444.999994
  },
  {
   "address": "0x43B0D17cad8a44AB824823F8fFd12CbE36d59728",
@@ -6748,7 +7081,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 30
  },
  {
   "address": "0x805Ba02F89C4C9ce6701eb502ebBBe19941e306F",
@@ -6766,7 +7100,8 @@
     "amount": 5000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xf6Ff2962af467Ca09D27378559B92Ad912006719",
@@ -6778,7 +7113,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 500
  },
  {
   "address": "0xA921792a5476836512B9daeEAE7C43AeE5b1cAE2",
@@ -6796,7 +7132,8 @@
     "amount": 3950
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x70c260E628676394c6CdB77Bf686898741B4AAcf",
@@ -6814,7 +7151,8 @@
     "amount": 416.9218
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x261437480dA0b195aDB651191907B5dDF8997EEe",
@@ -6834,7 +7172,8 @@
      50
     ]
    }
-  ]
+  ],
+  "balance": 137.125117
  },
  {
   "address": "0x1a99C8c86923127B714A4A8E4FD2C7cB4572F84C",
@@ -6852,7 +7191,8 @@
     "amount": 1000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x8904FFC6Aa039dB5941De11309a42372F3F7D2FD",
@@ -6933,7 +7273,8 @@
      60
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0xc554a3965DCadBE97Bd480ec28917Fd8992BF859",
@@ -6945,7 +7286,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 200
  },
  {
   "address": "0xBd2311213A38dfFe96b9FBdc44e0FE855C1EF52a",
@@ -6963,7 +7305,8 @@
     "amount": 100.252728
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x62AA1D79ddF0F11E372C88952E460e30B6400fa6",
@@ -6975,7 +7318,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 51.779028
  },
  {
   "address": "0x80658E3657882cFa73fff0eb20c92Aa5E948230C",
@@ -7032,7 +7376,8 @@
      10
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x699E17c0FD4608eCa4FF8866e93621fC68835881",
@@ -7050,7 +7395,8 @@
     "amount": 119.756086
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xa555cF7e7E04919e653577FF76fe44E119A018cC",
@@ -7062,7 +7408,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 1964.0365
  },
  {
   "address": "0x5debb97a6Cc1Fdf686a3C6aA804a623a21deD73c",
@@ -7074,7 +7421,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 8426.309478
  },
  {
   "address": "0xD745b97CB62A95E9ebA70A5CD84f728b903379f9",
@@ -7086,7 +7434,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 250
  },
  {
   "address": "0xaDE08D664048492335b1f807B6C233ACfF90b208",
@@ -7113,7 +7462,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0xDcEAC046974561148549EA45B7Ebf3680B802bb8",
@@ -7141,7 +7491,8 @@
     "amount": 1100
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x98EDd74baCAf84CD34D8c52dC28Ae061CA0d3B93",
@@ -7153,7 +7504,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 200
  },
  {
   "address": "0xC9D03065FdA836bfa73B5767aA84BE49bCe8112F",
@@ -7165,7 +7517,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 96.4539
  },
  {
   "address": "0x23ABb5FE2Bdd8362A521816EB495021681253264",
@@ -7177,7 +7530,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 80
  },
  {
   "address": "0xebD7807c6cDbDd9f886aeC1D39Ed4a337bff8452",
@@ -7189,7 +7543,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 60
  },
  {
   "address": "0xeB66B191f658DB14bAE39C139ab0f5F7B8c479F9",
@@ -7207,7 +7562,8 @@
     "amount": 10000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x32afa711113F9D3A282E9Bf4d56FaA1d017A9D4d",
@@ -7225,7 +7581,8 @@
     "amount": 150
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xB6605F98A5562b1AC821Bc5f2B75934239e8c6D6",
@@ -7289,7 +7646,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0xdb30CBAf473C2145b28f0db3F17cA9f6c6933692",
@@ -7301,7 +7659,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 5
  },
  {
   "address": "0x9CeDaDAb306467a8544c69eDb92d521a8AEC3C1F",
@@ -7313,7 +7672,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 129.48
  },
  {
   "address": "0x1CC20573092C61Fbd355918639Ceb16172134fE8",
@@ -7325,7 +7685,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 319.885485
  },
  {
   "address": "0x35EfCe5f4bd52356e8215BCB9dC7687aDe6B6400",
@@ -7368,7 +7729,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 84.999924
  },
  {
   "address": "0x676EaC048236AD9eA5026e75D4290ee181d7F571",
@@ -7380,7 +7742,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xa865bcEe67A513a658Ca60F5F894fDD3d058f5f2",
@@ -7403,7 +7766,8 @@
     "amount": 110
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x59427CD74811Cd0528fa8169EF553c5CF4960Ef3",
@@ -7421,7 +7785,8 @@
     "amount": 2888.8
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xDC513ee74C040213C50D39e516532748E84902e6",
@@ -7457,7 +7822,8 @@
      20
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0xD07523b44a272B9856a9f771558F044479bB55DE",
@@ -7475,7 +7841,8 @@
     "amount": 11717
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0.69063
  },
  {
   "address": "0x7D84AdfC2985868751f1c4B339c270f44fBD8E24",
@@ -7493,7 +7860,8 @@
     "amount": 450
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x67a828FcdCacE3500e3e0600f3BAD22137100630",
@@ -7524,7 +7892,8 @@
      55
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x616A4b9Eb8Bc62cb9fa091D913221E9eCE9973ed",
@@ -7542,7 +7911,8 @@
     "amount": 20000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xF595cE68D9A7De09E86926fba98629e32F721FB8",
@@ -7554,7 +7924,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 655.79
  },
  {
   "address": "0xC4c40dE29B2a24cF96Ca26354445f7bf9A6677f6",
@@ -7566,7 +7937,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 116.968149
  },
  {
   "address": "0xB22787d12aD1d1ADeE642C39Ba6F61245259Ed56",
@@ -7578,7 +7950,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 25
  },
  {
   "address": "0xb987F7be45FF99285851ff0AD1729b27acf41858",
@@ -7590,7 +7963,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 179
  },
  {
   "address": "0xB0D51e9d625Ff6543270E5Ce452c8042C94C4007",
@@ -7602,7 +7976,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 138.43
  },
  {
   "address": "0x24ee0e9eE29905af2f1166f02ee275092495f911",
@@ -7620,7 +7995,8 @@
     "amount": 10800.951734
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x5707F2582c38457Ee21a2606a08A37dfb6981805",
@@ -7632,7 +8008,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 68
  },
  {
   "address": "0xd331813f17633F2502B1Eb8Dd146e18b6d2f9aBC",
@@ -7644,7 +8021,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 143
  },
  {
   "address": "0x607401730AB4468Cdcf038eBb1632392b84430D9",
@@ -7662,7 +8040,8 @@
     "amount": 32402
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x14f63324F02426b5E5130fe92350E048F95b2b24",
@@ -7706,7 +8085,8 @@
      50
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x06fa4031b979C87Ebc3053E81D437064a7beEB0d",
@@ -7724,7 +8104,8 @@
     "amount": 13500
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xfff30cDDD7013124F06a34A330053A1737aFb514",
@@ -7744,7 +8125,8 @@
      50
     ]
    }
-  ]
+  ],
+  "balance": 4908.991545
  },
  {
   "address": "0xae3e8B084128854b05313f56563Bc1446A3d7e13",
@@ -7762,7 +8144,8 @@
     "amount": 6224.795637
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x2A10fF76c0953c57903Da027f051868D595CABA7",
@@ -7774,7 +8157,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 743.05
  },
  {
   "address": "0x0ba19D400d8D1816abA0062603222298693D5e18",
@@ -7786,7 +8170,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 500
  },
  {
   "address": "0x811E6C938bAf76f4444DaCB7f2A4c35c6639f036",
@@ -7798,7 +8183,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 300
  },
  {
   "address": "0xaf2280631b07862a226d1ba1ecB623Bb9710728F",
@@ -7810,7 +8196,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 272.494546
  },
  {
   "address": "0x0cb27e883E207905AD2A94F9B6eF0C7A99223C37",
@@ -7822,7 +8209,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 180
  },
  {
   "address": "0xC0A64379BB6217907C87767cA94e9706c24ae71C",
@@ -7840,7 +8228,8 @@
     "amount": 222
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x8bA2c9E3319719d9c6d0457f6d848de60d4DA5Ce",
@@ -7858,7 +8247,8 @@
     "amount": 700
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x9B860b5F6CE49C84eEF8E322B03CF6322008Bc95",
@@ -7881,7 +8271,8 @@
     "amount": 8998.481872
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x01F2E21B54945C73594268D6aD23e1C28d52FAF1",
@@ -7899,7 +8290,8 @@
     "amount": 1200
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xf13EDd440A69fD74Bcf48eCf8ffBCEaCc8eEeAEd",
@@ -7917,7 +8309,8 @@
     "amount": 101.5207
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x9D24c33c25CC8810bc995A28e74e45445EE9AF1e",
@@ -7929,7 +8322,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 200
  },
  {
   "address": "0x85C267bA0Cb161252FD84d74b78EE1A64FfE3B3A",
@@ -7941,7 +8335,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 269
  },
  {
   "address": "0x01546FBFDdEd1d046BAB387364EE3ACd5ff12a1F",
@@ -7959,7 +8354,8 @@
     "amount": 5180.582418
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x5b86344d75D00F616374f026ea5679F93d51C8a0",
@@ -7977,7 +8373,8 @@
     "amount": 27751
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 20
  },
  {
   "address": "0x3CADe22Bde30d487dCe4060f33F91363D23831Bb",
@@ -8029,7 +8426,8 @@
      10
     ]
    }
-  ]
+  ],
+  "balance": 51334.999657
  },
  {
   "address": "0xC0Fdbe488f4FBEB2f389F6c52b984aA795AAe158",
@@ -8041,7 +8439,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 101.163758
  },
  {
   "address": "0x75A6b3B01980bf4A78C7bdecA563d04f2dc60de2",
@@ -8053,7 +8452,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 50000
  },
  {
   "address": "0xFa62615E2172EE8bC10930C2c4F226d345aCde7D",
@@ -8071,7 +8471,8 @@
     "amount": 987.867114
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x6723162BaB75Ed930263AEFC228fFa6606CB31c8",
@@ -8099,7 +8500,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 508.999982
  },
  {
   "address": "0x0726F5633b1Cd024D41632d13E530945683144A0",
@@ -8111,7 +8513,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 250
  },
  {
   "address": "0xB277d98b101AF4F1a1c7fE6d443f6993f1904237",
@@ -8129,7 +8532,8 @@
     "amount": 300000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xbeE6735EfbF796405C2420Cc342c7A9df008f9f2",
@@ -8147,7 +8551,8 @@
     "amount": 483
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x745Da7b97eA7B5887815a9B8a343D210F8177Bf1",
@@ -8159,7 +8564,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 91.99
  },
  {
   "address": "0x88aAF4a728e14748cea5e9A3cA1306Ac567ba472",
@@ -8177,7 +8583,8 @@
     "amount": 38794.293339
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xCEFbF90582a4b0306141d18423bd1B6a0777C244",
@@ -8189,7 +8596,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 17.616473
  },
  {
   "address": "0xc199FeE1667cd1e667Df1FcB75F605e5b020c15c",
@@ -8207,7 +8615,8 @@
     "amount": 5993.422022
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x384A0c40651A66cC9e240642364e66c41b3a9ecF",
@@ -8225,7 +8634,8 @@
     "amount": 150000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xe3B27aE430A7875deC2d407833DcB7A66A08a9c7",
@@ -8237,7 +8647,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0x1538c9f37576F63FDA67b79d5562349b38B61BEb",
@@ -8249,7 +8660,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 200
  },
  {
   "address": "0x6C7B6114654Fee98B1a66697D50704e664A6925C",
@@ -8267,7 +8679,8 @@
     "amount": 1000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 500.590872
  },
  {
   "address": "0x624B09D27520bB0F4d453CC94607F8157fbDEed7",
@@ -8285,7 +8698,8 @@
     "amount": 400
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xDdf18b8448B6cf8ab4773978d60aa7155edB292D",
@@ -8406,7 +8820,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 0.00017
  },
  {
   "address": "0x4cBd885555906f60Ab4E13CB873e2314C438F8B9",
@@ -8424,7 +8839,8 @@
     "amount": 273.23
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0.003306
  },
  {
   "address": "0x1BBe8F396f7410bBDE0Ac85d1D99d9D9Ec680B27",
@@ -8436,7 +8852,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0x620634668fBEFc63fa130726ee1a4a54F23Dc9ee",
@@ -8448,7 +8865,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 89.53583
  },
  {
   "address": "0xF3ed873FEB92cD94C557A0d9d11e2768721ed28D",
@@ -8460,7 +8878,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 62
  },
  {
   "address": "0x7442278F3223F890a450db47FB2F36788457Bbb1",
@@ -8495,7 +8914,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0xB5355Dd0de891ed7D7D2f54d9b1695Bd38D81485",
@@ -8507,7 +8927,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 27.69
  },
  {
   "address": "0xa35688B065a49F0d53d2a9eC93D27AA0b06d6E89",
@@ -8519,7 +8940,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 246.164053
  },
  {
   "address": "0x486fbeee6BD7AA8a8A96eFf2D919a62AB84FBa13",
@@ -8531,7 +8953,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 60.886976
  },
  {
   "address": "0x295bF38f017B5f530cf252Aa3FDAc954002Cc6A0",
@@ -8543,7 +8966,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 29.520128
  },
  {
   "address": "0x8FA3530C4249177FB5caf36AF731748FDBF7eDc7",
@@ -8555,7 +8979,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 5
  },
  {
   "address": "0xb61642CDeF7F494c603ACdb94E2617fbF8A1c5F3",
@@ -8567,7 +8992,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100.843939
  },
  {
   "address": "0x92dd147F35e9A8Fdc05b891b96dC71756e2Ab49E",
@@ -8579,7 +9005,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 148.749046
  },
  {
   "address": "0x540c44FF7B71F2487Cd11aaF53aeC1a85BFE8f7a",
@@ -8628,7 +9055,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x5A22F49e520FF44516330eFBA868cCeD309cDf5D",
@@ -8640,7 +9068,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 349.321652
  },
  {
   "address": "0xE6C4aD6Ac0b9086922c4F51b1e32f87023C651B7",
@@ -8657,7 +9086,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 645.420666
  },
  {
   "address": "0x0E89B6b0cB84e41764bFDc2F0858C55950A0C26c",
@@ -8675,7 +9105,8 @@
     "amount": 6000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x808A023B72260170c95d831F589A1ae0DCa1e43E",
@@ -8693,7 +9124,8 @@
     "amount": 20365.352714
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xE5b611d4c0226010cCA4663F21a667Ee657eB129",
@@ -8705,7 +9137,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 332.196565
  },
  {
   "address": "0x0937F2c313dF9Ec5fb84707Af7715bfb03a2fF93",
@@ -8717,7 +9150,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 1029
  },
  {
   "address": "0xc873fBcB5DB38B87CaC2e02C28A5C504eC673d62",
@@ -8735,7 +9169,8 @@
     "amount": 496
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x9F4b5D1cEc935c2e89203210b7e12A6BC0ddB9d5",
@@ -8747,7 +9182,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 28
  },
  {
   "address": "0xCD680F523f5860F870064e5c3E54bD375B1cC763",
@@ -8759,7 +9195,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0xA098Ed4118E22e1A9C825c0AdAfb15694E9F8050",
@@ -8771,7 +9208,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 8334.850179
  },
  {
   "address": "0x58Ad65EDbeDB2D48C17F4Dd4401957093fd3B3c9",
@@ -8789,7 +9227,8 @@
     "amount": 10000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x65E2CeC88eA818ED989FfD98C7F2636B361f51d5",
@@ -8807,7 +9246,8 @@
     "amount": 2504
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x75d8f002D60c22f9119c3c8085148e315E02BD85",
@@ -8819,7 +9259,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 500
  },
  {
   "address": "0x92C48A51dF43e0EC3EBC1A53D0E6F8D40f5bACAc",
@@ -8831,7 +9272,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100077.214872
  },
  {
   "address": "0x14c90b59F95B9405113Dfedbae88fDD20C29ee36",
@@ -8861,7 +9303,8 @@
      55
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x633e99DF176d63c1109DaB56566F09508169eBff",
@@ -8932,7 +9375,8 @@
      10
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x88e99B179f25248163874E2b5dC5AAc0e2d455B9",
@@ -8944,7 +9388,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 105
  },
  {
   "address": "0x83025Fc4130a26dE9e42CDfC94840dF9bB783af4",
@@ -8956,7 +9401,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0x212e6CB3ec4BB3155b816ff874AF800b8ba6402a",
@@ -9025,7 +9471,8 @@
      10
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x1BeCe8C246E30d9067C9B0975651429E4d59C880",
@@ -9037,7 +9484,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 6
  },
  {
   "address": "0xb112f497fcEc23eFEFFD269D5d26c8d5FC25cE65",
@@ -9060,7 +9508,8 @@
     "amount": 1292.63
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x8a7F162dAaC546997cc36B6B7C528A21800507B9",
@@ -9077,7 +9526,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 75892.23
  },
  {
   "address": "0x9cB3c4A842CC7cfA656de34581Fd90fC110F714D",
@@ -9095,7 +9545,8 @@
     "amount": 400
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x2105F6e1F3cE782316ae57D1ff85085583BD7374",
@@ -9107,7 +9558,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 70
  },
  {
   "address": "0x11091AE7c462a2978863759F46E1056D04eA4999",
@@ -9119,7 +9571,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 10000
  },
  {
   "address": "0x9c0714C7221B4AcA2faC7D4387A36ebc94aC7957",
@@ -9131,7 +9584,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 49.438418
  },
  {
   "address": "0x0f3C2476FBF0ed09DFf00EA7f4eF252DcC72E6f1",
@@ -9160,7 +9614,8 @@
      20
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0xeF30926C28769A6ea1Fa260e096884C917CA3EE9",
@@ -9172,7 +9627,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 81.95
  },
  {
   "address": "0x22A7f246EB9FC51C3b4763A5A360a205910a2506",
@@ -9184,7 +9640,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 230
  },
  {
   "address": "0x870485C276157aEE5660Fcb67585c34d2Ed3B506",
@@ -9196,7 +9653,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 77.11331
  },
  {
   "address": "0x46678F91Bf0d7beeBA5c03552481C19903232161",
@@ -9208,7 +9666,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 9.968179
  },
  {
   "address": "0xEf6FE9C9B351824c96e5C7a478C1e52BAdCBAEe0",
@@ -9220,7 +9679,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 8364.804734
  },
  {
   "address": "0xc44C7737E41Ec35f866b15311DDdD74d2ADab845",
@@ -9237,7 +9697,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 65
  },
  {
   "address": "0x762eF272abb4Ec00499DE215445EfD3a80446D9C",
@@ -9249,7 +9710,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 490.88
  },
  {
   "address": "0x31213d1b055Fdd1332Bd3499c3016E936047816d",
@@ -9270,7 +9732,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 11459.999988
  },
  {
   "address": "0x8EF6ae18bAEc08b2E2326A39e60670490F254A87",
@@ -9282,7 +9745,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 198.81
  },
  {
   "address": "0xa77467087fFBE0bFaBD9F404FF27B25416D465E3",
@@ -9299,7 +9763,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 150
  },
  {
   "address": "0xd5F203B357701228458321946FfF5C9527831bd1",
@@ -9311,7 +9776,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 129.12
  },
  {
   "address": "0xa7De2BaaC11Cbba798f80451F61FE4097d6de822",
@@ -9329,7 +9795,8 @@
     "amount": 5200
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 300
  },
  {
   "address": "0xF319661f8A3D9055acd7465Ef81583440194F91C",
@@ -9341,7 +9808,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 1000
  },
  {
   "address": "0x92aFe264564DeC6243449983fD83d68637D1Ec59",
@@ -9353,7 +9821,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0x236511E76f6D333486926A446A791C2326E628A7",
@@ -9371,7 +9840,8 @@
     "amount": 2000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x8fEEaa5f3Bcc9700fb8D44FC1ba018A958f67bFe",
@@ -9389,7 +9859,8 @@
     "amount": 9999.320238
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xA0b5dc2326FD82909189373665A8d7C5d4251422",
@@ -9401,7 +9872,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 103
  },
  {
   "address": "0x9Dc03477A733C1d580d0Fa76e9DCFfdbdA9C89B0",
@@ -9442,7 +9914,8 @@
      10
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x2809a4e75cf664A006476D7ec4f414bC7f498aD4",
@@ -9454,7 +9927,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 80
  },
  {
   "address": "0x30d4a012DA4b3aAE741698FeB16F703fc77265BB",
@@ -9472,7 +9946,8 @@
     "amount": 434
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x4Fdd2d00df223d085C9EC5116dDbBefDf23ef5cC",
@@ -9484,7 +9959,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 69.86
  },
  {
   "address": "0xF182A70507e2E7c8b2290bCDAb2835647f456456",
@@ -9496,7 +9972,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 200
  },
  {
   "address": "0x015eA041f9Aab96AEf7F9194d6ef95D9Afb48804",
@@ -9514,7 +9991,8 @@
     "amount": 132184.405054
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xAeddA794d43e605E20550093190B1b5dedfa4F8b",
@@ -9526,7 +10004,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 194
  },
  {
   "address": "0xAEfe9CA7DD1dD5BeD4137517D4a4551671163a20",
@@ -9544,7 +10023,8 @@
     "amount": 25000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xbb36Ec20728996c92bF72334fC12503Af6C6A7fB",
@@ -9556,7 +10036,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 98.579921
  },
  {
   "address": "0x78ecf4763bF75acb6e8B2456FD7615443C574a64",
@@ -9568,7 +10049,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 418.811954
  },
  {
   "address": "0xc5D16847874F3C47C5dfEc353d01105896459D0f",
@@ -9605,7 +10087,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0xaD65d9dc54A464aF3db7C5AE51E1EED65B65761D",
@@ -9623,7 +10106,8 @@
     "amount": 490
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x9D8bef1D3c4aA35a147dFe58aae51cb5B68b2c90",
@@ -9643,7 +10127,8 @@
      5
     ]
    }
-  ]
+  ],
+  "balance": 461.629994
  },
  {
   "address": "0xf2F9f4b0C1b63E511D9E62E9502E1629eded2E59",
@@ -9655,7 +10140,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 800
  },
  {
   "address": "0xE6adC58E4e4C767e30e6a7dE726f6326B3922f25",
@@ -9686,7 +10172,8 @@
      50
     ]
    }
-  ]
+  ],
+  "balance": 0.009997
  },
  {
   "address": "0xe3522d2704a55Ba0C7cfa5a5D704eca604FC0Cd7",
@@ -9698,7 +10185,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0xEe8AE786985AE2eEce3978B0c3C7d177e2539E7b",
@@ -9710,7 +10198,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 5500
  },
  {
   "address": "0x710665F60B71737A73D00B0cBf00aC92561B475F",
@@ -9728,7 +10217,8 @@
     "amount": 3348.527234
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x357dfdC34F93388059D2eb09996d80F233037cBa",
@@ -9771,7 +10261,8 @@
     "amount": 200000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x3a880F126f5804fd571c5d5D491C08aa0Dd79005",
@@ -9789,7 +10280,8 @@
     "amount": 69544.267793
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x707a9EF81D9044ae2433c56D218D5e0EE439d961",
@@ -9801,7 +10293,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 1700
  },
  {
   "address": "0x1501B48D52EC034C9B87A646D669DE2738a3714C",
@@ -9813,7 +10306,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 190
  },
  {
   "address": "0xda4BCD3eD7C54BbEdCA1012bDF9999140B9Ec840",
@@ -9825,7 +10319,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 4.5
  },
  {
   "address": "0x85613F59aCe83Fa4f98a1f37b5f9dD34B6797381",
@@ -9837,7 +10332,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 50
  },
  {
   "address": "0xA29eDC0aC0e61CD26b9e3731C72D57fC604411F2",
@@ -9849,7 +10345,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 10
  },
  {
   "address": "0x2e42A35638a2B927fA6e0Add2fF9Ca6769BcdF18",
@@ -9861,7 +10358,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0xda891673F0f0dac67EF6867F863d8b9eAf71b034",
@@ -9873,7 +10371,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 545
  },
  {
   "address": "0x7b524E5121fBA5Add1BeA0A3f05Eb5BDc6252E94",
@@ -9885,7 +10384,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0x159310C3D671e5277Ae29E10f023f42589701191",
@@ -9921,7 +10421,8 @@
      10
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x3fC4538941466EF90DDb2C3251616B19C2D82c58",
@@ -9933,7 +10434,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 144.42
  },
  {
   "address": "0xF275dE16c1019002E81bB5096b267b818b97149B",
@@ -9985,7 +10487,8 @@
      60
     ]
    }
-  ]
+  ],
+  "balance": 64578.926602
  },
  {
   "address": "0x12a8d8B1Ad14dE9757755dfc3E62Ff0bd1147041",
@@ -9997,7 +10500,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 10
  },
  {
   "address": "0xF63F5FCC54f5fd11f3c098053F330E032E4D9259",
@@ -10009,7 +10513,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 3312150.809731
  },
  {
   "address": "0xf38572C8375DBf08f137BB7F32270c3e21ED5D89",
@@ -10021,7 +10526,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 105.323676
  },
  {
   "address": "0xC3A38E8DD695e42Dbd9a5E3c25B0b8cfc9315F27",
@@ -10033,7 +10539,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 117.388769
  },
  {
   "address": "0x19924aaB0f54c53A8C21937cc0aCf69c59927f87",
@@ -10045,7 +10552,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 15
  },
  {
   "address": "0x224e69025A2f705C8f31EFB6694398f8Fd09ac5C",
@@ -10063,7 +10571,8 @@
     "amount": 95
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 5
  },
  {
   "address": "0x782E256f781Af7Bb9EB0Ee117ea001194D21903F",
@@ -10101,7 +10610,8 @@
      10
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x57D3D9F381582632Ec3936b5170F41280728d66f",
@@ -10118,7 +10628,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 50
  },
  {
   "address": "0x79f08F2e75A8C99428DE4A2e6456c07C99E55da5",
@@ -10150,7 +10661,8 @@
      60
     ]
    }
-  ]
+  ],
+  "balance": 1225115.097005
  },
  {
   "address": "0x9482B421B876d213C11135c8D488B9FcFb48bb4A",
@@ -10182,7 +10694,8 @@
      15
     ]
    }
-  ]
+  ],
+  "balance": 1196157.02526
  },
  {
   "address": "0x89Dc27491d286771f72819D805d3Acc8A43E2638",
@@ -10194,7 +10707,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 150
  },
  {
   "address": "0x9288D36548b084d0ADCa9376E7E2C7263Ce5426A",
@@ -10206,7 +10720,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0xbc573fb377abe843ac7DB5CC6AA2815c0C896a37",
@@ -10218,7 +10733,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0xbc2E5e5C2F6140837942fc4EEf7E827e37B324D7",
@@ -10230,7 +10746,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 53.439958
  },
  {
   "address": "0xE0d4D9434Dec9A23d6dA52CDC148dC3DdcF338Ce",
@@ -10242,7 +10759,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 250
  },
  {
   "address": "0xD78269062aC48a23df529bD1aA654409B3544fFc",
@@ -10265,7 +10783,8 @@
     "amount": 144.2
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0.002912
  },
  {
   "address": "0xa4b5c35683A2368ad8CedBFC44Ac646ea02DE6A2",
@@ -10277,7 +10796,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 110.67
  },
  {
   "address": "0x605959Ed62f5C80b9F9D964f835827dB6adb15DA",
@@ -10289,7 +10809,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0x0Ac9c6c2754A298DdAc58b25d33885909a237fE0",
@@ -10301,7 +10822,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 19998.474554
  },
  {
   "address": "0xB592CfeF02f692C97C2b7Ab297CE127868cb38d5",
@@ -10313,7 +10835,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 10000
  },
  {
   "address": "0x536C404ab9E4e351D604C46861DDdb70B2D51E2D",
@@ -10325,7 +10848,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 260
  },
  {
   "address": "0x07a84C2449505F34DaA9aF962571d464f8CA267A",
@@ -10337,7 +10861,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 4
  },
  {
   "address": "0x476998b4624D97A83a5C6695EE698e287051cdeC",
@@ -10349,7 +10874,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 98.53
  },
  {
   "address": "0x1d05c8742Ff60B5D52C8A19E690214e287Ee49e1",
@@ -10361,7 +10887,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 300
  },
  {
   "address": "0xD26B9A32606B276413C7EB68E0B236E882caE0F3",
@@ -10373,7 +10900,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 10223.156106
  },
  {
   "address": "0xa1Bf1a865F875E21a1Ef0b6D5EEA4A694384506d",
@@ -10385,7 +10913,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 14999
  },
  {
   "address": "0x7aB811dD840E331C16becA9D0dCc1D76005cDEd7",
@@ -10397,7 +10926,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 200
  },
  {
   "address": "0xbBDF6a7f99866503218f0e6fE6206bc5E1F48163",
@@ -10409,7 +10939,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 99.292912
  },
  {
   "address": "0xAaE697f9BfEa16B2010cDCd06e1fB7D46D6b8986",
@@ -10421,7 +10952,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 109014.240929
  },
  {
   "address": "0x68BDD37b9aD6Ef885e85237A075B104a50AfC1f1",
@@ -10433,7 +10965,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 100
  },
  {
   "address": "0x2D2397894E114b5C054673ccEAa98b20d5d79521",
@@ -10445,7 +10978,8 @@
    }
   ],
   "withdrawals": [],
-  "claims": []
+  "claims": [],
+  "balance": 795
  },
  {
   "address": "0xe866d36a84ff74cA4D9277Abcb83640bB2cD2523",
@@ -10457,7 +10991,8 @@
     "amount": 70000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0x00E6acB9346c6d4940a167F7b196104fa7D84c85",
@@ -10477,7 +11012,8 @@
      505
     ]
    }
-  ]
+  ],
+  "balance": 0
  },
  {
   "address": "0x1db6aD3344F1Ae0A495b28B031B80cDDd99f2FD0",
@@ -10489,7 +11025,8 @@
     "amount": 700
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xd605bB8A3DA1f7f777276D3c97c828aAc3Dd4252",
@@ -10501,7 +11038,8 @@
     "amount": 108000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 51000
  },
  {
   "address": "0x7F069ACB8B641988626c911EBCbd6cb3DEa582aA",
@@ -10513,7 +11051,8 @@
     "amount": 700
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xC46D0da8017aeB08C9f1A37fE6943D290E356CE5",
@@ -10525,7 +11064,8 @@
     "amount": 700
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  },
  {
   "address": "0xB74659A1011F6DCA3BA6F6e22a71bA8f414F36A1",
@@ -10537,6 +11077,7 @@
     "amount": 2000
    }
   ],
-  "claims": []
+  "claims": [],
+  "balance": 0
  }
 ]

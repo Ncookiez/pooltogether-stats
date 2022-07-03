@@ -1,20 +1,23 @@
 
 // Imports:
-import { parseBN } from 'weaverfi/dist/functions.js';
-import { prizePoolABI, prizeDistributorABI } from './ABIs.js';
+import { prizePoolABI, prizeDistributorABI, ticketABI } from './ABIs.js';
+import { parseBN, multicallOneContractQuery } from 'weaverfi/dist/functions.js';
 import { getChainName, queryBlocks, writeJSON, readJSON, getLatestBlock } from './functions.js';
 
 // Ethereum Contract Addresses:
 const ethPrizePool = '0xd89a09084555a7D0ABe7B111b1f78DFEdDd638Be';
 const ethPrizeDistributor = '0xb9a179DcA5a7bf5f8B9E088437B3A85ebB495eFe';
+const ethTicket = '0xdd4d117723C257CEe402285D3aCF218E9A8236E1';
 
 // Polygon Contract Addresses:
 const polyPrizePool = '0x19DE635fb3678D8B8154E37d8C9Cdf182Fe84E60';
 const polyPrizeDistributor = '0x8141BcFBcEE654c5dE17C4e2B2AF26B67f9B9056';
+const polyTicket = '0x6a304dFdb9f808741244b6bfEe65ca7B3b3A6076';
 
 // Avalanche Contract Addresses:
 const avaxPrizePool = '0xF830F5Cb2422d555EC34178E27094a816c8F95EC';
 const avaxPrizeDistributor = '0x83332F908f403ce795D90f677cE3f382FE73f3D1';
+const avaxTicket = '0xB27f379C050f6eD0973A01667458af6eCeBc1d90';
 
 /* ====================================================================================================================================================== */
 
@@ -33,9 +36,12 @@ const executeQueries = async () => {
     await queryDeposits(chain);
     await queryWithdrawals(chain);
     await queryClaims(chain);
-    formatWallets(chain);
+    await queryWallets(chain);
   })());
   await Promise.all(promises);
+
+  // Timestamp Update:
+  updateTimestamp();
 }
 
 /* ====================================================================================================================================================== */
@@ -154,8 +160,8 @@ const queryClaims = async (chain) => {
 
 /* ====================================================================================================================================================== */
 
-// Function to format wallet data on a specific chain:
-const formatWallets = (chain) => {
+// Function to query and format wallet data on a specific chain:
+const queryWallets = async (chain) => {
 
   // Initializations:
   const fileName = `${chain}Wallets`;
@@ -164,6 +170,8 @@ const formatWallets = (chain) => {
   const withdrawals = readJSON(`${chain}Withdrawals`);
   const claims = readJSON(`${chain}Claims`);
   let wallets = [];
+  let balanceCalls = [];
+  let balances;
 
   // Filtering Deposits Data:
   deposits.forEach(deposit => {
@@ -175,7 +183,7 @@ const formatWallets = (chain) => {
         deposits: [depositTX],
         withdrawals: [],
         claims: []
-      })
+      });
     } else {
       wallets[existingWallet].deposits.push(depositTX);
     }
@@ -191,7 +199,7 @@ const formatWallets = (chain) => {
         deposits: [],
         withdrawals: [withdrawalTX],
         claims: []
-      })
+      });
     } else {
       wallets[existingWallet].withdrawals.push(withdrawalTX);
     }
@@ -207,15 +215,41 @@ const formatWallets = (chain) => {
         deposits: [],
         withdrawals: [],
         claims: [claimTX]
-      })
+      });
     } else {
       wallets[existingWallet].claims.push(claimTX);
     }
   });
-  console.log(`${chainName}: Formatted wallet data for ${wallets.length} wallets.`);
+
+  // Adding V4 Balances:
+  wallets.forEach(wallet => {
+    balanceCalls.push({ reference: wallet.address, methodName: 'balanceOf', methodParameters: [wallet.address] });
+  });
+  if(chain === 'eth') {
+    balances = await multicallOneContractQuery(chain, ethTicket, ticketABI, balanceCalls);
+  } else if(chain === 'poly') {
+    balances = await multicallOneContractQuery(chain, polyTicket, ticketABI, balanceCalls);
+  } else if(chain === 'avax') {
+    balances = await multicallOneContractQuery(chain, avaxTicket, ticketABI, balanceCalls);
+  }
+  wallets.forEach(wallet => {
+    if(balances[wallet.address]) {
+      wallet.balance = parseBN(balances[wallet.address][0]) / (10 ** 6);
+    } else {
+      console.warn('Wallet not found:', wallet.address);
+    }
+  });
+  console.log(`${chainName}: Queried wallet data for ${wallets.length} wallets.`);
 
   // Saving Wallet Data:
   writeJSON(wallets, fileName, true);
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to timestamp for last query:
+const updateTimestamp = () => {
+  writeJSON([{ timestamp: Date.now() }], 'timestamp', true);
 }
 
 /* ====================================================================================================================================================== */

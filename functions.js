@@ -26,11 +26,11 @@ export const queryBlocks = async (chain, address, abi, event, querySize, info, s
 
   // Percentages:
   let percentages = {
-    10: false,
-    25: false,
-    50: false,
+    90: false,
     75: false,
-    90: false
+    50: false,
+    25: false,
+    10: false
   }
 
   // Setting End Block:
@@ -54,9 +54,13 @@ export const queryBlocks = async (chain, address, abi, event, querySize, info, s
       results.push(...result);
       lastQueriedBlock = targetBlock;
       for(let percentage in percentages) {
-        if(lastQueriedBlock < endBlock && percentages[percentage] === false && (((lastQueriedBlock - startBlock) / (endBlock - startBlock)) * 100) > parseInt(percentage)) {
-          percentages[percentage] = true;
-          console.log(`${chainName}: Queries ${percentage}% done...`);
+        if(!percentages[percentage]) {
+          if(lastQueriedBlock < endBlock && (((lastQueriedBlock - startBlock) / (endBlock - startBlock)) * 100) > parseInt(percentage)) {
+            percentages[percentage] = true;
+            console.log(`${chainName}: Queries ${percentage}% done...`);
+          }
+        } else {
+          break;
         }
       }
     }
