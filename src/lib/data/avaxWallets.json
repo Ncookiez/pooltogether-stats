@@ -29527,6 +29527,11 @@
     "tx": "0x3755f4670c71560d34d7c736aab97f6f51ce54c4adaaf4ff53fa17c97a4b4396",
     "block": 16714590,
     "amount": 32.536958
+   },
+   {
+    "tx": "0x88ffac113783ac2cb7b13dffe41c86cc319a1870ed20088ddfea83a2ca2b1142",
+    "block": 16833818,
+    "amount": 26.311227
    }
   ],
   "withdrawals": [],
@@ -29541,6 +29546,13 @@
    {
     "tx": "0x2808312093fa886075851213945b2b6ad480d05e7ce48b8e284a3a7f36cfc166",
     "block": 16239141,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0xd4ff75156da6ad8141e79b5259cebb48b94acf211a4b73149d70caeeeb53b8b1",
+    "block": 16833622,
     "prizes": [
      5
     ]
@@ -41919,6 +41931,13 @@
     "prizes": [
      5
     ]
+   },
+   {
+    "tx": "0x278481a56f78aa259a306ff685646ee8d68d65b192c74546164e0b1bc02b5999",
+    "block": 16843701,
+    "prizes": [
+     5
+    ]
    }
   ]
  },
@@ -42858,6 +42877,13 @@
    {
     "tx": "0x5a6384220d899b64ed97f22ec271a9e458577c961c7efd112602f13237500dd0",
     "block": 15956276,
+    "prizes": [
+     5
+    ]
+   },
+   {
+    "tx": "0x4c61c41b529884ce57016cc4ac0c9245f37c0ff4669559961d02604f78e423cc",
+    "block": 16842955,
     "prizes": [
      5
     ]
@@ -49698,7 +49724,13 @@
     "amount": 883.007338
    }
   ],
-  "withdrawals": [],
+  "withdrawals": [
+   {
+    "tx": "0x910ec26a56eeafe0095cd0f23498974eda90700e57d21a69ae85bbf89926419d",
+    "block": 16830769,
+    "amount": 883
+   }
+  ],
   "claims": []
  },
  {
@@ -51302,7 +51334,13 @@
     "amount": 4
    }
   ],
-  "withdrawals": [],
+  "withdrawals": [
+   {
+    "tx": "0xe559336ab4a370118b845f7037cdd71da9090a366a9980f03fa108bae2dd9ee1",
+    "block": 16837223,
+    "amount": 4
+   }
+  ],
   "claims": []
  },
  {
@@ -61613,7 +61651,13 @@
     "amount": 4.01
    }
   ],
-  "withdrawals": [],
+  "withdrawals": [
+   {
+    "tx": "0x90532869935dfeae1ca153b523f10803850d2229a36b874503608d54c3ddbee6",
+    "block": 16843548,
+    "amount": 4.01
+   }
+  ],
   "claims": []
  },
  {
@@ -61895,7 +61939,13 @@
     "amount": 4.02
    }
   ],
-  "withdrawals": [],
+  "withdrawals": [
+   {
+    "tx": "0x6dca0fa0338f2bc7f7adb7fa3a8dafaeb8939eb44ef779147e6764cc804e6034",
+    "block": 16843576,
+    "amount": 4.02
+   }
+  ],
   "claims": []
  },
  {
@@ -62261,7 +62311,13 @@
     "amount": 4.06966
    }
   ],
-  "withdrawals": [],
+  "withdrawals": [
+   {
+    "tx": "0xf70ceb0c274c0801413abca1db694d7271a7bc6a848a4e164094207258fc8465",
+    "block": 16843526,
+    "amount": 4.06966
+   }
+  ],
   "claims": []
  },
  {
@@ -62507,7 +62563,13 @@
     "amount": 4.108227
    }
   ],
-  "withdrawals": [],
+  "withdrawals": [
+   {
+    "tx": "0x2897658bb43223b0e5d0ee06e10ce55009c71ba2d83290eef1d258b6618b33ac",
+    "block": 16843500,
+    "amount": 4.108227
+   }
+  ],
   "claims": []
  },
  {
@@ -62579,7 +62641,13 @@
     "amount": 4.324539
    }
   ],
-  "withdrawals": [],
+  "withdrawals": [
+   {
+    "tx": "0x073dd3e575a0538e13ea2c38c1625cac68923ad205948c4fd56d13246ad54d39",
+    "block": 16840081,
+    "amount": 4.324539
+   }
+  ],
   "claims": []
  },
  {
@@ -63083,7 +63151,13 @@
     "amount": 5
    }
   ],
-  "withdrawals": [],
+  "withdrawals": [
+   {
+    "tx": "0x7399afe6a9de910ee3f9efa69a99d02db9aac526ef762b0faa71756d46d4733f",
+    "block": 16832167,
+    "amount": 5
+   }
+  ],
   "claims": []
  },
  {
@@ -64942,7 +65016,13 @@
     "amount": 4.344759
    }
   ],
-  "withdrawals": [],
+  "withdrawals": [
+   {
+    "tx": "0xe552b7c818406e07d8cdc593fef8e9a7423c6fd551581e498edd7f4feb1d4223",
+    "block": 16828960,
+    "amount": 4.344759
+   }
+  ],
   "claims": []
  },
  {
@@ -67461,7 +67541,13 @@
     "amount": 4.12
    }
   ],
-  "withdrawals": [],
+  "withdrawals": [
+   {
+    "tx": "0x6c1b45282fb93c0adcddd0a104dd299e1bed43ae3bfd539ce3c5d85a7d9ebf4b",
+    "block": 16834137,
+    "amount": 4.12
+   }
+  ],
   "claims": []
  },
  {
@@ -73525,7 +73611,13 @@
     "amount": 4.500438
    }
   ],
-  "withdrawals": [],
+  "withdrawals": [
+   {
+    "tx": "0x8e36f0f6ceafde2833eeead34da628df9cf3ee2945b596b5a259749f9f066153",
+    "block": 16841366,
+    "amount": 4.500438
+   }
+  ],
   "claims": []
  },
  {
