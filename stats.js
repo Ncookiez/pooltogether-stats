@@ -42,6 +42,7 @@ const executeStats = async () => {
   // Stats Selection:
   for(let chain of chains) {
     calcDepositsOverTime(chain);
+    calcWithdrawalsOverTime(chain);
   }
 }
 
@@ -109,6 +110,72 @@ export const calcDepositsOverTime = (chain) => {
 
   // Saving Data:
   writeJSON([depositsOverTime], fileName, true);
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to calculate withdrawals over time:
+export const calcWithdrawalsOverTime = (chain) => {
+
+  // Initializations:
+  const fileName = `${chain}WithdrawalsOverTime`;
+  let withdrawals;
+  let start;
+  let endBlock;
+  let blocks = [];
+  let withdrawalsOverTime = {
+    timestamps: [],
+    withdrawalAmounts: [],
+    withdrawalCounts: [],
+    avgWithdrawalAmounts: [],
+    cumulativeWithdrawalAmounts: [],
+    cumulativeWithdrawalCounts: []
+  }
+
+  // Selecting Data:
+  if(chain === 'eth') {
+    withdrawals = ethWithdrawals;
+    start = ethStart;
+    endBlock = snapshot.ethBlock;
+  } else if(chain === 'poly') {
+    withdrawals = polyWithdrawals;
+    start = polyStart;
+    endBlock = snapshot.polyBlock;
+  } else {
+    withdrawals = avaxWithdrawals;
+    start = avaxStart;
+    endBlock = snapshot.avaxBlock;
+  }
+
+  // Setting Arrays:
+  blocks = getRangeArray(start.block, endBlock, tickCount);
+  withdrawalsOverTime.timestamps = getRangeArray(start.timestamp, snapshot.timestamp, tickCount);
+
+  // Filtering Data:
+  let cumulativeWithdrawalAmount = 0;
+  let cumulativeWithdrawalCount = 0;
+  for(let i = 0; i < tickCount; i++) {
+    let withdrawalAmount = 0;
+    let withdrawalCount = 0;
+    withdrawals.forEach(withdrawal => {
+      if(withdrawal.block <= blocks[i]) {
+        if((i > 0 && withdrawal.block > blocks[i - 1]) || i === 0) {
+          withdrawalAmount += withdrawal.amount;
+          withdrawalCount++;
+        }
+      }
+    });
+    cumulativeWithdrawalAmount += withdrawalAmount;
+    cumulativeWithdrawalCount += withdrawalCount;
+    withdrawalsOverTime.withdrawalAmounts.push(Math.floor(withdrawalAmount));
+    withdrawalsOverTime.withdrawalCounts.push(withdrawalCount);
+    withdrawalsOverTime.avgWithdrawalAmounts.push(withdrawalCount > 0 ? Math.floor(withdrawalAmount / withdrawalCount) : 0);
+    withdrawalsOverTime.cumulativeWithdrawalAmounts.push(Math.floor(cumulativeWithdrawalAmount));
+    withdrawalsOverTime.cumulativeWithdrawalCounts.push(cumulativeWithdrawalCount);
+  }
+
+  // Saving Data:
+  writeJSON([withdrawalsOverTime], fileName, true);
 }
 
 /* ====================================================================================================================================================== */
