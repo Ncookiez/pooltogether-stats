@@ -169,9 +169,10 @@ const queryWallets = async (chain) => {
   const deposits = readJSON(`${chain}Deposits`);
   const withdrawals = readJSON(`${chain}Withdrawals`);
   const claims = readJSON(`${chain}Claims`);
+  const callsBatchSize = 500;
   let wallets = [];
   let balanceCalls = [];
-  let balances;
+  let balanceCallsMade = 0;
 
   // Filtering Deposits Data:
   deposits.forEach(deposit => {
@@ -225,20 +226,26 @@ const queryWallets = async (chain) => {
   wallets.forEach(wallet => {
     balanceCalls.push({ reference: wallet.address, methodName: 'balanceOf', methodParameters: [wallet.address] });
   });
-  if(chain === 'eth') {
-    balances = await multicallOneContractQuery(chain, ethTicket, ticketABI, balanceCalls);
-  } else if(chain === 'poly') {
-    balances = await multicallOneContractQuery(chain, polyTicket, ticketABI, balanceCalls);
-  } else if(chain === 'avax') {
-    balances = await multicallOneContractQuery(chain, avaxTicket, ticketABI, balanceCalls);
-  }
-  wallets.forEach(wallet => {
-    if(balances[wallet.address]) {
-      wallet.balance = parseBN(balances[wallet.address][0]) / (10 ** 6);
-    } else {
-      console.warn('Wallet not found:', wallet.address);
+  while(balanceCallsMade < balanceCalls.length) {
+    let balances;
+    let lastCallIndex = Math.min(balanceCallsMade + callsBatchSize, balanceCalls.length);
+    if(chain === 'eth') {
+      balances = await multicallOneContractQuery(chain, ethTicket, ticketABI, balanceCalls.slice(balanceCallsMade, lastCallIndex));
+    } else if(chain === 'poly') {
+      balances = await multicallOneContractQuery(chain, polyTicket, ticketABI, balanceCalls.slice(balanceCallsMade, lastCallIndex));
+    } else if(chain === 'avax') {
+      balances = await multicallOneContractQuery(chain, avaxTicket, ticketABI, balanceCalls.slice(balanceCallsMade, lastCallIndex));
     }
-  });
+    balanceCallsMade = lastCallIndex;
+    for(let address in balances) {
+      let wallet = wallets.find(wallet => wallet.address === address);
+      if(wallet) {
+        wallet.balance = parseBN(balances[wallet.address][0]) / (10 ** 6);
+      } else {
+        console.warn('Wallet not found:', wallet.address);
+      }
+    }
+  }
   console.log(`${chainName}: Queried wallet data for ${wallets.length} wallets.`);
 
   // Saving Wallet Data:

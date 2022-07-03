@@ -68298,9 +68298,15 @@
     "amount": 5
    }
   ],
-  "withdrawals": [],
+  "withdrawals": [
+   {
+    "tx": "0x368f86a4b6594ff6a3c7b2f70087c0cb8cb9589c4dbc454cad3af2af0eb15485",
+    "block": 16851109,
+    "amount": 5
+   }
+  ],
   "claims": [],
-  "balance": 5
+  "balance": 0
  },
  {
   "address": "0x481787bBa8C56f801Db8bdb336844b771c011246",
