@@ -15,6 +15,9 @@
 	<i id="heart" />
 	<span> by <a href="{githubLink}">Ncookie</a></span>
 
+	<!-- Vibing GIF -->
+	<img id="vibing" src="/images/vibing.gif" alt="We Do Be Vibin'">
+
 </footer>
 
 <!-- #################################################################################################### -->
@@ -36,6 +39,7 @@
 		letter-spacing: 0.5px;
 		text-transform: uppercase;
 		border-top: 2px solid rgba(34,40,49,0.3);
+		overflow: hidden;
 	}
 	
 	a {
@@ -58,6 +62,13 @@
 	#heart:hover {
 		background-position: right;
 		animation: moveHeart 800ms steps(28) forwards;
+	}
+
+	#vibing {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		height: 57px;
 	}
 	
 	@keyframes moveHeart {

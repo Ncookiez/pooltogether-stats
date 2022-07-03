@@ -26,11 +26,11 @@ export const queryBlocks = async (chain, address, abi, event, querySize, info, s
 
   // Percentages:
   let percentages = {
-    90: false,
-    75: false,
-    50: false,
+    10: false,
     25: false,
-    10: false
+    50: false,
+    75: false,
+    90: false
   }
 
   // Setting End Block:
@@ -54,13 +54,9 @@ export const queryBlocks = async (chain, address, abi, event, querySize, info, s
       results.push(...result);
       lastQueriedBlock = targetBlock;
       for(let percentage in percentages) {
-        if(!percentages[percentage]) {
-          if(lastQueriedBlock < endBlock && (((lastQueriedBlock - startBlock) / (endBlock - startBlock)) * 100) > parseInt(percentage)) {
-            percentages[percentage] = true;
-            console.log(`${chainName}: Queries ${percentage}% done...`);
-          }
-        } else {
-          break;
+        if(lastQueriedBlock < endBlock && percentages[percentage] === false && (((lastQueriedBlock - startBlock) / (endBlock - startBlock)) * 100) > parseInt(percentage)) {
+          percentages[percentage] = true;
+          console.log(`${chainName}: Queries ${percentage}% done...`);
         }
       }
     }
@@ -119,6 +115,14 @@ export const getLatestBlock = (file) => {
 
 /* ====================================================================================================================================================== */
 
+// Function to get current block:
+export const getCurrentBlock = (chain) => {
+  const provider = getChainProvider(chain);
+  return provider.getBlockNumber();
+}
+
+/* ====================================================================================================================================================== */
+
 // Function to get chain name:
 export const getChainName = (chain) => {
   switch(chain) {
@@ -147,4 +151,18 @@ export const getChainProvider = (chain) => {
     default:
       return undefined;
   }
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to get array of numbers:
+export const getRangeArray = (start, end, ticks) => {
+  let range = [];
+  let tick = (end - start) / ticks;
+  let value = start;
+  while(value <= end) {
+    value += tick;
+    range.push(Math.ceil(value));
+  }
+  return range;
 }

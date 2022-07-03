@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "query": "node queries.js",
+    "stats": "node stats.js",
     "dev": "svelte-kit dev",
     "build": "svelte-kit build",
     "preview": "svelte-kit preview",

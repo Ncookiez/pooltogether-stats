@@ -2,12 +2,13 @@
 
 	// Imports:
 	import { onMount } from 'svelte';
+	import { updateBlockTimestamps } from '$lib/stats';
 
 	// Initializations & Exports:
 	// :3
 
 	onMount(() => {
-		// :3
+		updateBlockTimestamps();
 	});
 	
 </script>

@@ -2,7 +2,7 @@
 // Imports:
 import { prizePoolABI, prizeDistributorABI, ticketABI } from './ABIs.js';
 import { parseBN, multicallOneContractQuery } from 'weaverfi/dist/functions.js';
-import { getChainName, queryBlocks, writeJSON, readJSON, getLatestBlock } from './functions.js';
+import { getChainName, queryBlocks, writeJSON, readJSON, getLatestBlock, getCurrentBlock } from './functions.js';
 
 // Ethereum Contract Addresses:
 const ethPrizePool = '0xd89a09084555a7D0ABe7B111b1f78DFEdDd638Be';
@@ -40,8 +40,8 @@ const executeQueries = async () => {
   })());
   await Promise.all(promises);
 
-  // Timestamp Update:
-  updateTimestamp();
+  // Snapshot Update:
+  await updateSnapshot();
 }
 
 /* ====================================================================================================================================================== */
@@ -66,15 +66,17 @@ const queryDeposits = async (chain) => {
   console.log(`${chainName}: Found ${depositEvents.length} deposit events.`);
 
   // Formatting Deposit Events:
-  depositEvents.forEach(event => {
-    deposits.push({
-      txHash: event.transactionHash,
-      block: event.blockNumber,
-      wallet: event.args.operator,
-      amount: parseBN(event.args.amount) / (10 ** 6)
+  if(depositEvents.length > 0) {
+    depositEvents.forEach(event => {
+      deposits.push({
+        txHash: event.transactionHash,
+        block: event.blockNumber,
+        wallet: event.args.operator,
+        amount: parseBN(event.args.amount) / (10 ** 6)
+      });
     });
-  });
-  console.log(`${chainName}: Formatted events to ${deposits.length} Deposit TXs.`);
+    console.log(`${chainName}: Formatted events to ${deposits.length} Deposit TXs.`);
+  }
 
   // Saving Formatted Data:
   writeJSON(deposits, fileName);
@@ -102,15 +104,17 @@ const queryWithdrawals = async (chain) => {
   console.log(`${chainName}: Found ${withdrawalEvents.length} withdrawal events.`);
 
   // Formatting Withdrawal Events:
-  withdrawalEvents.forEach(event => {
-    withdrawals.push({
-      txHash: event.transactionHash,
-      block: event.blockNumber,
-      wallet: event.args.operator,
-      amount: parseBN(event.args.amount) / (10 ** 6)
+  if(withdrawalEvents.length > 0) {
+    withdrawalEvents.forEach(event => {
+      withdrawals.push({
+        txHash: event.transactionHash,
+        block: event.blockNumber,
+        wallet: event.args.operator,
+        amount: parseBN(event.args.amount) / (10 ** 6)
+      });
     });
-  });
-  console.log(`${chainName}: Formatted events to ${withdrawals.length} Withdrawal TXs.`);
+    console.log(`${chainName}: Formatted events to ${withdrawals.length} Withdrawal TXs.`);
+  }
 
   // Saving Formatted Data:
   writeJSON(withdrawals, fileName);
@@ -138,21 +142,23 @@ const queryClaims = async (chain) => {
   console.log(`${chainName}: Found ${claimEvents.length} claim events.`);
 
   // Formatting Claim Events:
-  claimEvents.forEach(event => {
-    let prize = Math.ceil(parseBN(event.args.payout) / (10 ** 6));
-    let existingTX = claims.map(claim => claim.txHash).indexOf(event.transactionHash);
-    if(existingTX === -1) {
-      claims.push({
-        txHash: event.transactionHash,
-        block: event.blockNumber,
-        wallet: event.args.user,
-        prizes: [prize]
-      });
-    } else {
-      claims[existingTX].prizes.push(prize);
-    }
-  });
-  console.log(`${chainName}: Formatted events to ${claims.length} Claim TXs.`);
+  if(claimEvents.length > 0) {
+    claimEvents.forEach(event => {
+      let prize = Math.ceil(parseBN(event.args.payout) / (10 ** 6));
+      let existingTX = claims.map(claim => claim.txHash).indexOf(event.transactionHash);
+      if(existingTX === -1) {
+        claims.push({
+          txHash: event.transactionHash,
+          block: event.blockNumber,
+          wallet: event.args.user,
+          prizes: [prize]
+        });
+      } else {
+        claims[existingTX].prizes.push(prize);
+      }
+    });
+    console.log(`${chainName}: Formatted events to ${claims.length} Claim TXs.`);
+  }
 
   // Saving Formatted Data:
   writeJSON(claims, fileName);
@@ -254,9 +260,15 @@ const queryWallets = async (chain) => {
 
 /* ====================================================================================================================================================== */
 
-// Function to timestamp for last query:
-const updateTimestamp = () => {
-  writeJSON([{ timestamp: Date.now() }], 'timestamp', true);
+// Function to update snapshot for last query execution:
+const updateSnapshot = async () => {
+  let snapshot = {
+    timestamp: Math.floor(Date.now() / 1000),
+    ethBlock: await getCurrentBlock('eth'),
+    polyBlock: await getCurrentBlock('poly'),
+    avaxBlock: await getCurrentBlock('avax')
+  }
+  writeJSON([snapshot], 'snapshot', true);
 }
 
 /* ====================================================================================================================================================== */
