@@ -55597,7 +55597,13 @@
     "amount": 4.995642
    }
   ],
-  "withdrawals": [],
+  "withdrawals": [
+   {
+    "tx": "0xbaeccb159241cf930d42a228f667a42aab2c4b7f4c676973a1989c4a9388a3cd",
+    "block": 16823364,
+    "amount": 4.995642
+   }
+  ],
   "claims": []
  },
  {

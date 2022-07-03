@@ -3556,5 +3556,11 @@
   "block": 15065200,
   "wallet": "0xbBDF6a7f99866503218f0e6fE6206bc5E1F48163",
   "amount": 99.292912
+ },
+ {
+  "txHash": "0x72e7238d690fb30db7cd5e685459dc512bae81b8c622d458a25ed8cbddf276c0",
+  "block": 15066597,
+  "wallet": "0xAaE697f9BfEa16B2010cDCd06e1fB7D46D6b8986",
+  "amount": 109014.240929
  }
 ]

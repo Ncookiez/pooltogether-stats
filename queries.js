@@ -1,6 +1,5 @@
 
 // Imports:
-import { WeaverFi } from 'weaverfi';
 import { parseBN } from 'weaverfi/dist/functions.js';
 import { prizePoolABI, prizeDistributorABI } from './ABIs.js';
 import { getChainName, queryBlocks, writeJSON, readJSON, getLatestBlock } from './functions.js';
@@ -35,7 +34,6 @@ const executeQueries = async () => {
     await queryWithdrawals(chain);
     await queryClaims(chain);
     formatWallets(chain);
-    // await queryWalletBalances(chain);
   })());
   await Promise.all(promises);
 }
@@ -215,42 +213,6 @@ const formatWallets = (chain) => {
     }
   });
   console.log(`${chainName}: Formatted wallet data for ${wallets.length} wallets.`);
-
-  // Saving Wallet Data:
-  writeJSON(wallets, fileName, true);
-}
-
-/* ====================================================================================================================================================== */
-
-// Function to query wallet balances on a specific chain:
-const queryWalletBalances = async (chain) => {
-
-  // Initializations:
-  const fileName = `${chain}Wallets`;
-  const chainName = getChainName(chain);
-  const wallets = readJSON(`${chain}Wallets`);
-
-  // Percentages:
-  let percentages = {
-    10: false,
-    25: false,
-    50: false,
-    75: false,
-    90: false
-  }
-
-  // Querying Wallet Balances In All Projects:
-  console.log(`${chainName}: Querying project balances for ${wallets.length} wallets...`);
-  for(let i = 0; i < wallets.length; i++) {
-    wallets[i].balances = await WeaverFi[chain.toUpperCase()].getAllProjectBalances(wallets[i].address);
-    for(let percentage in percentages) {
-      if(percentages[percentage] === false && (((i + 1) / wallets.length) * 100) > parseInt(percentage)) {
-        percentages[percentage] = true;
-        console.log(`${chainName}: Wallet queries ${percentage}% done...`);
-      }
-    }
-  }
-  console.log(`${chainName}: Added wallet balance data for ${wallets.length} wallets.`);
 
   // Saving Wallet Data:
   writeJSON(wallets, fileName, true);
