@@ -43,6 +43,7 @@ const executeStats = async () => {
   for(let chain of chains) {
     calcDepositsOverTime(chain);
     calcWithdrawalsOverTime(chain);
+    calcClaimsOverTime(chain);
   }
 }
 
@@ -180,16 +181,85 @@ export const calcWithdrawalsOverTime = (chain) => {
 
 /* ====================================================================================================================================================== */
 
-// withdrawal count over time
-// withdrawal amount over time
-// claim count over time
-// claim amount over time
+// Function to calculate claims over time:
+export const calcClaimsOverTime = (chain) => {
+
+  // Initializations:
+  const fileName = `${chain}ClaimsOverTime`;
+  let claims;
+  let start;
+  let endBlock;
+  let blocks = [];
+  let claimsOverTime = {
+    timestamps: [],
+    claimAmounts: [],
+    claimCounts: [],
+    prizeCounts: [],
+    avgClaimAmounts: [],
+    cumulativeClaimAmounts: [],
+    cumulativeClaimCounts: [],
+    cumulativePrizeCounts: []
+  }
+
+  // Selecting Data:
+  if(chain === 'eth') {
+    claims = ethClaims;
+    start = ethStart;
+    endBlock = snapshot.ethBlock;
+  } else if(chain === 'poly') {
+    claims = polyClaims;
+    start = polyStart;
+    endBlock = snapshot.polyBlock;
+  } else {
+    claims = avaxClaims;
+    start = avaxStart;
+    endBlock = snapshot.avaxBlock;
+  }
+
+  // Setting Arrays:
+  blocks = getRangeArray(start.block, endBlock, tickCount);
+  claimsOverTime.timestamps = getRangeArray(start.timestamp, snapshot.timestamp, tickCount);
+
+  // Filtering Data:
+  let cumulativeClaimAmount = 0;
+  let cumulativeClaimCount = 0;
+  let cumulativePrizeCount = 0;
+  for(let i = 0; i < tickCount; i++) {
+    let claimAmount = 0;
+    let claimCount = 0;
+    let prizeCount = 0;
+    claims.forEach(claim => {
+      if(claim.block <= blocks[i]) {
+        if((i > 0 && claim.block > blocks[i - 1]) || i === 0) {
+          claimAmount += claim.prizes.reduce((a, b) => a + b, 0);
+          claimCount++;
+          prizeCount += claim.prizes.length;
+        }
+      }
+    });
+    cumulativeClaimAmount += claimAmount;
+    cumulativeClaimCount += claimCount;
+    cumulativePrizeCount += prizeCount;
+    claimsOverTime.claimAmounts.push(Math.floor(claimAmount));
+    claimsOverTime.claimCounts.push(claimCount);
+    claimsOverTime.prizeCounts.push(prizeCount);
+    claimsOverTime.avgClaimAmounts.push(claimCount > 0 ? Math.floor(claimAmount / claimCount) : 0);
+    claimsOverTime.cumulativeClaimAmounts.push(Math.floor(cumulativeClaimAmount));
+    claimsOverTime.cumulativeClaimCounts.push(cumulativeClaimCount);
+    claimsOverTime.cumulativePrizeCounts.push(cumulativePrizeCount);
+  }
+
+  // Saving Data:
+  writeJSON([claimsOverTime], fileName, true);
+}
+
+/* ====================================================================================================================================================== */
+
 // unique wallets over time
-// average withdrawal
-// average claim
 // number of users with balance but no deposit
 // claim distribution
-// deposits over time (deposits + claims - withdrawals)
+// number of each prize amount claimed
+// some stats regarding how long people wait to claim
 
 /* ====================================================================================================================================================== */
 
