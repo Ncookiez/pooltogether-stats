@@ -5,18 +5,18 @@ import { writeJSON, readJSON, getRangeArray } from "./functions.js";
 /* ====================================================================================================================================================== */
 
 // JSON Files:
-const ethDeposits = readJSON('ethDeposits');
-const ethWithdrawals = readJSON('ethWithdrawals');
-const ethClaims = readJSON('ethClaims');
-const ethWallets = readJSON('ethWallets');
-const polyDeposits = readJSON('polyDeposits');
-const polyWithdrawals = readJSON('polyWithdrawals');
-const polyClaims = readJSON('polyClaims');
-const polyWallets = readJSON('polyWallets');
-const avaxDeposits = readJSON('avaxDeposits');
-const avaxWithdrawals = readJSON('avaxWithdrawals');
-const avaxClaims = readJSON('avaxClaims');
-const avaxWallets = readJSON('avaxWallets');
+const ethDeposits = readJSON('eth/deposits');
+const ethWithdrawals = readJSON('eth/withdrawals');
+const ethClaims = readJSON('eth/claims');
+const ethWallets = readJSON('eth/wallets');
+const polyDeposits = readJSON('poly/deposits');
+const polyWithdrawals = readJSON('poly/withdrawals');
+const polyClaims = readJSON('poly/claims');
+const polyWallets = readJSON('poly/wallets');
+const avaxDeposits = readJSON('avax/deposits');
+const avaxWithdrawals = readJSON('avax/withdrawals');
+const avaxClaims = readJSON('avax/claims');
+const avaxWallets = readJSON('avax/wallets');
 const snapshot = readJSON('snapshot')[0];
 
 // Starting Block Timestamps:
@@ -34,6 +34,7 @@ export const calcStats = (chain) => {
   calcDepositsOverTime(chain);
   calcWithdrawalsOverTime(chain);
   calcClaimsOverTime(chain);
+  calcWalletsOverTime(chain);
 }
 
 /* ====================================================================================================================================================== */
@@ -42,7 +43,7 @@ export const calcStats = (chain) => {
 const calcDepositsOverTime = (chain) => {
 
   // Initializations:
-  const fileName = `${chain}DepositsOverTime`;
+  const fileName = `${chain}/depositsOverTime`;
   let deposits;
   let start;
   let endBlock;
@@ -108,7 +109,7 @@ const calcDepositsOverTime = (chain) => {
 const calcWithdrawalsOverTime = (chain) => {
 
   // Initializations:
-  const fileName = `${chain}WithdrawalsOverTime`;
+  const fileName = `${chain}/withdrawalsOverTime`;
   let withdrawals;
   let start;
   let endBlock;
@@ -174,7 +175,7 @@ const calcWithdrawalsOverTime = (chain) => {
 const calcClaimsOverTime = (chain) => {
 
   // Initializations:
-  const fileName = `${chain}ClaimsOverTime`;
+  const fileName = `${chain}/claimsOverTime`;
   let claims;
   let start;
   let endBlock;
@@ -243,6 +244,8 @@ const calcClaimsOverTime = (chain) => {
 }
 
 /* ====================================================================================================================================================== */
+
+// calcWalletsOverTime
 
 // unique wallets over time
 // number of users with balance but no deposit

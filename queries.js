@@ -56,7 +56,7 @@ const executeQueries = async () => {
 const queryDeposits = async (chain) => {
 
   // Initializations:
-  const fileName = `${chain}Deposits`;
+  const fileName = `${chain}/deposits`;
   const chainName = getChainName(chain);
   let deposits = [];
   let depositEvents = [];
@@ -81,7 +81,7 @@ const queryDeposits = async (chain) => {
         amount: parseBN(event.args.amount) / (10 ** 6)
       });
     });
-    console.log(`${chainName}: Formatted events to ${deposits.length} Deposit TXs.`);
+    console.log(`${chainName}: Formatted events to ${deposits.length} deposit TXs.`);
   }
 
   // Saving Formatted Data:
@@ -94,7 +94,7 @@ const queryDeposits = async (chain) => {
 const queryWithdrawals = async (chain) => {
 
   // Initializations:
-  const fileName = `${chain}Withdrawals`;
+  const fileName = `${chain}/withdrawals`;
   const chainName = getChainName(chain);
   let withdrawals = [];
   let withdrawalEvents = [];
@@ -119,7 +119,7 @@ const queryWithdrawals = async (chain) => {
         amount: parseBN(event.args.amount) / (10 ** 6)
       });
     });
-    console.log(`${chainName}: Formatted events to ${withdrawals.length} Withdrawal TXs.`);
+    console.log(`${chainName}: Formatted events to ${withdrawals.length} withdrawal TXs.`);
   }
 
   // Saving Formatted Data:
@@ -132,7 +132,7 @@ const queryWithdrawals = async (chain) => {
 const queryClaims = async (chain) => {
 
   // Initializations:
-  const fileName = `${chain}Claims`;
+  const fileName = `${chain}/claims`;
   const chainName = getChainName(chain);
   let claims = [];
   let claimEvents = [];
@@ -163,7 +163,7 @@ const queryClaims = async (chain) => {
         claims[existingTX].prizes.push(prize);
       }
     });
-    console.log(`${chainName}: Formatted events to ${claims.length} Claim TXs.`);
+    console.log(`${chainName}: Formatted events to ${claims.length} claim TXs.`);
   }
 
   // Saving Formatted Data:
@@ -176,11 +176,11 @@ const queryClaims = async (chain) => {
 const queryWallets = async (chain) => {
 
   // Initializations:
-  const fileName = `${chain}Wallets`;
+  const fileName = `${chain}/wallets`;
   const chainName = getChainName(chain);
-  const deposits = readJSON(`${chain}Deposits`);
-  const withdrawals = readJSON(`${chain}Withdrawals`);
-  const claims = readJSON(`${chain}Claims`);
+  const deposits = readJSON(`${chain}/deposits`);
+  const withdrawals = readJSON(`${chain}/withdrawals`);
+  const claims = readJSON(`${chain}/claims`);
   const callsBatchSize = 500;
   let wallets = [];
   let balanceCalls = [];
