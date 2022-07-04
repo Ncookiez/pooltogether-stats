@@ -31,10 +31,15 @@ const tickCount = 100;
 
 // Function to execute stats' calculations:
 export const calcStats = (chain) => {
+
+  // Basic Stats Over Time:
   calcDepositsOverTime(chain);
   calcWithdrawalsOverTime(chain);
   calcClaimsOverTime(chain);
   calcWalletsOverTime(chain);
+
+  // Other Interesting Stats:
+  findWinlessWithdrawals(chain);
 }
 
 /* ====================================================================================================================================================== */
@@ -303,12 +308,44 @@ const calcWalletsOverTime = (chain) => {
 
 /* ====================================================================================================================================================== */
 
-// <TODO> users that won prizes without deposits
+// Function to find users that withdrew without winning any prizes:
+const findWinlessWithdrawals = (chain) => {
 
-/* ====================================================================================================================================================== */
+  // Initializations:
+  const fileName = `${chain}/winlessWithdrawals`;
+  let wallets;
+  let users = [];
 
-// <TODO> users that withdrew without winning any prizes
-// deposit amount is also important here
+  // Selecting Data:
+  if(chain === 'eth') {
+    wallets = ethWallets;
+  } else if(chain === 'poly') {
+    wallets = polyWallets;
+  } else {
+    wallets = avaxWallets;
+  }
+
+  // Finding Users:
+  wallets.forEach(wallet => {
+    if(wallet.balance === 0 && wallet.claims.length === 0 && wallet.deposits.length > 0) {
+      let user = wallet.address;
+      let txs = [];
+      wallet.deposits.forEach(tx => {
+        tx.type = 'deposit';
+        txs.push(tx);
+      });
+      wallet.withdrawals.forEach(tx => {
+        tx.type = 'withdrawal';
+        txs.push(tx);
+      });
+      txs.sort((a, b) => a.block - b.block);
+      users.push({ user, txs });
+    }
+  });
+
+  // Saving Data:
+  writeJSON(users, fileName, true);
+}
 
 /* ====================================================================================================================================================== */
 
