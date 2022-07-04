@@ -1,5 +1,6 @@
 
 // Imports:
+import { calcStats } from './stats.js';
 import { prizePoolABI, prizeDistributorABI, ticketABI } from './ABIs.js';
 import { parseBN, multicallOneContractQuery } from 'weaverfi/dist/functions.js';
 import { getChainName, queryBlocks, writeJSON, readJSON, getLatestBlock, getCurrentBlock } from './functions.js';
@@ -24,14 +25,14 @@ const avaxTicket = '0xB27f379C050f6eD0973A01667458af6eCeBc1d90';
 // Function to execute queries:
 const executeQueries = async () => {
 
-  // Chain Selection:
+  // Chains:
   const chains = [
     'eth',
     'poly',
     'avax'
   ];
 
-  // Query Selection:
+  // Queries:
   let promises = chains.map(chain => (async () => {
     await queryDeposits(chain);
     await queryWithdrawals(chain);
@@ -42,6 +43,11 @@ const executeQueries = async () => {
 
   // Snapshot Update:
   await updateSnapshot();
+
+  // Stats:
+  for(let chain of chains) {
+    calcStats(chain);
+  }
 }
 
 /* ====================================================================================================================================================== */

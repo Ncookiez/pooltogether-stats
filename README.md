@@ -7,6 +7,4 @@ Querying and analyzing some PoolTogether statistics.
 
 ## Usage
 
-Use `npm run query` to update data queried on-chain.
-
-Use `npm run stats` to filter through and calculate some statistics through the latest data queried.
+Use `npm run query` to update data queried on-chain and calculate some interesting stats.

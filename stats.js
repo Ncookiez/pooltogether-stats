@@ -30,27 +30,16 @@ const tickCount = 100;
 /* ====================================================================================================================================================== */
 
 // Function to execute stats' calculations:
-const executeStats = async () => {
-
-  // Chain Selection:
-  const chains = [
-    'eth',
-    'poly',
-    'avax'
-  ];
-
-  // Stats Selection:
-  for(let chain of chains) {
-    calcDepositsOverTime(chain);
-    calcWithdrawalsOverTime(chain);
-    calcClaimsOverTime(chain);
-  }
+export const calcStats = (chain) => {
+  calcDepositsOverTime(chain);
+  calcWithdrawalsOverTime(chain);
+  calcClaimsOverTime(chain);
 }
 
 /* ====================================================================================================================================================== */
 
 // Function to calculate deposits over time:
-export const calcDepositsOverTime = (chain) => {
+const calcDepositsOverTime = (chain) => {
 
   // Initializations:
   const fileName = `${chain}DepositsOverTime`;
@@ -116,7 +105,7 @@ export const calcDepositsOverTime = (chain) => {
 /* ====================================================================================================================================================== */
 
 // Function to calculate withdrawals over time:
-export const calcWithdrawalsOverTime = (chain) => {
+const calcWithdrawalsOverTime = (chain) => {
 
   // Initializations:
   const fileName = `${chain}WithdrawalsOverTime`;
@@ -182,7 +171,7 @@ export const calcWithdrawalsOverTime = (chain) => {
 /* ====================================================================================================================================================== */
 
 // Function to calculate claims over time:
-export const calcClaimsOverTime = (chain) => {
+const calcClaimsOverTime = (chain) => {
 
   // Initializations:
   const fileName = `${chain}ClaimsOverTime`;
@@ -260,7 +249,3 @@ export const calcClaimsOverTime = (chain) => {
 // claim distribution
 // number of each prize amount claimed
 // some stats regarding how long people wait to claim
-
-/* ====================================================================================================================================================== */
-
-executeStats();
