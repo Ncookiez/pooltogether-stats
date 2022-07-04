@@ -30,17 +30,30 @@ const tickCount = 100;
 /* ====================================================================================================================================================== */
 
 // Function to execute stats' calculations:
-export const calcStats = (chain) => {
+const calcStats = () => {
 
-  // Basic Stats Over Time:
-  calcDepositsOverTime(chain);
-  calcWithdrawalsOverTime(chain);
-  calcClaimsOverTime(chain);
-  calcWalletsOverTime(chain);
+  // Chains:
+  const chains = [
+    'eth',
+    'poly',
+    'avax'
+  ];
 
-  // Other Interesting Stats:
-  findWinlessWithdrawals(chain);
-  findClaimAmountDistributions(chain);
+  // Stats:
+  console.log('# Calculating Stats');
+  for(let chain of chains) {
+    
+    // Basic Stats Over Time:
+    calcDepositsOverTime(chain);
+    calcWithdrawalsOverTime(chain);
+    calcClaimsOverTime(chain);
+    calcWalletsOverTime(chain);
+
+    // Other Interesting Stats:
+    findWinlessWithdrawals(chain);
+    findClaimAmountDistributions(chain);
+    findAverageClaimTime(chain);
+  }
 }
 
 /* ====================================================================================================================================================== */
@@ -401,8 +414,44 @@ const findClaimAmountDistributions = (chain) => {
 
 /* ====================================================================================================================================================== */
 
-// <TODO> largest claim
+// Function to find average time between first deposit and first claim:
+const findAverageClaimTime = (chain) => {
+
+  // Initializations:
+  const fileName = `${chain}/avgClaimTime`;
+  let wallets;
+  let estimatedBlockTime;
+  let claimTimes = [];
+
+  // Selecting Data:
+  if(chain === 'eth') {
+    wallets = ethWallets;
+    estimatedBlockTime = 13;
+  } else if(chain === 'poly') {
+    wallets = polyWallets;
+    estimatedBlockTime = 2.2;
+  } else {
+    wallets = avaxWallets;
+    estimatedBlockTime = 2;
+  }
+
+  // Finding Users:
+  wallets.forEach(wallet => {
+    if(wallet.claims.length > 0 && wallet.deposits.length > 0) {
+      let claimTime = wallet.claims[0].block - wallet.deposits[0].block;
+      claimTimes.push(claimTime);
+    }
+  });
+
+  // Calculating Average Claim Time:
+  let avgBlocks = Math.ceil((claimTimes.reduce((a, b) => a + b, 0) / claimTimes.length));
+  let avgClaimTimeInSeconds = Math.ceil(avgBlocks * estimatedBlockTime);
+  let avgClaimTimeInDays = Math.ceil(avgClaimTimeInSeconds / 60 / 60 / 24);
+
+  // Saving Data:
+  writeJSON([{ avgBlocks, estimatedBlockTime, avgClaimTimeInSeconds, avgClaimTimeInDays }], fileName, true);
+}
 
 /* ====================================================================================================================================================== */
 
-// <TODO> time between first deposit and first claim
+calcStats();

@@ -1,6 +1,5 @@
 
 // Imports:
-import { calcStats } from './stats.js';
 import { prizePoolABI, prizeDistributorABI, ticketABI } from './ABIs.js';
 import { parseBN, multicallOneContractQuery } from 'weaverfi/dist/functions.js';
 import { getChainName, queryBlocks, writeJSON, readJSON, getLatestBlock, getCurrentBlock } from './functions.js';
@@ -45,12 +44,6 @@ const executeQueries = async () => {
   // Snapshot Update:
   console.log('\n# Updating Snapshot');
   await updateSnapshot();
-
-  // Stats:
-  console.log('\n# Calculating Stats');
-  for(let chain of chains) {
-    calcStats(chain);
-  }
 }
 
 /* ====================================================================================================================================================== */
