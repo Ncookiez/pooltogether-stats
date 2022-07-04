@@ -40,6 +40,7 @@ export const calcStats = (chain) => {
 
   // Other Interesting Stats:
   findWinlessWithdrawals(chain);
+  findClaimAmountDistributions(chain);
 }
 
 /* ====================================================================================================================================================== */
@@ -349,8 +350,58 @@ const findWinlessWithdrawals = (chain) => {
 
 /* ====================================================================================================================================================== */
 
-// <TODO> gas costs (percentage of prize as gas)
-// maybe users losing money with claims?
+// Function to find total claim amount distributions:
+const findClaimAmountDistributions = (chain) => {
+
+  // Initializations:
+  const fileName = `${chain}/claimDistributions`;
+  let claims;
+  let totalClaims = {
+    below5: 0,
+    below10: 0,
+    below50: 0,
+    below100: 0,
+    below500: 0,
+    below1000: 0,
+    above1000: 0
+  }
+
+  // Selecting Data:
+  if(chain === 'eth') {
+    claims = ethClaims;
+  } else if(chain === 'poly') {
+    claims = polyClaims;
+  } else {
+    claims = avaxClaims;
+  }
+
+  // Finding Users:
+  claims.forEach(claim => {
+    let totalClaim = claim.prizes.reduce((a, b) => a + b, 0);
+    if(totalClaim <= 5) {
+      totalClaims.below5++;
+    } else if(totalClaim <= 10) {
+      totalClaims.below10++;
+    } else if(totalClaim <= 50) {
+      totalClaims.below50++;
+    } else if(totalClaim <= 100) {
+      totalClaims.below100++;
+    } else if(totalClaim <= 500) {
+      totalClaims.below500++;
+    } else if(totalClaim <= 1000) {
+      totalClaims.below1000++;
+    } else {
+      totalClaims.above1000++;
+    }
+  });
+
+  // Saving Data:
+  writeJSON([totalClaims], fileName, true);
+}
+
+/* ====================================================================================================================================================== */
+
+// <TODO> largest claim
 
 /* ====================================================================================================================================================== */
 
