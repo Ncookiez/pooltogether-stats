@@ -245,10 +245,76 @@ const calcClaimsOverTime = (chain) => {
 
 /* ====================================================================================================================================================== */
 
-// calcWalletsOverTime
+// Function to calculate unique new wallets over time:
+const calcWalletsOverTime = (chain) => {
 
-// unique wallets over time
-// number of users with balance but no deposit
-// claim distribution
-// number of each prize amount claimed
-// some stats regarding how long people wait to claim
+  // Initializations:
+  const fileName = `${chain}/walletsOverTime`;
+  let deposits;
+  let start;
+  let endBlock;
+  let blocks = [];
+  let allWallets = [];
+  let walletsOverTime = {
+    timestamps: [],
+    walletCounts: [],
+    cumulativeWalletCounts: []
+  }
+
+  // Selecting Data:
+  if(chain === 'eth') {
+    deposits = ethDeposits;
+    start = ethStart;
+    endBlock = snapshot.ethBlock;
+  } else if(chain === 'poly') {
+    deposits = polyDeposits;
+    start = polyStart;
+    endBlock = snapshot.polyBlock;
+  } else {
+    deposits = avaxDeposits;
+    start = avaxStart;
+    endBlock = snapshot.avaxBlock;
+  }
+
+  // Setting Arrays:
+  blocks = getRangeArray(start.block, endBlock, tickCount);
+  walletsOverTime.timestamps = getRangeArray(start.timestamp, snapshot.timestamp, tickCount);
+
+  // Filtering Data:
+  for(let i = 0; i < tickCount; i++) {
+    let wallets = [];
+    deposits.forEach(deposit => {
+      if(deposit.block <= blocks[i]) {
+        if((i > 0 && deposit.block > blocks[i - 1]) || i === 0) {
+          if(!allWallets.includes(deposit.wallet)) {
+            wallets.push(deposit.wallet);
+            allWallets.push(deposit.wallet);
+          }
+        }
+      }
+    });
+    walletsOverTime.walletCounts.push(wallets.length);
+    walletsOverTime.cumulativeWalletCounts.push(allWallets.length);
+  }
+
+  // Saving Data:
+  writeJSON([walletsOverTime], fileName, true);
+}
+
+/* ====================================================================================================================================================== */
+
+// <TODO> users that won prizes without deposits
+
+/* ====================================================================================================================================================== */
+
+// <TODO> users that withdrew without winning any prizes
+// deposit amount is also important here
+
+/* ====================================================================================================================================================== */
+
+// <TODO> gas costs (percentage of prize as gas)
+// maybe users losing money with claims?
+
+/* ====================================================================================================================================================== */
+
+// <TODO> time between first deposit and first claim

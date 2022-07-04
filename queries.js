@@ -33,6 +33,7 @@ const executeQueries = async () => {
   ];
 
   // Queries:
+  console.log('# Starting Queries');
   let promises = chains.map(chain => (async () => {
     await queryDeposits(chain);
     await queryWithdrawals(chain);
@@ -42,9 +43,11 @@ const executeQueries = async () => {
   await Promise.all(promises);
 
   // Snapshot Update:
+  console.log('\n# Updating Snapshot');
   await updateSnapshot();
 
   // Stats:
+  console.log('\n# Calculating Stats');
   for(let chain of chains) {
     calcStats(chain);
   }
@@ -69,9 +72,9 @@ const queryDeposits = async (chain) => {
   } else if(chain === 'avax') {
     depositEvents = await queryBlocks(chain, avaxPrizePool, prizePoolABI, 'Deposited', 100000, [], Math.max(8501287, getLatestBlock(fileName)));
   }
-  console.log(`${chainName}: Found ${depositEvents.length} deposit events.`);
+  console.log(`  > ${chainName}: Found ${depositEvents.length} new deposit events.`);
 
-  // Formatting Deposit Events:
+  // Formatting & Saving Deposit Events:
   if(depositEvents.length > 0) {
     depositEvents.forEach(event => {
       deposits.push({
@@ -81,11 +84,8 @@ const queryDeposits = async (chain) => {
         amount: parseBN(event.args.amount) / (10 ** 6)
       });
     });
-    console.log(`${chainName}: Formatted events to ${deposits.length} deposit TXs.`);
+    writeJSON(deposits, fileName);
   }
-
-  // Saving Formatted Data:
-  writeJSON(deposits, fileName);
 }
 
 /* ====================================================================================================================================================== */
@@ -107,9 +107,9 @@ const queryWithdrawals = async (chain) => {
   } else if(chain === 'avax') {
     withdrawalEvents = await queryBlocks(chain, avaxPrizePool, prizePoolABI, 'Withdrawal', 100000, [], Math.max(8501287, getLatestBlock(fileName)));
   }
-  console.log(`${chainName}: Found ${withdrawalEvents.length} withdrawal events.`);
+  console.log(`  > ${chainName}: Found ${withdrawalEvents.length} new withdrawal events.`);
 
-  // Formatting Withdrawal Events:
+  // Formatting & Saving Withdrawal Events:
   if(withdrawalEvents.length > 0) {
     withdrawalEvents.forEach(event => {
       withdrawals.push({
@@ -119,11 +119,8 @@ const queryWithdrawals = async (chain) => {
         amount: parseBN(event.args.amount) / (10 ** 6)
       });
     });
-    console.log(`${chainName}: Formatted events to ${withdrawals.length} withdrawal TXs.`);
+    writeJSON(withdrawals, fileName);
   }
-
-  // Saving Formatted Data:
-  writeJSON(withdrawals, fileName);
 }
 
 /* ====================================================================================================================================================== */
@@ -145,9 +142,9 @@ const queryClaims = async (chain) => {
   } else if(chain === 'avax') {
     claimEvents = await queryBlocks(chain, avaxPrizeDistributor, prizeDistributorABI, 'ClaimedDraw', 100000, [], Math.max(8501313, getLatestBlock(fileName)));
   }
-  console.log(`${chainName}: Found ${claimEvents.length} claim events.`);
+  console.log(`  > ${chainName}: Found ${claimEvents.length} new claim events.`);
 
-  // Formatting Claim Events:
+  // Formatting & Saving Claim Events:
   if(claimEvents.length > 0) {
     claimEvents.forEach(event => {
       let prize = Math.ceil(parseBN(event.args.payout) / (10 ** 6));
@@ -163,11 +160,8 @@ const queryClaims = async (chain) => {
         claims[existingTX].prizes.push(prize);
       }
     });
-    console.log(`${chainName}: Formatted events to ${claims.length} claim TXs.`);
+    writeJSON(claims, fileName);
   }
-
-  // Saving Formatted Data:
-  writeJSON(claims, fileName);
 }
 
 /* ====================================================================================================================================================== */
@@ -254,11 +248,11 @@ const queryWallets = async (chain) => {
       if(wallet) {
         wallet.balance = parseBN(balances[wallet.address][0]) / (10 ** 6);
       } else {
-        console.warn('Wallet not found:', wallet.address);
+        console.warn('    - QUERY WARNING: Wallet not found:', wallet.address);
       }
     }
   }
-  console.log(`${chainName}: Queried wallet data for ${wallets.length} wallets.`);
+  console.log(`  > ${chainName}: Queried wallet data for ${wallets.length} wallets.`);
 
   // Saving Wallet Data:
   writeJSON(wallets, fileName, true);

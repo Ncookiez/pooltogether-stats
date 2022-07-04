@@ -40,7 +40,7 @@ export const queryBlocks = async (chain, address, abi, event, querySize, info, s
   
   // Querying Blocks:
   try {
-    console.log(`${chainName}: Querying ${(endBlock - startBlock).toLocaleString()} blocks... (${startBlock.toLocaleString()} to ${endBlock.toLocaleString()})`);
+    console.log(`  > ${chainName}: Querying ${(endBlock - startBlock).toLocaleString()} blocks... (${startBlock.toLocaleString()} to ${endBlock.toLocaleString()})`);
     while(++lastQueriedBlock < endBlock) {
       let targetBlock = Math.min(lastQueriedBlock + querySize, endBlock);
       let result;
@@ -48,7 +48,7 @@ export const queryBlocks = async (chain, address, abi, event, querySize, info, s
         try {
           result = await contract.queryFilter(eventFilter, lastQueriedBlock, targetBlock);
         } catch {
-          console.warn(`RPC WARNING: Retrying block ${lastQueriedBlock} query on ${chainName}...`);
+          console.warn(`    - RPC WARNING: Retrying block ${lastQueriedBlock} query on ${chainName}...`);
         }
       }
       results.push(...result);
@@ -56,7 +56,7 @@ export const queryBlocks = async (chain, address, abi, event, querySize, info, s
       for(let percentage in percentages) {
         if(lastQueriedBlock < endBlock && percentages[percentage] === false && (((lastQueriedBlock - startBlock) / (endBlock - startBlock)) * 100) > parseInt(percentage)) {
           percentages[percentage] = true;
-          console.log(`${chainName}: Queries ${percentage}% done...`);
+          console.log(`    - ${chainName}: Queries ${percentage}% done...`);
         }
       }
     }
@@ -86,7 +86,7 @@ export const writeJSON = (data, file, overwrite) => {
   // Writing New Data:
   fileContents.push(...data);
   fs.writeFileSync(`${fileRoute}${file}.json`, JSON.stringify(fileContents, null, ' '), 'utf8');
-  console.log(`Saved data to ${file}.json`);
+  console.log(`  $ Saved data to ${file}.json`);
 }
 
 /* ====================================================================================================================================================== */

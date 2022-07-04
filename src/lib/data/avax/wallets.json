@@ -27661,6 +27661,11 @@
     "tx": "0x98272296dd09a82b1800003ab39f1043d5da5b846be71417f4bf4a5723e13cdc",
     "block": 16357419,
     "amount": 26000.280325
+   },
+   {
+    "tx": "0x3d0977a3eec2ddac0203aa8575bfa932081047d27e3f1c17f760cb0c3589be4c",
+    "block": 16898315,
+    "amount": 3436.591562
    }
   ],
   "withdrawals": [
@@ -27711,7 +27716,7 @@
     ]
    }
   ],
-  "balance": 10200.280325
+  "balance": 13636.871887
  },
  {
   "address": "0xA9a9DCEaAAb489879E4dB7C77F1E2d0E2cea4c58",
