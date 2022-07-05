@@ -3,7 +3,8 @@
 	// Imports:
 	import { onMount } from 'svelte';
 	import { getChainName } from '$lib/functions';
-	import { Chart, registerables, type ChartConfiguration } from 'chart.js';
+	import { lineChartConfig } from '$lib/charts';
+	import { Chart, registerables } from 'chart.js';
 	import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 	// Data Imports:
@@ -18,35 +19,12 @@
 	let cumulativeDepositAmountsChart: Chart;
 	let depositAmountsChart: Chart;
 	let avgDepositAmountsChart: Chart;
-	let axisColor = 'white';
 	let lineColor = '#FFB636';
 	let backgroundColor = lineColor + '80';
 	let lineWidth = 2;
 	let pointSize = 0;
 	let pointHoverSize = 5;
 	let lineTension = 0.2;
-
-	// Basic Chart Config:
-	const chartConfig = {
-		type: 'line',
-		data: { labels: [], datasets: [] },
-		options: {
-			responsive: true,
-			plugins: {
-				datalabels: { opacity: 0 },
-				legend: { display: false }
-			},
-			interaction: { intersect: false, mode: 'index' },
-			scales: {
-				x: {
-					ticks: { color: axisColor }
-				},
-				y: {
-					ticks: { color: axisColor }
-				}
-			}
-		}
-	}
 
 	// Reactive Data:
 	$: depositsOverTime = getDepositsOverTime(selectedChain);
@@ -180,24 +158,18 @@
 		// Chart.js Registrations:
 		Chart.register(...registerables, ChartDataLabels);
 
-		// Cumulative Deposit Counts Chart:
-		cumulativeDepositCountsChart = new Chart('cumulativeDepositCountsChart', structuredClone(chartConfig) as ChartConfiguration);
+		// Initializing Charts:
+		cumulativeDepositCountsChart = new Chart('cumulativeDepositCountsChart', structuredClone(lineChartConfig));
+		depositCountsChart = new Chart('depositCountsChart', structuredClone(lineChartConfig));
+		cumulativeDepositAmountsChart = new Chart('cumulativeDepositAmountsChart', structuredClone(lineChartConfig));
+		depositAmountsChart = new Chart('depositAmountsChart', structuredClone(lineChartConfig));
+		avgDepositAmountsChart = new Chart('avgDepositAmountsChart', structuredClone(lineChartConfig));
+		
+		// Setting Chart Data:
 		setCumulativeDepositCountsChartData();
-
-		// Deposit Counts Chart:
-		depositCountsChart = new Chart('depositCountsChart', structuredClone(chartConfig) as ChartConfiguration);
 		setDepositCountsChartData();
-
-		// Cumulative Deposit Amounts Chart:
-		cumulativeDepositAmountsChart = new Chart('cumulativeDepositAmountsChart', structuredClone(chartConfig) as ChartConfiguration);
 		setCumulativeDepositAmountsChartData();
-
-		// Deposit Amounts Chart:
-		depositAmountsChart = new Chart('depositAmountsChart', structuredClone(chartConfig) as ChartConfiguration);
 		setDepositAmountsChartData();
-
-		// Avg Deposit Amounts Chart:
-		avgDepositAmountsChart = new Chart('avgDepositAmountsChart', structuredClone(chartConfig) as ChartConfiguration);
 		setAvgDepositAmountsChartData();
 
 	});

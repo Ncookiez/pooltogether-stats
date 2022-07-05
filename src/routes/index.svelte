@@ -49,9 +49,6 @@
 	<span class="avax" class:selected={selectedChain === 'avax'} on:click={() => selectedChain = 'avax'}><img src="/images/avalanche.svg" alt="AVAX"></span>
 </div>
 
-<!-- Quick Navigation Menu -->
-<!-- TODO -->
-
 <!-- #################################################################################################### -->
 
 <style>
