@@ -26,6 +26,9 @@ const avaxStart = { block: 8501200, timestamp: 1640037507 };
 
 // Settings:
 const tickCount = 50;
+const estimatedEthBlockTime = 13;
+const estimatedPolyBlockTime = 2.2;
+const estimatedAvaxBlockTime = 2;
 
 /* ====================================================================================================================================================== */
 
@@ -53,6 +56,8 @@ const calcStats = () => {
     findWinlessWithdrawals(chain);
     findClaimAmountDistributions(chain);
     findAverageClaimTime(chain);
+    findConfidentUsers(chain);
+    
   }
 }
 
@@ -426,13 +431,13 @@ const findAverageClaimTime = (chain) => {
   // Selecting Data:
   if(chain === 'eth') {
     wallets = ethWallets;
-    estimatedBlockTime = 13;
+    estimatedBlockTime = estimatedEthBlockTime;
   } else if(chain === 'poly') {
     wallets = polyWallets;
-    estimatedBlockTime = 2.2;
+    estimatedBlockTime = estimatedPolyBlockTime;
   } else {
     wallets = avaxWallets;
-    estimatedBlockTime = 2;
+    estimatedBlockTime = estimatedAvaxBlockTime;
   }
 
   // Finding Users:
@@ -450,6 +455,65 @@ const findAverageClaimTime = (chain) => {
 
   // Saving Data:
   writeJSON([{ avgBlocks, estimatedBlockTime, avgClaimTimeInSeconds, avgClaimTimeInDays }], fileName, true);
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to find users with small deposits that later deposit more:
+const findConfidentUsers = (chain) => {
+  
+  // Initializations:
+  const fileName = `${chain}/confidentUsers`;
+  const amountBarrier = 100;
+  let wallets;
+  let blocksBetweenDeposits = [];
+  let confidentUsers = {
+    totalCount: 0,
+    withClaim: 0,
+    estimatedBlockTime: 0,
+    avgBlocks: 0,
+    avgTimeInSeconds: 0,
+    avgTimeInDays: 0
+  };
+
+  // Selecting Data:
+  if(chain === 'eth') {
+    wallets = ethWallets;
+    confidentUsers.estimatedBlockTime = estimatedEthBlockTime;
+  } else if(chain === 'poly') {
+    wallets = polyWallets;
+    confidentUsers.estimatedBlockTime = estimatedPolyBlockTime;
+  } else {
+    wallets = avaxWallets;
+    confidentUsers.estimatedBlockTime = estimatedAvaxBlockTime;
+  }
+
+  // Finding Users:
+  wallets.forEach(wallet => {
+    if(wallet.deposits.length > 1) {
+      if(wallet.deposits[0].amount <= amountBarrier && wallet.deposits[1].amount > amountBarrier) {
+        let blocks = wallet.deposits[1].block - wallet.deposits[0].block;
+        if(blocks > ((24 * 60 * 60) / confidentUsers.estimatedBlockTime)) {
+          confidentUsers.totalCount++;
+          if(wallet.claims.length > 0) {
+            let claim = wallet.claims.find(claim => claim.block > wallet.deposits[0].block && claim.block < wallet.deposits[1].block);
+            if(claim) {
+              confidentUsers.withClaim++;
+            }
+          }
+          blocksBetweenDeposits.push(blocks);
+        }
+      }
+    }
+  });
+
+  // Calculating Average Time Between Deposits:
+  confidentUsers.avgBlocks = Math.ceil((blocksBetweenDeposits.reduce((a, b) => a + b, 0) / blocksBetweenDeposits.length));
+  confidentUsers.avgTimeInSeconds = Math.ceil(confidentUsers.avgBlocks * confidentUsers.estimatedBlockTime);
+  confidentUsers.avgTimeInDays = Math.ceil(confidentUsers.avgTimeInSeconds / 60 / 60 / 24);
+
+  // Saving Data:
+  writeJSON([confidentUsers], fileName, true);
 }
 
 /* ====================================================================================================================================================== */
