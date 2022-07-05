@@ -13,62 +13,6 @@ const fileRoute = './src/lib/data/';
 
 /* ====================================================================================================================================================== */
 
-// Function to query blocks for a specific event:
-export const queryBlocks = async (chain, address, abi, event, querySize, info, startBlock, endBlock) => {
-
-  // Initializations:
-  const provider = getChainProvider(chain);
-  const chainName = getChainName(chain);
-  const contract = new ethers.Contract(address, abi, provider);
-  const eventFilter = contract.filters[event](...info);
-  let results = [];
-  let lastQueriedBlock = startBlock;
-
-  // Percentages:
-  let percentages = {
-    10: false,
-    25: false,
-    50: false,
-    75: false,
-    90: false
-  }
-
-  // Setting End Block:
-  if(!endBlock) {
-    endBlock = await provider.getBlockNumber();
-  }
-  
-  // Querying Blocks:
-  try {
-    console.log(`  > ${chainName}: Querying ${(endBlock - startBlock).toLocaleString()} blocks... (${startBlock.toLocaleString()} to ${endBlock.toLocaleString()})`);
-    while(++lastQueriedBlock < endBlock) {
-      let targetBlock = Math.min(lastQueriedBlock + querySize, endBlock);
-      let result;
-      while(!result) {
-        try {
-          result = await contract.queryFilter(eventFilter, lastQueriedBlock, targetBlock);
-        } catch {
-          console.warn(`    - RPC WARNING: Retrying block ${lastQueriedBlock} query on ${chainName}...`);
-        }
-      }
-      results.push(...result);
-      lastQueriedBlock = targetBlock;
-      for(let percentage in percentages) {
-        if(lastQueriedBlock < endBlock && percentages[percentage] === false && (((lastQueriedBlock - startBlock) / (endBlock - startBlock)) * 100) > parseInt(percentage)) {
-          percentages[percentage] = true;
-          console.log(`    - ${chainName}: Queries ${percentage}% done...`);
-        }
-      }
-    }
-  } catch(err) {
-    console.error(err);
-    process.exit(1);
-  }
-  return results;
-}
-
-/* ====================================================================================================================================================== */
-
 // Function to write data to JSON file:
 export const writeJSON = (data, file, overwrite) => {
 

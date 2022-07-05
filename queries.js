@@ -1,8 +1,8 @@
 
 // Imports:
 import { prizePoolABI, prizeDistributorABI, ticketABI } from './ABIs.js';
-import { parseBN, multicallOneContractQuery } from 'weaverfi/dist/functions.js';
-import { getChainName, queryBlocks, writeJSON, readJSON, getLatestBlock, getCurrentBlock } from './functions.js';
+import { queryBlocks, parseBN, multicallOneContractQuery } from 'weaverfi/dist/functions.js';
+import { getChainName, writeJSON, readJSON, getLatestBlock, getCurrentBlock } from './functions.js';
 
 // Ethereum Contract Addresses:
 const ethPrizePool = '0xd89a09084555a7D0ABe7B111b1f78DFEdDd638Be';

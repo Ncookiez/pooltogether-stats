@@ -1,6 +1,6 @@
 {
   "name": "pooltogether-stats",
-  "version": "0.8.3",
+  "version": "0.9.0",
   "type": "module",
   "scripts": {
     "query": "node queries.js",
@@ -24,6 +24,6 @@
     "chart.js": "^3.8.0",
     "chartjs-plugin-datalabels": "^2.0.0",
     "ethers": "^5.6.9",
-    "weaverfi": "^1.29.10"
+    "weaverfi": "^1.30.0"
   }
 }
