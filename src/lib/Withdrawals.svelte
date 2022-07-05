@@ -178,7 +178,7 @@
 
 <!-- #################################################################################################### -->
 
-<section id="withdrawalStats">
+<section id="withdrawals">
 
 	<!-- Section Title -->
 	<h2>Withdrawal Stats</h2>
@@ -212,7 +212,7 @@
 	section {
 		display: flex;
 		flex-direction: column;
-		width: 600px;
+		width: min(90%, 600px);
 		padding: 1em 0;
 		border-top: 2px solid white;
 	}

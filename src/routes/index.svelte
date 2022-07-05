@@ -1,6 +1,7 @@
 <script lang="ts">
 
 	// Imports:
+	import { goto } from '$app/navigation';
 	import { getTimestamp } from '$lib/functions';
 
 	// Component Imports:
@@ -48,6 +49,13 @@
 	<span class="poly" class:selected={selectedChain === 'poly'} on:click={() => selectedChain = 'poly'}><img src="/images/polygon.svg" alt="POLY"></span>
 	<span class="avax" class:selected={selectedChain === 'avax'} on:click={() => selectedChain = 'avax'}><img src="/images/avalanche.svg" alt="AVAX"></span>
 </div>
+
+<!-- Quick Navigation -->
+<nav>
+	<span on:click={() => goto('#deposits')}>Deposits</span>
+	<span on:click={() => goto('#withdrawals')}>Withdrawals</span>
+	<span on:click={() => goto('#claims')}>Claims</span>
+</nav>
 
 <!-- #################################################################################################### -->
 
@@ -113,8 +121,64 @@
 		z-index: 1;
 	}
 
+	nav {
+		position: fixed;
+		top: 4em;
+		right: 0;
+		display: flex;
+		flex-direction: column;
+		margin-right: 1em;
+	}
+
+	nav span {
+		text-align: right;
+		cursor: pointer;
+	}
+
+	nav span:hover::before {
+		content: '> ';
+	}
+
 	span.spacer {
 		height: 100px;
+	}
+
+	@media screen and (max-width: 1080px) {
+		nav {
+			display: none;
+		}
+	}
+
+	@media screen and (max-width: 900px) {
+		div.header img {
+			height: 7.5em;
+			margin-right: 1em;
+		}
+		h1 {
+			font-size: 5.5em;
+		}
+	}
+
+	@media screen and (max-width: 600px) {
+		div.header img {
+			height: 4.6em;
+			margin-right: 1em;
+		}
+		h1 {
+			font-size: 3.5em;
+			letter-spacing: 3px;
+		}
+	}
+
+	@media screen and (max-width: 400px) {
+		div.header {
+			flex-direction: column;
+			align-items: center;
+		}
+		div.header img {
+			height: 4.2em;
+			margin-right: 0;
+		}
 	}
 	
 </style>

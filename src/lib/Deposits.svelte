@@ -178,7 +178,7 @@
 
 <!-- #################################################################################################### -->
 
-<section id="depositStats">
+<section id="deposits">
 
 	<!-- Section Title -->
 	<h2>Deposit Stats</h2>
@@ -212,7 +212,7 @@
 	section {
 		display: flex;
 		flex-direction: column;
-		width: 600px;
+		width: min(90%, 600px);
 		padding: 1em 0;
 		border-top: 2px solid white;
 	}
