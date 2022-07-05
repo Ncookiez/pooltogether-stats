@@ -212,6 +212,7 @@
 	section {
 		display: flex;
 		flex-direction: column;
+		width: 600px;
 		padding: 1em 0;
 		border-top: 2px solid white;
 	}

@@ -4,9 +4,9 @@
 	import { getTimestamp } from '$lib/functions';
 
 	// Component Imports:
-	// import Claims from '$lib/Claims.svelte';
+	import Claims from '$lib/Claims.svelte';
 	import Deposits from '$lib/Deposits.svelte';
-	// import Withdrawals from '$lib/Withdrawals.svelte';
+	import Withdrawals from '$lib/Withdrawals.svelte';
 
 	// Initializations:
 	let selectedChain: 'eth' | 'poly' | 'avax' = 'eth';
@@ -34,10 +34,10 @@
 <Deposits {selectedChain} />
 
 <!-- Withdrawals -->
-<!-- <Withdrawals {selectedChain} /> -->
+<Withdrawals {selectedChain} />
 
 <!-- Claims -->
-<!-- <Claims {selectedChain} /> -->
+<Claims {selectedChain} />
 
 <!-- Bottom Spacer -->
 <span class="spacer" />
