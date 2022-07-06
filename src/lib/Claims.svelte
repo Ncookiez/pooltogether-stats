@@ -7,19 +7,16 @@
 	import { lineChartConfig, pieChartConfig } from '$lib/charts';
 	import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-	// Data Imports:
-	import ethClaimsOverTime from '$lib/data/eth/claimsOverTime.json';
-	import polyClaimsOverTime from '$lib/data/poly/claimsOverTime.json';
-	import avaxClaimsOverTime from '$lib/data/avax/claimsOverTime.json';
-	import ethAvgClaimTime from '$lib/data/eth/avgClaimTime.json';
-	import polyAvgClaimTime from '$lib/data/poly/avgClaimTime.json';
-	import avaxAvgClaimTime from '$lib/data/avax/avgClaimTime.json';
-	import ethClaimDistributions from '$lib/data/eth/claimDistributions.json';
-	import polyClaimDistributions from '$lib/data/poly/claimDistributions.json';
-	import avaxClaimDistributions from '$lib/data/avax/claimDistributions.json';
-
 	// Initializations & Exports:
 	export let selectedChain: 'eth' | 'poly' | 'avax';
+	const lineColor = '#FFB636';
+	const backgroundColor = lineColor + '80';
+	const lineWidth = 2;
+	const pointSize = 0;
+	const pointHoverSize = 5;
+	const lineTension = 0.2;
+
+	// Charts:
 	let cumulativeClaimCountsChart: Chart;
 	let claimCountsChart: Chart;
 	let cumulativePrizeCountsChart: Chart;
@@ -28,22 +25,21 @@
 	let claimAmountsChart: Chart;
 	let avgClaimAmountsChart: Chart;
 	let claimDistributionsChart: Chart;
-	let lineColor = '#FFB636';
-	let backgroundColor = lineColor + '80';
-	let lineWidth = 2;
-	let pointSize = 0;
-	let pointHoverSize = 5;
-	let lineTension = 0.2;
+
+	// JSON Files:
+	let claimsOverTime: { timestamps: number[], claimAmounts: number[], claimCounts: number[], prizeCounts: number[], avgClaimAmounts: number[], cumulativeClaimAmounts: number[], cumulativeClaimCounts: number[], cumulativePrizeCounts: number[] }[] | undefined;
+	let avgClaimTime: { avgBlocks: number, estimatedBlockTime: number, avgClaimTimeInSeconds: number, avgClaimTimeInDays: number }[] | undefined;
+	let claimDistributions: { below5: number, below10: number, below50: number, below100: number, below500: number, below1000: number, above1000: number }[] | undefined;
 
 	// Reactive Data:
-	$: claimsOverTime = getClaimsOverTime(selectedChain);
-	$: avgClaimTime = getAvgClaimTime(selectedChain);
-	$: claimDistributions = getClaimDistributions(selectedChain);
-	$: timestamps = claimsOverTime[0].timestamps.map(time => (new Date(time * 1000)).toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }));
-	$: totalClaimCount = claimsOverTime[0].cumulativeClaimCounts[claimsOverTime[0].cumulativeClaimCounts.length - 1];
-	$: totalPrizeCount = claimsOverTime[0].cumulativePrizeCounts[claimsOverTime[0].cumulativePrizeCounts.length - 1];
-	$: totalClaimAmount = claimsOverTime[0].cumulativeClaimAmounts[claimsOverTime[0].cumulativeClaimAmounts.length - 1];
-	$: avgClaimAmount = Math.ceil((claimsOverTime[0].avgClaimAmounts.reduce((a, b) => a + b, 0)) / claimsOverTime[0].avgClaimAmounts.length);
+	$: getClaimsOverTime(selectedChain);
+	$: getAvgClaimTime(selectedChain);
+	$: getClaimDistributions(selectedChain);
+	$: timestamps = claimsOverTime ? claimsOverTime[0].timestamps.map(time => (new Date(time * 1000)).toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })) : [];
+	$: totalClaimCount = claimsOverTime ? claimsOverTime[0].cumulativeClaimCounts[claimsOverTime[0].cumulativeClaimCounts.length - 1] : 0;
+	$: totalPrizeCount = claimsOverTime ? claimsOverTime[0].cumulativePrizeCounts[claimsOverTime[0].cumulativePrizeCounts.length - 1] : 0;
+	$: totalClaimAmount = claimsOverTime ? claimsOverTime[0].cumulativeClaimAmounts[claimsOverTime[0].cumulativeClaimAmounts.length - 1] : 0;
+	$: avgClaimAmount = claimsOverTime ? Math.ceil((claimsOverTime[0].avgClaimAmounts.reduce((a, b) => a + b, 0)) / claimsOverTime[0].avgClaimAmounts.length) : 0;
 
 	// Reactive Chart Data:
 	$: claimsOverTime, setCumulativeClaimCountsChartData();
@@ -56,41 +52,23 @@
 	$: claimDistributions, setClaimDistributionsChartData();
 
 	// Function to find appropriate claims over time data:
-	const getClaimsOverTime = (chain: 'eth' | 'poly' | 'avax') => {
-		if(chain === 'eth') {
-			return ethClaimsOverTime;
-		} else if(chain === 'poly') {
-			return polyClaimsOverTime;
-		} else {
-			return avaxClaimsOverTime;
-		}
+	const getClaimsOverTime = async (chain: 'eth' | 'poly' | 'avax') => {
+		claimsOverTime = (await import(`./data/${chain}/claimsOverTime.json`)).default;
 	}
 
 	// Function to find appropriate average claim time data:
-	const getAvgClaimTime = (chain: 'eth' | 'poly' | 'avax') => {
-		if(chain === 'eth') {
-			return ethAvgClaimTime;
-		} else if(chain === 'poly') {
-			return polyAvgClaimTime;
-		} else {
-			return avaxAvgClaimTime;
-		}
+	const getAvgClaimTime = async (chain: 'eth' | 'poly' | 'avax') => {
+		avgClaimTime = (await import(`./data/${chain}/avgClaimTime.json`)).default;
 	}
 
 	// Function to find appropriate claim distributions data:
-	const getClaimDistributions = (chain: 'eth' | 'poly' | 'avax') => {
-		if(chain === 'eth') {
-			return ethClaimDistributions;
-		} else if(chain === 'poly') {
-			return polyClaimDistributions;
-		} else {
-			return avaxClaimDistributions;
-		}
+	const getClaimDistributions = async (chain: 'eth' | 'poly' | 'avax') => {
+		claimDistributions = (await import(`./data/${chain}/claimDistributions.json`)).default;
 	}
 
 	// Function to set cumulative claim counts chart data:
 	const setCumulativeClaimCountsChartData = () => {
-		if(cumulativeClaimCountsChart) {
+		if(cumulativeClaimCountsChart && claimsOverTime) {
 			cumulativeClaimCountsChart.data.labels = timestamps;
 			cumulativeClaimCountsChart.data.datasets = [{
 				label: 'Claims',
@@ -108,7 +86,7 @@
 
 	// Function to set claim counts chart data:
 	const setClaimCountsChartData = () => {
-		if(claimCountsChart) {
+		if(claimCountsChart && claimsOverTime) {
 			claimCountsChart.data.labels = timestamps;
 			claimCountsChart.data.datasets = [{
 				label: 'Claims',
@@ -126,7 +104,7 @@
 
 	// Function to set cumulative prize counts chart data:
 	const setCumulativePrizeCountsChartData = () => {
-		if(cumulativePrizeCountsChart) {
+		if(cumulativePrizeCountsChart && claimsOverTime) {
 			cumulativePrizeCountsChart.data.labels = timestamps;
 			cumulativePrizeCountsChart.data.datasets = [{
 				label: 'Prize Claims',
@@ -144,7 +122,7 @@
 
 	// Function to set prize counts chart data:
 	const setPrizeCountsChartData = () => {
-		if(prizeCountsChart) {
+		if(prizeCountsChart && claimsOverTime) {
 			prizeCountsChart.data.labels = timestamps;
 			prizeCountsChart.data.datasets = [{
 				label: 'Prize Claims',
@@ -162,7 +140,7 @@
 
 	// Function to set cumulative claim amounts chart data:
 	const setCumulativeClaimAmountsChartData = () => {
-		if(cumulativeClaimAmountsChart) {
+		if(cumulativeClaimAmountsChart && claimsOverTime) {
 			cumulativeClaimAmountsChart.data.labels = timestamps;
 			cumulativeClaimAmountsChart.data.datasets = [{
 				label: 'Claim Amount',
@@ -184,7 +162,7 @@
 
 	// Function to set claim amounts chart data:
 	const setClaimAmountsChartData = () => {
-		if(claimAmountsChart) {
+		if(claimAmountsChart && claimsOverTime) {
 			claimAmountsChart.data.labels = timestamps;
 			claimAmountsChart.data.datasets = [{
 				label: 'Claim Amount',
@@ -206,7 +184,7 @@
 
 	// Function to set average claim amounts chart data:
 	const setAvgClaimAmountsChartData = () => {
-		if(avgClaimAmountsChart) {
+		if(avgClaimAmountsChart && claimsOverTime) {
 			avgClaimAmountsChart.data.labels = timestamps;
 			avgClaimAmountsChart.data.datasets = [{
 				label: 'Average Claim Amount',
@@ -228,7 +206,7 @@
 
 	// Function to set claim distributions chart data:
 	const setClaimDistributionsChartData = () => {
-		if(claimDistributionsChart) {
+		if(claimDistributionsChart && claimDistributions) {
 			claimDistributionsChart.data.labels = ['<$5', '$5-$10', '$10-$50', '$50-$100', '$100-$500', '$500-$1,000', '>$1,000'];
 			claimDistributionsChart.data.datasets[0].data = Object.values(claimDistributions[0]);
 			claimDistributionsChart.data.datasets[0].backgroundColor = ['#9f82d7', '#8D70C4', '#7B5EB0', '#6A4D9D', '#583B89', '#462976', '#341762'];
@@ -325,7 +303,7 @@
 	<!-- Average Claim Times -->
 	<div>
 		<span>How long do users have to wait since their first deposit to win a prize?</span>
-		<span>On average, users on <strong>{getChainName(selectedChain)}</strong> have <strong>{avgClaimTime[0].avgClaimTimeInDays.toLocaleString(undefined)}</strong> days between their first deposit and first claim.</span>
+		<span>On average, users on <strong>{getChainName(selectedChain)}</strong> have <strong>{avgClaimTime ? avgClaimTime[0].avgClaimTimeInDays.toLocaleString(undefined) : 0}</strong> days between their first deposit and first claim.</span>
 	</div>
 
 </section>

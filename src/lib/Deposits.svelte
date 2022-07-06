@@ -7,40 +7,36 @@
 	import { lineChartConfig, pieChartConfig } from '$lib/charts';
 	import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-	// Data Imports:
-	import ethDepositsOverTime from '$lib/data/eth/depositsOverTime.json';
-	import polyDepositsOverTime from '$lib/data/poly/depositsOverTime.json';
-	import avaxDepositsOverTime from '$lib/data/avax/depositsOverTime.json';
-	import ethConfidentUsers from '$lib/data/eth/confidentUsers.json';
-	import polyConfidentUsers from '$lib/data/poly/confidentUsers.json';
-	import avaxConfidentUsers from '$lib/data/avax/confidentUsers.json';
-	import ethDepositDistributions from '$lib/data/eth/depositDistributions.json';
-	import polyDepositDistributions from '$lib/data/poly/depositDistributions.json';
-	import avaxDepositDistributions from '$lib/data/avax/depositDistributions.json';
-
 	// Initializations & Exports:
 	export let selectedChain: 'eth' | 'poly' | 'avax';
+	const lineColor = '#FFB636';
+	const backgroundColor = lineColor + '80';
+	const lineWidth = 2;
+	const pointSize = 0;
+	const pointHoverSize = 5;
+	const lineTension = 0.2;
+
+	// Charts:
 	let cumulativeDepositCountsChart: Chart;
 	let depositCountsChart: Chart;
 	let cumulativeDepositAmountsChart: Chart;
 	let depositAmountsChart: Chart;
 	let avgDepositAmountsChart: Chart;
 	let depositDistributionsChart: Chart;
-	let lineColor = '#FFB636';
-	let backgroundColor = lineColor + '80';
-	let lineWidth = 2;
-	let pointSize = 0;
-	let pointHoverSize = 5;
-	let lineTension = 0.2;
+
+	// JSON Files:
+	let depositsOverTime: { timestamps: number[], depositAmounts: number[], depositCounts: number[], avgDepositAmounts: number[], cumulativeDepositAmounts: number[], cumulativeDepositCounts: number[] }[] | undefined;
+	let confidentUsers: { totalCount: number, withClaim: number, estimatedBlockTime: number, avgBlocks: number, avgTimeInSeconds: number, avgTimeInDays: number }[] | undefined;
+	let depositDistributions: { below10: number, below100: number, below500: number, below1000: number, below5000: number, below50000: number, above50000: number }[] | undefined;
 
 	// Reactive Data:
-	$: depositsOverTime = getDepositsOverTime(selectedChain);
-	$: confidentUsers = getConfidentUsersData(selectedChain);
-	$: depositDistributions = getDepositDistributions(selectedChain);
-	$: timestamps = depositsOverTime[0].timestamps.map(time => (new Date(time * 1000)).toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }));
-	$: totalDepositCount = depositsOverTime[0].cumulativeDepositCounts[depositsOverTime[0].cumulativeDepositCounts.length - 1];
-	$: totalDepositAmount = depositsOverTime[0].cumulativeDepositAmounts[depositsOverTime[0].cumulativeDepositAmounts.length - 1];
-	$: avgDepositAmount = Math.ceil((depositsOverTime[0].avgDepositAmounts.reduce((a, b) => a + b, 0)) / depositsOverTime[0].avgDepositAmounts.length);
+	$: getDepositsOverTime(selectedChain);
+	$: getConfidentUsersData(selectedChain);
+	$: getDepositDistributions(selectedChain);
+	$: timestamps = depositsOverTime ? depositsOverTime[0].timestamps.map(time => (new Date(time * 1000)).toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })) : [];
+	$: totalDepositCount = depositsOverTime ? depositsOverTime[0].cumulativeDepositCounts[depositsOverTime[0].cumulativeDepositCounts.length - 1] : 0;
+	$: totalDepositAmount = depositsOverTime ? depositsOverTime[0].cumulativeDepositAmounts[depositsOverTime[0].cumulativeDepositAmounts.length - 1] : 0;
+	$: avgDepositAmount = depositsOverTime ? Math.ceil((depositsOverTime[0].avgDepositAmounts.reduce((a, b) => a + b, 0)) / depositsOverTime[0].avgDepositAmounts.length) : 0;
 
 	// Reactive Chart Data:
 	$: depositsOverTime, setCumulativeDepositCountsChartData();
@@ -51,41 +47,23 @@
 	$: depositDistributions, setDepositDistributionsChartData();
 
 	// Function to find appropriate deposits over time data:
-	const getDepositsOverTime = (chain: 'eth' | 'poly' | 'avax') => {
-		if(chain === 'eth') {
-			return ethDepositsOverTime;
-		} else if(chain === 'poly') {
-			return polyDepositsOverTime;
-		} else {
-			return avaxDepositsOverTime;
-		}
+	const getDepositsOverTime = async (chain: 'eth' | 'poly' | 'avax') => {
+		depositsOverTime = (await import(`./data/${chain}/depositsOverTime.json`)).default;
 	}
 	
 	// Function to find appropriate confident users' data:
-	const getConfidentUsersData = (chain: 'eth' | 'poly' | 'avax') => {
-		if(chain === 'eth') {
-			return ethConfidentUsers;
-		} else if(chain === 'poly') {
-			return polyConfidentUsers;
-		} else {
-			return avaxConfidentUsers;
-		}
+	const getConfidentUsersData = async (chain: 'eth' | 'poly' | 'avax') => {
+		confidentUsers = (await import(`./data/${chain}/confidentUsers.json`)).default;
 	}
 
 	// Function to find appropriate deposit distributions data:
-	const getDepositDistributions = (chain: 'eth' | 'poly' | 'avax') => {
-		if(chain === 'eth') {
-			return ethDepositDistributions;
-		} else if(chain === 'poly') {
-			return polyDepositDistributions;
-		} else {
-			return avaxDepositDistributions;
-		}
+	const getDepositDistributions = async (chain: 'eth' | 'poly' | 'avax') => {
+		depositDistributions = (await import(`./data/${chain}/depositDistributions.json`)).default;
 	}
 
 	// Function to set cumulative deposit counts chart data:
 	const setCumulativeDepositCountsChartData = () => {
-		if(cumulativeDepositCountsChart) {
+		if(cumulativeDepositCountsChart && depositsOverTime) {
 			cumulativeDepositCountsChart.data.labels = timestamps;
 			cumulativeDepositCountsChart.data.datasets = [{
 				label: 'Deposits',
@@ -103,7 +81,7 @@
 
 	// Function to set deposit counts chart data:
 	const setDepositCountsChartData = () => {
-		if(depositCountsChart) {
+		if(depositCountsChart && depositsOverTime) {
 			depositCountsChart.data.labels = timestamps;
 			depositCountsChart.data.datasets = [{
 				label: 'Deposits',
@@ -121,7 +99,7 @@
 
 	// Function to set cumulative deposit amounts chart data:
 	const setCumulativeDepositAmountsChartData = () => {
-		if(cumulativeDepositAmountsChart) {
+		if(cumulativeDepositAmountsChart && depositsOverTime) {
 			cumulativeDepositAmountsChart.data.labels = timestamps;
 			cumulativeDepositAmountsChart.data.datasets = [{
 				label: 'Deposit Amount',
@@ -143,7 +121,7 @@
 
 	// Function to set deposit amounts chart data:
 	const setDepositAmountsChartData = () => {
-		if(depositAmountsChart) {
+		if(depositAmountsChart && depositsOverTime) {
 			depositAmountsChart.data.labels = timestamps;
 			depositAmountsChart.data.datasets = [{
 				label: 'Deposit Amount',
@@ -165,7 +143,7 @@
 
 	// Function to set average deposit amounts chart data:
 	const setAvgDepositAmountsChartData = () => {
-		if(avgDepositAmountsChart) {
+		if(avgDepositAmountsChart && depositsOverTime) {
 			avgDepositAmountsChart.data.labels = timestamps;
 			avgDepositAmountsChart.data.datasets = [{
 				label: 'Average Deposit Amount',
@@ -187,7 +165,7 @@
 
 	// Function to set deposit distributions chart data:
 	const setDepositDistributionsChartData = () => {
-		if(depositDistributionsChart) {
+		if(depositDistributionsChart && depositDistributions) {
 			depositDistributionsChart.data.labels = ['<$10', '$10-$100', '$100-$500', '$500-$1,000', '$1,000-$5,000', '$5,000-$50,000', '>$50,000'];
 			depositDistributionsChart.data.datasets[0].data = Object.values(depositDistributions[0]);
 			depositDistributionsChart.data.datasets[0].backgroundColor = ['#9f82d7', '#8D70C4', '#7B5EB0', '#6A4D9D', '#583B89', '#462976', '#341762'];
@@ -272,10 +250,10 @@
 	<!-- Confident Depositors -->
 	<div>
 		<span>Some may choose to deposit a small amount first to test out the waters, then later deposit more.</span>
-		<span>Turns out <strong>{confidentUsers[0].totalCount.toLocaleString(undefined)}</strong> users did just that, with under <strong>$100</strong>!</span>
-		{#if confidentUsers[0].withClaim === 1}
+		<span>Turns out <strong>{confidentUsers ? confidentUsers[0].totalCount.toLocaleString(undefined) : 0}</strong> users did just that, with under <strong>$100</strong>!</span>
+		{#if confidentUsers && confidentUsers[0].withClaim === 1}
 			<span>Only <strong>one</strong> of these users claimed a prize before choosing to deposit a larger amount.</span>
-		{:else if confidentUsers[0].withClaim > 1}
+		{:else if confidentUsers && confidentUsers[0].withClaim > 1}
 			<span>Out of these, <strong>{confidentUsers[0].withClaim.toLocaleString(undefined)}</strong> users (<strong>{((confidentUsers[0].withClaim / confidentUsers[0].totalCount) * 100).toFixed(1)}%</strong>) won a prize before choosing to deposit a larger amount.</span>
 		{:else}
 			<span>None of these users won a prize before choosing to deposit a larger amount.</span>

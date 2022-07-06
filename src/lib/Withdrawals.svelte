@@ -7,39 +7,36 @@
 	import { Chart, registerables } from 'chart.js';
 	import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-	// Data Imports:
-	import ethWithdrawalsOverTime from '$lib/data/eth/withdrawalsOverTime.json';
-	import polyWithdrawalsOverTime from '$lib/data/poly/withdrawalsOverTime.json';
-	import avaxWithdrawalsOverTime from '$lib/data/avax/withdrawalsOverTime.json';
-	import ethWinlessWithdrawals from '$lib/data/eth/winlessWithdrawals.json';
-	import polyWinlessWithdrawals from '$lib/data/poly/winlessWithdrawals.json';
-	import avaxWinlessWithdrawals from '$lib/data/avax/winlessWithdrawals.json';
-	import ethWallets from '$lib/data/eth/wallets.json';
-	import polyWallets from '$lib/data/poly/wallets.json';
-	import avaxWallets from '$lib/data/avax/wallets.json';
-
 	// Initializations & Exports:
 	export let selectedChain: 'eth' | 'poly' | 'avax';
+	const lineColor = '#FFB636';
+	const backgroundColor = lineColor + '80';
+	const lineWidth = 2;
+	const pointSize = 0;
+	const pointHoverSize = 5;
+	const lineTension = 0.2;
+
+	// Charts:
 	let cumulativeWithdrawalCountsChart: Chart;
 	let withdrawalCountsChart: Chart;
 	let cumulativeWithdrawalAmountsChart: Chart;
 	let withdrawalAmountsChart: Chart;
 	let avgWithdrawalAmountsChart: Chart;
-	let lineColor = '#FFB636';
-	let backgroundColor = lineColor + '80';
-	let lineWidth = 2;
-	let pointSize = 0;
-	let pointHoverSize = 5;
-	let lineTension = 0.2;
+
+	// JSON Files:
+	let withdrawalsOverTime: { timestamps: number[], withdrawalAmounts: number[], withdrawalCounts: number[], avgWithdrawalAmounts: number[], cumulativeWithdrawalAmounts: number[], cumulativeWithdrawalCounts: number[] }[] | undefined;
+	let winlessWithdrawals: { totalCount: number, estimatedBlockTime: number, avgBlocksDeposited: number, avgTimeDepositedInSeconds: number, avgTimeDepositedInDays: number }[] | undefined;
+	let walletsOverTime: { timestamps: number[], walletCounts: number[], cumulativeWalletCounts: number[] }[] | undefined;
 
 	// Reactive Data:
-	$: withdrawalsOverTime = getWithdrawalsOverTime(selectedChain);
-	$: winlessWithdrawals = getWinlessWithdrawals(selectedChain);
-	$: wallets = getWallets(selectedChain);
-	$: timestamps = withdrawalsOverTime[0].timestamps.map(time => (new Date(time * 1000)).toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }));
-	$: totalWithdrawalCount = withdrawalsOverTime[0].cumulativeWithdrawalCounts[withdrawalsOverTime[0].cumulativeWithdrawalCounts.length - 1];
-	$: totalWithdrawalAmount = withdrawalsOverTime[0].cumulativeWithdrawalAmounts[withdrawalsOverTime[0].cumulativeWithdrawalAmounts.length - 1];
-	$: avgWithdrawalAmount = Math.ceil((withdrawalsOverTime[0].avgWithdrawalAmounts.reduce((a, b) => a + b, 0)) / withdrawalsOverTime[0].avgWithdrawalAmounts.length);
+	$: getWithdrawalsOverTime(selectedChain);
+	$: getWinlessWithdrawals(selectedChain);
+	$: getWalletsOverTime(selectedChain);
+	$: timestamps = withdrawalsOverTime ? withdrawalsOverTime[0].timestamps.map(time => (new Date(time * 1000)).toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })) : [];
+	$: totalWithdrawalCount = withdrawalsOverTime ? withdrawalsOverTime[0].cumulativeWithdrawalCounts[withdrawalsOverTime[0].cumulativeWithdrawalCounts.length - 1] : 0;
+	$: totalWithdrawalAmount = withdrawalsOverTime ? withdrawalsOverTime[0].cumulativeWithdrawalAmounts[withdrawalsOverTime[0].cumulativeWithdrawalAmounts.length - 1] : 0;
+	$: avgWithdrawalAmount = withdrawalsOverTime ? Math.ceil((withdrawalsOverTime[0].avgWithdrawalAmounts.reduce((a, b) => a + b, 0)) / withdrawalsOverTime[0].avgWithdrawalAmounts.length) : 0;
+	$: totalWallets = walletsOverTime ? walletsOverTime[0].cumulativeWalletCounts[walletsOverTime[0].cumulativeWalletCounts.length - 1] : 0;
 
 	// Reactive Chart Data:
 	$: withdrawalsOverTime, setCumulativeWithdrawalCountsChartData();
@@ -49,41 +46,23 @@
 	$: withdrawalsOverTime, setAvgWithdrawalAmountsChartData();
 
 	// Function to find appropriate withdrawals over time data:
-	const getWithdrawalsOverTime = (chain: 'eth' | 'poly' | 'avax') => {
-		if(chain === 'eth') {
-			return ethWithdrawalsOverTime;
-		} else if(chain === 'poly') {
-			return polyWithdrawalsOverTime;
-		} else {
-			return avaxWithdrawalsOverTime;
-		}
+	const getWithdrawalsOverTime = async (chain: 'eth' | 'poly' | 'avax') => {
+		withdrawalsOverTime = (await import(`./data/${chain}/withdrawalsOverTime.json`)).default;
 	}
 
 	// Function to find appropriate winless withdrawals data:
-	const getWinlessWithdrawals = (chain: 'eth' | 'poly' | 'avax') => {
-		if(chain === 'eth') {
-			return ethWinlessWithdrawals;
-		} else if(chain === 'poly') {
-			return polyWinlessWithdrawals;
-		} else {
-			return avaxWinlessWithdrawals;
-		}
+	const getWinlessWithdrawals = async (chain: 'eth' | 'poly' | 'avax') => {
+		winlessWithdrawals = (await import(`./data/${chain}/winlessWithdrawals.json`)).default;
 	}
 
 	// Function to find appropriate wallets data:
-	const getWallets = (chain: 'eth' | 'poly' | 'avax') => {
-		if(chain === 'eth') {
-			return ethWallets;
-		} else if(chain === 'poly') {
-			return polyWallets;
-		} else {
-			return avaxWallets;
-		}
+	const getWalletsOverTime = async (chain: 'eth' | 'poly' | 'avax') => {
+		walletsOverTime = (await import(`./data/${chain}/walletsOverTime.json`)).default;
 	}
 
 	// Function to set cumulative withdrawal counts chart data:
 	const setCumulativeWithdrawalCountsChartData = () => {
-		if(cumulativeWithdrawalCountsChart) {
+		if(cumulativeWithdrawalCountsChart && withdrawalsOverTime) {
 			cumulativeWithdrawalCountsChart.data.labels = timestamps;
 			cumulativeWithdrawalCountsChart.data.datasets = [{
 				label: 'Withdrawals',
@@ -101,7 +80,7 @@
 
 	// Function to set withdrawal counts chart data:
 	const setWithdrawalCountsChartData = () => {
-		if(withdrawalCountsChart) {
+		if(withdrawalCountsChart && withdrawalsOverTime) {
 			withdrawalCountsChart.data.labels = timestamps;
 			withdrawalCountsChart.data.datasets = [{
 				label: 'Withdrawals',
@@ -119,7 +98,7 @@
 
 	// Function to set cumulative withdrawal amounts chart data:
 	const setCumulativeWithdrawalAmountsChartData = () => {
-		if(cumulativeWithdrawalAmountsChart) {
+		if(cumulativeWithdrawalAmountsChart && withdrawalsOverTime) {
 			cumulativeWithdrawalAmountsChart.data.labels = timestamps;
 			cumulativeWithdrawalAmountsChart.data.datasets = [{
 				label: 'Withdrawal Amount',
@@ -141,7 +120,7 @@
 
 	// Function to set withdrawal amounts chart data:
 	const setWithdrawalAmountsChartData = () => {
-		if(withdrawalAmountsChart) {
+		if(withdrawalAmountsChart && withdrawalsOverTime) {
 			withdrawalAmountsChart.data.labels = timestamps;
 			withdrawalAmountsChart.data.datasets = [{
 				label: 'Withdrawal Amount',
@@ -163,7 +142,7 @@
 
 	// Function to set average withdrawal amounts chart data:
 	const setAvgWithdrawalAmountsChartData = () => {
-		if(avgWithdrawalAmountsChart) {
+		if(avgWithdrawalAmountsChart && withdrawalsOverTime) {
 			avgWithdrawalAmountsChart.data.labels = timestamps;
 			avgWithdrawalAmountsChart.data.datasets = [{
 				label: 'Average Withdrawal Amount',
@@ -236,8 +215,8 @@
 	<!-- Winless Withdrawals -->
 	<div>
 		<span>Some users may be dissapointed that they haven't won any prizes, resulting in a full withdrawal.</span>
-		<span>This was the case with <strong>{winlessWithdrawals[0].totalCount.toLocaleString(undefined)}</strong> users, or <strong>{((winlessWithdrawals[0].totalCount / wallets.length) * 100).toFixed(1)}%</strong> of all users.</span>
-		<span>These users were deposited for an average of <strong>{winlessWithdrawals[0].avgTimeDepositedInDays.toLocaleString(undefined)}</strong> days before fully withdrawing.</span>
+		<span>This was the case with <strong>{winlessWithdrawals ? winlessWithdrawals[0].totalCount.toLocaleString(undefined) : 0}</strong> users, or <strong>{winlessWithdrawals && walletsOverTime ? ((winlessWithdrawals[0].totalCount / totalWallets) * 100).toFixed(1) : 0}%</strong> of all users.</span>
+		<span>These users were deposited for an average of <strong>{winlessWithdrawals ? winlessWithdrawals[0].avgTimeDepositedInDays.toLocaleString(undefined) : 0}</strong> days before fully withdrawing.</span>
 	</div>
 
 </section>
