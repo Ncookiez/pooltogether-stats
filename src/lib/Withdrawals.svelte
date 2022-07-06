@@ -11,6 +11,12 @@
 	import ethWithdrawalsOverTime from '$lib/data/eth/withdrawalsOverTime.json';
 	import polyWithdrawalsOverTime from '$lib/data/poly/withdrawalsOverTime.json';
 	import avaxWithdrawalsOverTime from '$lib/data/avax/withdrawalsOverTime.json';
+	import ethWinlessWithdrawals from '$lib/data/eth/winlessWithdrawals.json';
+	import polyWinlessWithdrawals from '$lib/data/poly/winlessWithdrawals.json';
+	import avaxWinlessWithdrawals from '$lib/data/avax/winlessWithdrawals.json';
+	import ethWallets from '$lib/data/eth/wallets.json';
+	import polyWallets from '$lib/data/poly/wallets.json';
+	import avaxWallets from '$lib/data/avax/wallets.json';
 
 	// Initializations & Exports:
 	export let selectedChain: 'eth' | 'poly' | 'avax';
@@ -28,6 +34,8 @@
 
 	// Reactive Data:
 	$: withdrawalsOverTime = getWithdrawalsOverTime(selectedChain);
+	$: winlessWithdrawals = getWinlessWithdrawals(selectedChain);
+	$: wallets = getWallets(selectedChain);
 	$: timestamps = withdrawalsOverTime[0].timestamps.map(time => (new Date(time * 1000)).toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }));
 	$: totalWithdrawalCount = withdrawalsOverTime[0].cumulativeWithdrawalCounts[withdrawalsOverTime[0].cumulativeWithdrawalCounts.length - 1];
 	$: totalWithdrawalAmount = withdrawalsOverTime[0].cumulativeWithdrawalAmounts[withdrawalsOverTime[0].cumulativeWithdrawalAmounts.length - 1];
@@ -48,6 +56,28 @@
 			return polyWithdrawalsOverTime;
 		} else {
 			return avaxWithdrawalsOverTime;
+		}
+	}
+
+	// Function to find appropriate winless withdrawals data:
+	const getWinlessWithdrawals = (chain: 'eth' | 'poly' | 'avax') => {
+		if(chain === 'eth') {
+			return ethWinlessWithdrawals;
+		} else if(chain === 'poly') {
+			return polyWinlessWithdrawals;
+		} else {
+			return avaxWinlessWithdrawals;
+		}
+	}
+
+	// Function to find appropriate wallets data:
+	const getWallets = (chain: 'eth' | 'poly' | 'avax') => {
+		if(chain === 'eth') {
+			return ethWallets;
+		} else if(chain === 'poly') {
+			return polyWallets;
+		} else {
+			return avaxWallets;
 		}
 	}
 
@@ -192,7 +222,7 @@
 	<canvas id="withdrawalCountsChart" />
 
 	<!-- Cumulative Withdrawal Amounts Over Time Chart -->
-	<span>This amounts to over <strong>${totalWithdrawalAmount.toLocaleString(undefined)}</strong> in withdrawals over time!</span>
+	<span>This amounts to over <strong>${totalWithdrawalAmount.toLocaleString(undefined)}</strong> in withdrawals over time.</span>
 	<canvas id="cumulativeWithdrawalAmountsChart" />
 
 	<!-- Withdrawal Amounts Over Time Chart -->
@@ -202,6 +232,13 @@
 	<!-- Avg Withdrawal Amounts Over Time Chart -->
 	<span>The all-time average withdrawal on <strong>{getChainName(selectedChain)}</strong> is of <strong>${avgWithdrawalAmount.toLocaleString(undefined)}</strong>:</span>
 	<canvas id="avgWithdrawalAmountsChart" />
+
+	<!-- Winless Withdrawals -->
+	<div>
+		<span>Some users may be dissapointed that they haven't won any prizes, resulting in a full withdrawal.</span>
+		<span>This was the case with <strong>{winlessWithdrawals[0].totalCount.toLocaleString(undefined)}</strong> users, or <strong>{((winlessWithdrawals[0].totalCount / wallets.length) * 100).toFixed(1)}%</strong> of all users.</span>
+		<span>These users were deposited for an average of <strong>{winlessWithdrawals[0].avgTimeDepositedInDays.toLocaleString(undefined)}</strong> days before fully withdrawing.</span>
+	</div>
 
 </section>
 
@@ -226,8 +263,38 @@
 		color: var(--secondary-color);
 	}
 
-	span {
+	section > span, section > div {
 		margin: 1em 0;
+	}
+
+	div {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		text-align: center;
+		isolation: isolate;
+	}
+
+	div::before {
+		content: '';
+		position: absolute;
+		height: 100%;
+		width: 200vw;
+		margin-left: -100vw;
+		background-color: var(--dark-purple);
+		z-index: -1;
+	}
+
+	div > span {
+		margin: .2em 0;
+	}
+
+	div > span:first-of-type {
+		margin-top: 1em;
+	}
+
+	div > span:last-of-type {
+		margin-bottom: 1em;
 	}
 	
 </style>

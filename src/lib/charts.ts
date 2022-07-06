@@ -3,7 +3,7 @@
 import type { ChartConfiguration } from 'chart.js';
 
 // Chart Settings:
-const axisColor = 'white';
+const baseColor = 'white';
 
 /* ====================================================================================================================================================== */
 
@@ -20,11 +20,27 @@ export const lineChartConfig: ChartConfiguration = {
     interaction: { intersect: false, mode: 'index' },
     scales: {
       x: {
-        ticks: { color: axisColor }
+        ticks: { color: baseColor }
       },
       y: {
-        ticks: { color: axisColor }
+        ticks: { color: baseColor }
       }
+    }
+  }
+}
+
+// Basic Pie Chart Config:
+export const pieChartConfig: ChartConfiguration = {
+  type: 'pie',
+  data: { labels: [], datasets: [{ data: [] }] },
+  options: {
+    responsive: true,
+    plugins: {
+      datalabels: {
+        color: baseColor,
+        textAlign: 'center'
+      },
+      legend: { display: false }
     }
   }
 }

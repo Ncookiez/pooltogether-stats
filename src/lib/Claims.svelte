@@ -3,14 +3,20 @@
 	// Imports:
 	import { onMount } from 'svelte';
 	import { getChainName } from '$lib/functions';
-	import { lineChartConfig } from '$lib/charts';
 	import { Chart, registerables } from 'chart.js';
+	import { lineChartConfig, pieChartConfig } from '$lib/charts';
 	import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 	// Data Imports:
 	import ethClaimsOverTime from '$lib/data/eth/claimsOverTime.json';
 	import polyClaimsOverTime from '$lib/data/poly/claimsOverTime.json';
 	import avaxClaimsOverTime from '$lib/data/avax/claimsOverTime.json';
+	import ethAvgClaimTime from '$lib/data/eth/avgClaimTime.json';
+	import polyAvgClaimTime from '$lib/data/poly/avgClaimTime.json';
+	import avaxAvgClaimTime from '$lib/data/avax/avgClaimTime.json';
+	import ethClaimDistributions from '$lib/data/eth/claimDistributions.json';
+	import polyClaimDistributions from '$lib/data/poly/claimDistributions.json';
+	import avaxClaimDistributions from '$lib/data/avax/claimDistributions.json';
 
 	// Initializations & Exports:
 	export let selectedChain: 'eth' | 'poly' | 'avax';
@@ -21,6 +27,7 @@
 	let cumulativeClaimAmountsChart: Chart;
 	let claimAmountsChart: Chart;
 	let avgClaimAmountsChart: Chart;
+	let claimDistributionsChart: Chart;
 	let lineColor = '#FFB636';
 	let backgroundColor = lineColor + '80';
 	let lineWidth = 2;
@@ -30,6 +37,8 @@
 
 	// Reactive Data:
 	$: claimsOverTime = getClaimsOverTime(selectedChain);
+	$: avgClaimTime = getAvgClaimTime(selectedChain);
+	$: claimDistributions = getClaimDistributions(selectedChain);
 	$: timestamps = claimsOverTime[0].timestamps.map(time => (new Date(time * 1000)).toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }));
 	$: totalClaimCount = claimsOverTime[0].cumulativeClaimCounts[claimsOverTime[0].cumulativeClaimCounts.length - 1];
 	$: totalPrizeCount = claimsOverTime[0].cumulativePrizeCounts[claimsOverTime[0].cumulativePrizeCounts.length - 1];
@@ -43,7 +52,8 @@
 	$: claimsOverTime, setPrizeCountsChartData();
 	$: claimsOverTime, setCumulativeClaimAmountsChartData();
 	$: claimsOverTime, setClaimAmountsChartData();
-	$: claimsOverTime, setAvgClaimAmountsChartData();
+	$: avgClaimTime, setAvgClaimAmountsChartData();
+	$: claimDistributions, setClaimDistributionsChartData();
 
 	// Function to find appropriate claims over time data:
 	const getClaimsOverTime = (chain: 'eth' | 'poly' | 'avax') => {
@@ -53,6 +63,28 @@
 			return polyClaimsOverTime;
 		} else {
 			return avaxClaimsOverTime;
+		}
+	}
+
+	// Function to find appropriate average claim time data:
+	const getAvgClaimTime = (chain: 'eth' | 'poly' | 'avax') => {
+		if(chain === 'eth') {
+			return ethAvgClaimTime;
+		} else if(chain === 'poly') {
+			return polyAvgClaimTime;
+		} else {
+			return avaxAvgClaimTime;
+		}
+	}
+
+	// Function to find appropriate claim distributions data:
+	const getClaimDistributions = (chain: 'eth' | 'poly' | 'avax') => {
+		if(chain === 'eth') {
+			return ethClaimDistributions;
+		} else if(chain === 'poly') {
+			return polyClaimDistributions;
+		} else {
+			return avaxClaimDistributions;
 		}
 	}
 
@@ -194,6 +226,34 @@
 		}
 	}
 
+	// Function to set claim distributions chart data:
+	const setClaimDistributionsChartData = () => {
+		if(claimDistributionsChart) {
+			claimDistributionsChart.data.labels = ['<$5', '$5-$10', '$10-$50', '$50-$100', '$100-$500', '$500-$1,000', '>$1,000'];
+			claimDistributionsChart.data.datasets[0].data = Object.values(claimDistributions[0]);
+			claimDistributionsChart.data.datasets[0].backgroundColor = ['#9f82d7', '#8D70C4', '#7B5EB0', '#6A4D9D', '#583B89', '#462976', '#341762'];
+			claimDistributionsChart.data.datasets[0].borderColor = ['#4c249f'];
+			claimDistributionsChart.data.datasets[0].borderWidth = 10;
+			if(claimDistributionsChart.options.plugins?.tooltip && claimDistributionsChart.options.plugins?.datalabels) {
+				claimDistributionsChart.options.plugins.tooltip.callbacks = { label: (item) => { return `  ${item.label}: ${item.formattedValue} TXs` } };
+				claimDistributionsChart.options.plugins.datalabels.formatter = (value: string, context: any) => {
+          let numValue = parseInt(value);
+          let totalValue = 0;
+          context.dataset.data.forEach((data: string) => {
+            totalValue += parseInt(data);
+          });
+          let percentage = (numValue / totalValue) * 100;
+          if(percentage < 5) {
+            return '';
+          } else {
+            return `${context.chart.data.labels[context.dataIndex]}\n${percentage.toFixed(1)}%`;
+          }
+        }
+			}
+			claimDistributionsChart.update();
+		}
+	}
+
 	onMount(() => {
 
 		// Chart.js Registrations:
@@ -207,6 +267,7 @@
 		cumulativeClaimAmountsChart = new Chart('cumulativeClaimAmountsChart', structuredClone(lineChartConfig));
 		claimAmountsChart = new Chart('claimAmountsChart', structuredClone(lineChartConfig));
 		avgClaimAmountsChart = new Chart('avgClaimAmountsChart', structuredClone(lineChartConfig));
+		claimDistributionsChart = new Chart('claimDistributionsChart', structuredClone(pieChartConfig));
 		
 		// Setting Chart Data:
 		setCumulativeClaimCountsChartData();
@@ -216,6 +277,7 @@
 		setCumulativeClaimAmountsChartData();
 		setClaimAmountsChartData();
 		setAvgClaimAmountsChartData();
+		setClaimDistributionsChartData();
 
 	});
 	
@@ -256,6 +318,16 @@
 	<span>The all-time average claim on <strong>{getChainName(selectedChain)}</strong> is of <strong>${avgClaimAmount.toLocaleString(undefined)}</strong>:</span>
 	<canvas id="avgClaimAmountsChart" />
 
+	<!-- Claim Distributions Chart -->
+	<span>The distribution of claim transactions on <strong>{getChainName(selectedChain)}</strong> is as follows:</span>
+	<canvas id="claimDistributionsChart" class="pieChart" />
+
+	<!-- Average Claim Times -->
+	<div>
+		<span>How long do users have to wait since their first deposit to win a prize?</span>
+		<span>On average, users on <strong>{getChainName(selectedChain)}</strong> have <strong>{avgClaimTime[0].avgClaimTimeInDays.toLocaleString(undefined)}</strong> days between their first deposit and first claim.</span>
+	</div>
+
 </section>
 
 <!-- #################################################################################################### -->
@@ -279,8 +351,43 @@
 		color: var(--secondary-color);
 	}
 
-	span {
+	section > span, section > div {
 		margin: 1em 0;
+	}
+
+	div {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		text-align: center;
+		isolation: isolate;
+	}
+
+	div::before {
+		content: '';
+		position: absolute;
+		height: 100%;
+		width: 200vw;
+		margin-left: -100vw;
+		background-color: var(--dark-purple);
+		z-index: -1;
+	}
+
+	div > span {
+		margin: .2em 0;
+	}
+
+	div > span:first-of-type {
+		margin-top: 1em;
+	}
+
+	div > span:last-of-type {
+		margin-bottom: 1em;
+	}
+
+	canvas.pieChart {
+		margin-top: -1em;
+		padding: 2em;
 	}
 	
 </style>

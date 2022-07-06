@@ -54,6 +54,7 @@ const calcStats = () => {
 
     // Other Interesting Stats:
     findWinlessWithdrawals(chain);
+    findDepositAmountDistributions(chain);
     findClaimAmountDistributions(chain);
     findAverageClaimTime(chain);
     findConfidentUsers(chain);
@@ -334,36 +335,112 @@ const findWinlessWithdrawals = (chain) => {
   const fileName = `${chain}/winlessWithdrawals`;
   let wallets;
   let users = [];
+  let blocksDeposited = [];
+  let winlessWithrawals = {
+    totalCount: 0,
+    estimatedBlockTime: 0,
+    avgBlocksDeposited: 0,
+    avgTimeDepositedInSeconds: 0,
+    avgTimeDepositedInDays: 0
+  }
 
   // Selecting Data:
   if(chain === 'eth') {
     wallets = ethWallets;
+    winlessWithrawals.estimatedBlockTime = estimatedEthBlockTime;
   } else if(chain === 'poly') {
     wallets = polyWallets;
+    winlessWithrawals.estimatedBlockTime = estimatedPolyBlockTime;
   } else {
     wallets = avaxWallets;
+    winlessWithrawals.estimatedBlockTime = estimatedAvaxBlockTime;
   }
 
   // Finding Users:
   wallets.forEach(wallet => {
     if(wallet.balance === 0 && wallet.claims.length === 0 && wallet.deposits.length > 0) {
-      let user = wallet.address;
       let txs = [];
+      let virtualBalance = 0;
       wallet.deposits.forEach(tx => {
         tx.type = 'deposit';
         txs.push(tx);
+        virtualBalance += tx.amount;
       });
       wallet.withdrawals.forEach(tx => {
         tx.type = 'withdrawal';
         txs.push(tx);
+        virtualBalance -= tx.amount;
       });
-      txs.sort((a, b) => a.block - b.block);
-      users.push({ user, txs });
+      if(virtualBalance <= 0) {
+        txs.sort((a, b) => a.block - b.block);
+        users.push({ txs });
+      }
+    }
+  });
+  winlessWithrawals.totalCount = users.length;
+
+  // Calculating Average Time Deposited:
+  users.forEach(user => {
+    let firstDeposit = user.txs.find(tx => tx.type === 'deposit');
+    let lastWithdrawal = user.txs.slice().reverse().find(tx => tx.type === 'withdrawal');
+    blocksDeposited.push(lastWithdrawal.block - firstDeposit.block);
+  });
+  winlessWithrawals.avgBlocksDeposited = Math.ceil((blocksDeposited.reduce((a, b) => a + b, 0) / blocksDeposited.length));
+  winlessWithrawals.avgTimeDepositedInSeconds = Math.ceil(winlessWithrawals.avgBlocksDeposited * winlessWithrawals.estimatedBlockTime);
+  winlessWithrawals.avgTimeDepositedInDays = Math.ceil(winlessWithrawals.avgTimeDepositedInSeconds / 60 / 60 / 24);
+
+  // Saving Data:
+  writeJSON([winlessWithrawals], fileName, true);
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to find total deposit amount distributions:
+const findDepositAmountDistributions = (chain) => {
+
+  // Initializations:
+  const fileName = `${chain}/depositDistributions`;
+  let deposits;
+  let totalDeposits = {
+    below10: 0,
+    below100: 0,
+    below500: 0,
+    below1000: 0,
+    below5000: 0,
+    below50000: 0,
+    above50000: 0
+  }
+
+  // Selecting Data:
+  if(chain === 'eth') {
+    deposits = ethDeposits;
+  } else if(chain === 'poly') {
+    deposits = polyDeposits;
+  } else {
+    deposits = avaxDeposits;
+  }
+
+  // Finding Users:
+  deposits.forEach(deposit => {
+    if(deposit.amount <= 10) {
+      totalDeposits.below10++;
+    } else if(deposit.amount <= 100) {
+      totalDeposits.below100++;
+    } else if(deposit.amount <= 500) {
+      totalDeposits.below500++;
+    } else if(deposit.amount <= 1000) {
+      totalDeposits.below1000++;
+    } else if(deposit.amount <= 5000) {
+      totalDeposits.below5000++;
+    } else if(deposit.amount <= 50000) {
+      totalDeposits.below50000++;
+    } else {
+      totalDeposits.above50000++;
     }
   });
 
   // Saving Data:
-  writeJSON(users, fileName, true);
+  writeJSON([totalDeposits], fileName, true);
 }
 
 /* ====================================================================================================================================================== */

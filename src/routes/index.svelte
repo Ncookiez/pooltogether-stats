@@ -5,9 +5,9 @@
 	import { getTimestamp } from '$lib/functions';
 
 	// Component Imports:
-	import Claims from '$lib/Claims.svelte';
 	import Deposits from '$lib/Deposits.svelte';
 	import Withdrawals from '$lib/Withdrawals.svelte';
+	import Claims from '$lib/Claims.svelte';
 
 	// Initializations:
 	let selectedChain: 'eth' | 'poly' | 'avax' = 'eth';
@@ -63,7 +63,7 @@
 
 	div.header {
 		display: flex;
-		margin: 2em 0;
+		margin: 4em 0 2em;
 	}
 
 	div.header img {
