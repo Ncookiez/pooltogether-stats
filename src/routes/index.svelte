@@ -10,7 +10,7 @@
 	import Claims from '$lib/Claims.svelte';
 
 	// Initializations:
-	let selectedChain: 'eth' | 'poly' | 'avax' = 'eth';
+	let selectedChain: 'eth' | 'poly' | 'avax' | 'op' = 'eth';
 	
 </script>
 
@@ -48,6 +48,7 @@
 	<span class="eth" class:selected={selectedChain === 'eth'} on:click={() => selectedChain = 'eth'}><img src="/images/ethereum.svg" alt="ETH"></span>
 	<span class="poly" class:selected={selectedChain === 'poly'} on:click={() => selectedChain = 'poly'}><img src="/images/polygon.svg" alt="POLY"></span>
 	<span class="avax" class:selected={selectedChain === 'avax'} on:click={() => selectedChain = 'avax'}><img src="/images/avalanche.svg" alt="AVAX"></span>
+	<span class="op" class:selected={selectedChain === 'op'} on:click={() => selectedChain = 'op'}><img src="/images/optimism.svg" alt="OP"></span>
 </div>
 
 <!-- Quick Navigation -->
@@ -111,8 +112,12 @@
 	}
 
 	div.chainSelector span.avax {
-		border-radius: 0 1em 1em 0;
 		background-color: #E84142;
+	}
+
+	div.chainSelector span.op {
+		border-radius: 0 1em 1em 0;
+		background-color: #FF0420;
 	}
 
 	div.chainSelector span.selected {

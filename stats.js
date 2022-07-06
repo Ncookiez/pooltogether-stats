@@ -17,18 +17,24 @@ const avaxDeposits = readJSON('avax/deposits');
 const avaxWithdrawals = readJSON('avax/withdrawals');
 const avaxClaims = readJSON('avax/claims');
 const avaxWallets = readJSON('avax/wallets');
+const opDeposits = readJSON('op/deposits');
+const opWithdrawals = readJSON('op/withdrawals');
+const opClaims = readJSON('op/claims');
+const opWallets = readJSON('op/wallets');
 const snapshot = readJSON('snapshot')[0];
 
 // Starting Block Timestamps:
 const ethStart = { block: 13419900, timestamp: 1634263391 };
 const polyStart = { block: 20226700, timestamp: 1634256864 };
 const avaxStart = { block: 8501200, timestamp: 1640037507 };
+const opStart = { block: 13641368, timestamp: 1656691441 };
 
 // Settings:
 const tickCount = 50;
 const estimatedEthBlockTime = 13;
 const estimatedPolyBlockTime = 2.2;
 const estimatedAvaxBlockTime = 2;
+const estimatedOpBlockTime = 1;
 
 /* ====================================================================================================================================================== */
 
@@ -39,7 +45,8 @@ const calcStats = () => {
   const chains = [
     'eth',
     'poly',
-    'avax'
+    'avax',
+    'op'
   ];
 
   // Stats:
@@ -91,10 +98,14 @@ const calcDepositsOverTime = (chain) => {
     deposits = polyDeposits;
     start = polyStart;
     endBlock = snapshot.polyBlock;
-  } else {
+  } else if(chain === 'avax') {
     deposits = avaxDeposits;
     start = avaxStart;
     endBlock = snapshot.avaxBlock;
+  } else {
+    deposits = opDeposits;
+    start = opStart;
+    endBlock = snapshot.opBlock;
   }
 
   // Setting Arrays:
@@ -157,10 +168,14 @@ const calcWithdrawalsOverTime = (chain) => {
     withdrawals = polyWithdrawals;
     start = polyStart;
     endBlock = snapshot.polyBlock;
-  } else {
+  } else if(chain === 'avax') {
     withdrawals = avaxWithdrawals;
     start = avaxStart;
     endBlock = snapshot.avaxBlock;
+  } else {
+    withdrawals = opWithdrawals;
+    start = opStart;
+    endBlock = snapshot.opBlock;
   }
 
   // Setting Arrays:
@@ -225,10 +240,14 @@ const calcClaimsOverTime = (chain) => {
     claims = polyClaims;
     start = polyStart;
     endBlock = snapshot.polyBlock;
-  } else {
+  } else if(chain === 'avax') {
     claims = avaxClaims;
     start = avaxStart;
     endBlock = snapshot.avaxBlock;
+  } else {
+    claims = opClaims;
+    start = opStart;
+    endBlock = snapshot.opBlock;
   }
 
   // Setting Arrays:
@@ -295,10 +314,14 @@ const calcWalletsOverTime = (chain) => {
     deposits = polyDeposits;
     start = polyStart;
     endBlock = snapshot.polyBlock;
-  } else {
+  } else if(chain === 'avax') {
     deposits = avaxDeposits;
     start = avaxStart;
     endBlock = snapshot.avaxBlock;
+  } else {
+    deposits = opDeposits;
+    start = opStart;
+    endBlock = snapshot.opBlock;
   }
 
   // Setting Arrays:
@@ -351,9 +374,12 @@ const findWinlessWithdrawals = (chain) => {
   } else if(chain === 'poly') {
     wallets = polyWallets;
     winlessWithrawals.estimatedBlockTime = estimatedPolyBlockTime;
-  } else {
+  } else if(chain === 'avax') {
     wallets = avaxWallets;
     winlessWithrawals.estimatedBlockTime = estimatedAvaxBlockTime;
+  } else {
+    wallets = opWallets;
+    winlessWithrawals.estimatedBlockTime = estimatedOpBlockTime;
   }
 
   // Finding Users:
@@ -416,8 +442,10 @@ const findDepositAmountDistributions = (chain) => {
     deposits = ethDeposits;
   } else if(chain === 'poly') {
     deposits = polyDeposits;
-  } else {
+  } else if(chain === 'avax') {
     deposits = avaxDeposits;
+  } else {
+    deposits = opDeposits;
   }
 
   // Finding Users:
@@ -466,8 +494,10 @@ const findClaimAmountDistributions = (chain) => {
     claims = ethClaims;
   } else if(chain === 'poly') {
     claims = polyClaims;
-  } else {
+  } else if(chain === 'avax') {
     claims = avaxClaims;
+  } else {
+    claims = opClaims;
   }
 
   // Finding Users:
@@ -512,9 +542,12 @@ const findAverageClaimTime = (chain) => {
   } else if(chain === 'poly') {
     wallets = polyWallets;
     estimatedBlockTime = estimatedPolyBlockTime;
-  } else {
+  } else if(chain === 'avax') {
     wallets = avaxWallets;
     estimatedBlockTime = estimatedAvaxBlockTime;
+  } else {
+    wallets = opWallets;
+    estimatedBlockTime = estimatedOpBlockTime;
   }
 
   // Finding Users:
@@ -560,9 +593,12 @@ const findConfidentUsers = (chain) => {
   } else if(chain === 'poly') {
     wallets = polyWallets;
     confidentUsers.estimatedBlockTime = estimatedPolyBlockTime;
-  } else {
+  } else if(chain === 'avax') {
     wallets = avaxWallets;
     confidentUsers.estimatedBlockTime = estimatedAvaxBlockTime;
+  } else {
+    wallets = opWallets;
+    confidentUsers.estimatedBlockTime = estimatedOpBlockTime;
   }
 
   // Finding Users:

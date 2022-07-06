@@ -8,7 +8,7 @@
 	import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 	// Initializations & Exports:
-	export let selectedChain: 'eth' | 'poly' | 'avax';
+	export let selectedChain: 'eth' | 'poly' | 'avax' | 'op';
 	const lineColor = '#FFB636';
 	const backgroundColor = lineColor + '80';
 	const lineWidth = 2;
@@ -47,17 +47,17 @@
 	$: depositDistributions, setDepositDistributionsChartData();
 
 	// Function to find appropriate deposits over time data:
-	const getDepositsOverTime = async (chain: 'eth' | 'poly' | 'avax') => {
+	const getDepositsOverTime = async (chain: 'eth' | 'poly' | 'avax' | 'op') => {
 		depositsOverTime = (await import(`./data/${chain}/depositsOverTime.json`)).default;
 	}
 	
 	// Function to find appropriate confident users' data:
-	const getConfidentUsersData = async (chain: 'eth' | 'poly' | 'avax') => {
+	const getConfidentUsersData = async (chain: 'eth' | 'poly' | 'avax' | 'op') => {
 		confidentUsers = (await import(`./data/${chain}/confidentUsers.json`)).default;
 	}
 
 	// Function to find appropriate deposit distributions data:
-	const getDepositDistributions = async (chain: 'eth' | 'poly' | 'avax') => {
+	const getDepositDistributions = async (chain: 'eth' | 'poly' | 'avax' | 'op') => {
 		depositDistributions = (await import(`./data/${chain}/depositDistributions.json`)).default;
 	}
 

@@ -8,7 +8,7 @@
 	import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 	// Initializations & Exports:
-	export let selectedChain: 'eth' | 'poly' | 'avax';
+	export let selectedChain: 'eth' | 'poly' | 'avax' | 'op';
 	const lineColor = '#FFB636';
 	const backgroundColor = lineColor + '80';
 	const lineWidth = 2;
@@ -52,17 +52,17 @@
 	$: claimDistributions, setClaimDistributionsChartData();
 
 	// Function to find appropriate claims over time data:
-	const getClaimsOverTime = async (chain: 'eth' | 'poly' | 'avax') => {
+	const getClaimsOverTime = async (chain: 'eth' | 'poly' | 'avax' | 'op') => {
 		claimsOverTime = (await import(`./data/${chain}/claimsOverTime.json`)).default;
 	}
 
 	// Function to find appropriate average claim time data:
-	const getAvgClaimTime = async (chain: 'eth' | 'poly' | 'avax') => {
+	const getAvgClaimTime = async (chain: 'eth' | 'poly' | 'avax' | 'op') => {
 		avgClaimTime = (await import(`./data/${chain}/avgClaimTime.json`)).default;
 	}
 
 	// Function to find appropriate claim distributions data:
-	const getClaimDistributions = async (chain: 'eth' | 'poly' | 'avax') => {
+	const getClaimDistributions = async (chain: 'eth' | 'poly' | 'avax' | 'op') => {
 		claimDistributions = (await import(`./data/${chain}/claimDistributions.json`)).default;
 	}
 
@@ -303,7 +303,7 @@
 	<!-- Average Claim Times -->
 	<div>
 		<span>How long do users have to wait since their first deposit to win a prize?</span>
-		<span>On average, users on <strong>{getChainName(selectedChain)}</strong> have <strong>{avgClaimTime ? avgClaimTime[0].avgClaimTimeInDays.toLocaleString(undefined) : 0}</strong> days between their first deposit and first claim.</span>
+		<span>On average, users on <strong>{getChainName(selectedChain)}</strong> have <strong>{avgClaimTime && avgClaimTime[0].avgClaimTimeInDays ? avgClaimTime[0].avgClaimTimeInDays.toLocaleString(undefined) : 0}</strong> days between their first deposit and first claim.</span>
 	</div>
 
 </section>

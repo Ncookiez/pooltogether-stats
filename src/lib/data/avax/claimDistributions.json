@@ -1,10 +1,10 @@
 [
  {
-  "below5": 713,
-  "below10": 278,
+  "below5": 716,
+  "below10": 279,
   "below50": 393,
-  "below100": 139,
-  "below500": 136,
+  "below100": 140,
+  "below500": 139,
   "below1000": 10,
   "above1000": 22
  }

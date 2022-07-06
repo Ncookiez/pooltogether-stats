@@ -7,6 +7,7 @@ import ethers from 'ethers';
 const eth = new ethers.providers.StaticJsonRpcProvider('https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161');
 const poly = new ethers.providers.StaticJsonRpcProvider('https://polygon-rpc.com');
 const avax = new ethers.providers.StaticJsonRpcProvider('https://avax-mainnet.gateway.pokt.network/v1/lb/605238bf6b986eea7cf36d5e/ext/bc/C/rpc');
+const op = new ethers.providers.StaticJsonRpcProvider('https://mainnet.optimism.io');
 
 // Data Files' Route:
 const fileRoute = './src/lib/data/';
@@ -76,6 +77,8 @@ export const getChainName = (chain) => {
       return 'Polygon';
     case 'avax':
       return 'Avalanche';
+    case 'op':
+      return 'Optimism';
     default:
       return undefined;
   }
@@ -92,6 +95,8 @@ export const getChainProvider = (chain) => {
       return poly;
     case 'avax':
       return avax;
+    case 'op':
+      return op;
     default:
       return undefined;
   }

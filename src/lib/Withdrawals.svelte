@@ -8,7 +8,7 @@
 	import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 	// Initializations & Exports:
-	export let selectedChain: 'eth' | 'poly' | 'avax';
+	export let selectedChain: 'eth' | 'poly' | 'avax' | 'op';
 	const lineColor = '#FFB636';
 	const backgroundColor = lineColor + '80';
 	const lineWidth = 2;
@@ -46,17 +46,17 @@
 	$: withdrawalsOverTime, setAvgWithdrawalAmountsChartData();
 
 	// Function to find appropriate withdrawals over time data:
-	const getWithdrawalsOverTime = async (chain: 'eth' | 'poly' | 'avax') => {
+	const getWithdrawalsOverTime = async (chain: 'eth' | 'poly' | 'avax' | 'op') => {
 		withdrawalsOverTime = (await import(`./data/${chain}/withdrawalsOverTime.json`)).default;
 	}
 
 	// Function to find appropriate winless withdrawals data:
-	const getWinlessWithdrawals = async (chain: 'eth' | 'poly' | 'avax') => {
+	const getWinlessWithdrawals = async (chain: 'eth' | 'poly' | 'avax' | 'op') => {
 		winlessWithdrawals = (await import(`./data/${chain}/winlessWithdrawals.json`)).default;
 	}
 
 	// Function to find appropriate wallets data:
-	const getWalletsOverTime = async (chain: 'eth' | 'poly' | 'avax') => {
+	const getWalletsOverTime = async (chain: 'eth' | 'poly' | 'avax' | 'op') => {
 		walletsOverTime = (await import(`./data/${chain}/walletsOverTime.json`)).default;
 	}
 
@@ -216,7 +216,7 @@
 	<div>
 		<span>Some users may be dissapointed that they haven't won any prizes, resulting in a full withdrawal.</span>
 		<span>This was the case with <strong>{winlessWithdrawals ? winlessWithdrawals[0].totalCount.toLocaleString(undefined) : 0}</strong> users, or <strong>{winlessWithdrawals && walletsOverTime ? ((winlessWithdrawals[0].totalCount / totalWallets) * 100).toFixed(1) : 0}%</strong> of all users.</span>
-		<span>These users were deposited for an average of <strong>{winlessWithdrawals ? winlessWithdrawals[0].avgTimeDepositedInDays.toLocaleString(undefined) : 0}</strong> days before fully withdrawing.</span>
+		<span>These users were deposited for an average of <strong>{winlessWithdrawals && winlessWithdrawals[0].avgTimeDepositedInDays ? winlessWithdrawals[0].avgTimeDepositedInDays.toLocaleString(undefined) : 0}</strong> days before fully withdrawing.</span>
 	</div>
 
 </section>

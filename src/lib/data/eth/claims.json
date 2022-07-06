@@ -2022,5 +2022,32 @@
    50,
    5
   ]
+ },
+ {
+  "txHash": "0x53fb1f147e5ae724077d00cce7cd5ad69e364573858b0a3bd9518c8445364ee5",
+  "block": 15085365,
+  "wallet": "0xa0Ebf87De04fF8185575E59ec907bA1D329eb83a",
+  "prizes": [
+   55
+  ]
+ },
+ {
+  "txHash": "0xe48a9ea3414f4f0ee65e2dd89d8a960d3e1a420fa761c6a4052d4c83b61ac3c4",
+  "block": 15090108,
+  "wallet": "0x31213d1b055Fdd1332Bd3499c3016E936047816d",
+  "prizes": [
+   5,
+   5,
+   5,
+   10,
+   5,
+   5,
+   10,
+   10,
+   5,
+   5,
+   5,
+   5
+  ]
  }
 ]

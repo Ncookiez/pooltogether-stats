@@ -1,9 +1,9 @@
 [
  {
-  "totalCount": 182,
+  "totalCount": 183,
   "estimatedBlockTime": 13,
-  "avgBlocksDeposited": 265774,
-  "avgTimeDepositedInSeconds": 3455062,
+  "avgBlocksDeposited": 264702,
+  "avgTimeDepositedInSeconds": 3441126,
   "avgTimeDepositedInDays": 40
  }
 ]
