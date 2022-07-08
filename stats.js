@@ -27,7 +27,7 @@ const snapshot = readJSON('snapshot')[0];
 const ethStart = { block: 13419900, timestamp: 1634263391 };
 const polyStart = { block: 20226700, timestamp: 1634256864 };
 const avaxStart = { block: 8501200, timestamp: 1640037507 };
-const opStart = { block: 13641368, timestamp: 1656691441 };
+const opStart = { block: 14043015, timestamp: 1657231225 };
 
 // Settings:
 const tickCount = 50;

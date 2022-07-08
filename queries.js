@@ -20,9 +20,9 @@ const avaxPrizeDistributor = '0x83332F908f403ce795D90f677cE3f382FE73f3D1';
 const avaxTicket = '0xB27f379C050f6eD0973A01667458af6eCeBc1d90';
 
 // Optimism Contract Addresses:
-const opPrizePool = '0x73A7D35bb34E6c7b0Bc06E6399CdDE05320bcBc3';
-const opPrizeDistributor = '0xa365317291122b44a549C34a383CCd117b71941e';
-const opTicket = '0x5E5b54cd73872ba3103cd95A58067A7079d0259b';
+const opPrizePool = '0x79Bc8bD53244bC8a9C8c27509a2d573650A83373';
+const opPrizeDistributor = '0x722e9BFC008358aC2d445a8d892cF7b62B550F3F';
+const opTicket = '0x62BB4fc73094c83B5e952C2180B23fA7054954c4';
 
 /* ====================================================================================================================================================== */
 
@@ -71,7 +71,7 @@ const queryDeposits = async (chain) => {
   } else if(chain === 'avax') {
     depositEvents = await queryBlocks(chain, avaxPrizePool, prizePoolABI, 'Deposited', 100000, [], Math.max(8501287, getLatestBlock(fileName)));
   } else if(chain === 'op') {
-    depositEvents = await queryBlocks(chain, opPrizePool, prizePoolABI, 'Deposited', 100000, [], Math.max(13641368, getLatestBlock(fileName)));
+    depositEvents = await queryBlocks(chain, opPrizePool, prizePoolABI, 'Deposited', 100000, [], Math.max(14043015, getLatestBlock(fileName)));
   }
   console.log(`  > ${chainName}: Found ${depositEvents.length} new deposit events.`);
 
@@ -108,7 +108,7 @@ const queryWithdrawals = async (chain) => {
   } else if(chain === 'avax') {
     withdrawalEvents = await queryBlocks(chain, avaxPrizePool, prizePoolABI, 'Withdrawal', 100000, [], Math.max(8501287, getLatestBlock(fileName)));
   } else if(chain === 'op') {
-    withdrawalEvents = await queryBlocks(chain, opPrizePool, prizePoolABI, 'Withdrawal', 100000, [], Math.max(13641368, getLatestBlock(fileName)));
+    withdrawalEvents = await queryBlocks(chain, opPrizePool, prizePoolABI, 'Withdrawal', 100000, [], Math.max(14043015, getLatestBlock(fileName)));
   }
   console.log(`  > ${chainName}: Found ${withdrawalEvents.length} new withdrawal events.`);
 
@@ -145,7 +145,7 @@ const queryClaims = async (chain) => {
   } else if(chain === 'avax') {
     claimEvents = await queryBlocks(chain, avaxPrizeDistributor, prizeDistributorABI, 'ClaimedDraw', 100000, [], Math.max(8501313, getLatestBlock(fileName)));
   } else if(chain === 'op') {
-    claimEvents = await queryBlocks(chain, opPrizeDistributor, prizeDistributorABI, 'ClaimedDraw', 100000, [], Math.max(13641401, getLatestBlock(fileName)));
+    claimEvents = await queryBlocks(chain, opPrizeDistributor, prizeDistributorABI, 'ClaimedDraw', 100000, [], Math.max(14043052, getLatestBlock(fileName)));
   }
   console.log(`  > ${chainName}: Found ${claimEvents.length} new claim events.`);
 
