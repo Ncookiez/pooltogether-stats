@@ -17147,5 +17147,111 @@
    5,
    5
   ]
+ },
+ {
+  "txHash": "0xfbbecaaa427884bb73674e79bc43a2dced6496f5b4cf16e54f3a2db5558eee63",
+  "block": 16989271,
+  "wallet": "0x923D2f38fd86Bc66478b990168b8E0D4D64d1FC8",
+  "prizes": [
+   55
+  ]
+ },
+ {
+  "txHash": "0xb879a160853da73357a39e644ea51452bf51e5ec159fef214c41b2e55ae632fc",
+  "block": 16995518,
+  "wallet": "0x69809Bf7f08d7112b30d77AA07e6E98A0C68BE59",
+  "prizes": [
+   10
+  ]
+ },
+ {
+  "txHash": "0x148936fc1950066ff761e0ca785875b9d3f86c28e7cf8c7655a5531eb2e693d8",
+  "block": 17017184,
+  "wallet": "0xced732cA92CB4f040239C4e8c85F14ACBb5db000",
+  "prizes": [
+   10,
+   5,
+   5,
+   10,
+   10,
+   10,
+   5,
+   5,
+   5,
+   10,
+   10,
+   5,
+   5,
+   5,
+   5
+  ]
+ },
+ {
+  "txHash": "0xcc697fcfacaae8ec52c220d90eed7cec383b6c48477747ea75c16b8b29175ea3",
+  "block": 17022303,
+  "wallet": "0x3Dc2E29297B69E7C75BBE7f2240CDd7FBce857Bf",
+  "prizes": [
+   15,
+   10,
+   10,
+   10,
+   10,
+   10,
+   10
+  ]
+ },
+ {
+  "txHash": "0xdf640fc2c2d9f23adf7cef09f4a86241e58096480b15e2140168b4fcca103469",
+  "block": 17022323,
+  "wallet": "0x73076d73b3DCf783d93AE2a449B0AB56184A6E35",
+  "prizes": [
+   10,
+   10,
+   10,
+   5,
+   10,
+   10,
+   10
+  ]
+ },
+ {
+  "txHash": "0xaffcae46eb21920fc57bd7a789c83d7c592a46d699fc0632d04d377468cd04ee",
+  "block": 17022339,
+  "wallet": "0x0d16ec0FeFe07Cb7D43742714744E811Ce9a1210",
+  "prizes": [
+   10,
+   5,
+   15,
+   5,
+   10
+  ]
+ },
+ {
+  "txHash": "0x6dc223ec81a7288ea4e8cba8c2b4bf501c850787316b82e7e927cfde8eb15251",
+  "block": 17034785,
+  "wallet": "0x94dfE05107bD874CCEF5Bb192C6C188955EBE0D4",
+  "prizes": [
+   5
+  ]
+ },
+ {
+  "txHash": "0x0092d47fbaa43deb8b070ff89793b8d5e0c511a6b43f89bf496c74075d2c14cf",
+  "block": 17065227,
+  "wallet": "0xe7b32c481d3E5990561eD651262Ac3c5CcdA8CB3",
+  "prizes": [
+   5,
+   5,
+   5,
+   5,
+   5
+  ]
+ },
+ {
+  "txHash": "0x9be66b7d9280e23e9f60c44756443768f9a7744f0406e199245d1f122355d320",
+  "block": 17068444,
+  "wallet": "0xf5B6f583987911d3f086a03FB1d3387649152F83",
+  "prizes": [
+   5
+  ]
  }
 ]
