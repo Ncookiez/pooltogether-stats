@@ -17253,5 +17253,42 @@
   "prizes": [
    5
   ]
+ },
+ {
+  "txHash": "0xcddc691edf0d5977470a4cfcd6c6cf5e5910eaf94013da47bb5722162abb2171",
+  "block": 17072229,
+  "wallet": "0x540c44FF7B71F2487Cd11aaF53aeC1a85BFE8f7a",
+  "prizes": [
+   5,
+   10,
+   5,
+   5,
+   18
+  ]
+ },
+ {
+  "txHash": "0xffe0c19ef8e1f35b624b18b4125c4fce215ded4276ed33e72ddde6c147be441f",
+  "block": 17074762,
+  "wallet": "0x77c84d9ff6F2999861e2017f4E38908ebB6a7566",
+  "prizes": [
+   10,
+   18
+  ]
+ },
+ {
+  "txHash": "0xf31b8125650f1df37eff5b9ea3d3cedd9d6be5859136c9e7f09355dce807b922",
+  "block": 17085728,
+  "wallet": "0x92A27f87Cf6363FEa05563fFf0DFA8A4c809B5C8",
+  "prizes": [
+   5
+  ]
+ },
+ {
+  "txHash": "0xd6a64b85ff542e446cb75012ca6c202928c935344e48856d8afa2db7ba3724f7",
+  "block": 17110851,
+  "wallet": "0x7Eb9cB7Aba96e1E7Ff7b194FBde9A34e8B4BF6c5",
+  "prizes": [
+   50
+  ]
  }
 ]
