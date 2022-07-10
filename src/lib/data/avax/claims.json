@@ -17290,5 +17290,29 @@
   "prizes": [
    50
   ]
+ },
+ {
+  "txHash": "0xc2d3345446d5394632453dc8099734473f5b134ba72314b3d9f0d2f6398787c7",
+  "block": 17114214,
+  "wallet": "0xB048755CFBc2F4E3b4caB57D750e678c85B0Ba71",
+  "prizes": [
+   18
+  ]
+ },
+ {
+  "txHash": "0x946106fbde3d820b3eb477373184e39461db9afae4c3acb37cbabe1105784e0d",
+  "block": 17135319,
+  "wallet": "0xF80d53E13838558A9697cA40Eedfe7a94761EfE3",
+  "prizes": [
+   10,
+   10,
+   5,
+   5,
+   5,
+   10,
+   5,
+   5,
+   18
+  ]
  }
 ]
