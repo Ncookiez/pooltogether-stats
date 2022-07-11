@@ -2,9 +2,9 @@
 
 	// Imports:
 	import { onMount } from 'svelte';
-	import { getChainName, getTimestamp } from '$lib/functions';
 	import { lineChartConfig } from '$lib/charts';
 	import { Chart, registerables } from 'chart.js';
+	import { getChainName, getTimestamp } from '$lib/functions';
 	import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 	// Initializations & Exports:

@@ -208,16 +208,16 @@
 	<span>Here's a more granular look at these amounts:</span>
 	<canvas id="withdrawalAmountsChart" />
 
-	<!-- Avg Withdrawal Amounts Over Time Chart -->
-	<span>The all-time average withdrawal on <strong>{getChainName(selectedChain)}</strong> is of <strong>${avgWithdrawalAmount.toLocaleString(undefined)}</strong>:</span>
-	<canvas id="avgWithdrawalAmountsChart" />
-
 	<!-- Winless Withdrawals -->
 	<div>
 		<span>Some users may be dissapointed that they haven't won any prizes, resulting in a full withdrawal.</span>
 		<span>This was the case with <strong>{winlessWithdrawals ? winlessWithdrawals[0].totalCount.toLocaleString(undefined) : 0}</strong> users, or <strong>{winlessWithdrawals && walletsOverTime ? ((winlessWithdrawals[0].totalCount / totalWallets) * 100).toFixed(1) : 0}%</strong> of all users on <strong>{getChainName(selectedChain)}</strong>.</span>
 		<span>These users were deposited for an average of <strong>{winlessWithdrawals && winlessWithdrawals[0].avgTimeDepositedInDays ? winlessWithdrawals[0].avgTimeDepositedInDays.toLocaleString(undefined) : 0}</strong> days before fully withdrawing.</span>
 	</div>
+
+	<!-- Avg Withdrawal Amounts Over Time Chart -->
+	<span>The all-time average withdrawal on <strong>{getChainName(selectedChain)}</strong> is of <strong>${avgWithdrawalAmount.toLocaleString(undefined)}</strong>:</span>
+	<canvas id="avgWithdrawalAmountsChart" />
 
 </section>
 

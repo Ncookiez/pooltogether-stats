@@ -70,6 +70,8 @@ const calcStats = () => {
     findClaimAmountDistributions(chain);
     findAverageClaimTime(chain);
     findConfidentUsers(chain);
+    findMultichainUsers(chain);
+    findMovingUsers(chain);
     
   }
 }
@@ -700,6 +702,95 @@ const findConfidentUsers = (chain) => {
 
   // Saving Data:
   writeJSON([confidentUsers], fileName, true);
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to find users deposited in multiple chains:
+const findMultichainUsers = (chain) => {
+
+  // Initializations:
+  const fileName = `${chain}/multichainUsers`;
+  let wallets;
+  let wallets2;
+  let wallets3;
+  let wallets4;
+  let chainDepositPercentages = [];
+  let multichainUsers = {
+    oneChain: 0,
+    twoChains: 0,
+    threeChains: 0,
+    fourChains: 0,
+    avgChainDepositPercentage: 0
+  }
+
+  // Selecting Data:
+  if(chain === 'eth') {
+    wallets = ethWallets;
+    wallets2 = polyWallets;
+    wallets3 = avaxWallets;
+    wallets4 = opWallets;
+  } else if(chain === 'poly') {
+    wallets = polyWallets;
+    wallets2 = ethWallets;
+    wallets3 = avaxWallets;
+    wallets4 = opWallets;
+  } else if(chain === 'avax') {
+    wallets = avaxWallets;
+    wallets2 = ethWallets;
+    wallets3 = polyWallets;
+    wallets4 = opWallets;
+  } else {
+    wallets = opWallets;
+    wallets2 = ethWallets;
+    wallets3 = polyWallets;
+    wallets4 = avaxWallets;
+  }
+
+  // Finding Multichain Users:
+  wallets.forEach(wallet => {
+    if(wallet.balance > 0) {
+      let balances = [wallet.balance];
+      let wallet2 = wallets2.find(otherWallet => otherWallet.address === wallet.address);
+      if(wallet2 && wallet2.balance > 0) {
+        balances.push(wallet2.balance);
+      }
+      let wallet3 = wallets3.find(otherWallet => otherWallet.address === wallet.address);
+      if(wallet3 && wallet3.balance > 0) {
+        balances.push(wallet3.balance);
+      }
+      let wallet4 = wallets4.find(otherWallet => otherWallet.address === wallet.address);
+      if(wallet4 && wallet4.balance > 0) {
+        balances.push(wallet4.balance);
+      }
+      if(balances.length === 1) {
+        multichainUsers.oneChain++;
+      } else {
+        if(balances.length === 2) {
+          multichainUsers.twoChains++;
+        } else if(balances.length === 3) {
+          multichainUsers.threeChains++;
+        } else if(balances.length === 4) {
+          multichainUsers.fourChains++;
+        }
+        let totalBalance = balances.reduce((a, b) => a + b, 0);
+        chainDepositPercentages.push((wallet.balance / totalBalance) * 100);
+      }
+    }
+  });
+  
+  // Calculating Average Deposit Percentage On Main Chain:
+  multichainUsers.avgChainDepositPercentage = chainDepositPercentages.reduce((a, b) => a + b, 0) / chainDepositPercentages.length;
+
+  // Saving Data:
+  writeJSON([multichainUsers], fileName, true);
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to find users that withdrew from one chain to deposit in another:
+const findMovingUsers = (chain) => {
+  // <TODO>
 }
 
 /* ====================================================================================================================================================== */

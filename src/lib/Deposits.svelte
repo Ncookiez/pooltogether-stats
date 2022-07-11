@@ -239,14 +239,6 @@
 	<span>Here's a more granular look at these amounts:</span>
 	<canvas id="depositAmountsChart" />
 
-	<!-- Avg Deposit Amounts Over Time Chart -->
-	<span>The all-time average deposit on <strong>{getChainName(selectedChain)}</strong> is of <strong>${avgDepositAmount.toLocaleString(undefined)}</strong>:</span>
-	<canvas id="avgDepositAmountsChart" />
-
-	<!-- Deposit Distributions Chart -->
-	<span>The distribution of deposit transactions on <strong>{getChainName(selectedChain)}</strong> is as follows:</span>
-	<canvas id="depositDistributionsChart" class="pieChart" />
-
 	<!-- Confident Depositors -->
 	<div>
 		<span>Some may choose to deposit a small amount first to test out the waters, then later deposit more.</span>
@@ -259,6 +251,14 @@
 			<span>None of these users won a prize before choosing to deposit a larger amount.</span>
 		{/if}
 	</div>
+
+	<!-- Avg Deposit Amounts Over Time Chart -->
+	<span>The all-time average deposit on <strong>{getChainName(selectedChain)}</strong> is of <strong>${avgDepositAmount.toLocaleString(undefined)}</strong>:</span>
+	<canvas id="avgDepositAmountsChart" />
+
+	<!-- Deposit Distributions Chart -->
+	<span>The distribution of deposit transactions on <strong>{getChainName(selectedChain)}</strong> is as follows:</span>
+	<canvas id="depositDistributionsChart" class="pieChart" />
 
 </section>
 
