@@ -9,18 +9,22 @@ const ethDeposits = readJSON('eth/deposits');
 const ethWithdrawals = readJSON('eth/withdrawals');
 const ethClaims = readJSON('eth/claims');
 const ethWallets = readJSON('eth/wallets');
+const ethYieldCaptures = readJSON('eth/yieldCaptures');
 const polyDeposits = readJSON('poly/deposits');
 const polyWithdrawals = readJSON('poly/withdrawals');
 const polyClaims = readJSON('poly/claims');
 const polyWallets = readJSON('poly/wallets');
+const polyYieldCaptures = readJSON('poly/yieldCaptures');
 const avaxDeposits = readJSON('avax/deposits');
 const avaxWithdrawals = readJSON('avax/withdrawals');
 const avaxClaims = readJSON('avax/claims');
 const avaxWallets = readJSON('avax/wallets');
+const avaxYieldCaptures = readJSON('avax/yieldCaptures');
 const opDeposits = readJSON('op/deposits');
 const opWithdrawals = readJSON('op/withdrawals');
 const opClaims = readJSON('op/claims');
 const opWallets = readJSON('op/wallets');
+const opYieldCaptures = readJSON('op/yieldCaptures');
 const snapshot = readJSON('snapshot')[0];
 
 // Starting Block Timestamps:
@@ -58,6 +62,7 @@ const calcStats = () => {
     calcWithdrawalsOverTime(chain);
     calcClaimsOverTime(chain);
     calcWalletsOverTime(chain);
+    calcYieldOverTime(chain);
 
     // Other Interesting Stats:
     findWinlessWithdrawals(chain);
@@ -347,6 +352,74 @@ const calcWalletsOverTime = (chain) => {
 
   // Saving Data:
   writeJSON([walletsOverTime], fileName, true);
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to calculate yield captures over time:
+const calcYieldOverTime = (chain) => {
+
+  // Initializations:
+  const fileName = `${chain}/yieldOverTime`;
+  let yieldCaptures;
+  let start;
+  let endBlock;
+  let blocks = [];
+  let yieldOverTime = {
+    timestamps: [],
+    yieldAmounts: [],
+    yieldCounts: [],
+    cumulativeYieldAmounts: [],
+    cumulativeYieldCounts: []
+  }
+
+  // Selecting Data:
+  if(chain === 'eth') {
+    yieldCaptures = ethYieldCaptures;
+    start = ethStart;
+    endBlock = snapshot.ethBlock;
+  } else if(chain === 'poly') {
+    yieldCaptures = polyYieldCaptures;
+    start = polyStart;
+    endBlock = snapshot.polyBlock;
+  } else if(chain === 'avax') {
+    yieldCaptures = avaxYieldCaptures;
+    start = avaxStart;
+    endBlock = snapshot.avaxBlock;
+  } else {
+    yieldCaptures = opYieldCaptures;
+    start = opStart;
+    endBlock = snapshot.opBlock;
+  }
+
+  // Setting Arrays:
+  blocks = getRangeArray(start.block, endBlock, tickCount);
+  yieldOverTime.timestamps = getRangeArray(start.timestamp, snapshot.timestamp, tickCount);
+
+  // Filtering Data:
+  let cumulativeYieldAmount = 0;
+  let cumulativeYieldCount = 0;
+  for(let i = 0; i < tickCount; i++) {
+    let yieldAmount = 0;
+    let yieldCount = 0;
+    yieldCaptures.forEach(capture => {
+      if(capture.block <= blocks[i]) {
+        if((i > 0 && capture.block > blocks[i - 1]) || i === 0) {
+          yieldAmount += capture.yield;
+          yieldCount++;
+        }
+      }
+    });
+    cumulativeYieldAmount += yieldAmount;
+    cumulativeYieldCount += yieldCount;
+    yieldOverTime.yieldAmounts.push(Math.floor(yieldAmount));
+    yieldOverTime.yieldCounts.push(yieldCount);
+    yieldOverTime.cumulativeYieldAmounts.push(Math.floor(cumulativeYieldAmount));
+    yieldOverTime.cumulativeYieldCounts.push(cumulativeYieldCount);
+  }
+
+  // Saving Data:
+  writeJSON([yieldOverTime], fileName, true);
 }
 
 /* ====================================================================================================================================================== */

@@ -320,6 +320,11 @@
     "tx": "0xf23bd30436301e9fc496c2391371aa6543d3bd14338cd20006488b36dd59c73f",
     "block": 13434333,
     "amount": 1500
+   },
+   {
+    "tx": "0x184cc539370060af3dffaffa7e9352c15dc6a888e5578114749df29f71e3d538",
+    "block": 15116554,
+    "amount": 60000
    }
   ],
   "withdrawals": [
@@ -330,7 +335,7 @@
    }
   ],
   "claims": [],
-  "balance": 0
+  "balance": 60000
  },
  {
   "address": "0xDa63D70332139E6A8eCA7513f4b6E2E0Dc93b693",

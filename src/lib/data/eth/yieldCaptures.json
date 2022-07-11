@@ -1,0 +1,82 @@
+[
+ {
+  "txHash": "0x7cc837f4d28cbac9b418ca3979db09ddd19a83d35d5269a4768407978f768a99",
+  "block": 13642664,
+  "yield": 9305.809904
+ },
+ {
+  "txHash": "0x3441ee05505e3799345cb313cc59a5909e3f9ef54b8a0c303e94b27e703cbc35",
+  "block": 13766939,
+  "yield": 3384.560573
+ },
+ {
+  "txHash": "0x2aa2c56b4c1fa0788cc5ffa4941fca6896c5052f976937dc5eb951209bcee802",
+  "block": 13948603,
+  "yield": 5845.761011
+ },
+ {
+  "txHash": "0x49a995ac26cd5635a50c3192767c6d61deed7af3c19829fa726fa1b27f973581",
+  "block": 13986912,
+  "yield": 1115.563455
+ },
+ {
+  "txHash": "0x499d9c287a174c169f1b162e0e3cbb84721a6744adfce6e75fd38744955c514d",
+  "block": 14077449,
+  "yield": 1939.60557
+ },
+ {
+  "txHash": "0x9bd19b14507cb0fa2bc6f30573359e244a3a0da3a47bde65ed8f2401c0ddd6c5",
+  "block": 14168086,
+  "yield": 1056.361311
+ },
+ {
+  "txHash": "0x3093cf68e3a6861721d09192595d6b65a02b2ac2d055391ac4b73743c5b3f799",
+  "block": 14258531,
+  "yield": 1478.528569
+ },
+ {
+  "txHash": "0x0a7e749fba7e69cc011c02b579e28521fd1bf0dda01fab307f81193dc461cb39",
+  "block": 14348837,
+  "yield": 2651.030993
+ },
+ {
+  "txHash": "0xafd3da4a3a1b9999d9112fc8b484df514fd2f232ad198d36b98db8959f4d53d7",
+  "block": 14438797,
+  "yield": 4116.284262
+ },
+ {
+  "txHash": "0xfeafe2f7ae4dba8f5aaecb20f23d79bc895894d0946d14c5157e645bf30e13fa",
+  "block": 14528660,
+  "yield": 5627.591558
+ },
+ {
+  "txHash": "0x2d8932985649ecb85a3a89f981940b9996798d084aad10020c4953c1967a73b3",
+  "block": 14618259,
+  "yield": 6044.349871
+ },
+ {
+  "txHash": "0x87f3f72a280a63e523872a7785b9565d2861bb023f61cce2086707799513970d",
+  "block": 14707304,
+  "yield": 3770.14298
+ },
+ {
+  "txHash": "0x7f530b1121fab274c0b7abd67e0f60de757a342041514f1238077bf03f67b13d",
+  "block": 14795153,
+  "yield": 2974.56804
+ },
+ {
+  "txHash": "0x8bc03699e97b133b920ee835886a63538d473ef293503c2ed7668e312f4410b2",
+  "block": 14881291,
+  "yield": 2059.126809
+ },
+ {
+  "txHash": "0x8431b65a06a8e90730e1df4fd859e7bce2a692307ff29d53e6b12cb561ba7f63",
+  "block": 14964198,
+  "yield": 1963.695072
+ },
+ {
+  "txHash": "0x45a8a942ba57d566eae5d6e02be5cf95f9bd1e66f1c61baef1767d2a18db7fde",
+  "block": 15041946,
+  "yield": 2960.328052
+ }
+]

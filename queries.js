@@ -1,6 +1,6 @@
 
 // Imports:
-import { prizePoolABI, prizeDistributorABI, ticketABI } from './ABIs.js';
+import { prizePoolABI, prizeDistributorABI, ticketABI, flushABI } from './ABIs.js';
 import { queryBlocks, parseBN, multicallOneContractQuery } from 'weaverfi/dist/functions.js';
 import { getChainName, writeJSON, readJSON, getLatestBlock, getCurrentBlock } from './functions.js';
 
@@ -8,21 +8,25 @@ import { getChainName, writeJSON, readJSON, getLatestBlock, getCurrentBlock } fr
 const ethPrizePool = '0xd89a09084555a7D0ABe7B111b1f78DFEdDd638Be';
 const ethPrizeDistributor = '0xb9a179DcA5a7bf5f8B9E088437B3A85ebB495eFe';
 const ethTicket = '0xdd4d117723C257CEe402285D3aCF218E9A8236E1';
+const ethFlush = '0x2193b28b2BdfBf805506C9D91Ed2021bA6fBc888';
 
 // Polygon Contract Addresses:
 const polyPrizePool = '0x19DE635fb3678D8B8154E37d8C9Cdf182Fe84E60';
 const polyPrizeDistributor = '0x8141BcFBcEE654c5dE17C4e2B2AF26B67f9B9056';
 const polyTicket = '0x6a304dFdb9f808741244b6bfEe65ca7B3b3A6076';
+const polyFlush = '0xA2342489470474536F04cd4DdA2e8658303b305d';
 
 // Avalanche Contract Addresses:
 const avaxPrizePool = '0xF830F5Cb2422d555EC34178E27094a816c8F95EC';
 const avaxPrizeDistributor = '0x83332F908f403ce795D90f677cE3f382FE73f3D1';
 const avaxTicket = '0xB27f379C050f6eD0973A01667458af6eCeBc1d90';
+const avaxFlush = '0x1B20994C3894EcC862e26A9F4EC626A8489DD051';
 
 // Optimism Contract Addresses:
 const opPrizePool = '0x79Bc8bD53244bC8a9C8c27509a2d573650A83373';
 const opPrizeDistributor = '0x722e9BFC008358aC2d445a8d892cF7b62B550F3F';
 const opTicket = '0x62BB4fc73094c83B5e952C2180B23fA7054954c4';
+const opFlush = '0x4c65F496B78b7E81c15723f56a43925E5dc3a0e1';
 
 /* ====================================================================================================================================================== */
 
@@ -44,6 +48,7 @@ const executeQueries = async () => {
     await queryWithdrawals(chain);
     await queryClaims(chain);
     await queryWallets(chain);
+    await queryYield(chain);
   })());
   await Promise.all(promises);
 
@@ -263,6 +268,42 @@ const queryWallets = async (chain) => {
 
   // Saving Wallet Data:
   writeJSON(wallets, fileName, true);
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to query for yield captures on a specific chain:
+const queryYield = async (chain) => {
+
+  // Initializations:
+  const fileName = `${chain}/yieldCaptures`;
+  const chainName = getChainName(chain);
+  let yieldCaptures = [];
+  let flushEvents = [];
+
+  // Querying Flush Events:
+  if(chain === 'eth') {
+    flushEvents = await queryBlocks(chain, ethFlush, flushABI, 'Flushed', 100000, [], Math.max(13419944, getLatestBlock(fileName)));
+  } else if(chain === 'poly') {
+    flushEvents = await queryBlocks(chain, polyFlush, flushABI, 'Flushed', 2048, [], Math.max(20226820, getLatestBlock(fileName)));
+  } else if(chain === 'avax') {
+    flushEvents = await queryBlocks(chain, avaxFlush, flushABI, 'Flushed', 100000, [], Math.max(8501340, getLatestBlock(fileName)));
+  } else if(chain === 'op') {
+    flushEvents = await queryBlocks(chain, opFlush, flushABI, 'Flushed', 100000, [], Math.max(14043064, getLatestBlock(fileName)));
+  }
+  console.log(`  > ${chainName}: Found ${flushEvents.length} new flush events.`);
+
+  // Formatting & Saving Flush Events:
+  if(flushEvents.length > 0) {
+    flushEvents.forEach(event => {
+      yieldCaptures.push({
+        txHash: event.transactionHash,
+        block: event.blockNumber,
+        yield: parseBN(event.args.amount) / (10 ** 6)
+      });
+    });
+    writeJSON(yieldCaptures, fileName);
+  }
 }
 
 /* ====================================================================================================================================================== */

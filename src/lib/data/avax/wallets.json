@@ -41898,6 +41898,11 @@
     "tx": "0xcdaeaaa77dc43f9ff5bfa3bc6869d8aa83aced7435c984390ddb8c62aa5e5870",
     "block": 14811828,
     "amount": 10034.999965
+   },
+   {
+    "tx": "0xcef07b94811541800f47dd6a654fbc360e37d0840a2b3e957f2cc313d81d1ce9",
+    "block": 17165003,
+    "amount": 25226.48089
    }
   ],
   "claims": [
@@ -42038,9 +42043,16 @@
      5,
      18
     ]
+   },
+   {
+    "tx": "0xc7cfab278f3a11f944d75169636ea39901556b971e2412a52c3455c11d82f56f",
+    "block": 17164927,
+    "prizes": [
+     18
+    ]
    }
   ],
-  "balance": 25209.230891
+  "balance": 0
  },
  {
   "address": "0x7D7963bc806800327494471386af6DBC185662f5",
@@ -43046,7 +43058,13 @@
     "amount": 9
    }
   ],
-  "withdrawals": [],
+  "withdrawals": [
+   {
+    "tx": "0x0dcb2692cc5410d29ffe68066c622c52c4735a73f7068634ae07c923d3419da1",
+    "block": 17153965,
+    "amount": 228.99
+   }
+  ],
   "claims": [
    {
     "tx": "0x1bf1fcf0b095edf2209ca2ecf524441a5757b8560eab7ea62d7b30c2025c759e",
@@ -43056,7 +43074,7 @@
     ]
    }
   ],
-  "balance": 228.999989
+  "balance": 0.009989
  },
  {
   "address": "0x23Fc56800A4425CFE6cAB4BA863F4305D08529d6",
@@ -48892,9 +48910,17 @@
     "prizes": [
      5
     ]
+   },
+   {
+    "tx": "0xb2565cdf2f1b3d2d138e120b15709817a3641de33cec32635add604dfec20a27",
+    "block": 17158598,
+    "prizes": [
+     5,
+     5
+    ]
    }
   ],
-  "balance": 993.783788
+  "balance": 1003.783776
  },
  {
   "address": "0x24c625B636514037DF035402A65257f3f682703F",
@@ -79584,9 +79610,15 @@
     "amount": 1513.64
    }
   ],
-  "withdrawals": [],
+  "withdrawals": [
+   {
+    "tx": "0x33155840c714c28b1ea14e25e7d8be334099d04502eb1811ed57476373058ab4",
+    "block": 17159692,
+    "amount": 1513.64
+   }
+  ],
   "claims": [],
-  "balance": 1513.64
+  "balance": 0
  },
  {
   "address": "0x5333c1d733794e02f34d5f0d88c65d03FD2E4Db1",
@@ -79819,9 +79851,15 @@
     "amount": 35
    }
   ],
-  "withdrawals": [],
+  "withdrawals": [
+   {
+    "tx": "0xcb7b9d13c419bd61540dbc0505dd72bebfe129caf57a7e7b5e9e2634d1352179",
+    "block": 17160407,
+    "amount": 35
+   }
+  ],
   "claims": [],
-  "balance": 35
+  "balance": 0
  },
  {
   "address": "0xf46839E69021Ac0F0BdF845078Ef8C0847Ed2450",
@@ -79897,6 +79935,19 @@
   "withdrawals": [],
   "claims": [],
   "balance": 20
+ },
+ {
+  "address": "0x20117e32de41aF89Ce66AA67A439f3ECC0F0F68D",
+  "deposits": [
+   {
+    "tx": "0x6ebd7ca6541a2e0d43c92d7824ab5329ec691e4672c0c96edceaa00ec9df109d",
+    "block": 17155641,
+    "amount": 104.74051
+   }
+  ],
+  "withdrawals": [],
+  "claims": [],
+  "balance": 104.74051
  },
  {
   "address": "0x803eE04086FfE0D4dB449420D92a0b89B1750c97",

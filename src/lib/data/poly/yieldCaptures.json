@@ -1,0 +1,97 @@
+[
+ {
+  "txHash": "0x34e5c8ff5788ea18d85dca737e94d4273c1d07a4b43ff2fc03f9cb2d4fd61825",
+  "block": 21534767,
+  "yield": 30980.607781
+ },
+ {
+  "txHash": "0x79c8a1bc3025f583fe10e8aa1af269fc3770da09a5ba0d6588c8e38c95de5849",
+  "block": 22291132,
+  "yield": 30190.191806
+ },
+ {
+  "txHash": "0x814c375446399d4740658148d9eefd450befd03fe2f0ecfc669a9267ec6d2c47",
+  "block": 22874132,
+  "yield": 25790.398407
+ },
+ {
+  "txHash": "0x1074f5a728ffd1ce4e5df9594327b6b4d03e8f1ed239939b2970fb9c12c2cc0c",
+  "block": 23272999,
+  "yield": 19596.647533
+ },
+ {
+  "txHash": "0xca478c09e386fbb4812dd4ff2132df9f2304d8a348840008dc0b05890e99a22e",
+  "block": 23276911,
+  "yield": 192.504769
+ },
+ {
+  "txHash": "0x6c8fba1ce933980bcbd9639ebac868d37bcf4ca99964271724074d54fe17b688",
+  "block": 23609547,
+  "yield": 17409.223784
+ },
+ {
+  "txHash": "0xad7825ace34c79cd648654e5a3ca90fbb042f13cb8df4c4db4669bff088ae676",
+  "block": 23771847,
+  "yield": 8008.736284
+ },
+ {
+  "txHash": "0x5eacbca62d038540e3f942cf47f58347ca6fcd39a53b8dbe6af6997294d40bba",
+  "block": 24327740,
+  "yield": 25127.339509
+ },
+ {
+  "txHash": "0x53b9cad9e71166192959913f1e9db1fcc15de4dfad2379f6f82a33058af321dc",
+  "block": 24877611,
+  "yield": 23554.782243
+ },
+ {
+  "txHash": "0x0db2f3d814c7ad97be1f1fb5af5c12ff817cb282823044ca86badbbb21d831be",
+  "block": 25361097,
+  "yield": 16669.863211
+ },
+ {
+  "txHash": "0x41b6a0c679f3e6e9386bfb12c6ab6c9dbdf7b9741f85594401908cb52f8e8cfe",
+  "block": 25870646,
+  "yield": 20246.582116
+ },
+ {
+  "txHash": "0xdd416a8a42a95f69e3ea212ef27ad0dc436fa543b8a627ae87f7f9f533bd9649",
+  "block": 26391112,
+  "yield": 23866.394768
+ },
+ {
+  "txHash": "0x8c125223ef0874a619771886bbac4206d5ae7e6f56f9d320a30163343b2753a9",
+  "block": 26937353,
+  "yield": 24804.874862
+ },
+ {
+  "txHash": "0x2bbff5449dec005b83742615d21c20a46e174d0c129a12cba9f452a6ce1d79a3",
+  "block": 27488558,
+  "yield": 26804.243249
+ },
+ {
+  "txHash": "0x363bee41ba495e9e434e16609aadd19cccf8ad44c230c3b72c2872eaf03492f2",
+  "block": 28040609,
+  "yield": 23797.655904
+ },
+ {
+  "txHash": "0xc3d6d95cfc006d2840bd76f46118cbc9431b94c502f653dd2deee7410917c82f",
+  "block": 28597327,
+  "yield": 14670.376059
+ },
+ {
+  "txHash": "0x290d7639b5801b0ff55a5d78d30239e04532f3ffd5f54eaa3957397b4b27f025",
+  "block": 29163281,
+  "yield": 14377.758591
+ },
+ {
+  "txHash": "0x6987f2527e615db5495ff4c60bcc31349f8ce2cc0a509dac2be4530dab352395",
+  "block": 29722917,
+  "yield": 11941.596625
+ },
+ {
+  "txHash": "0xe64443cdc05670c221ac09b0a2fd448db129fee88425ac77379e8dc2244dc2a5",
+  "block": 30258988,
+  "yield": 5249.259617
+ }
+]

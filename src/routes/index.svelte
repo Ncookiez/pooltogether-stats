@@ -8,6 +8,7 @@
 	import Deposits from '$lib/Deposits.svelte';
 	import Withdrawals from '$lib/Withdrawals.svelte';
 	import Claims from '$lib/Claims.svelte';
+	import Yield from '$lib/Yield.svelte';
 
 	// Initializations:
 	let selectedChain: 'eth' | 'poly' | 'avax' | 'op' = 'eth';
@@ -40,6 +41,9 @@
 <!-- Claims -->
 <Claims {selectedChain} />
 
+<!-- Yield -->
+<Yield {selectedChain} />
+
 <!-- Bottom Spacer -->
 <span class="spacer" />
 
@@ -56,6 +60,7 @@
 	<span on:click={() => goto('#deposits')}>Deposits</span>
 	<span on:click={() => goto('#withdrawals')}>Withdrawals</span>
 	<span on:click={() => goto('#claims')}>Claims</span>
+	<span on:click={() => goto('#yield')}>Yield</span>
 </nav>
 
 <!-- #################################################################################################### -->
