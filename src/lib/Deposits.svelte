@@ -23,16 +23,19 @@
 	let depositAmountsChart: Chart;
 	let avgDepositAmountsChart: Chart;
 	let depositDistributionsChart: Chart;
+	let multichainDepositorsChart: Chart;
 
 	// JSON Files:
 	let depositsOverTime: { timestamps: number[], depositAmounts: number[], depositCounts: number[], avgDepositAmounts: number[], cumulativeDepositAmounts: number[], cumulativeDepositCounts: number[] }[] | undefined;
 	let confidentUsers: { totalCount: number, withClaim: number, estimatedBlockTime: number, avgBlocks: number, avgTimeInSeconds: number, avgTimeInDays: number }[] | undefined;
 	let depositDistributions: { below10: number, below100: number, below500: number, below1000: number, below5000: number, below50000: number, above50000: number }[] | undefined;
+	let multichainUsers: { oneChain: number, twoChains: number, threeChains: number, fourChains: number, avgChainDepositPercentage: number }[] | undefined;
 
 	// Reactive Data:
 	$: getDepositsOverTime(selectedChain);
 	$: getConfidentUsersData(selectedChain);
 	$: getDepositDistributions(selectedChain);
+	$: getMultichainUsers(selectedChain);
 	$: timestamps = depositsOverTime ? depositsOverTime[0].timestamps.map(time => (new Date(time * 1000)).toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })) : [];
 	$: totalDepositCount = depositsOverTime ? depositsOverTime[0].cumulativeDepositCounts[depositsOverTime[0].cumulativeDepositCounts.length - 1] : 0;
 	$: totalDepositAmount = depositsOverTime ? depositsOverTime[0].cumulativeDepositAmounts[depositsOverTime[0].cumulativeDepositAmounts.length - 1] : 0;
@@ -45,6 +48,7 @@
 	$: depositsOverTime, setDepositAmountsChartData();
 	$: depositsOverTime, setAvgDepositAmountsChartData();
 	$: depositDistributions, setDepositDistributionsChartData();
+	$: multichainUsers, setMultichainDepositorsChartData();
 
 	// Function to find appropriate deposits over time data:
 	const getDepositsOverTime = async (chain: 'eth' | 'poly' | 'avax' | 'op') => {
@@ -59,6 +63,11 @@
 	// Function to find appropriate deposit distributions data:
 	const getDepositDistributions = async (chain: 'eth' | 'poly' | 'avax' | 'op') => {
 		depositDistributions = (await import(`./data/${chain}/depositDistributions.json`)).default;
+	}
+
+	// Function to find appropriate multichain users' data:
+	const getMultichainUsers = async (chain: 'eth' | 'poly' | 'avax' | 'op') => {
+		multichainUsers = (await import(`./data/${chain}/multichainUsers.json`)).default;
 	}
 
 	// Function to set cumulative deposit counts chart data:
@@ -191,6 +200,34 @@
 		}
 	}
 
+	// Function to set multichain depositors chart data:
+	const setMultichainDepositorsChartData = () => {
+		if(multichainDepositorsChart && multichainUsers) {
+			multichainDepositorsChart.data.labels = [`Only ${getChainName(selectedChain)}`, '2 Chains', '3 Chains', '4 Chains'];
+			multichainDepositorsChart.data.datasets[0].data = Object.values(multichainUsers[0]).slice(0, -1);
+			multichainDepositorsChart.data.datasets[0].backgroundColor = ['#9f82d7', '#7B5EB0', '#583B89', '#341762'];
+			multichainDepositorsChart.data.datasets[0].borderColor = ['#4c249f'];
+			multichainDepositorsChart.data.datasets[0].borderWidth = 10;
+			if(multichainDepositorsChart.options.plugins?.tooltip && multichainDepositorsChart.options.plugins?.datalabels) {
+				multichainDepositorsChart.options.plugins.tooltip.callbacks = { label: (item) => { return `  ${item.label}: ${item.formattedValue} Users` } };
+				multichainDepositorsChart.options.plugins.datalabels.formatter = (value: string, context: any) => {
+          let numValue = parseInt(value);
+          let totalValue = 0;
+          context.dataset.data.forEach((data: string) => {
+            totalValue += parseInt(data);
+          });
+          let percentage = (numValue / totalValue) * 100;
+          if(percentage < 5) {
+            return '';
+          } else {
+            return `${context.chart.data.labels[context.dataIndex]}\n${percentage.toFixed(1)}%`;
+          }
+        }
+			}
+			multichainDepositorsChart.update();
+		}
+	}
+
 	onMount(() => {
 
 		// Chart.js Registrations:
@@ -203,6 +240,7 @@
 		depositAmountsChart = new Chart('depositAmountsChart', structuredClone(lineChartConfig));
 		avgDepositAmountsChart = new Chart('avgDepositAmountsChart', structuredClone(lineChartConfig));
 		depositDistributionsChart = new Chart('depositDistributionsChart', structuredClone(pieChartConfig));
+		multichainDepositorsChart = new Chart('multichainDepositorsChart', structuredClone(pieChartConfig));
 		
 		// Setting Chart Data:
 		setCumulativeDepositCountsChartData();
@@ -211,6 +249,7 @@
 		setDepositAmountsChartData();
 		setAvgDepositAmountsChartData();
 		setDepositDistributionsChartData();
+		setMultichainDepositorsChartData();
 
 	});
 	
@@ -239,6 +278,14 @@
 	<span>Here's a more granular look at these amounts:</span>
 	<canvas id="depositAmountsChart" />
 
+	<!-- Avg Deposit Amounts Over Time Chart -->
+	<span>The all-time average deposit on <strong>{getChainName(selectedChain)}</strong> is of <strong>${avgDepositAmount.toLocaleString(undefined)}</strong>:</span>
+	<canvas id="avgDepositAmountsChart" />
+
+	<!-- Deposit Distributions Chart -->
+	<span>The distribution of deposit transactions on <strong>{getChainName(selectedChain)}</strong> is as follows:</span>
+	<canvas id="depositDistributionsChart" class="pieChart" />
+
 	<!-- Confident Depositors -->
 	<div>
 		<span>Some may choose to deposit a small amount first to test out the waters, then later deposit more.</span>
@@ -252,13 +299,9 @@
 		{/if}
 	</div>
 
-	<!-- Avg Deposit Amounts Over Time Chart -->
-	<span>The all-time average deposit on <strong>{getChainName(selectedChain)}</strong> is of <strong>${avgDepositAmount.toLocaleString(undefined)}</strong>:</span>
-	<canvas id="avgDepositAmountsChart" />
-
-	<!-- Deposit Distributions Chart -->
-	<span>The distribution of deposit transactions on <strong>{getChainName(selectedChain)}</strong> is as follows:</span>
-	<canvas id="depositDistributionsChart" class="pieChart" />
+	<!-- Multichain Depositors -->
+	<span>Users that have deposits on multiple chains have on average <strong>{multichainUsers ? multichainUsers[0].avgChainDepositPercentage.toFixed(1) : 0}%</strong> of their funds on <strong>{getChainName(selectedChain)}</strong>. Here's how multi-chain depositors are:</span>
+	<canvas id="multichainDepositorsChart" class="pieChart" />
 
 </section>
 
