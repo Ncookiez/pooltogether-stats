@@ -351,7 +351,7 @@ const querySupply = async (chain) => {
     supply.ticket = parseInt(await query(chain, opTicket, ticketABI, 'totalSupply', [])) / (10 ** decimals);
   }
   console.log(`  > ${chainName}: Queried token supplies.`);
-  writeJSON([supply], fileName);
+  writeJSON([supply], fileName, true);
 }
 
 /* ====================================================================================================================================================== */
