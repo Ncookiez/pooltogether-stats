@@ -790,7 +790,160 @@ const findMultichainUsers = (chain) => {
 
 // Function to find users that withdrew from one chain to deposit in another:
 const findMovingUsers = (chain) => {
-  // <TODO>
+
+  // Initializations:
+  const fileName = `${chain}/movingUsers`;
+  let wallets;
+  let startBlock;
+  let endBlock;
+  let wallets2;
+  let startBlock2;
+  let endBlock2;
+  let wallets3;
+  let startBlock3;
+  let endBlock3;
+  let wallets4;
+  let startBlock4;
+  let endBlock4;
+  let destinations = {
+    chain2: 0,
+    chain3: 0,
+    chain4: 0
+  }
+  let movingUsers = {
+    totalWithdrawingUsers: 0,
+    movingUserCount: 0,
+    topDestination: ''
+  }
+
+  // Selecting Data:
+  if(chain === 'eth') {
+    wallets = ethWallets;
+    startBlock = ethStart.block;
+    endBlock = snapshot.ethBlock;
+    wallets2 = polyWallets;
+    startBlock2 = polyStart.block;
+    endBlock2 = snapshot.polyBlock;
+    wallets3 = avaxWallets;
+    startBlock3 = avaxStart.block;
+    endBlock3 = snapshot.avaxBlock;
+    wallets4 = opWallets;
+    startBlock4 = opStart.block;
+    endBlock4 = snapshot.opBlock;
+  } else if(chain === 'poly') {
+    wallets = polyWallets;
+    startBlock = polyStart.block;
+    endBlock = snapshot.polyBlock;
+    wallets2 = ethWallets;
+    startBlock2 = ethStart.block;
+    endBlock2 = snapshot.ethBlock;
+    wallets3 = avaxWallets;
+    startBlock3 = avaxStart.block;
+    endBlock3 = snapshot.avaxBlock;
+    wallets4 = opWallets;
+    startBlock4 = opStart.block;
+    endBlock4 = snapshot.opBlock;
+  } else if(chain === 'avax') {
+    wallets = avaxWallets;
+    startBlock = avaxStart.block;
+    endBlock = snapshot.avaxBlock;
+    wallets2 = ethWallets;
+    startBlock2 = ethStart.block;
+    endBlock2 = snapshot.ethBlock;
+    wallets3 = polyWallets;
+    startBlock3 = polyStart.block;
+    endBlock3 = snapshot.polyBlock;
+    wallets4 = opWallets;
+    startBlock4 = opStart.block;
+    endBlock4 = snapshot.opBlock;
+  } else {
+    wallets = opWallets;
+    startBlock = opStart.block;
+    endBlock = snapshot.opBlock;
+    wallets2 = ethWallets;
+    startBlock2 = ethStart.block;
+    endBlock2 = snapshot.ethBlock;
+    wallets3 = polyWallets;
+    startBlock3 = polyStart.block;
+    endBlock3 = snapshot.polyBlock;
+    wallets4 = avaxWallets;
+    startBlock4 = avaxStart.block;
+    endBlock4 = snapshot.avaxBlock;
+  }
+
+  // Finding Moving Users:
+  wallets.forEach(wallet => {
+    if(wallet.balance === 0 && wallet.withdrawals.length > 0) {
+      movingUsers.totalWithdrawingUsers++;
+      let lastWithdrawal = wallet.withdrawals[wallet.withdrawals.length - 1];
+      let timeScale = (lastWithdrawal.block - startBlock) / (endBlock - startBlock);
+      let wallet2 = wallets2.find(otherWallet => otherWallet.address === wallet.address);
+      if(wallet2) {
+        let depositAfterWithdrawal = wallet2.deposits.find(deposit => ((deposit.block - startBlock2) / (endBlock2 - startBlock2)) > timeScale);
+        if(depositAfterWithdrawal) {
+          movingUsers.movingUserCount++;
+          destinations.chain2++;
+        }
+      }
+      let wallet3 = wallets3.find(otherWallet => otherWallet.address === wallet.address);
+      if(wallet3) {
+        let depositAfterWithdrawal = wallet3.deposits.find(deposit => ((deposit.block - startBlock3) / (endBlock3 - startBlock3)) > timeScale);
+        if(depositAfterWithdrawal) {
+          movingUsers.movingUserCount++;
+          destinations.chain3++;
+        }
+      }
+      let wallet4 = wallets4.find(otherWallet => otherWallet.address === wallet.address);
+      if(wallet4) {
+        let depositAfterWithdrawal = wallet4.deposits.find(deposit => ((deposit.block - startBlock4) / (endBlock4 - startBlock4)) > timeScale);
+        if(depositAfterWithdrawal) {
+          movingUsers.movingUserCount++;
+          destinations.chain4++;
+        }
+      }
+    }
+  });
+
+  // Setting Top Destination:
+  let destinationValues = Object.values(destinations);
+  let maxValue = Math.max(...destinationValues);
+  let topChain = destinationValues.indexOf(maxValue);
+  if(chain === 'eth') {
+    if(topChain === 0) {
+      movingUsers.topDestination = 'poly';
+    } else if(topChain === 1) {
+      movingUsers.topDestination = 'avax';
+    } else if(topChain === 2) {
+      movingUsers.topDestination = 'op';
+    }
+  } else if(chain === 'poly') {
+    if(topChain === 0) {
+      movingUsers.topDestination = 'eth';
+    } else if(topChain === 1) {
+      movingUsers.topDestination = 'avax';
+    } else if(topChain === 2) {
+      movingUsers.topDestination = 'op';
+    }
+  } else if(chain === 'avax') {
+    if(topChain === 0) {
+      movingUsers.topDestination = 'eth';
+    } else if(topChain === 1) {
+      movingUsers.topDestination = 'poly';
+    } else if(topChain === 2) {
+      movingUsers.topDestination = 'op';
+    }
+  } else {
+    if(topChain === 0) {
+      movingUsers.topDestination = 'eth';
+    } else if(topChain === 1) {
+      movingUsers.topDestination = 'poly';
+    } else if(topChain === 2) {
+      movingUsers.topDestination = 'avax';
+    }
+  }
+
+  // Saving Data:
+  writeJSON([movingUsers], fileName, true);
 }
 
 /* ====================================================================================================================================================== */
