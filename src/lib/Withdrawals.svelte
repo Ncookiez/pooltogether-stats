@@ -27,11 +27,13 @@
 	let withdrawalsOverTime: { timestamps: number[], withdrawalAmounts: number[], withdrawalCounts: number[], avgWithdrawalAmounts: number[], cumulativeWithdrawalAmounts: number[], cumulativeWithdrawalCounts: number[] }[] | undefined;
 	let winlessWithdrawals: { totalCount: number, estimatedBlockTime: number, avgBlocksDeposited: number, avgTimeDepositedInSeconds: number, avgTimeDepositedInDays: number }[] | undefined;
 	let walletsOverTime: { timestamps: number[], walletCounts: number[], cumulativeWalletCounts: number[] }[] | undefined;
+	let movingUsers: { totalWithdrawingUsers: number, movingUserCount: number, topDestination: 'eth' | 'poly' | 'avax' | 'op' }[] | undefined;
 
 	// Reactive Data:
 	$: getWithdrawalsOverTime(selectedChain);
 	$: getWinlessWithdrawals(selectedChain);
 	$: getWalletsOverTime(selectedChain);
+	$: getMovingUsers(selectedChain);
 	$: timestamps = withdrawalsOverTime ? withdrawalsOverTime[0].timestamps.map(time => (new Date(time * 1000)).toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })) : [];
 	$: totalWithdrawalCount = withdrawalsOverTime ? withdrawalsOverTime[0].cumulativeWithdrawalCounts[withdrawalsOverTime[0].cumulativeWithdrawalCounts.length - 1] : 0;
 	$: totalWithdrawalAmount = withdrawalsOverTime ? withdrawalsOverTime[0].cumulativeWithdrawalAmounts[withdrawalsOverTime[0].cumulativeWithdrawalAmounts.length - 1] : 0;
@@ -58,6 +60,11 @@
 	// Function to find appropriate wallets data:
 	const getWalletsOverTime = async (chain: 'eth' | 'poly' | 'avax' | 'op') => {
 		walletsOverTime = (await import(`./data/${chain}/walletsOverTime.json`)).default;
+	}
+
+	// Function to find appropriate moving users' data:
+	const getMovingUsers = async (chain: 'eth' | 'poly' | 'avax' | 'op') => {
+		movingUsers = (await import(`./data/${chain}/movingUsers.json`)).default;
 	}
 
 	// Function to set cumulative withdrawal counts chart data:
@@ -218,6 +225,12 @@
 	<!-- Avg Withdrawal Amounts Over Time Chart -->
 	<span>The all-time average withdrawal on <strong>{getChainName(selectedChain)}</strong> is of <strong>${avgWithdrawalAmount.toLocaleString(undefined)}</strong>:</span>
 	<canvas id="avgWithdrawalAmountsChart" />
+
+	<!-- Moving Users -->
+	<div>
+		<span>Out of the <strong>{movingUsers ? movingUsers[0].totalWithdrawingUsers.toLocaleString(undefined) : 0}</strong> users that completely withdrew their balances on <strong>{getChainName(selectedChain)}</strong>, how many did so only to move to another chain and deposit there?</span>
+		<span>The answer is <strong>{movingUsers ? movingUsers[0].movingUserCount.toLocaleString(undefined) : 0}</strong> of them (<strong>{movingUsers ? ((movingUsers[0].movingUserCount / movingUsers[0].totalWithdrawingUsers) * 100).toFixed(1) : 0}%</strong>), with the most common destination being <strong>{movingUsers ? getChainName(movingUsers[0].topDestination) : '?'}</strong>.</span>
+	</div>
 
 </section>
 
