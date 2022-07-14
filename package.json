@@ -1,6 +1,6 @@
 {
   "name": "pooltogether-stats",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "type": "module",
   "scripts": {
     "query": "node queries.js",

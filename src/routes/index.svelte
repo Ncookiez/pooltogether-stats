@@ -8,6 +8,7 @@
 	import Deposits from '$lib/Deposits.svelte';
 	import Withdrawals from '$lib/Withdrawals.svelte';
 	import Claims from '$lib/Claims.svelte';
+	import Delegations from '$lib/Delegations.svelte';
 	import Yield from '$lib/Yield.svelte';
 
 	// Initializations:
@@ -41,6 +42,9 @@
 <!-- Claims -->
 <Claims {selectedChain} />
 
+<!-- Delegations -->
+<Delegations {selectedChain} />
+
 <!-- Yield -->
 <Yield {selectedChain} />
 
@@ -60,6 +64,7 @@
 	<span on:click={() => goto('#deposits')}>Deposits</span>
 	<span on:click={() => goto('#withdrawals')}>Withdrawals</span>
 	<span on:click={() => goto('#claims')}>Claims</span>
+	<span on:click={() => goto('#delegations')}>Delegations</span>
 	<span on:click={() => goto('#yield')}>Yield</span>
 </nav>
 
