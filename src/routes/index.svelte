@@ -12,7 +12,7 @@
 	import Yield from '$lib/Yield.svelte';
 
 	// Initializations:
-	let selectedChain: 'eth' | 'poly' | 'avax' | 'op' = 'eth';
+	let selectedChain: 'eth' | 'poly' | 'avax' | 'op' = 'poly';
 	
 </script>
 
