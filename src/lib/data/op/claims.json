@@ -1,0 +1,26 @@
+[
+ {
+  "txHash": "0x9e703e7cca49d2aacab44285cf9d446270d5165e3553775218184b40e6292420",
+  "block": 14355111,
+  "wallet": "0xe9A7e9172f63F949949eE28707D6E6e5b06d87E8",
+  "prizes": [
+   69
+  ]
+ },
+ {
+  "txHash": "0xd1bb434ccf44f3d6e9547dacf5f71c7b7e1d7a621c60c80bb15a40f3ff1a352d",
+  "block": 14356502,
+  "wallet": "0x83dE1603DF0249c0155e30c636598FEE5E11DBdc",
+  "prizes": [
+   69
+  ]
+ },
+ {
+  "txHash": "0x60860f53ad03919dd0fceef322c8e7c7b5e359ecb88eeb337df3cad40d5d6108",
+  "block": 14429771,
+  "wallet": "0xe9A7e9172f63F949949eE28707D6E6e5b06d87E8",
+  "prizes": [
+   69
+  ]
+ }
+]

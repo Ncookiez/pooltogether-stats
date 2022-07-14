@@ -1,9 +1,9 @@
 [
  {
-  "oneChain": 256,
-  "twoChains": 36,
-  "threeChains": 12,
+  "oneChain": 252,
+  "twoChains": 35,
+  "threeChains": 13,
   "fourChains": 2,
-  "avgChainDepositPercentage": 47.969420614075496
+  "avgChainDepositPercentage": 48.04197828505724
  }
 ]

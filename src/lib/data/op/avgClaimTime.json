@@ -1,8 +1,8 @@
 [
  {
-  "avgBlocks": null,
+  "avgBlocks": 264623,
   "estimatedBlockTime": 1,
-  "avgClaimTimeInSeconds": null,
-  "avgClaimTimeInDays": null
+  "avgClaimTimeInSeconds": 264623,
+  "avgClaimTimeInDays": 4
  }
 ]

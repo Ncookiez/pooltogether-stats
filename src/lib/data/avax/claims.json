@@ -17355,5 +17355,66 @@
    5,
    5
   ]
+ },
+ {
+  "txHash": "0x223c7a4482fae7a8f9142b312cbbc217b4f7766057de7fc4b4af49c1ab040c7f",
+  "block": 17199857,
+  "wallet": "0x540c44FF7B71F2487Cd11aaF53aeC1a85BFE8f7a",
+  "prizes": [
+   18
+  ]
+ },
+ {
+  "txHash": "0x870a80ab9156f9b7575d45adaf59fc424bd47bc9e269962eb4f6a1001279049f",
+  "block": 17208569,
+  "wallet": "0x9b69884fc0ACd4C52CD277bd662F1D17b18A4DB6",
+  "prizes": [
+   5,
+   5
+  ]
+ },
+ {
+  "txHash": "0x8f49abcb5d67fa13f1489b247edbe5045e1542bad382c8eb472fa8368924e7a4",
+  "block": 17213195,
+  "wallet": "0xDBEfE4579591B8bc8F0B874eE3DDe28816C7dE3e",
+  "prizes": [
+   5,
+   5,
+   5
+  ]
+ },
+ {
+  "txHash": "0x33b493b2cab3b00b77220e8607c395aaed7b8ab3a7ea9faf72bd33fc8592d30a",
+  "block": 17215214,
+  "wallet": "0x318918b1D1301DE527A3803B3f4f898C163Fd819",
+  "prizes": [
+   50,
+   5,
+   10,
+   18
+  ]
+ },
+ {
+  "txHash": "0x3676c3441d170146834696da70568647fbd076fa369a8d5bf60df670b2ee0fb5",
+  "block": 17245929,
+  "wallet": "0x9b69884fc0ACd4C52CD277bd662F1D17b18A4DB6",
+  "prizes": [
+   18
+  ]
+ },
+ {
+  "txHash": "0x77800dbd4b2a5b1dd53f84759c9dc06849a749c2ee2b6adb3db812fd64b1c00d",
+  "block": 17274516,
+  "wallet": "0x212e6CB3ec4BB3155b816ff874AF800b8ba6402a",
+  "prizes": [
+   10,
+   10,
+   5,
+   5,
+   10,
+   10,
+   18,
+   18
+  ]
  }
 ]

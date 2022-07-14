@@ -1,0 +1,26 @@
+[
+ {
+  "txHash": "0xd95a25bd8186e367a056a5cdc7f327cde59548e499878cd0faa0c5b9cb63a7d9",
+  "block": 14244423,
+  "delegator": "0xa5c3A513645A9a00cB561fED40438E9DFE0D6a69",
+  "amount": 10000
+ },
+ {
+  "txHash": "0x34eef83f5b9dbcc465bcbef28368e61c4d0e6571a0b3197c0516beb5c4c2a832",
+  "block": 14361868,
+  "delegator": "0xa8078cAbCE440b0fEADD7264Adf179D301fCef18",
+  "amount": 2499
+ },
+ {
+  "txHash": "0x4c4fcd046543a89943348eec242fc5924ed93cf78ba287337be1854735014ce8",
+  "block": 14404712,
+  "delegator": "0xa5c3A513645A9a00cB561fED40438E9DFE0D6a69",
+  "amount": 3000
+ },
+ {
+  "txHash": "0xc86ca91883c45f73436c2cc606010c5d756c1891baf4137ef35e69a9b14c7c5d",
+  "block": 14404799,
+  "delegator": "0xa5c3A513645A9a00cB561fED40438E9DFE0D6a69",
+  "amount": 3000
+ }
+]

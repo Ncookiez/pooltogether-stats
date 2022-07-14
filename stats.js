@@ -8,21 +8,33 @@ import { writeJSON, readJSON, getRangeArray } from "./functions.js";
 const ethDeposits = readJSON('eth/deposits');
 const ethWithdrawals = readJSON('eth/withdrawals');
 const ethClaims = readJSON('eth/claims');
+const ethDelegationsCreated = readJSON('eth/delegationsCreated');
+const ethDelegationsFunded = readJSON('eth/delegationsFunded');
+const ethDelegationsWithdrawn = readJSON('eth/delegationsWithdrawn');
 const ethWallets = readJSON('eth/wallets');
 const ethYieldCaptures = readJSON('eth/yieldCaptures');
 const polyDeposits = readJSON('poly/deposits');
 const polyWithdrawals = readJSON('poly/withdrawals');
 const polyClaims = readJSON('poly/claims');
+const polyDelegationsCreated = readJSON('poly/delegationsCreated');
+const polyDelegationsFunded = readJSON('poly/delegationsFunded');
+const polyDelegationsWithdrawn = readJSON('poly/delegationsWithdrawn');
 const polyWallets = readJSON('poly/wallets');
 const polyYieldCaptures = readJSON('poly/yieldCaptures');
 const avaxDeposits = readJSON('avax/deposits');
 const avaxWithdrawals = readJSON('avax/withdrawals');
 const avaxClaims = readJSON('avax/claims');
+const avaxDelegationsCreated = readJSON('avax/delegationsCreated');
+const avaxDelegationsFunded = readJSON('avax/delegationsFunded');
+const avaxDelegationsWithdrawn = readJSON('avax/delegationsWithdrawn');
 const avaxWallets = readJSON('avax/wallets');
 const avaxYieldCaptures = readJSON('avax/yieldCaptures');
 const opDeposits = readJSON('op/deposits');
 const opWithdrawals = readJSON('op/withdrawals');
 const opClaims = readJSON('op/claims');
+const opDelegationsCreated = readJSON('op/delegationsCreated');
+const opDelegationsFunded = readJSON('op/delegationsFunded');
+const opDelegationsWithdrawn = readJSON('op/delegationsWithdrawn');
 const opWallets = readJSON('op/wallets');
 const opYieldCaptures = readJSON('op/yieldCaptures');
 const snapshot = readJSON('snapshot')[0];
@@ -61,6 +73,7 @@ const calcStats = () => {
     calcDepositsOverTime(chain);
     calcWithdrawalsOverTime(chain);
     calcClaimsOverTime(chain);
+    calcDelegationsOverTime(chain);
     calcWalletsOverTime(chain);
     calcYieldOverTime(chain);
 
@@ -292,6 +305,114 @@ const calcClaimsOverTime = (chain) => {
 
   // Saving Data:
   writeJSON([claimsOverTime], fileName, true);
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to calculate delegations over time:
+const calcDelegationsOverTime = (chain) => {
+
+  // Initializations:
+  const fileName = `${chain}/delegationsOverTime`;
+  let delegationsCreated;
+  let delegationsFunded;
+  let delegationsWithdrawn;
+  let start;
+  let endBlock;
+  let blocks = [];
+  let delegationsOverTime = {
+    timestamps: [],
+    delegationAmounts: [],
+    delegationCounts: [],
+    delegationWithdrawalAmounts: [],
+    delegationWithdrawalCounts: [],
+    avgDelegationAmounts: [],
+    cumulativeDelegationAmounts: [],
+    cumulativeDelegationCounts: [],
+    cumulativeDelegationWithdrawalAmounts: [],
+    cumulativeDelegationWithdrawalCounts: []
+  }
+
+  // Selecting Data:
+  if(chain === 'eth') {
+    delegationsCreated = ethDelegationsCreated;
+    delegationsFunded = ethDelegationsFunded;
+    delegationsWithdrawn = ethDelegationsWithdrawn;
+    start = ethStart;
+    endBlock = snapshot.ethBlock;
+  } else if(chain === 'poly') {
+    delegationsCreated = polyDelegationsCreated;
+    delegationsFunded = polyDelegationsFunded;
+    delegationsWithdrawn = polyDelegationsWithdrawn;
+    start = polyStart;
+    endBlock = snapshot.polyBlock;
+  } else if(chain === 'avax') {
+    delegationsCreated = avaxDelegationsCreated;
+    delegationsFunded = avaxDelegationsFunded;
+    delegationsWithdrawn = avaxDelegationsWithdrawn;
+    start = avaxStart;
+    endBlock = snapshot.avaxBlock;
+  } else {
+    delegationsCreated = opDelegationsCreated;
+    delegationsFunded = opDelegationsFunded;
+    delegationsWithdrawn = opDelegationsWithdrawn;
+    start = opStart;
+    endBlock = snapshot.opBlock;
+  }
+
+  // Setting Arrays:
+  blocks = getRangeArray(start.block, endBlock, tickCount);
+  delegationsOverTime.timestamps = getRangeArray(start.timestamp, snapshot.timestamp, tickCount);
+
+  // Filtering Data:
+  let cumulativeDelegationAmount = 0;
+  let cumulativeDelegationCount = 0;
+  let cumulativeDelegationWithdrawalAmount = 0;
+  let cumulativeDelegationWithdrawalCount = 0;
+  for(let i = 0; i < tickCount; i++) {
+    let delegationAmount = 0;
+    let delegationCount = 0;
+    let delegationWithdrawalAmount = 0;
+    let delegationWithdrawalCount = 0;
+    delegationsCreated.forEach(delegation => {
+      if(delegation.block <= blocks[i]) {
+        if((i > 0 && delegation.block > blocks[i - 1]) || i === 0) {
+          delegationCount++;
+        }
+      }
+    });
+    delegationsFunded.forEach(delegation => {
+      if(delegation.block <= blocks[i]) {
+        if((i > 0 && delegation.block > blocks[i - 1]) || i === 0) {
+          delegationAmount += delegation.amount;
+        }
+      }
+    });
+    delegationsWithdrawn.forEach(delegation => {
+      if(delegation.block <= blocks[i]) {
+        if((i > 0 && delegation.block > blocks[i - 1]) || i === 0) {
+          delegationWithdrawalAmount += delegation.amount;
+          delegationWithdrawalCount++;
+        }
+      }
+    });
+    cumulativeDelegationAmount += delegationAmount;
+    cumulativeDelegationCount += delegationCount;
+    cumulativeDelegationWithdrawalAmount += delegationWithdrawalAmount;
+    cumulativeDelegationWithdrawalCount += delegationWithdrawalCount;
+    delegationsOverTime.delegationAmounts.push(Math.floor(delegationAmount));
+    delegationsOverTime.delegationCounts.push(delegationCount);
+    delegationsOverTime.delegationWithdrawalAmounts.push(Math.floor(delegationWithdrawalAmount));
+    delegationsOverTime.delegationWithdrawalCounts.push(delegationWithdrawalCount);
+    delegationsOverTime.avgDelegationAmounts.push(delegationCount > 0 ? Math.floor(delegationAmount / delegationCount) : 0);
+    delegationsOverTime.cumulativeDelegationAmounts.push(Math.floor(cumulativeDelegationAmount));
+    delegationsOverTime.cumulativeDelegationCounts.push(cumulativeDelegationCount);
+    delegationsOverTime.cumulativeDelegationWithdrawalAmounts.push(Math.floor(cumulativeDelegationWithdrawalAmount));
+    delegationsOverTime.cumulativeDelegationWithdrawalCounts.push(cumulativeDelegationWithdrawalCount);
+  }
+
+  // Saving Data:
+  writeJSON([delegationsOverTime], fileName, true);
 }
 
 /* ====================================================================================================================================================== */
