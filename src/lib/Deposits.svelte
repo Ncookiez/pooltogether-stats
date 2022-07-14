@@ -39,7 +39,7 @@
 	$: timestamps = depositsOverTime ? depositsOverTime[0].timestamps.map(time => (new Date(time * 1000)).toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })) : [];
 	$: totalDepositCount = depositsOverTime ? depositsOverTime[0].cumulativeDepositCounts[depositsOverTime[0].cumulativeDepositCounts.length - 1] : 0;
 	$: totalDepositAmount = depositsOverTime ? depositsOverTime[0].cumulativeDepositAmounts[depositsOverTime[0].cumulativeDepositAmounts.length - 1] : 0;
-	$: avgDepositAmount = depositsOverTime ? Math.ceil((depositsOverTime[0].avgDepositAmounts.reduce((a, b) => a + b, 0)) / depositsOverTime[0].avgDepositAmounts.length) : 0;
+	$: avgDepositAmount = totalDepositCount > 0 ? Math.ceil(totalDepositAmount / totalDepositCount) : 0;
 
 	// Reactive Chart Data:
 	$: depositsOverTime, setCumulativeDepositCountsChartData();

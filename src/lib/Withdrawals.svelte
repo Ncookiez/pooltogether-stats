@@ -37,7 +37,7 @@
 	$: timestamps = withdrawalsOverTime ? withdrawalsOverTime[0].timestamps.map(time => (new Date(time * 1000)).toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })) : [];
 	$: totalWithdrawalCount = withdrawalsOverTime ? withdrawalsOverTime[0].cumulativeWithdrawalCounts[withdrawalsOverTime[0].cumulativeWithdrawalCounts.length - 1] : 0;
 	$: totalWithdrawalAmount = withdrawalsOverTime ? withdrawalsOverTime[0].cumulativeWithdrawalAmounts[withdrawalsOverTime[0].cumulativeWithdrawalAmounts.length - 1] : 0;
-	$: avgWithdrawalAmount = withdrawalsOverTime ? Math.ceil((withdrawalsOverTime[0].avgWithdrawalAmounts.reduce((a, b) => a + b, 0)) / withdrawalsOverTime[0].avgWithdrawalAmounts.length) : 0;
+	$: avgWithdrawalAmount = totalWithdrawalCount > 0 ? Math.ceil(totalWithdrawalAmount / totalWithdrawalCount) : 0;
 	$: totalWallets = walletsOverTime ? walletsOverTime[0].cumulativeWalletCounts[walletsOverTime[0].cumulativeWalletCounts.length - 1] : 0;
 
 	// Reactive Chart Data:

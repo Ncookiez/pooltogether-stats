@@ -39,7 +39,7 @@
 	$: totalClaimCount = claimsOverTime ? claimsOverTime[0].cumulativeClaimCounts[claimsOverTime[0].cumulativeClaimCounts.length - 1] : 0;
 	$: totalPrizeCount = claimsOverTime ? claimsOverTime[0].cumulativePrizeCounts[claimsOverTime[0].cumulativePrizeCounts.length - 1] : 0;
 	$: totalClaimAmount = claimsOverTime ? claimsOverTime[0].cumulativeClaimAmounts[claimsOverTime[0].cumulativeClaimAmounts.length - 1] : 0;
-	$: avgClaimAmount = claimsOverTime ? Math.ceil((claimsOverTime[0].avgClaimAmounts.reduce((a, b) => a + b, 0)) / claimsOverTime[0].avgClaimAmounts.length) : 0;
+	$: avgClaimAmount = totalClaimCount > 0 ? Math.ceil(totalClaimAmount / totalClaimCount) : 0;
 
 	// Reactive Chart Data:
 	$: claimsOverTime, setCumulativeClaimCountsChartData();
