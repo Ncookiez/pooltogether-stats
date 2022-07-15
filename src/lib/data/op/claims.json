@@ -22,5 +22,13 @@
   "prizes": [
    69
   ]
+ },
+ {
+  "txHash": "0x52eaeab0cda416ebbc999049a10fb5de5bd94a22744ec9108c46dc34a1f7a7f7",
+  "block": 14444726,
+  "wallet": "0x6622BA5B4fEc399B88D4BdCAB09936491Ea3781a",
+  "prizes": [
+   69
+  ]
  }
 ]
