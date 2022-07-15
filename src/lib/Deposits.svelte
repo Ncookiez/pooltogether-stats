@@ -30,16 +30,19 @@
 	let confidentUsers: { totalCount: number, withClaim: number, estimatedBlockTime: number, avgBlocks: number, avgTimeInSeconds: number, avgTimeInDays: number }[] | undefined;
 	let depositDistributions: { below10: number, below100: number, below500: number, below1000: number, below5000: number, below50000: number, above50000: number }[] | undefined;
 	let multichainUsers: { oneChain: number, twoChains: number, threeChains: number, fourChains: number, avgChainDepositPercentage: number }[] | undefined;
+	let walletsOverTime: { timestamps: number[], walletCounts: number[], cumulativeWalletCounts: number[] }[] | undefined;
 
 	// Reactive Data:
 	$: getDepositsOverTime(selectedChain);
 	$: getConfidentUsersData(selectedChain);
 	$: getDepositDistributions(selectedChain);
 	$: getMultichainUsers(selectedChain);
+	$: getWalletsOverTime(selectedChain);
 	$: timestamps = depositsOverTime ? depositsOverTime[0].timestamps.map(time => (new Date(time * 1000)).toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })) : [];
 	$: totalDepositCount = depositsOverTime ? depositsOverTime[0].cumulativeDepositCounts[depositsOverTime[0].cumulativeDepositCounts.length - 1] : 0;
 	$: totalDepositAmount = depositsOverTime ? depositsOverTime[0].cumulativeDepositAmounts[depositsOverTime[0].cumulativeDepositAmounts.length - 1] : 0;
 	$: avgDepositAmount = totalDepositCount > 0 ? Math.ceil(totalDepositAmount / totalDepositCount) : 0;
+	$: totalWallets = walletsOverTime ? walletsOverTime[0].cumulativeWalletCounts[walletsOverTime[0].cumulativeWalletCounts.length - 1] : 0;
 
 	// Reactive Chart Data:
 	$: depositsOverTime, setCumulativeDepositCountsChartData();
@@ -68,6 +71,11 @@
 	// Function to find appropriate multichain users' data:
 	const getMultichainUsers = async (chain: 'eth' | 'poly' | 'avax' | 'op') => {
 		multichainUsers = (await import(`./data/${chain}/multichainUsers.json`)).default;
+	}
+
+	// Function to find appropriate wallets over time data:
+	const getWalletsOverTime = async (chain: 'eth' | 'poly' | 'avax' | 'op') => {
+		walletsOverTime = (await import(`./data/${chain}/walletsOverTime.json`)).default;
 	}
 
 	// Function to set cumulative deposit counts chart data:
@@ -267,7 +275,7 @@
 	<canvas id="cumulativeDepositCountsChart" />
 
 	<!-- Deposit Counts Over Time Chart -->
-	<span>Here's a more granular look at these deposits:</span>
+	<span>Here's a more granular look at these deposits from <strong>{totalWallets.toLocaleString(undefined)}</strong> unique wallets:</span>
 	<canvas id="depositCountsChart" />
 
 	<!-- Cumulative Deposit Amounts Over Time Chart -->
