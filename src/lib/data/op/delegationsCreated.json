@@ -22,5 +22,11 @@
   "block": 14404799,
   "delegator": "0xa5c3A513645A9a00cB561fED40438E9DFE0D6a69",
   "delegatee": "0xe9945b3AcbDc2f9dcad8871F01aa9dabBb20d882"
+ },
+ {
+  "txHash": "0x5af49dc0b2f13ba3f725c18c801819d769d1cb65ad4d6ad81bd040893220329b",
+  "block": 14868469,
+  "delegator": "0x75fF842c48cc95F1E50869C0bcd7b823a919d7cA",
+  "delegatee": "0x426116891341F96b87161c797c76AE3a81d10C85"
  }
 ]

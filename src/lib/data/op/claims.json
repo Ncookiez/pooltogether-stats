@@ -30,5 +30,86 @@
   "prizes": [
    69
   ]
+ },
+ {
+  "txHash": "0xe386248c16ffac651a2da243be78a07a76413544ae49148345acfff58d36e9fe",
+  "block": 14626226,
+  "wallet": "0x6622BA5B4fEc399B88D4BdCAB09936491Ea3781a",
+  "prizes": [
+   69
+  ]
+ },
+ {
+  "txHash": "0xe56551f4a7fb75b6a725acaf5a7af218d536e2ecff11c3ddee03adc5702d03d9",
+  "block": 14631016,
+  "wallet": "0x60A8F2c35a2924021c41CCAC77673e355E22C211",
+  "prizes": [
+   69
+  ]
+ },
+ {
+  "txHash": "0xa6de8338281993c734f5f76708e99de84853aed1129426ea6ae701c278ce42ae",
+  "block": 14703827,
+  "wallet": "0xd4Ed9a5861209d4445bc938fF9Ebb4cAE82537f8",
+  "prizes": [
+   69
+  ]
+ },
+ {
+  "txHash": "0xe449261c4b6e79afb18c983d47ece8489683aa4301cf4431c5b0fe981df6beed",
+  "block": 14706420,
+  "wallet": "0x5c10afD2E8C8aE7E282AEA60759209f32EdFe3d8",
+  "prizes": [
+   69
+  ]
+ },
+ {
+  "txHash": "0x174919f4c3bef4767606e78983dc0d7706285c50326b805f82a1493438d0cd39",
+  "block": 14718007,
+  "wallet": "0xe9A7e9172f63F949949eE28707D6E6e5b06d87E8",
+  "prizes": [
+   69
+  ]
+ },
+ {
+  "txHash": "0x77d4497747da74cf10a88f062666d8810d9b2dc6055c200072ad27116ce56b19",
+  "block": 14718665,
+  "wallet": "0x8d0D612E38Def56685bB6189A519B0c43a1F2739",
+  "prizes": [
+   69
+  ]
+ },
+ {
+  "txHash": "0x6e4dafc9f53582be8fa6fd41f75f5bbd55501fa200b526b96274213724854d58",
+  "block": 14802484,
+  "wallet": "0x83dE1603DF0249c0155e30c636598FEE5E11DBdc",
+  "prizes": [
+   69
+  ]
+ },
+ {
+  "txHash": "0x3525dda5dff5c0740d58c5317aaaa2c02094f84c19aacc50f543482e78e4a0e7",
+  "block": 14813909,
+  "wallet": "0x9AA4E6641FEfD0764BfEBDeda637E7782d7eD4dc",
+  "prizes": [
+   69
+  ]
+ },
+ {
+  "txHash": "0xcf37f7e4596d32dbb8556a687a760505e7d93bd08398da8155c6e8e888a4cc4c",
+  "block": 14905006,
+  "wallet": "0xbF760fd4535Fb211E5c6881B28283B60D1A059bF",
+  "prizes": [
+   1420
+  ]
+ },
+ {
+  "txHash": "0xe8183d5b53d47a6eeaf24d3fedc4d8687af259eb7f0d01fdb4ba0335da0e75a4",
+  "block": 14909772,
+  "wallet": "0x6398f2612e98c39dE1bD54F5e55019e2A6F981FF",
+  "prizes": [
+   1420,
+   69
+  ]
  }
 ]

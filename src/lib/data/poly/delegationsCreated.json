@@ -22300,5 +22300,11 @@
   "block": 30574726,
   "delegator": "0xa2614955555477a6151252D9936E5a3B385c3aD9",
   "delegatee": "0xc90351f6E808AAE279aC11a9E8354eFc425A1524"
+ },
+ {
+  "txHash": "0x9dfadb5832d926aeef3d8d11dfb6f6b5387cff1855038cd0c9d8335f1f7a26f6",
+  "block": 30870470,
+  "delegator": "0x09986e6acF22BDbAaEd0FDb1C9c307Ddae35feAb",
+  "delegatee": "0x09986e6acF22BDbAaEd0FDb1C9c307Ddae35feAb"
  }
 ]
