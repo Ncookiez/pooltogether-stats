@@ -952,5 +952,17 @@
   "block": 30462097,
   "delegator": "0xa0b038B22cE84EaE04ACdb4Cf8d9a4612EFAd033",
   "newDelegatee": "0xD1E6eE8273FD2369d0717d3a54ecD15eF02da5c6"
+ },
+ {
+  "txHash": "0xdf15f7b8ea5d8f02511513384a995f19fc9cd8ee470197586d25a8de6e9f661d",
+  "block": 30881371,
+  "delegator": "0xD17E89c050a2CdDeC783b02411755B93a94C2eB3",
+  "newDelegatee": "0xcD6b350A3d3C320419d68a71b8C9c19ed7CD0b9c"
+ },
+ {
+  "txHash": "0x06407b90d211daba8b5ba2d06e555725e1d1b440172f5656ea404279635ced8e",
+  "block": 30881468,
+  "delegator": "0xD17E89c050a2CdDeC783b02411755B93a94C2eB3",
+  "newDelegatee": "0x31eD381ad8E1514B6289Ad5eC7cB3e9fa5C22b3d"
  }
 ]

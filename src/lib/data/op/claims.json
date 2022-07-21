@@ -111,5 +111,42 @@
    1420,
    69
   ]
+ },
+ {
+  "txHash": "0x3e1f0c547125112737bea775f5972a1478061539b9b8e2fbb6cb091567634cea",
+  "block": 14922117,
+  "wallet": "0x9Dc03477A733C1d580d0Fa76e9DCFfdbdA9C89B0",
+  "prizes": [
+   69
+  ]
+ },
+ {
+  "txHash": "0x182a480ec52b9017a9c0cd51dde66a80e3ffc82fb013dd991887bae1b33699fb",
+  "block": 14942827,
+  "wallet": "0x6622BA5B4fEc399B88D4BdCAB09936491Ea3781a",
+  "prizes": [
+   69,
+   69
+  ]
+ },
+ {
+  "txHash": "0x2f279739ae2a0158ff12afa9c850f091b1e536df94ce7c158d2876ecf4f9a9fe",
+  "block": 15007171,
+  "wallet": "0xD9F3203E147CeFdd6440eD73E32EA4A4d52eC9A3",
+  "prizes": [
+   69,
+   69,
+   69,
+   69
+  ]
+ },
+ {
+  "txHash": "0x485f6572fce1f34061ae1cd782bfb41cff40ff5864cedc4429fd5155b4ac08fd",
+  "block": 15110107,
+  "wallet": "0x0e41c9B548cf0545377AEEb693A6006172F1af81",
+  "prizes": [
+   69,
+   69
+  ]
  }
 ]

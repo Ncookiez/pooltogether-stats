@@ -25,7 +25,7 @@
 
 	// JSON Files:
 	let withdrawalsOverTime: { timestamps: number[], withdrawalAmounts: number[], withdrawalCounts: number[], avgWithdrawalAmounts: number[], cumulativeWithdrawalAmounts: number[], cumulativeWithdrawalCounts: number[] }[] | undefined;
-	let winlessWithdrawals: { totalCount: number, estimatedBlockTime: number, avgBlocksDeposited: number, avgTimeDepositedInSeconds: number, avgTimeDepositedInDays: number }[] | undefined;
+	let winlessWithdrawals: { estimatedBlockTime: number, totalCount: number, avgBlocksDeposited: number, avgTimeDepositedInSeconds: number, avgTimeDepositedInDays: number, over10TotalCount: number, over10AvgBlocksDeposited: number, over10AvgTimeDepositedInSeconds: number, over10AvgTimeDepositedInDays: number, over100TotalCount: number, over100AvgBlocksDeposited: number, over100AvgTimeDepositedInSeconds: number, over100AvgTimeDepositedInDays: number, over1000TotalCount: number, over1000AvgBlocksDeposited: number, over1000AvgTimeDepositedInSeconds: number, over1000AvgTimeDepositedInDays: number }[] | undefined;
 	let walletsOverTime: { timestamps: number[], walletCounts: number[], cumulativeWalletCounts: number[] }[] | undefined;
 	let movingUsers: { totalWithdrawingUsers: number, movingUserCount: number, topDestination: 'eth' | 'poly' | 'avax' | 'op' }[] | undefined;
 
@@ -220,6 +220,9 @@
 		<span>Some users may be dissapointed that they haven't won any prizes, resulting in a full withdrawal.</span>
 		<span>This was the case with <strong>{winlessWithdrawals ? winlessWithdrawals[0].totalCount.toLocaleString(undefined) : 0}</strong> users, or <strong>{winlessWithdrawals && walletsOverTime ? ((winlessWithdrawals[0].totalCount / totalWallets) * 100).toFixed(1) : 0}%</strong> of all users on <strong>{getChainName(selectedChain)}</strong>.</span>
 		<span>These users were deposited for an average of <strong>{winlessWithdrawals && winlessWithdrawals[0].avgTimeDepositedInDays ? winlessWithdrawals[0].avgTimeDepositedInDays.toLocaleString(undefined) : 0}</strong> days before fully withdrawing.</span>
+		<span>If only considering deposits of over $10, this results in <strong>{winlessWithdrawals && walletsOverTime ? ((winlessWithdrawals[0].over10TotalCount / totalWallets) * 100).toFixed(1) : 0}%</strong> of users, deposited for an average of <strong>{winlessWithdrawals && winlessWithdrawals[0].over10AvgTimeDepositedInDays ? winlessWithdrawals[0].over10AvgTimeDepositedInDays.toLocaleString(undefined) : 0}</strong> days.</span>
+		<span>Similarly for deposits over $100, <strong>{winlessWithdrawals && walletsOverTime ? ((winlessWithdrawals[0].over100TotalCount / totalWallets) * 100).toFixed(1) : 0}%</strong> of users, deposited for <strong>{winlessWithdrawals && winlessWithdrawals[0].over100AvgTimeDepositedInDays ? winlessWithdrawals[0].over100AvgTimeDepositedInDays.toLocaleString(undefined) : 0}</strong> days.</span>
+		<span>Or over $1000: <strong>{winlessWithdrawals && walletsOverTime ? ((winlessWithdrawals[0].over1000TotalCount / totalWallets) * 100).toFixed(1) : 0}%</strong> of users, deposited for <strong>{winlessWithdrawals && winlessWithdrawals[0].over1000AvgTimeDepositedInDays ? winlessWithdrawals[0].over1000AvgTimeDepositedInDays.toLocaleString(undefined) : 0}</strong> days.</span>
 	</div>
 
 	<!-- Avg Withdrawal Amounts Over Time Chart -->

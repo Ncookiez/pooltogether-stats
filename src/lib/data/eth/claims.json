@@ -2210,5 +2210,14 @@
    1420,
    1420
   ]
+ },
+ {
+  "txHash": "0x9b7017879848a266cc45a796b9cccdbf93fbc7ab707dd14ec4d4ebecd080b356",
+  "block": 15181170,
+  "wallet": "0x79f08F2e75A8C99428DE4A2e6456c07C99E55da5",
+  "prizes": [
+   1104,
+   1420
+  ]
  }
 ]

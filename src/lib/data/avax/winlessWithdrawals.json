@@ -1,9 +1,21 @@
 [
  {
-  "totalCount": 1508,
   "estimatedBlockTime": 2,
-  "avgBlocksDeposited": 581999,
-  "avgTimeDepositedInSeconds": 1163998,
-  "avgTimeDepositedInDays": 14
+  "totalCount": 1510,
+  "avgBlocksDeposited": 585431,
+  "avgTimeDepositedInSeconds": 1170862,
+  "avgTimeDepositedInDays": 14,
+  "over10TotalCount": 612,
+  "over10AvgBlocksDeposited": 1144890,
+  "over10AvgTimeDepositedInSeconds": 2289780,
+  "over10AvgTimeDepositedInDays": 27,
+  "over100TotalCount": 383,
+  "over100AvgBlocksDeposited": 1061039,
+  "over100AvgTimeDepositedInSeconds": 2122078,
+  "over100AvgTimeDepositedInDays": 25,
+  "over1000TotalCount": 74,
+  "over1000AvgBlocksDeposited": 723797,
+  "over1000AvgTimeDepositedInSeconds": 1447594,
+  "over1000AvgTimeDepositedInDays": 17
  }
 ]

@@ -22306,5 +22306,23 @@
   "block": 30870470,
   "delegator": "0x09986e6acF22BDbAaEd0FDb1C9c307Ddae35feAb",
   "delegatee": "0x09986e6acF22BDbAaEd0FDb1C9c307Ddae35feAb"
+ },
+ {
+  "txHash": "0xd5b69494e64a1328a2082cdeb8a682d79a3751630bf72c4d51f4905509dcbdf7",
+  "block": 30949090,
+  "delegator": "0x4a3e6E66f8C32bC05A50879f872B1177A1573CDF",
+  "delegatee": "0x686693A0E0C08a8637f28F15Ef90f01eC583c0E9"
+ },
+ {
+  "txHash": "0xd5b69494e64a1328a2082cdeb8a682d79a3751630bf72c4d51f4905509dcbdf7",
+  "block": 30949090,
+  "delegator": "0x4a3e6E66f8C32bC05A50879f872B1177A1573CDF",
+  "delegatee": "0x4575C176b350c33D428003d1fD1245237565e4b4"
+ },
+ {
+  "txHash": "0xd5b69494e64a1328a2082cdeb8a682d79a3751630bf72c4d51f4905509dcbdf7",
+  "block": 30949090,
+  "delegator": "0x4a3e6E66f8C32bC05A50879f872B1177A1573CDF",
+  "delegatee": "0x1e96871AC2f1647Be012E75cb87c3da1bB632Ab5"
  }
 ]

@@ -3,8 +3,8 @@
   "below5": 0,
   "below10": 0,
   "below50": 0,
-  "below100": 12,
-  "below500": 0,
+  "below100": 13,
+  "below500": 3,
   "below1000": 0,
   "above1000": 2
  }

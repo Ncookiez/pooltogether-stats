@@ -555,27 +555,42 @@ const findWinlessWithdrawals = (chain) => {
   let wallets;
   let users = [];
   let blocksDeposited = [];
-  let winlessWithrawals = {
-    totalCount: 0,
+  let over10BlocksDeposited = [];
+  let over100BlocksDeposited = [];
+  let over1000BlocksDeposited = [];
+  let winlessWithdrawals = {
     estimatedBlockTime: 0,
+    totalCount: 0,
     avgBlocksDeposited: 0,
     avgTimeDepositedInSeconds: 0,
-    avgTimeDepositedInDays: 0
+    avgTimeDepositedInDays: 0,
+    over10TotalCount: 0,
+    over10AvgBlocksDeposited: 0,
+    over10AvgTimeDepositedInSeconds: 0,
+    over10AvgTimeDepositedInDays: 0,
+    over100TotalCount: 0,
+    over100AvgBlocksDeposited: 0,
+    over100AvgTimeDepositedInSeconds: 0,
+    over100AvgTimeDepositedInDays: 0,
+    over1000TotalCount: 0,
+    over1000AvgBlocksDeposited: 0,
+    over1000AvgTimeDepositedInSeconds: 0,
+    over1000AvgTimeDepositedInDays: 0
   }
 
   // Selecting Data:
   if(chain === 'eth') {
     wallets = ethWallets;
-    winlessWithrawals.estimatedBlockTime = estimatedEthBlockTime;
+    winlessWithdrawals.estimatedBlockTime = estimatedEthBlockTime;
   } else if(chain === 'poly') {
     wallets = polyWallets;
-    winlessWithrawals.estimatedBlockTime = estimatedPolyBlockTime;
+    winlessWithdrawals.estimatedBlockTime = estimatedPolyBlockTime;
   } else if(chain === 'avax') {
     wallets = avaxWallets;
-    winlessWithrawals.estimatedBlockTime = estimatedAvaxBlockTime;
+    winlessWithdrawals.estimatedBlockTime = estimatedAvaxBlockTime;
   } else {
     wallets = opWallets;
-    winlessWithrawals.estimatedBlockTime = estimatedOpBlockTime;
+    winlessWithdrawals.estimatedBlockTime = estimatedOpBlockTime;
   }
 
   // Finding Users:
@@ -583,10 +598,14 @@ const findWinlessWithdrawals = (chain) => {
     if(wallet.balance === 0 && wallet.claims.length === 0 && wallet.deposits.length > 0) {
       let txs = [];
       let virtualBalance = 0;
+      let maxVirtualBalance = 0;
       wallet.deposits.forEach(tx => {
         tx.type = 'deposit';
         txs.push(tx);
         virtualBalance += tx.amount;
+        if(virtualBalance > maxVirtualBalance) {
+          maxVirtualBalance = virtualBalance;
+        }
       });
       wallet.withdrawals.forEach(tx => {
         tx.type = 'withdrawal';
@@ -595,24 +614,46 @@ const findWinlessWithdrawals = (chain) => {
       });
       if(virtualBalance <= 0) {
         txs.sort((a, b) => a.block - b.block);
-        users.push({ txs });
+        users.push({ txs, maxVirtualBalance });
       }
     }
   });
-  winlessWithrawals.totalCount = users.length;
+  winlessWithdrawals.totalCount = users.length;
+  winlessWithdrawals.over10TotalCount = users.filter(user => user.maxVirtualBalance >= 10).length;
+  winlessWithdrawals.over100TotalCount = users.filter(user => user.maxVirtualBalance >= 100).length;
+  winlessWithdrawals.over1000TotalCount = users.filter(user => user.maxVirtualBalance >= 1000).length;
 
   // Calculating Average Time Deposited:
   users.forEach(user => {
     let firstDeposit = user.txs.find(tx => tx.type === 'deposit');
     let lastWithdrawal = user.txs.slice().reverse().find(tx => tx.type === 'withdrawal');
-    blocksDeposited.push(lastWithdrawal.block - firstDeposit.block);
+    let blocks = lastWithdrawal.block - firstDeposit.block;
+    blocksDeposited.push(blocks);
+    if(user.maxVirtualBalance >= 10) {
+      over10BlocksDeposited.push(blocks);
+    }
+    if(user.maxVirtualBalance >= 100) {
+      over100BlocksDeposited.push(blocks);
+    }
+    if(user.maxVirtualBalance >= 1000) {
+      over1000BlocksDeposited.push(blocks);
+    }
   });
-  winlessWithrawals.avgBlocksDeposited = Math.ceil((blocksDeposited.reduce((a, b) => a + b, 0) / blocksDeposited.length));
-  winlessWithrawals.avgTimeDepositedInSeconds = Math.ceil(winlessWithrawals.avgBlocksDeposited * winlessWithrawals.estimatedBlockTime);
-  winlessWithrawals.avgTimeDepositedInDays = Math.ceil(winlessWithrawals.avgTimeDepositedInSeconds / 60 / 60 / 24);
+  winlessWithdrawals.avgBlocksDeposited = Math.ceil((blocksDeposited.reduce((a, b) => a + b, 0) / blocksDeposited.length));
+  winlessWithdrawals.avgTimeDepositedInSeconds = Math.ceil(winlessWithdrawals.avgBlocksDeposited * winlessWithdrawals.estimatedBlockTime);
+  winlessWithdrawals.avgTimeDepositedInDays = Math.ceil(winlessWithdrawals.avgTimeDepositedInSeconds / 60 / 60 / 24);
+  winlessWithdrawals.over10AvgBlocksDeposited = Math.ceil((over10BlocksDeposited.reduce((a, b) => a + b, 0) / over10BlocksDeposited.length));
+  winlessWithdrawals.over10AvgTimeDepositedInSeconds = Math.ceil(winlessWithdrawals.over10AvgBlocksDeposited * winlessWithdrawals.estimatedBlockTime);
+  winlessWithdrawals.over10AvgTimeDepositedInDays = Math.ceil(winlessWithdrawals.over10AvgTimeDepositedInSeconds / 60 / 60 / 24);
+  winlessWithdrawals.over100AvgBlocksDeposited = Math.ceil((over100BlocksDeposited.reduce((a, b) => a + b, 0) / over100BlocksDeposited.length));
+  winlessWithdrawals.over100AvgTimeDepositedInSeconds = Math.ceil(winlessWithdrawals.over100AvgBlocksDeposited * winlessWithdrawals.estimatedBlockTime);
+  winlessWithdrawals.over100AvgTimeDepositedInDays = Math.ceil(winlessWithdrawals.over100AvgTimeDepositedInSeconds / 60 / 60 / 24);
+  winlessWithdrawals.over1000AvgBlocksDeposited = Math.ceil((over1000BlocksDeposited.reduce((a, b) => a + b, 0) / over1000BlocksDeposited.length));
+  winlessWithdrawals.over1000AvgTimeDepositedInSeconds = Math.ceil(winlessWithdrawals.over1000AvgBlocksDeposited * winlessWithdrawals.estimatedBlockTime);
+  winlessWithdrawals.over1000AvgTimeDepositedInDays = Math.ceil(winlessWithdrawals.over1000AvgTimeDepositedInSeconds / 60 / 60 / 24);
 
   // Saving Data:
-  writeJSON([winlessWithrawals], fileName, true);
+  writeJSON([winlessWithdrawals], fileName, true);
 }
 
 /* ====================================================================================================================================================== */
