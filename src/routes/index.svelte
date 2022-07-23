@@ -1,6 +1,8 @@
 <script lang="ts">
 
 	// Imports:
+	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { getTimestamp } from '$lib/functions';
 
@@ -11,8 +13,30 @@
 	import Delegations from '$lib/Delegations.svelte';
 	import Yield from '$lib/Yield.svelte';
 
+	// Chain Type:
+	type Chain = 'eth' | 'poly' | 'avax' | 'op';
+
 	// Initializations:
-	let selectedChain: 'eth' | 'poly' | 'avax' | 'op' = 'poly';
+	let selectedChain: Chain = 'poly';
+	let doneMounting = false;
+
+	// URL Reactivity:
+	$: syncURL(selectedChain);
+
+	// Function to update URL on input changes:
+	const syncURL = (selectedChain: Chain) => {
+		if(doneMounting) {
+			let searchParams = new URLSearchParams(window.location.search);
+    	searchParams.set('chain', selectedChain);
+			goto(`?${searchParams.toString()}`, { noscroll: true, keepfocus: true });
+		}
+	}
+
+	onMount(async () => {
+		let urlChain = $page.url.searchParams.get('chain');
+		if(urlChain) { selectedChain = urlChain as Chain; }
+		doneMounting = true;
+	});
 	
 </script>
 
