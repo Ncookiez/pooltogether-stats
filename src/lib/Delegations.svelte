@@ -156,8 +156,8 @@
 
 	<!-- Updating Users -->
 	<div>
-		<span>Did you know you can change who you are delegating to at any time, without having to make any deposits or withdrawals?</span>
-		<span>This makes a bit trickier to track delegations, but is an amazing feature!</span>
+		<span>You can change who you are delegating to at any time, without having to make any deposits or withdrawals!</span>
+		<span>This makes a bit trickier to track delegations, but is an amazing feature.</span>
 		{#if delegationsUpdated === undefined || delegationsUpdated.length === 0}
 			<span>Unfortunately, on <strong>{getChainName(selectedChain)}</strong> this was never utilized.</span>
 		{:else}

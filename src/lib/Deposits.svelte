@@ -271,7 +271,7 @@
 	<h2>Deposit Stats</h2>
 
 	<!-- Cumulative Deposit Counts Over Time Chart -->
-	<span>Did you know there are over <strong>{totalDepositCount.toLocaleString(undefined)}</strong> deposits on <strong>{getChainName(selectedChain)}</strong>?</span>
+	<span>There are over <strong>{totalDepositCount.toLocaleString(undefined)}</strong> deposits on <strong>{getChainName(selectedChain)}</strong>!</span>
 	<canvas id="cumulativeDepositCountsChart" />
 
 	<!-- Deposit Counts Over Time Chart -->
