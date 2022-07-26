@@ -1,21 +1,21 @@
 [
  {
   "estimatedBlockTime": 2,
-  "totalCount": 1517,
-  "avgBlocksDeposited": 592525,
-  "avgTimeDepositedInSeconds": 1185050,
-  "avgTimeDepositedInDays": 14,
-  "over10TotalCount": 613,
-  "over10AvgBlocksDeposited": 1145052,
-  "over10AvgTimeDepositedInSeconds": 2290104,
-  "over10AvgTimeDepositedInDays": 27,
-  "over100TotalCount": 383,
-  "over100AvgBlocksDeposited": 1061039,
-  "over100AvgTimeDepositedInSeconds": 2122078,
-  "over100AvgTimeDepositedInDays": 25,
+  "totalCount": 1530,
+  "avgBlocksDeposited": 607183,
+  "avgTimeDepositedInSeconds": 1214366,
+  "avgTimeDepositedInDays": 15,
+  "over10TotalCount": 617,
+  "over10AvgBlocksDeposited": 1166884,
+  "over10AvgTimeDepositedInSeconds": 2333768,
+  "over10AvgTimeDepositedInDays": 28,
+  "over100TotalCount": 385,
+  "over100AvgBlocksDeposited": 1080125,
+  "over100AvgTimeDepositedInSeconds": 2160250,
+  "over100AvgTimeDepositedInDays": 26,
   "over1000TotalCount": 74,
-  "over1000AvgBlocksDeposited": 723797,
-  "over1000AvgTimeDepositedInSeconds": 1447594,
-  "over1000AvgTimeDepositedInDays": 17
+  "over1000AvgBlocksDeposited": 641978,
+  "over1000AvgTimeDepositedInSeconds": 1283956,
+  "over1000AvgTimeDepositedInDays": 15
  }
 ]

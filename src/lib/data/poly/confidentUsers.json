@@ -1,10 +1,10 @@
 [
  {
-  "totalCount": 643,
+  "totalCount": 649,
   "withClaim": 62,
   "estimatedBlockTime": 2.2,
-  "avgBlocks": 1118893,
-  "avgTimeInSeconds": 2461565,
-  "avgTimeInDays": 29
+  "avgBlocks": 1145211,
+  "avgTimeInSeconds": 2519465,
+  "avgTimeInDays": 30
  }
 ]

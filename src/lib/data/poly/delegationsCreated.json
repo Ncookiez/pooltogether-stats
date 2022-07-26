@@ -22324,5 +22324,35 @@
   "block": 30949090,
   "delegator": "0x4a3e6E66f8C32bC05A50879f872B1177A1573CDF",
   "delegatee": "0x1e96871AC2f1647Be012E75cb87c3da1bB632Ab5"
+ },
+ {
+  "txHash": "0x2bd3e8f43920f3aca9fd3095f8e51ade5100e76a28660221920a0a9a72f3fa59",
+  "block": 31113778,
+  "delegator": "0x8E9598BAB89853FD7431d01Da6BaAB8122eefa26",
+  "delegatee": "0x1Ff596052758bd991c3DC914cFc1FdeAC4639084"
+ },
+ {
+  "txHash": "0x2bd3e8f43920f3aca9fd3095f8e51ade5100e76a28660221920a0a9a72f3fa59",
+  "block": 31113778,
+  "delegator": "0x8E9598BAB89853FD7431d01Da6BaAB8122eefa26",
+  "delegatee": "0xAfBa881a948d0c82dCDC2cF80632dd6Fa1b0Ccb9"
+ },
+ {
+  "txHash": "0x2bd3e8f43920f3aca9fd3095f8e51ade5100e76a28660221920a0a9a72f3fa59",
+  "block": 31113778,
+  "delegator": "0x8E9598BAB89853FD7431d01Da6BaAB8122eefa26",
+  "delegatee": "0x2BAdAD0bc7B2A67A29DE52d077bf6bEDbD0f7Fa0"
+ },
+ {
+  "txHash": "0x8d485d0f33621e1393704fab2622ce562d25bc1ff83b678be119eac2ba1b3345",
+  "block": 31114035,
+  "delegator": "0xbfAcF9482A46B96718D932F4D664D91E1ED58629",
+  "delegatee": "0xB8569a63435b283C0BE0312b06084d09C91c0512"
+ },
+ {
+  "txHash": "0x473218820eaadb8782c72dd1269cee4adf6805de640cfadf3abe7982f662c10e",
+  "block": 31117839,
+  "delegator": "0x0686aE1bA6758E9Ea65Ca772Ce7ADB8039D88f37",
+  "delegatee": "0x0B58857708a6f84e7EE04BEAEF069a7E6D1D4A0b"
  }
 ]

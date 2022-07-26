@@ -27496,5 +27496,77 @@
   "block": 17692781,
   "wallet": "0xDf409F0CA8500A05AC211c78C86e1bc9a812A51D",
   "amount": 20
+ },
+ {
+  "txHash": "0x3a2d3224c3f2ec37adfc5f242cc8fefda840f5738dd2496c309fb74b7a7ca1c4",
+  "block": 17721118,
+  "wallet": "0x224e69025A2f705C8f31EFB6694398f8Fd09ac5C",
+  "amount": 35
+ },
+ {
+  "txHash": "0x13315ff7306d21b8c5c495385b80de991902e2ce82936824cb215eec9a7550b8",
+  "block": 17743140,
+  "wallet": "0xa63859b66F63A36Fd114B3fAEdE1e117Ce5351da",
+  "amount": 4.7
+ },
+ {
+  "txHash": "0x3175772cc52d6d6f104142b4b68969044ea8dedaf210b3c6d43f619a4266df36",
+  "block": 17743612,
+  "wallet": "0xCbDbAc2F68dC35398981Cf76D4f0DA76Fadba8ea",
+  "amount": 12.99
+ },
+ {
+  "txHash": "0x631a36636a2adda286fc763218728e8b97448fcc4fcbb465243b3051ec851d35",
+  "block": 17745193,
+  "wallet": "0x0C85891C036ecd0dd902eBB722A4eCB71e8e0D12",
+  "amount": 11.9
+ },
+ {
+  "txHash": "0x543b8fc05dc294177ab4fbdccd3adbb9c42c926a145be5f2b4615a27e1c3f62a",
+  "block": 17745931,
+  "wallet": "0x5BA1031BB03110D4443f5Df83002338428C4C8Eb",
+  "amount": 6.5
+ },
+ {
+  "txHash": "0xd62735492fb5d3b7d2d54d791b848f151a2c8e59bb35d30bf94be0ba8dc019ab",
+  "block": 17747394,
+  "wallet": "0x0E5610b7E42E134D9d57224DB6B47Ce75afA87c9",
+  "amount": 5.6
+ },
+ {
+  "txHash": "0x8f28e825deb178ee6aba0a8527fc4d839cb097972f63d2c9f754f92610cea369",
+  "block": 17747776,
+  "wallet": "0x8e6327a2513C4e9ceaF1080d5cB35442b737bf40",
+  "amount": 4.3
+ },
+ {
+  "txHash": "0xbf865d861041444e8cc8fb61dd113415c72f283ae340c3152dd0d0dcfd733593",
+  "block": 17758212,
+  "wallet": "0x87d3627090a40DAC583DaF99991dA53457064e4F",
+  "amount": 11.5
+ },
+ {
+  "txHash": "0xf2948cfa71266c3cec77a88cc6f3a1191e718407102a603c147a7ea8e6699991",
+  "block": 17762432,
+  "wallet": "0x70987e1Afb2d3e2cCd9823e222ea04b4bC99D2c5",
+  "amount": 604.25
+ },
+ {
+  "txHash": "0xfba811d28d1a416f4f1ada129ec55b9f8874426a7f641cba219ed9c5e379a0e6",
+  "block": 17793756,
+  "wallet": "0xe929C8E7efaE6d8e912DeDE4173451a88f594c85",
+  "amount": 177
+ },
+ {
+  "txHash": "0x40e33b9cae1f635c6f471cff3d10514ef94c2e9bb046a5abf1340696bb548a87",
+  "block": 17796024,
+  "wallet": "0x3E112bdd3228A6215b52Ea0CA0EdEd9e443aC813",
+  "amount": 5095
+ },
+ {
+  "txHash": "0xb24774fecd6a08a089d86dd294f91fb4924eb296904e65ee3208749d50d432c8",
+  "block": 17806160,
+  "wallet": "0x3e3210C7df16fA815B8502A17383C191D00878aD",
+  "amount": 40.59
  }
 ]
