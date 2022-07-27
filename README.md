@@ -7,10 +7,15 @@ Querying and analyzing some PoolTogether statistics.
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/b1855df2-30cb-4834-a53f-ae21fd018f0e/deploy-status)](https://app.netlify.com/sites/pool-stats/deploys)
 
-## Usage
+## Data Sources
+
+The data utilized by the app is fetched from the following external APIs:
+
+- PoolTogether Stats API ([Repo](https://github.com/Ncookiez/pooltogether-stats-functions))
+- PoolExplorer API ([Repo](https://github.com/underethsea/explorer-api))
+
+## Local Development
 
 Install dependencies with `npm i`.
 
-Use `npm run query` to update data queried on-chain.
-
-Use `npm run stats` to filter through and calculate some statistics through the latest data queried.
+Run local server with `npm run dev`.

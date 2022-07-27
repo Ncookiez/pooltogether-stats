@@ -1,42 +1,13 @@
 <script lang="ts">
 
 	// Imports:
-	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { getTimestamp } from '$lib/functions';
-
-	// Component Imports:
-	import Deposits from '$lib/Deposits.svelte';
-	import Withdrawals from '$lib/Withdrawals.svelte';
-	import Claims from '$lib/Claims.svelte';
-	import Delegations from '$lib/Delegations.svelte';
-	import Yield from '$lib/Yield.svelte';
 
 	// Chain Type:
 	type Chain = 'eth' | 'poly' | 'avax' | 'op';
 
 	// Initializations:
 	let selectedChain: Chain = 'poly';
-	let doneMounting = false;
-
-	// URL Reactivity:
-	$: syncURL(selectedChain);
-
-	// Function to update URL on input changes:
-	const syncURL = (selectedChain: Chain) => {
-		if(doneMounting) {
-			let searchParams = new URLSearchParams(window.location.search);
-    	searchParams.set('chain', selectedChain);
-			goto(`?${searchParams.toString()}`, { noscroll: true, keepfocus: true });
-		}
-	}
-
-	onMount(async () => {
-		let urlChain = $page.url.searchParams.get('chain');
-		if(urlChain) { selectedChain = urlChain as Chain; }
-		doneMounting = true;
-	});
 	
 </script>
 
@@ -53,24 +24,6 @@
 	<img src="/images/pooltogether-logo.svg" alt="PoolTogether">
 	<h1>Stats</h1>
 </div>
-
-<!-- Last Updated Date -->
-<span class="lastUpdated"><strong>Last Updated:</strong> {getTimestamp()}</span>
-
-<!-- Deposits -->
-<Deposits {selectedChain} />
-
-<!-- Withdrawals -->
-<Withdrawals {selectedChain} />
-
-<!-- Claims -->
-<Claims {selectedChain} />
-
-<!-- Delegations -->
-<Delegations {selectedChain} />
-
-<!-- Yield -->
-<Yield {selectedChain} />
 
 <!-- Bottom Spacer -->
 <span class="spacer" />
@@ -107,14 +60,8 @@
 	}
 
 	h1 {
-		font-family: 'Righteous', cursive;
 		font-size: 7.5em;
 		letter-spacing: 5px;
-	}
-
-	span.lastUpdated {
-		margin-bottom: .3em;
-		font-size: 1.2em;
 	}
 
 	div.chainSelector {
@@ -180,44 +127,6 @@
 
 	span.spacer {
 		height: 100px;
-	}
-
-	@media screen and (max-width: 1080px) {
-		nav {
-			display: none;
-		}
-	}
-
-	@media screen and (max-width: 900px) {
-		div.header img {
-			height: 7.5em;
-			margin-right: 1em;
-		}
-		h1 {
-			font-size: 5.5em;
-		}
-	}
-
-	@media screen and (max-width: 600px) {
-		div.header img {
-			height: 4.6em;
-			margin-right: 1em;
-		}
-		h1 {
-			font-size: 3.5em;
-			letter-spacing: 3px;
-		}
-	}
-
-	@media screen and (max-width: 400px) {
-		div.header {
-			flex-direction: column;
-			align-items: center;
-		}
-		div.header img {
-			height: 4.2em;
-			margin-right: 0;
-		}
 	}
 	
 </style>
