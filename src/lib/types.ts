@@ -117,3 +117,17 @@ export interface ExplorerAPIDrawResponse {
     g: number   // Wallet's Average Balance
   }[]
 }
+
+/* ========================================================================================================================================================================= */
+
+// Line Chart Data Interface:
+export interface Line {
+  label: string
+  data: number[]
+  backgroundColor?: string
+  lineColor?: string
+  lineWidth?: number
+  pointRadius?: number
+  pointHoverRadius?: number
+  tension?: number
+}
