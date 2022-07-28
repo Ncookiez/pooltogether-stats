@@ -16,7 +16,7 @@ export interface ChainData {
   delegationsFunded: { lastQueriedBlock: number, data: DelegationFundedData[] }
   delegationsUpdated: { lastQueriedBlock: number, data: DelegationUpdatedData[] }
   delegationsWithdrawn: { lastQueriedBlock: number, data: DelegationWithdrawnData[] }
-  yield: { lastQueriedBlock: number, data: YieldData[] }
+  yields: { lastQueriedBlock: number, data: YieldData[] }
   supply: { lastQueriedBlock: number, data: SupplyData[] }
   balances: { lastQueriedBlock: number, timestamp: number | undefined, data: BalanceData[] }
   draws: { data: DrawData[] }

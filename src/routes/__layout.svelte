@@ -25,8 +25,6 @@
 	// Reactive Loading Progress:
 	$: loadingProgress = ethLoadingProgress + polyLoadingProgress + avaxLoadingProgress + opLoadingProgress + drawsLoadingProgress;
 
-	// <TODO> need local caching to only query all data if update has happened
-
 	// Function to load data:
 	const loadData = async () => {
 		try {
@@ -34,10 +32,6 @@
 			// Fetching & Assigning Draw Data:
 			const draws = await fetchDraws();
 			drawsLoadingProgress++;
-			$ethData.draws = draws.eth;
-			$polyData.draws = draws.poly;
-			$avaxData.draws = draws.avax;
-			$opData.draws = draws.op;
 
 			let promises = chains.map(chain => (async () => {
 
@@ -65,54 +59,20 @@
 
 				// Assigning Chain-Specific Data:
 				if(chain === 'eth') {
-					$ethData.deposits = deposits;
-					$ethData.withdrawals = withdrawals;
-					$ethData.claims = claims;
-					$ethData.delegationsCreated = delegationsCreated;
-					$ethData.delegationsFunded = delegationsFunded;
-					$ethData.delegationsUpdated = delegationsUpdated;
-					$ethData.delegationsWithdrawn = delegationsWithdrawn;
-					$ethData.yield = yields;
-					$ethData.supply = supply;
-					$ethData.balances = balances;
+					ethData.set({ deposits, withdrawals, claims, delegationsCreated, delegationsFunded, delegationsUpdated, delegationsWithdrawn, yields, supply, balances, draws: draws.eth });
 				} else if(chain === 'poly') {
-					$polyData.deposits = deposits;
-					$polyData.withdrawals = withdrawals;
-					$polyData.claims = claims;
-					$polyData.delegationsCreated = delegationsCreated;
-					$polyData.delegationsFunded = delegationsFunded;
-					$polyData.delegationsUpdated = delegationsUpdated;
-					$polyData.delegationsWithdrawn = delegationsWithdrawn;
-					$polyData.yield = yields;
-					$polyData.supply = supply;
-					$polyData.balances = balances;
+					polyData.set({ deposits, withdrawals, claims, delegationsCreated, delegationsFunded, delegationsUpdated, delegationsWithdrawn, yields, supply, balances, draws: draws.poly });
 				} else if(chain === 'avax') {
-					$avaxData.deposits = deposits;
-					$avaxData.withdrawals = withdrawals;
-					$avaxData.claims = claims;
-					$avaxData.delegationsCreated = delegationsCreated;
-					$avaxData.delegationsFunded = delegationsFunded;
-					$avaxData.delegationsUpdated = delegationsUpdated;
-					$avaxData.delegationsWithdrawn = delegationsWithdrawn;
-					$avaxData.yield = yields;
-					$avaxData.supply = supply;
-					$avaxData.balances = balances;
+					avaxData.set({ deposits, withdrawals, claims, delegationsCreated, delegationsFunded, delegationsUpdated, delegationsWithdrawn, yields, supply, balances, draws: draws.avax });
 				} else if(chain === 'op') {
-					$opData.deposits = deposits;
-					$opData.withdrawals = withdrawals;
-					$opData.claims = claims;
-					$opData.delegationsCreated = delegationsCreated;
-					$opData.delegationsFunded = delegationsFunded;
-					$opData.delegationsUpdated = delegationsUpdated;
-					$opData.delegationsWithdrawn = delegationsWithdrawn;
-					$opData.yield = yields;
-					$opData.supply = supply;
-					$opData.balances = balances;
+					opData.set({ deposits, withdrawals, claims, delegationsCreated, delegationsFunded, delegationsUpdated, delegationsWithdrawn, yields, supply, balances, draws: draws.op });
 				}
+				
 			})());
 			await Promise.all(promises);
 			return true;
-		} catch {
+		} catch(err) {
+			console.error(err);
 			return false;
 		} finally {
 			loadingData = false;

@@ -1,6 +1,6 @@
 
 // Type Imports:
-import type { Chain, Hash, DepositData, WithdrawalData, ClaimData, DelegationCreatedData, DelegationFundedData, DelegationUpdatedData, DelegationWithdrawnData, YieldData, SupplyData, BalanceData, DrawData, ExplorerAPIDrawResponse } from '$lib/types';
+import type { Chain, Hash, ChainData, DepositData, WithdrawalData, ClaimData, DelegationCreatedData, DelegationFundedData, DelegationUpdatedData, DelegationWithdrawnData, YieldData, SupplyData, BalanceData, DrawData, ExplorerAPIDrawResponse } from '$lib/types';
 
 /* ========================================================================================================================================================================= */
 
@@ -15,7 +15,7 @@ const pageSize = 20000;
 export const fetchDeposits = async (chain: Chain) => {
 
   // Initializations:
-  const deposits: { lastQueriedBlock: number, data: DepositData[] } = { lastQueriedBlock: 0, data: [] };
+  const deposits: ChainData['deposits'] = { lastQueriedBlock: 0, data: [] };
   let hasNextPage = false;
   let page = 0;
 
@@ -42,7 +42,7 @@ export const fetchDeposits = async (chain: Chain) => {
 export const fetchWithdrawals = async (chain: Chain) => {
 
   // Initializations:
-  const withdrawals: { lastQueriedBlock: number, data: WithdrawalData[] } = { lastQueriedBlock: 0, data: [] };
+  const withdrawals: ChainData['withdrawals'] = { lastQueriedBlock: 0, data: [] };
   let hasNextPage = false;
   let page = 0;
 
@@ -69,7 +69,7 @@ export const fetchWithdrawals = async (chain: Chain) => {
 export const fetchClaims = async (chain: Chain) => {
 
   // Initializations:
-  const claims: { lastQueriedBlock: number, data: ClaimData[] } = { lastQueriedBlock: 0, data: [] };
+  const claims: ChainData['claims'] = { lastQueriedBlock: 0, data: [] };
   let hasNextPage = false;
   let page = 0;
 
@@ -96,7 +96,7 @@ export const fetchClaims = async (chain: Chain) => {
 export const fetchDelegationsCreated = async (chain: Chain) => {
 
   // Initializations:
-  const delegationsCreated: { lastQueriedBlock: number, data: DelegationCreatedData[] } = { lastQueriedBlock: 0, data: [] };
+  const delegationsCreated: ChainData['delegationsCreated'] = { lastQueriedBlock: 0, data: [] };
   let hasNextPage = false;
   let page = 0;
 
@@ -123,7 +123,7 @@ export const fetchDelegationsCreated = async (chain: Chain) => {
 export const fetchDelegationsFunded = async (chain: Chain) => {
 
   // Initializations:
-  const delegationsFunded: { lastQueriedBlock: number, data: DelegationFundedData[] } = { lastQueriedBlock: 0, data: [] };
+  const delegationsFunded: ChainData['delegationsFunded'] = { lastQueriedBlock: 0, data: [] };
   let hasNextPage = false;
   let page = 0;
 
@@ -150,7 +150,7 @@ export const fetchDelegationsFunded = async (chain: Chain) => {
 export const fetchDelegationsUpdated = async (chain: Chain) => {
 
   // Initializations:
-  const delegationsUpdated: { lastQueriedBlock: number, data: DelegationUpdatedData[] } = { lastQueriedBlock: 0, data: [] };
+  const delegationsUpdated: ChainData['delegationsUpdated'] = { lastQueriedBlock: 0, data: [] };
   let hasNextPage = false;
   let page = 0;
 
@@ -177,7 +177,7 @@ export const fetchDelegationsUpdated = async (chain: Chain) => {
 export const fetchDelegationsWithdrawn = async (chain: Chain) => {
 
   // Initializations:
-  const delegationsWithdrawn: { lastQueriedBlock: number, data: DelegationWithdrawnData[] } = { lastQueriedBlock: 0, data: [] };
+  const delegationsWithdrawn: ChainData['delegationsWithdrawn'] = { lastQueriedBlock: 0, data: [] };
   let hasNextPage = false;
   let page = 0;
 
@@ -204,7 +204,7 @@ export const fetchDelegationsWithdrawn = async (chain: Chain) => {
 export const fetchYield = async (chain: Chain) => {
 
   // Initializations:
-  const yields: { lastQueriedBlock: number, data: YieldData[] } = { lastQueriedBlock: 0, data: [] };
+  const yields: ChainData['yields'] = { lastQueriedBlock: 0, data: [] };
   let hasNextPage = false;
   let page = 0;
 
@@ -231,7 +231,7 @@ export const fetchYield = async (chain: Chain) => {
 export const fetchSupply = async (chain: Chain) => {
 
   // Initializations:
-  const supply: { lastQueriedBlock: number, data: SupplyData[] } = { lastQueriedBlock: 0, data: [] };
+  const supply: ChainData['supply'] = { lastQueriedBlock: 0, data: [] };
   let hasNextPage = false;
   let page = 0;
 
@@ -259,7 +259,7 @@ export const fetchSupply = async (chain: Chain) => {
 export const fetchBalances = async (chain: Chain) => {
 
   // Initializations:
-  const balances: { lastQueriedBlock: number, timestamp: number | undefined, data: BalanceData[] } = { lastQueriedBlock: 0, timestamp: undefined, data: [] };
+  const balances: ChainData['balances'] = { lastQueriedBlock: 0, timestamp: undefined, data: [] };
   let hasNextPage = false;
   let page = 0;
 
@@ -320,10 +320,10 @@ export const fetchDraws = async () => {
           result.push({ chain, wallet, claimable, dropped, avgBalance });
         }
       });
-      const ethResults = result.filter(entry => entry.chain === 'eth').map(entry => ({ wallet: entry.wallet, claimable: entry.claimable, dropped: entry.dropped, avgBalance: entry.avgBalance }));
-      const polyResults = result.filter(entry => entry.chain === 'poly').map(entry => ({ wallet: entry.wallet, claimable: entry.claimable, dropped: entry.dropped, avgBalance: entry.avgBalance }));
-      const avaxResults = result.filter(entry => entry.chain === 'avax').map(entry => ({ wallet: entry.wallet, claimable: entry.claimable, dropped: entry.dropped, avgBalance: entry.avgBalance }));
-      const opResults = result.filter(entry => entry.chain === 'op').map(entry => ({ wallet: entry.wallet, claimable: entry.claimable, dropped: entry.dropped, avgBalance: entry.avgBalance }));
+      const ethResults: DrawData['result'] = result.filter(entry => entry.chain === 'eth').map(entry => ({ wallet: entry.wallet, claimable: entry.claimable, dropped: entry.dropped, avgBalance: entry.avgBalance }));
+      const polyResults: DrawData['result'] = result.filter(entry => entry.chain === 'poly').map(entry => ({ wallet: entry.wallet, claimable: entry.claimable, dropped: entry.dropped, avgBalance: entry.avgBalance }));
+      const avaxResults: DrawData['result'] = result.filter(entry => entry.chain === 'avax').map(entry => ({ wallet: entry.wallet, claimable: entry.claimable, dropped: entry.dropped, avgBalance: entry.avgBalance }));
+      const opResults: DrawData['result'] = result.filter(entry => entry.chain === 'op').map(entry => ({ wallet: entry.wallet, claimable: entry.claimable, dropped: entry.dropped, avgBalance: entry.avgBalance }));
       draws.eth.data.push({ draw, timestamp, result: ethResults });
       draws.poly.data.push({ draw, timestamp, result: polyResults });
       draws.avax.data.push({ draw, timestamp, result: avaxResults });
