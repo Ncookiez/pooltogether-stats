@@ -2,6 +2,8 @@
 
 	// Imports:
 	import { onMount } from 'svelte';
+	import { slide } from 'svelte/transition';
+	import { getChainName } from '$lib/functions';
 	import { ethData, polyData, avaxData, opData } from '$lib/stores';
 	import { fetchDeposits, fetchWithdrawals, fetchClaims, fetchDelegationsCreated, fetchDelegationsFunded, fetchDelegationsUpdated, fetchDelegationsWithdrawn, fetchYield, fetchSupply, fetchBalances, fetchDraws } from '$lib/data';
 	import Navbar from '$lib/Navbar.svelte';
@@ -13,17 +15,11 @@
 
 	// Initializations:
 	const chains: Chain[] = ['eth', 'poly', 'avax', 'op'];
-	const maxLoadingProgress = (10 * chains.length) + 1;
+	const chainLoadingProgress: Record<Chain, number> = { eth: 0, poly: 0, avax: 0, op: 0 };
+	const maxChainLoadingProgress = 10;
 	let dataLoaded = false;
 	let loadingData = true;
-	let ethLoadingProgress = 0;
-	let polyLoadingProgress = 0;
-	let avaxLoadingProgress = 0;
-	let opLoadingProgress = 0;
-	let drawsLoadingProgress = 0;
-
-	// Reactive Loading Progress:
-	$: loadingProgress = ethLoadingProgress + polyLoadingProgress + avaxLoadingProgress + opLoadingProgress + drawsLoadingProgress;
+	let drawsLoaded = false;
 
 	// Function to load data:
 	const loadData = async () => {
@@ -31,31 +27,31 @@
 
 			// Fetching & Assigning Draw Data:
 			const draws = await fetchDraws();
-			drawsLoadingProgress++;
+			drawsLoaded = true;
 
 			let promises = chains.map(chain => (async () => {
 
 				// Fetching Chain-Specific Data:
 				const deposits = await fetchDeposits(chain);
-				updateLoadingProgress(chain);
+				chainLoadingProgress[chain]++;
 				const withdrawals = await fetchWithdrawals(chain);
-				updateLoadingProgress(chain);
+				chainLoadingProgress[chain]++;
 				const claims = await fetchClaims(chain);
-				updateLoadingProgress(chain);
+				chainLoadingProgress[chain]++;
 				const delegationsCreated = await fetchDelegationsCreated(chain);
-				updateLoadingProgress(chain);
+				chainLoadingProgress[chain]++;
 				const delegationsFunded = await fetchDelegationsFunded(chain);
-				updateLoadingProgress(chain);
+				chainLoadingProgress[chain]++;
 				const delegationsUpdated = await fetchDelegationsUpdated(chain);
-				updateLoadingProgress(chain);
+				chainLoadingProgress[chain]++;
 				const delegationsWithdrawn = await fetchDelegationsWithdrawn(chain);
-				updateLoadingProgress(chain);
+				chainLoadingProgress[chain]++;
 				const yields = await fetchYield(chain);
-				updateLoadingProgress(chain);
+				chainLoadingProgress[chain]++;
 				const supply = await fetchSupply(chain);
-				updateLoadingProgress(chain);
+				chainLoadingProgress[chain]++;
 				const balances = await fetchBalances(chain);
-				updateLoadingProgress(chain);
+				chainLoadingProgress[chain]++;
 
 				// Assigning Chain-Specific Data:
 				if(chain === 'eth') {
@@ -79,19 +75,6 @@
 		}
 	}
 
-	// Function to update loading progress:
-	const updateLoadingProgress = (chain: Chain) => {
-		if(chain === 'eth') {
-			ethLoadingProgress++;
-		} else if(chain === 'poly') {
-			polyLoadingProgress++;
-		} else if(chain === 'avax') {
-			avaxLoadingProgress++;
-		} else if(chain === 'op') {
-			opLoadingProgress++;
-		}
-	}
-
 	onMount(async () => {
 		dataLoaded = await loadData();
 	});
@@ -110,9 +93,34 @@
 	{:else}
 		<div id="loadingModal">
 			{#if loadingData}
-				<span>Loading data... ({loadingProgress}/{maxLoadingProgress})</span>
+				<img src="/images/loading.gif" alt="Loading">
+				<h2>Initializing some data... (This may take a minute)</h2>
+				{#if !drawsLoaded}
+					<span class="dataProgress" transition:slide|local>
+						<span class="type">Prize Draw Data...</span>
+						<span class="status">
+							<img src="/images/excitedPooly.gif" alt="Pooly">
+							<img class="trophy" src="/images/trophy.webp" alt="Trophy">
+						</span>
+					</span>
+				{/if}
+				{#each chains as chain}
+					{#if chainLoadingProgress[chain] < maxChainLoadingProgress}
+						<span class="dataProgress" transition:slide|local>
+							<span class="type">{getChainName(chain)} Data...</span>
+							<span class="status">
+								<img src="/images/excitedPooly.gif" alt="Pooly" style="margin-left: {(chainLoadingProgress[chain] / maxChainLoadingProgress) * 80}%">
+								<img class="trophy" src="/images/trophy.webp" alt="Trophy">
+							</span>
+						</span>
+					{/if}
+				{/each}
 			{:else}
-				<span>There seems to have been an issue loading data.</span>
+				<span class="error">
+					<img src="/images/ngmi.webp" alt="Whoops">
+					<h2>There was an issue loading data.</h2>
+					<span>Refresh the page to try again, or scream at @Ncookie on Discord.</span>
+				</span>
 			{/if}
 		</div>
 	{/if}
@@ -133,9 +141,57 @@
 	}
 
 	#loadingModal {
-		position: absolute;
-		inset: 0;
-		margin: 20vh 40vw;
+		display: flex;
+		flex-direction: column;
+		margin-top: calc(var(--navbar-height) + 5em);
+	}
+
+	img {
+		height: 5em;
+		margin: 0 auto;
+	}
+
+	h2 {
+		margin: 1em auto;
+		font-size: 1em;
+	}
+
+	span.dataProgress {
+		display: flex;
+		align-items: center;
+		margin: .5em 1em;
+		white-space: nowrap;
+	}
+
+	span.type {
+		display: flex;
+		align-items: center;
+		width: 15ch;
+	}
+
+	span.status {
+		display: flex;
+		align-items: center;
+		flex: 1;
+	}
+
+	span.status img {
+		height: 1.5em;
+		margin: 0;
+	}
+
+	span.status img.trophy {
+		margin-left: auto;
+	}
+
+	span.error {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	span.error img {
+		height: 7em;
 	}
 
 </style>
