@@ -120,7 +120,24 @@ export interface ExplorerAPIDrawResponse {
 
 /* ========================================================================================================================================================================= */
 
-// Line Chart Data Interface:
+// Chart Interfaces:
+export interface BaseChartInfo {
+  name: string
+  type: 'line' | 'pie'
+}
+export interface LineChartInfo extends BaseChartInfo {
+  type: 'line'
+  xAxisValues: string[]
+  data: Line[]
+  dollarValues?: boolean
+}
+export interface PieChartInfo extends BaseChartInfo {
+  type: 'pie'
+  sectionLabels: string[]
+  data: number[]
+  hiddenPercentage?: number
+  appendedLabel?: string
+}
 export interface Line {
   label: string
   data: number[]

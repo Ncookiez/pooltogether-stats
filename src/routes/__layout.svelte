@@ -17,7 +17,7 @@
 	const chains: Chain[] = ['eth', 'poly', 'avax', 'op'];
 	const chainLoadingProgress: Record<Chain, number> = { eth: 0, poly: 0, avax: 0, op: 0 };
 	const maxChainLoadingProgress = 10;
-	let dataLoaded = false;
+	let dataLoaded = true; // <TODO> turn to false before full deployment
 	let loadingData = true;
 	let drawsLoaded = false;
 
@@ -76,7 +76,9 @@
 	}
 
 	onMount(async () => {
-		dataLoaded = await loadData();
+		if(!dataLoaded) {
+			dataLoaded = await loadData();
+		}
 	});
 	
 </script>

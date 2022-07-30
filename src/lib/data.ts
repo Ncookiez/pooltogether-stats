@@ -254,7 +254,6 @@ export const fetchSupply = async (chain: Chain) => {
 
 /* ========================================================================================================================================================================= */
 
-// <TODO> re-add after implementing balances on API
 // Function to fetch balances data:
 export const fetchBalances = async (chain: Chain) => {
 
@@ -264,19 +263,19 @@ export const fetchBalances = async (chain: Chain) => {
   let page = 0;
 
   // Fetching Balances:
-  // try {
-  //   do {
-  //     let apiResponse: { lastQueriedBlock: number, timestamp: number | undefined, data: BalanceData[], page: number, hasNextPage: boolean } = await fetch(`${apiURL}/${chain}/balances?page=${page++}&pageSize=${pageSize}`).then(response => response.json());
-  //     if(apiResponse.lastQueriedBlock > balances.lastQueriedBlock) {
-  //       balances.lastQueriedBlock = apiResponse.lastQueriedBlock;
-  //       balances.timestamp = apiResponse.timestamp;
-  //     }
-  //     balances.data.push(...apiResponse.data);
-  //     hasNextPage = apiResponse.hasNextPage;
-  //   } while(hasNextPage);
-  // } catch {
-  //   throw new Error(`Error querying ${chain.toUpperCase()} balances.`);
-  // }
+  try {
+    do {
+      let apiResponse: { lastQueriedBlock: number, timestamp: number | undefined, data: BalanceData[], page: number, hasNextPage: boolean } = await fetch(`${apiURL}/${chain}/balances?page=${page++}&pageSize=${pageSize}`).then(response => response.json());
+      if(apiResponse.lastQueriedBlock > balances.lastQueriedBlock) {
+        balances.lastQueriedBlock = apiResponse.lastQueriedBlock;
+        balances.timestamp = apiResponse.timestamp;
+      }
+      balances.data.push(...apiResponse.data);
+      hasNextPage = apiResponse.hasNextPage;
+    } while(hasNextPage);
+  } catch {
+    throw new Error(`Error querying ${chain.toUpperCase()} balances.`);
+  }
 
   return balances;
 }
