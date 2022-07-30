@@ -21,6 +21,9 @@
 	const appBackgroundColor = '#4c249f';
 	const defaultSectionBorderWidth = 10;
 
+	// Reactive Chart Updates:
+	$: onUpdate(sectionLabels, data, hiddenPercentage, appendedLabel);
+
 	// Basic Pie Chart Config:
 	const pieChartConfig: ChartConfiguration = {
 		type: 'pie',
@@ -87,11 +90,17 @@
 		}
 	}
 
+	// Function to update chart data:
+	const onUpdate = (sectionLabels: string[], data: number[], hiddenPercentage: number, appendedLabel: string | undefined) => {
+		if(pieChart) {
+			setPieChartData(pieChart, sectionLabels, data, hiddenPercentage, appendedLabel);
+			pieChart.update();
+		}
+	}
+
 	onMount(() => {
 		Chart.register(...registerables, ChartDataLabels);
 		pieChart = new Chart(name, structuredClone(pieChartConfig));
-		setPieChartData(pieChart, sectionLabels, data, hiddenPercentage, appendedLabel); 
-		pieChart.update();
 	});
 	
 </script>

@@ -20,6 +20,10 @@ export interface ChainData {
   supply: { lastQueriedBlock: number, data: SupplyData[] }
   balances: { lastQueriedBlock: number, timestamp: number | undefined, data: BalanceData[] }
   draws: { data: DrawData[] }
+  depositsOverTime?: DepositsOverTime
+  withdrawalsOverTime?: WithdrawalsOverTime
+  claimsOverTime?: ClaimsOverTime
+  tvlOverTime?: TVLOverTime
 }
 
 /* ========================================================================================================================================================================= */
@@ -121,18 +125,14 @@ export interface ExplorerAPIDrawResponse {
 /* ========================================================================================================================================================================= */
 
 // Chart Interfaces:
-export interface BaseChartInfo {
+export interface LineChartInfo {
   name: string
-  type: 'line' | 'pie'
-}
-export interface LineChartInfo extends BaseChartInfo {
-  type: 'line'
   xAxisValues: string[]
   data: Line[]
   dollarValues?: boolean
 }
-export interface PieChartInfo extends BaseChartInfo {
-  type: 'pie'
+export interface PieChartInfo {
+  name: string
   sectionLabels: string[]
   data: number[]
   hiddenPercentage?: number
@@ -147,4 +147,50 @@ export interface Line {
   pointRadius?: number
   pointHoverRadius?: number
   tension?: number
+}
+
+/* ========================================================================================================================================================================= */
+
+// Deposits Over Time Interface:
+export interface DepositsOverTime {
+  timestamps: number[]
+  depositAmounts: number[]
+  depositCounts: number[]
+  uniqueWallets: number[]
+  avgDepositAmounts: number[]
+  cumulativeDepositAmounts: number[]
+  cumulativeDepositCounts: number[]
+  cumulativeUniqueWallets: number[]
+}
+
+// Withdrawals Over Time Interface:
+export interface WithdrawalsOverTime {
+  timestamps: number[]
+  withdrawalAmounts: number[]
+  withdrawalCounts: number[]
+  uniqueWallets: number[]
+  avgWithdrawalAmounts: number[]
+  cumulativeWithdrawalAmounts: number[]
+  cumulativeWithdrawalCounts: number[]
+  cumulativeUniqueWallets: number[]
+}
+
+// Claims Over Time Interface:
+export interface ClaimsOverTime {
+  timestamps: number[]
+  claimAmounts: number[]
+  claimCounts: number[]
+  prizeCounts: number[]
+  uniqueWallets: number[]
+  avgClaimAmounts: number[]
+  cumulativeClaimAmounts: number[]
+  cumulativeClaimCounts: number[]
+  cumulativePrizeCounts: number[]
+  cumulativeUniqueWallets: number[]
+}
+
+// TVL Over Time Interface:
+export interface TVLOverTime {
+  timestamps: number[]
+  tvls: number[]
 }

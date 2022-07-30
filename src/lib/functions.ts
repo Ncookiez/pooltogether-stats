@@ -1,6 +1,6 @@
 
 // Type Imports:
-import type { Chain } from '$lib/types';
+import type { Chain, Hash, ChainData, DepositsOverTime, WithdrawalsOverTime, ClaimsOverTime, TVLOverTime } from '$lib/types';
 
 /* ====================================================================================================================================================== */
 
@@ -15,4 +15,215 @@ export const getChainName = (chain: Chain) => {
   } else {
     return 'Optimism';
   }
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to get array of numbers:
+export const getRangeArray = (start: number, end: number, ticks: number) => {
+  const range: number[] = [];
+  const tick = (end - start) / ticks;
+  let value = start;
+  while(value <= end) {
+    value += tick;
+    range.push(Math.ceil(value));
+  }
+  return range;
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to get timestamps:
+export const getTimestamps = (chainData: ChainData, ticks: number) => {
+  const firstTimestamp = chainData.deposits.data[0].timestamp as number;
+  const lastTimestamp = chainData.balances.timestamp as number;
+  return getRangeArray(firstTimestamp, lastTimestamp, ticks);
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to convert timestamps to dates:
+export const timestampsToDates = (timestamps: number[]) => {
+  const dates = timestamps.map(timestamp => (new Date(timestamp * 1000)).toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }));
+  return dates;
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to get deposits over time:
+export const getDepositsOverTime = (chainData: ChainData, ticks: number) => {
+
+  // Initializations:
+  const depositsOverTime: DepositsOverTime = {
+    timestamps: getTimestamps(chainData, ticks),
+    depositAmounts: [],
+    depositCounts: [],
+    uniqueWallets: [],
+    avgDepositAmounts: [],
+    cumulativeDepositAmounts: [],
+    cumulativeDepositCounts: [],
+    cumulativeUniqueWallets: []
+  }
+  let cumulativeDepositAmount = 0;
+  let cumulativeDepositCount = 0;
+  let cumulativeUniqueWallets: Hash[] = [];
+  
+  // Filtering Data:
+  for(let i = 0; i < ticks; i++) {
+    let depositAmount = 0;
+    let depositCount = 0;
+    let newWallets = 0;
+    chainData.deposits.data.forEach(deposit => {
+      if(deposit.timestamp && deposit.timestamp <= depositsOverTime.timestamps[i]) {
+        if((i > 0 && deposit.timestamp > depositsOverTime.timestamps[i - 1]) || i === 0) {
+          depositAmount += deposit.amount;
+          depositCount++;
+          if(!cumulativeUniqueWallets.includes(deposit.wallet)) {
+            cumulativeUniqueWallets.push(deposit.wallet);
+            newWallets++;
+          }
+        }
+      }
+    });
+    cumulativeDepositAmount += depositAmount;
+    cumulativeDepositCount += depositCount;
+    depositsOverTime.depositAmounts.push(Math.floor(depositAmount));
+    depositsOverTime.depositCounts.push(depositCount);
+    depositsOverTime.uniqueWallets.push(newWallets);
+    depositsOverTime.avgDepositAmounts.push(depositCount > 0 ? Math.floor(depositAmount / depositCount) : 0);
+    depositsOverTime.cumulativeDepositAmounts.push(Math.floor(cumulativeDepositAmount));
+    depositsOverTime.cumulativeDepositCounts.push(cumulativeDepositCount);
+    depositsOverTime.cumulativeUniqueWallets.push(cumulativeUniqueWallets.length);
+  }
+
+  return depositsOverTime;
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to get withdrawals over time:
+export const getWithdrawalsOverTime = (chainData: ChainData, ticks: number) => {
+
+  // Initializations:
+  const withdrawalsOverTime: WithdrawalsOverTime = {
+    timestamps: getTimestamps(chainData, ticks),
+    withdrawalAmounts: [],
+    withdrawalCounts: [],
+    uniqueWallets: [],
+    avgWithdrawalAmounts: [],
+    cumulativeWithdrawalAmounts: [],
+    cumulativeWithdrawalCounts: [],
+    cumulativeUniqueWallets: []
+  }
+  let cumulativeWithdrawalAmount = 0;
+  let cumulativeWithdrawalCount = 0;
+  let cumulativeUniqueWallets: Hash[] = [];
+  
+  // Filtering Data:
+  for(let i = 0; i < ticks; i++) {
+    let withdrawalAmount = 0;
+    let withdrawalCount = 0;
+    let newWallets = 0;
+    chainData.withdrawals.data.forEach(withdrawal => {
+      if(withdrawal.timestamp && withdrawal.timestamp <= withdrawalsOverTime.timestamps[i]) {
+        if((i > 0 && withdrawal.timestamp > withdrawalsOverTime.timestamps[i - 1]) || i === 0) {
+          withdrawalAmount += withdrawal.amount;
+          withdrawalCount++;
+          if(!cumulativeUniqueWallets.includes(withdrawal.wallet)) {
+            cumulativeUniqueWallets.push(withdrawal.wallet);
+            newWallets++;
+          }
+        }
+      }
+    });
+    cumulativeWithdrawalAmount += withdrawalAmount;
+    cumulativeWithdrawalCount += withdrawalCount;
+    withdrawalsOverTime.withdrawalAmounts.push(Math.floor(withdrawalAmount));
+    withdrawalsOverTime.withdrawalCounts.push(withdrawalCount);
+    withdrawalsOverTime.uniqueWallets.push(newWallets);
+    withdrawalsOverTime.avgWithdrawalAmounts.push(withdrawalCount > 0 ? Math.floor(withdrawalAmount / withdrawalCount) : 0);
+    withdrawalsOverTime.cumulativeWithdrawalAmounts.push(Math.floor(cumulativeWithdrawalAmount));
+    withdrawalsOverTime.cumulativeWithdrawalCounts.push(cumulativeWithdrawalCount);
+    withdrawalsOverTime.cumulativeUniqueWallets.push(cumulativeUniqueWallets.length);
+  }
+
+  return withdrawalsOverTime;
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to get claims over time:
+export const getClaimsOverTime = (chainData: ChainData, ticks: number) => {
+
+  // Initializations:
+  const claimsOverTime: ClaimsOverTime = {
+    timestamps: getTimestamps(chainData, ticks),
+    claimAmounts: [],
+    claimCounts: [],
+    prizeCounts: [],
+    uniqueWallets: [],
+    avgClaimAmounts: [],
+    cumulativeClaimAmounts: [],
+    cumulativeClaimCounts: [],
+    cumulativePrizeCounts: [],
+    cumulativeUniqueWallets: []
+  }
+  let cumulativeClaimAmount = 0;
+  let cumulativeClaimCount = 0;
+  let cumulativePrizeCount = 0;
+  let cumulativeUniqueWallets: Hash[] = [];
+  
+  // Filtering Data:
+  for(let i = 0; i < ticks; i++) {
+    let claimAmount = 0;
+    let claimCount = 0;
+    let prizeCount = 0;
+    let newWallets = 0;
+    chainData.claims.data.forEach(claim => {
+      if(claim.timestamp && claim.timestamp <= claimsOverTime.timestamps[i]) {
+        if((i > 0 && claim.timestamp > claimsOverTime.timestamps[i - 1]) || i === 0) {
+          claimAmount += claim.prizes.reduce((a, b) => a + b, 0);
+          claimCount++;
+          prizeCount += claim.prizes.length;
+          if(!cumulativeUniqueWallets.includes(claim.wallet)) {
+            cumulativeUniqueWallets.push(claim.wallet);
+            newWallets++;
+          }
+        }
+      }
+    });
+    cumulativeClaimAmount += claimAmount;
+    cumulativeClaimCount += claimCount;
+    cumulativePrizeCount += prizeCount;
+    claimsOverTime.claimAmounts.push(Math.floor(claimAmount));
+    claimsOverTime.claimCounts.push(claimCount);
+    claimsOverTime.prizeCounts.push(prizeCount);
+    claimsOverTime.uniqueWallets.push(newWallets);
+    claimsOverTime.avgClaimAmounts.push(claimCount > 0 ? Math.floor(claimAmount / claimCount) : 0);
+    claimsOverTime.cumulativeClaimAmounts.push(Math.floor(cumulativeClaimAmount));
+    claimsOverTime.cumulativeClaimCounts.push(cumulativeClaimCount);
+    claimsOverTime.cumulativePrizeCounts.push(cumulativePrizeCount);
+    claimsOverTime.cumulativeUniqueWallets.push(cumulativeUniqueWallets.length);
+  }
+
+  return claimsOverTime;
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to get TVL over time:
+export const getTVLOverTime = (deposits: DepositsOverTime, withdrawals: WithdrawalsOverTime, claims: ClaimsOverTime) => {
+
+  // Initializations:
+  const tvlOverTime: TVLOverTime = {
+    timestamps: deposits.timestamps,
+    tvls: []
+  }
+
+  // Calculating TVL Over Time:
+  for(let i = 0; i < tvlOverTime.timestamps.length; i++) {
+    tvlOverTime.tvls.push(deposits.cumulativeDepositAmounts[i] + claims.cumulativeClaimAmounts[i] - withdrawals.cumulativeWithdrawalAmounts[i]);
+  }
+
+  return tvlOverTime;
 }

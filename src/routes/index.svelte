@@ -1,25 +1,28 @@
 <script lang="ts">
 
 	// Imports:
+	import { onMount } from 'svelte';
+	import { timestampsToDates } from '$lib/functions';
+	import { ethData, polyData, avaxData, opData } from '$lib/stores';
 	import PieChart from '$lib/PieChart.svelte';
 	import LineChart from '$lib/LineChart.svelte';
 
 	// Type Imports:
 	import type { LineChartInfo, PieChartInfo } from '$lib/types';
 
-	const testLineChart: LineChartInfo = {
-		name: 'testLineChart',
-		type: 'line',
-		xAxisValues: ['1', '2', '3', '4', '5'],
-		data: [{ label: 'Deposits', data: [1, 2, 3, 4, 5] }]
-	}
+	// Charts:
+	let tvlChart: LineChartInfo = {
+		name: 'tvlChart',
+		xAxisValues: [],
+		data: [{ label: 'TVL', data: [] }]
+	};
 
-	const testPieChart: PieChartInfo = {
-		name: 'testingPieChart',
-		type: 'pie',
-		sectionLabels: ['s1', 's2', 's3'],
-		data: [3, 3, 5]
-	}
+	onMount(() => {
+		if($opData.tvlOverTime) {
+			tvlChart.xAxisValues = timestampsToDates($opData.tvlOverTime.timestamps);
+			tvlChart.data[0].data = $opData.tvlOverTime.tvls;
+		}
+	});
 	
 </script>
 
@@ -31,11 +34,11 @@
 	<meta name="description" content="An app for querying and analyzing some PoolTogether statistics." />
 </svelte:head>
 
-<!-- Line Chart -->
-<LineChart {...testLineChart} />
+<!-- TVL Chart -->
+<LineChart {...tvlChart} />
 
 <!-- Pie Chart -->
-<PieChart {...testPieChart} />
+<!-- <PieChart {...testPieChart} /> -->
 
 <!-- #################################################################################################### -->
 

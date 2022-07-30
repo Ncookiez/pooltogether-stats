@@ -25,6 +25,9 @@
 	const defaultPointHoverRadius = 5;
 	const defaultLineTension = 0.2;
 
+	// Reactive Chart Updates:
+	$: onUpdate(xAxisValues, data, dollarValues);
+
 	// Basic Line Chart Config:
 	const lineChartConfig: ChartConfiguration = {
 		type: 'line',
@@ -68,11 +71,17 @@
 		}
 	}
 
+	// Function to update chart data:
+	const onUpdate = (xAxisValues: string[], data: Line[], dollarValues: boolean) => {
+		if(lineChart) {
+			setLineChartData(lineChart, xAxisValues, data, dollarValues); 
+			lineChart.update();
+		}
+	}
+
 	onMount(() => {
 		Chart.register(...registerables, ChartDataLabels);
 		lineChart = new Chart(name, structuredClone(lineChartConfig));
-		setLineChartData(lineChart, xAxisValues, data, dollarValues); 
-		lineChart.update();
 	});
 	
 </script>
