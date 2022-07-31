@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
 	import { ethData, polyData, avaxData, opData } from '$lib/stores';
-	import { getChainName, getDepositsOverTime, getWithdrawalsOverTime, getClaimsOverTime, getTVLOverTime, getDelegationsOverTime, getYieldOverTime, getWalletData, getWinlessWithdrawals } from '$lib/functions';
+	import { getChainName, getDepositsOverTime, getWithdrawalsOverTime, getClaimsOverTime, getTVLOverTime, getDelegationsOverTime, getYieldOverTime, getWalletData, getWinlessWithdrawals, getMovingUsers } from '$lib/functions';
 	import { fetchDeposits, fetchWithdrawals, fetchClaims, fetchDelegationsCreated, fetchDelegationsFunded, fetchDelegationsUpdated, fetchDelegationsWithdrawn, fetchYield, fetchSupply, fetchBalances, fetchDraws } from '$lib/data';
 	import Navbar from '$lib/Navbar.svelte';
 	import Footer from '$lib/Footer.svelte';
@@ -99,6 +99,13 @@
 				
 			})());
 			await Promise.all(promises);
+
+			// Assigning Extra Multi-Chain Data:
+			$ethData.movingUsers = getMovingUsers($ethData.withdrawals.data, $ethData.deposits.data, $polyData.deposits.data, $avaxData.deposits.data, $opData.deposits.data);
+			$polyData.movingUsers = getMovingUsers($polyData.withdrawals.data, $ethData.deposits.data, $polyData.deposits.data, $avaxData.deposits.data, $opData.deposits.data);
+			$avaxData.movingUsers = getMovingUsers($avaxData.withdrawals.data, $ethData.deposits.data, $polyData.deposits.data, $avaxData.deposits.data, $opData.deposits.data);
+			$opData.movingUsers = getMovingUsers($opData.withdrawals.data, $ethData.deposits.data, $polyData.deposits.data, $avaxData.deposits.data, $opData.deposits.data);
+
 			return true;
 		} catch(err) {
 			console.error(err);

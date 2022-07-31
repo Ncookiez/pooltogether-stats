@@ -1,6 +1,6 @@
 
 // Type Imports:
-import type { Chain, Hash, ChainData, BalanceData, WalletData, DepositsOverTime, WithdrawalsOverTime, ClaimsOverTime, TVLOverTime, DelegationsOverTime, YieldOverTime, WinlessWithdrawals, MultichainDistribution } from '$lib/types';
+import type { Chain, Hash, ChainData, DepositData, WithdrawalData, BalanceData, WalletData, DepositsOverTime, WithdrawalsOverTime, ClaimsOverTime, TVLOverTime, DelegationsOverTime, YieldOverTime, WinlessWithdrawals, MultichainDistribution, MovingUsers } from '$lib/types';
 
 /* ====================================================================================================================================================== */
 
@@ -620,4 +620,69 @@ export const getMultichainUsersDistribution = (ethBalances: BalanceData[], polyB
   }
 
   return multichainDistribution;
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to get users moving to a new chain:
+export const getMovingUsers = (withdrawals: WithdrawalData[], ethDeposits: DepositData[], polyDeposits: DepositData[], avaxDeposits: DepositData[], opDeposits: DepositData[]) => {
+
+  // Initializations:
+  const movingUsers: MovingUsers = {
+    totalWithdrawn: { amount: 0, users: 0 },
+    movedToETH: { amount: 0, users: 0 },
+    movedToPOLY: { amount: 0, users: 0 },
+    movedToAVAX: { amount: 0, users: 0 },
+    movedToOP: { amount: 0, users: 0 }
+  }
+  const uniqueWallets: Hash[] = [];
+
+  // Finding Data:
+  withdrawals.forEach(withdrawal => {
+    const wallet = withdrawal.wallet;
+    const timestamp = withdrawal.timestamp;
+    if(timestamp && !uniqueWallets.includes(wallet)) {
+      uniqueWallets.push(wallet);
+      movingUsers.totalWithdrawn.users++;
+
+      // Moving To Ethereum:
+      let ethWalletDeposits = ethDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp);
+      if(ethWalletDeposits.length > 0) {
+        ethWalletDeposits.forEach(deposit => {
+          movingUsers.movedToETH.amount += deposit.amount;
+        });
+        movingUsers.movedToETH.users++;
+      }
+
+      // Moving To Polygon:
+      let polyWalletDeposits = polyDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp);
+      if(polyWalletDeposits.length > 0) {
+        polyWalletDeposits.forEach(deposit => {
+          movingUsers.movedToPOLY.amount += deposit.amount;
+        });
+        movingUsers.movedToPOLY.users++;
+      }
+
+      // Moving To Avalanche:
+      let avaxWalletDeposits = avaxDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp);
+      if(avaxWalletDeposits.length > 0) {
+        avaxWalletDeposits.forEach(deposit => {
+          movingUsers.movedToAVAX.amount += deposit.amount;
+        });
+        movingUsers.movedToAVAX.users++;
+      }
+
+      // Moving To Optimism:
+      let opWalletDeposits = opDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp);
+      if(opWalletDeposits.length > 0) {
+        opWalletDeposits.forEach(deposit => {
+          movingUsers.movedToOP.amount += deposit.amount;
+        });
+        movingUsers.movedToOP.users++;
+      }
+    }
+    movingUsers.totalWithdrawn.amount += withdrawal.amount;
+  });
+
+  return movingUsers;
 }

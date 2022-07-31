@@ -298,3 +298,14 @@ export interface MultichainDistribution {
   threeChains: number
   fourChains: number
 }
+
+/* ========================================================================================================================================================================= */
+
+// Moving Users Interface:
+export interface MovingUsers {
+  totalWithdrawn: { amount: number, users: number }
+  movedToETH: { amount: number, users: number }
+  movedToPOLY: { amount: number, users: number }
+  movedToAVAX: { amount: number, users: number }
+  movedToOP: { amount: number, users: number }
+}
