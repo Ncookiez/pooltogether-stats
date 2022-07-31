@@ -1,6 +1,6 @@
 
 // Type Imports:
-import type { Chain, Hash, ChainData, WalletData, DepositsOverTime, WithdrawalsOverTime, ClaimsOverTime, TVLOverTime, DelegationsOverTime, YieldOverTime, WinlessWithdrawals } from '$lib/types';
+import type { Chain, Hash, ChainData, BalanceData, WalletData, DepositsOverTime, WithdrawalsOverTime, ClaimsOverTime, TVLOverTime, DelegationsOverTime, YieldOverTime, WinlessWithdrawals, MultichainDistribution } from '$lib/types';
 
 /* ====================================================================================================================================================== */
 
@@ -549,4 +549,75 @@ export const getWinlessWithdrawals = (wallets: Record<Hash, WalletData>) => {
   }
 
   return winlessWithdrawals;
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to get multichain users' distribution:
+export const getMultichainUsersDistribution = (ethBalances: BalanceData[], polyBalances: BalanceData[], avaxBalances: BalanceData[], opBalances: BalanceData[]) => {
+
+  // Initializations:
+  const multichainDistribution: MultichainDistribution = {
+    totalUsers: 0,
+    oneChain: 0,
+    twoChains: 0,
+    threeChains: 0,
+    fourChains: 0
+  }
+  const wallets: Record<Hash, number> = {};
+
+  // Filtering Balances:
+  ethBalances.forEach(entry => {
+    if(entry.balance > 0) {
+      if(wallets[entry.wallet]) {
+        wallets[entry.wallet]++;
+      } else {
+        wallets[entry.wallet] = 1;
+      }
+    }
+  });
+  polyBalances.forEach(entry => {
+    if(entry.balance > 0) {
+      if(wallets[entry.wallet]) {
+        wallets[entry.wallet]++;
+      } else {
+        wallets[entry.wallet] = 1;
+      }
+    }
+  });
+  avaxBalances.forEach(entry => {
+    if(entry.balance > 0) {
+      if(wallets[entry.wallet]) {
+        wallets[entry.wallet]++;
+      } else {
+        wallets[entry.wallet] = 1;
+      }
+    }
+  });
+  opBalances.forEach(entry => {
+    if(entry.balance > 0) {
+      if(wallets[entry.wallet]) {
+        wallets[entry.wallet]++;
+      } else {
+        wallets[entry.wallet] = 1;
+      }
+    }
+  });
+
+  // Updating Data:
+  for(let stringWallet in wallets) {
+    const wallet = stringWallet as Hash;
+    if(wallets[wallet] === 1) {
+      multichainDistribution.oneChain++;
+    } else if(wallets[wallet] === 2) {
+      multichainDistribution.twoChains++;
+    } else if(wallets[wallet] === 3) {
+      multichainDistribution.threeChains++;
+    } else if(wallets[wallet] === 4) {
+      multichainDistribution.fourChains++;
+    }
+    multichainDistribution.totalUsers++;
+  }
+
+  return multichainDistribution;
 }

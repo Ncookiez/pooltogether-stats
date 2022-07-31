@@ -291,3 +291,10 @@ export interface ClaimDistribution {
   500: number[]
   1000: number[]
 }
+export interface MultichainDistribution {
+  totalUsers: number
+  oneChain: number
+  twoChains: number
+  threeChains: number
+  fourChains: number
+}
