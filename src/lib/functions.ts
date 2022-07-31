@@ -157,7 +157,7 @@ export const getDepositsOverTime = (chainData: ChainData, ticks: number, customT
     let distributions = { 1: 0, 10: 0, 100: 0, 1000: 0, 10000: 0, 100000: 0 };
     chainData.deposits.data.forEach(deposit => {
       if(deposit.timestamp && deposit.timestamp <= depositsOverTime.timestamps[i]) {
-        if((i > 0 && deposit.timestamp > depositsOverTime.timestamps[i - 1]) || i === 0) {
+        if((i > 0 && deposit.timestamp > depositsOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
           depositAmount += deposit.amount;
           depositCount++;
           if(!cumulativeUniqueWallets.includes(deposit.wallet)) {
@@ -249,7 +249,7 @@ export const getWithdrawalsOverTime = (chainData: ChainData, ticks: number, cust
     let newWallets = 0;
     chainData.withdrawals.data.forEach(withdrawal => {
       if(withdrawal.timestamp && withdrawal.timestamp <= withdrawalsOverTime.timestamps[i]) {
-        if((i > 0 && withdrawal.timestamp > withdrawalsOverTime.timestamps[i - 1]) || i === 0) {
+        if((i > 0 && withdrawal.timestamp > withdrawalsOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
           withdrawalAmount += withdrawal.amount;
           withdrawalCount++;
           if(!cumulativeUniqueWallets.includes(withdrawal.wallet)) {
@@ -308,7 +308,7 @@ export const getClaimsOverTime = (chainData: ChainData, ticks: number, customTim
     let distributions = { 1: 0, 5: 0, 10: 0, 50: 0, 100: 0, 500: 0, 1000: 0 };
     chainData.claims.data.forEach(claim => {
       if(claim.timestamp && claim.timestamp <= claimsOverTime.timestamps[i]) {
-        if((i > 0 && claim.timestamp > claimsOverTime.timestamps[i - 1]) || i === 0) {
+        if((i > 0 && claim.timestamp > claimsOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
           const totalAmountClaimed = claim.prizes.reduce((a, b) => a + b, 0);
           claimAmount += totalAmountClaimed;
           claimCount++;
@@ -499,7 +499,7 @@ export const getDelegationsOverTime = (chainData: ChainData, ticks: number, cust
     let newWallets = 0;
     chainData.delegationsCreated.data.forEach(delegation => {
       if(delegation.timestamp && delegation.timestamp <= delegationsOverTime.timestamps[i]) {
-        if((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || i === 0) {
+        if((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
           delegationCount++;
           if(!cumulativeUniqueWallets.includes(delegation.delegator)) {
             cumulativeUniqueWallets.push(delegation.delegator);
@@ -510,14 +510,14 @@ export const getDelegationsOverTime = (chainData: ChainData, ticks: number, cust
     });
     chainData.delegationsFunded.data.forEach(delegation => {
       if(delegation.timestamp && delegation.timestamp <= delegationsOverTime.timestamps[i]) {
-        if((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || i === 0) {
+        if((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
           delegationAmount += delegation.amount;
         }
       }
     });
     chainData.delegationsWithdrawn.data.forEach(delegation => {
       if(delegation.timestamp && delegation.timestamp <= delegationsOverTime.timestamps[i]) {
-        if((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || i === 0) {
+        if((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
           delegationWithdrawalAmount += delegation.amount;
           delegationWithdrawalCount++;
         }
@@ -565,7 +565,7 @@ export const getYieldOverTime = (chainData: ChainData, ticks: number, customTime
     let yieldCount = 0;
     chainData.yields.data.forEach(yieldTX => {
       if(yieldTX.timestamp && yieldTX.timestamp <= yieldOverTime.timestamps[i]) {
-        if((i > 0 && yieldTX.timestamp > yieldOverTime.timestamps[i - 1]) || i === 0) {
+        if((i > 0 && yieldTX.timestamp > yieldOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
           yieldAmount += yieldTX.amount;
           yieldCount++;
         }
