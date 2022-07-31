@@ -34,4 +34,17 @@ html, body {
 	font-family: Averta;
 	color: #ffffff;
 	background-color: var(--primary-color);
+	overflow: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--light-purple);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--dark-purple);
 }

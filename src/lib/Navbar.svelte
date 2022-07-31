@@ -30,6 +30,9 @@
 		{/each}
 	</div>
 
+	<!-- Wallet Search -->
+	<!-- TODO - search for specific wallet and see all events -->
+
 </nav>
 
 <!-- #################################################################################################### -->

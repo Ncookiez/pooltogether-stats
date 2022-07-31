@@ -140,7 +140,7 @@
 		<div id="loadingModal">
 			{#if loadingData}
 				<img src="/images/loading.gif" alt="Loading">
-				<h2>Initializing some data... (This may take a minute)</h2>
+				<h2>Initializing some data... (this may take a minute)</h2>
 				{#if !drawsLoaded}
 					<span class="dataProgress" transition:slide|local>
 						<span class="type">Prize Draw Data...</span>
@@ -181,15 +181,20 @@
 
 	main {
 		display: flex;
-		flex-direction: column;
+		justify-content: center;
 		align-items: center;
+		flex-wrap: wrap;
+		gap: 1em;
+		max-height: calc(100vh - var(--navbar-height) - 50px);
+		margin-top: var(--navbar-height);
+		padding: 2em;
 		overflow: hidden auto;
 	}
 
 	#loadingModal {
 		display: flex;
 		flex-direction: column;
-		margin-top: calc(var(--navbar-height) + 5em);
+		margin-top: 4em;
 	}
 
 	img {

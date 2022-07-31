@@ -11,6 +11,7 @@
 
 	// Initializations:
 	export let name: string;
+	export let title: string = '';
 	export let xAxisValues: string[];
 	export let data: Line[];
 	export let dollarValues: boolean = false;
@@ -89,12 +90,30 @@
 <!-- #################################################################################################### -->
 
 <!-- Line Chart -->
-<canvas id="{name}" />
+<div class="lineChart">
+	{#if title !== ''}
+		<h3>{title}</h3>
+	{/if}
+	<canvas id="{name}" />
+</div>
 
 <!-- #################################################################################################### -->
 
 <style>
 
-	/* CSS Goes Here */
+	div.lineChart {
+		display: flex;
+		flex-direction: column;
+		width: 40em;
+		padding: 1em;
+		background: var(--dark-purple);
+		border: 2px solid var(--accent-color);
+		border-radius: 1em;
+	}
+
+	h3 {
+		margin: 0 0 1em .5em;
+		text-shadow: 2px 2px 10px black;
+	}
 	
 </style>

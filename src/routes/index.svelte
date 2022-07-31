@@ -11,17 +11,10 @@
 	import type { LineChartInfo, PieChartInfo } from '$lib/types';
 
 	// Charts:
-	let tvlChart: LineChartInfo = {
-		name: 'tvlChart',
-		xAxisValues: [],
-		data: [{ label: 'TVL', data: [] }]
-	};
+	// :3
 
 	onMount(() => {
-		if($opData.tvlOverTime) {
-			tvlChart.xAxisValues = timestampsToDates($opData.tvlOverTime.timestamps);
-			tvlChart.data[0].data = $opData.tvlOverTime.tvls;
-		}
+		// :3
 	});
 	
 </script>
@@ -33,12 +26,6 @@
 	<title>PoolTogether Stats</title>
 	<meta name="description" content="An app for querying and analyzing some PoolTogether statistics." />
 </svelte:head>
-
-<!-- TVL Chart -->
-<LineChart {...tvlChart} />
-
-<!-- Pie Chart -->
-<!-- <PieChart {...testPieChart} /> -->
 
 <!-- #################################################################################################### -->
 

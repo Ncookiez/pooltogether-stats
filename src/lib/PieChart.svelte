@@ -10,6 +10,7 @@
 
 	// Initializations:
 	export let name: string;
+	export let title: string = '';
 	export let sectionLabels: string[];
 	export let data: number[];
 	export let hiddenPercentage: number = 5;
@@ -108,7 +109,12 @@
 <!-- #################################################################################################### -->
 
 <!-- Pie Chart -->
-<canvas id="{name}" />
+<div class="pieChart">
+	{#if title !== ''}
+		<h3>{title}</h3>
+	{/if}
+	<canvas id="{name}" />
+</div>
 
 <!-- #################################################################################################### -->
 

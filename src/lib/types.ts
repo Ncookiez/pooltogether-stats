@@ -136,12 +136,14 @@ export interface ExplorerAPIDrawResponse {
 // Chart Interfaces:
 export interface LineChartInfo {
   name: string
+  title?: string
   xAxisValues: string[]
   data: Line[]
   dollarValues?: boolean
 }
 export interface PieChartInfo {
   name: string
+  title?: string
   sectionLabels: string[]
   data: number[]
   hiddenPercentage?: number
