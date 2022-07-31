@@ -151,7 +151,7 @@ export interface Line {
 
 /* ========================================================================================================================================================================= */
 
-// Deposits Over Time Interface:
+// Over Time Interfaces:
 export interface DepositsOverTime {
   timestamps: number[]
   depositAmounts: number[]
@@ -162,8 +162,6 @@ export interface DepositsOverTime {
   cumulativeDepositCounts: number[]
   cumulativeUniqueWallets: number[]
 }
-
-// Withdrawals Over Time Interface:
 export interface WithdrawalsOverTime {
   timestamps: number[]
   withdrawalAmounts: number[]
@@ -174,8 +172,6 @@ export interface WithdrawalsOverTime {
   cumulativeWithdrawalCounts: number[]
   cumulativeUniqueWallets: number[]
 }
-
-// Claims Over Time Interface:
 export interface ClaimsOverTime {
   timestamps: number[]
   claimAmounts: number[]
@@ -188,9 +184,21 @@ export interface ClaimsOverTime {
   cumulativePrizeCounts: number[]
   cumulativeUniqueWallets: number[]
 }
-
-// TVL Over Time Interface:
 export interface TVLOverTime {
   timestamps: number[]
   tvls: number[]
+}
+export interface DelegationsOverTime {
+  timestamps: number[]
+  delegationAmounts: number[]
+  delegationCounts: number[]
+  delegationWithdrawalAmounts: number[]
+  delegationWithdrawalCounts: number[]
+  uniqueWallets: number[]
+  avgDelegationAmounts: number[]
+  cumulativeDelegationAmounts: number[]
+  cumulativeDelegationCounts: number[]
+  cumulativeDelegationWithdrawalAmounts: number[]
+  cumulativeDelegationWithdrawalCounts: number[]
+  cumulativeUniqueWallets: number[]
 }

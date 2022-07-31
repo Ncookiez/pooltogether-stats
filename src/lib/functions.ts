@@ -1,6 +1,6 @@
 
 // Type Imports:
-import type { Chain, Hash, ChainData, DepositsOverTime, WithdrawalsOverTime, ClaimsOverTime, TVLOverTime } from '$lib/types';
+import type { Chain, Hash, ChainData, DepositsOverTime, WithdrawalsOverTime, ClaimsOverTime, TVLOverTime, DelegationsOverTime } from '$lib/types';
 
 /* ====================================================================================================================================================== */
 
@@ -226,4 +226,83 @@ export const getTVLOverTime = (deposits: DepositsOverTime, withdrawals: Withdraw
   }
 
   return tvlOverTime;
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to get delegations over time:
+export const getDelegationsOverTime = (chainData: ChainData, ticks: number) => {
+
+  // Initializations:
+  const delegationsOverTime: DelegationsOverTime = {
+    timestamps: getTimestamps(chainData, ticks),
+    delegationAmounts: [],
+    delegationCounts: [],
+    delegationWithdrawalAmounts: [],
+    delegationWithdrawalCounts: [],
+    uniqueWallets: [],
+    avgDelegationAmounts: [],
+    cumulativeDelegationAmounts: [],
+    cumulativeDelegationCounts: [],
+    cumulativeDelegationWithdrawalAmounts: [],
+    cumulativeDelegationWithdrawalCounts: [],
+    cumulativeUniqueWallets: []
+  }
+  let cumulativeDelegationAmount = 0;
+  let cumulativeDelegationCount = 0;
+  let cumulativeDelegationWithdrawalAmount = 0;
+  let cumulativeDelegationWithdrawalCount = 0;
+  let cumulativeUniqueWallets: Hash[] = [];
+  
+  // Filtering Data:
+  for(let i = 0; i < ticks; i++) {
+    let delegationAmount = 0;
+    let delegationCount = 0;
+    let delegationWithdrawalAmount = 0;
+    let delegationWithdrawalCount = 0;
+    let newWallets = 0;
+    chainData.delegationsCreated.data.forEach(delegation => {
+      if(delegation.timestamp && delegation.timestamp <= delegationsOverTime.timestamps[i]) {
+        if((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || i === 0) {
+          delegationCount++;
+          if(!cumulativeUniqueWallets.includes(delegation.delegator)) {
+            cumulativeUniqueWallets.push(delegation.delegator);
+            newWallets++;
+          }
+        }
+      }
+    });
+    chainData.delegationsFunded.data.forEach(delegation => {
+      if(delegation.timestamp && delegation.timestamp <= delegationsOverTime.timestamps[i]) {
+        if((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || i === 0) {
+          delegationAmount += delegation.amount;
+        }
+      }
+    });
+    chainData.delegationsWithdrawn.data.forEach(delegation => {
+      if(delegation.timestamp && delegation.timestamp <= delegationsOverTime.timestamps[i]) {
+        if((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || i === 0) {
+          delegationWithdrawalAmount += delegation.amount;
+          delegationWithdrawalCount++;
+        }
+      }
+    });
+    cumulativeDelegationAmount += delegationAmount;
+    cumulativeDelegationCount += delegationCount;
+    cumulativeDelegationWithdrawalAmount += delegationWithdrawalAmount;
+    cumulativeDelegationWithdrawalCount += delegationWithdrawalCount;
+    delegationsOverTime.delegationAmounts.push(Math.floor(delegationAmount));
+    delegationsOverTime.delegationCounts.push(delegationCount);
+    delegationsOverTime.delegationWithdrawalAmounts.push(Math.floor(delegationWithdrawalAmount));
+    delegationsOverTime.delegationWithdrawalCounts.push(delegationWithdrawalCount);
+    delegationsOverTime.uniqueWallets.push(newWallets);
+    delegationsOverTime.avgDelegationAmounts.push(delegationCount > 0 ? Math.floor(delegationAmount / delegationCount) : 0);
+    delegationsOverTime.cumulativeDelegationAmounts.push(Math.floor(cumulativeDelegationAmount));
+    delegationsOverTime.cumulativeDelegationCounts.push(cumulativeDelegationCount);
+    delegationsOverTime.cumulativeDelegationWithdrawalAmounts.push(Math.floor(cumulativeDelegationWithdrawalAmount));
+    delegationsOverTime.cumulativeDelegationWithdrawalCounts.push(cumulativeDelegationWithdrawalCount);
+    delegationsOverTime.cumulativeUniqueWallets.push(cumulativeUniqueWallets.length);
+  }
+
+  return delegationsOverTime;
 }
