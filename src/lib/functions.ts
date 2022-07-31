@@ -42,6 +42,27 @@ export const getTimestamps = (chainData: ChainData, ticks: number) => {
 
 /* ====================================================================================================================================================== */
 
+// Function to get multi-chain spanning timestamps:
+export const getMultichainTimestamps = (ethData: ChainData, polyData: ChainData, avaxData: ChainData, opData: ChainData, ticks: number) => {
+
+  // Initializations:
+  const ethFirstTimestamp = ethData.deposits.data[0].timestamp as number;
+  const ethLastTimestamp = ethData.balances.timestamp as number;
+  const polyFirstTimestamp = polyData.deposits.data[0].timestamp as number;
+  const polyLastTimestamp = polyData.balances.timestamp as number;
+  const avaxFirstTimestamp = avaxData.deposits.data[0].timestamp as number;
+  const avaxLastTimestamp = avaxData.balances.timestamp as number;
+  const opFirstTimestamp = opData.deposits.data[0].timestamp as number;
+  const opLastTimestamp = opData.balances.timestamp as number;
+
+  // Getting Timestamps:
+  const firstTimestamp = Math.min(ethFirstTimestamp, polyFirstTimestamp, avaxFirstTimestamp, opFirstTimestamp);
+  const lastTimestamp = Math.max(ethLastTimestamp, polyLastTimestamp, avaxLastTimestamp, opLastTimestamp);
+  return getRangeArray(firstTimestamp, lastTimestamp, ticks);
+}
+
+/* ====================================================================================================================================================== */
+
 // Function to convert timestamps to dates:
 export const timestampsToDates = (timestamps: number[]) => {
   const dates = timestamps.map(timestamp => (new Date(timestamp * 1000)).toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }));
@@ -108,11 +129,11 @@ export const getWalletData = (chainData: ChainData) => {
 /* ====================================================================================================================================================== */
 
 // Function to get deposits over time:
-export const getDepositsOverTime = (chainData: ChainData, ticks: number) => {
+export const getDepositsOverTime = (chainData: ChainData, ticks: number, customTimestamps?: number[]) => {
 
   // Initializations:
   const depositsOverTime: DepositsOverTime = {
-    timestamps: getTimestamps(chainData, ticks),
+    timestamps: customTimestamps ?? getTimestamps(chainData, ticks),
     depositAmounts: [],
     depositCounts: [],
     uniqueWallets: [],
@@ -204,11 +225,11 @@ export const getDepositsOverTime = (chainData: ChainData, ticks: number) => {
 /* ====================================================================================================================================================== */
 
 // Function to get withdrawals over time:
-export const getWithdrawalsOverTime = (chainData: ChainData, ticks: number) => {
+export const getWithdrawalsOverTime = (chainData: ChainData, ticks: number, customTimestamps?: number[]) => {
 
   // Initializations:
   const withdrawalsOverTime: WithdrawalsOverTime = {
-    timestamps: getTimestamps(chainData, ticks),
+    timestamps: customTimestamps ?? getTimestamps(chainData, ticks),
     withdrawalAmounts: [],
     withdrawalCounts: [],
     uniqueWallets: [],
@@ -255,11 +276,11 @@ export const getWithdrawalsOverTime = (chainData: ChainData, ticks: number) => {
 /* ====================================================================================================================================================== */
 
 // Function to get claims over time:
-export const getClaimsOverTime = (chainData: ChainData, ticks: number) => {
+export const getClaimsOverTime = (chainData: ChainData, ticks: number, customTimestamps?: number[]) => {
 
   // Initializations:
   const claimsOverTime: ClaimsOverTime = {
-    timestamps: getTimestamps(chainData, ticks),
+    timestamps: customTimestamps ?? getTimestamps(chainData, ticks),
     claimAmounts: [],
     claimCounts: [],
     prizeCounts: [],
@@ -446,11 +467,11 @@ export const getTVLDistribution = (balances: BalanceData[]) => {
 /* ====================================================================================================================================================== */
 
 // Function to get delegations over time:
-export const getDelegationsOverTime = (chainData: ChainData, ticks: number) => {
+export const getDelegationsOverTime = (chainData: ChainData, ticks: number, customTimestamps?: number[]) => {
 
   // Initializations:
   const delegationsOverTime: DelegationsOverTime = {
-    timestamps: getTimestamps(chainData, ticks),
+    timestamps: customTimestamps ?? getTimestamps(chainData, ticks),
     delegationAmounts: [],
     delegationCounts: [],
     delegationWithdrawalAmounts: [],
@@ -525,11 +546,11 @@ export const getDelegationsOverTime = (chainData: ChainData, ticks: number) => {
 /* ====================================================================================================================================================== */
 
 // Function to get yield captures over time:
-export const getYieldOverTime = (chainData: ChainData, ticks: number) => {
+export const getYieldOverTime = (chainData: ChainData, ticks: number, customTimestamps?: number[]) => {
 
   // Initializations:
   const yieldOverTime: YieldOverTime = {
-    timestamps: getTimestamps(chainData, ticks),
+    timestamps: customTimestamps ?? getTimestamps(chainData, ticks),
     yieldAmounts: [],
     yieldCounts: [],
     cumulativeYieldAmounts: [],
