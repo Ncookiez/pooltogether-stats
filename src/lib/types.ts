@@ -204,10 +204,12 @@ export interface DepositsOverTime {
   depositAmounts: number[]
   depositCounts: number[]
   uniqueWallets: number[]
+  distributions: DepositDistribution
   avgDepositAmounts: number[]
   cumulativeDepositAmounts: number[]
   cumulativeDepositCounts: number[]
   cumulativeUniqueWallets: number[]
+  cumulativeDistributions: DepositDistribution
 }
 export interface WithdrawalsOverTime {
   timestamps: number[]
@@ -225,11 +227,13 @@ export interface ClaimsOverTime {
   claimCounts: number[]
   prizeCounts: number[]
   uniqueWallets: number[]
+  distributions: ClaimDistribution
   avgClaimAmounts: number[]
   cumulativeClaimAmounts: number[]
   cumulativeClaimCounts: number[]
   cumulativePrizeCounts: number[]
   cumulativeUniqueWallets: number[]
+  cumulativeDistributions: ClaimDistribution
 }
 export interface TVLOverTime {
   timestamps: number[]
@@ -265,4 +269,25 @@ export interface WinlessWithdrawals {
   maxBalance: number
   firstDepositTimestamp: number
   lastWithdrawalTimestamp: number
+}
+
+/* ========================================================================================================================================================================= */
+
+// Distribution Interfaces:
+export interface DepositDistribution {
+  1: number[]
+  10: number[]
+  100: number[]
+  1000: number[]
+  10000: number[]
+  100000: number[]
+}
+export interface ClaimDistribution {
+  1: number[]
+  5: number[]
+  10: number[]
+  50: number[]
+  100: number[]
+  500: number[]
+  1000: number[]
 }
