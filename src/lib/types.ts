@@ -24,6 +24,8 @@ export interface ChainData {
   withdrawalsOverTime?: WithdrawalsOverTime
   claimsOverTime?: ClaimsOverTime
   tvlOverTime?: TVLOverTime
+  delegationsOverTime?: DelegationsOverTime
+  yieldOverTime?: YieldOverTime
 }
 
 /* ========================================================================================================================================================================= */
@@ -201,4 +203,11 @@ export interface DelegationsOverTime {
   cumulativeDelegationWithdrawalAmounts: number[]
   cumulativeDelegationWithdrawalCounts: number[]
   cumulativeUniqueWallets: number[]
+}
+export interface YieldOverTime {
+  timestamps: number[]
+  yieldAmounts: number[]
+  yieldCounts: number[]
+  cumulativeYieldAmounts: number[]
+  cumulativeYieldCounts: number[]
 }

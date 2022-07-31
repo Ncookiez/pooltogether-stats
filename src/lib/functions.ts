@@ -1,6 +1,6 @@
 
 // Type Imports:
-import type { Chain, Hash, ChainData, DepositsOverTime, WithdrawalsOverTime, ClaimsOverTime, TVLOverTime, DelegationsOverTime } from '$lib/types';
+import type { Chain, Hash, ChainData, DepositsOverTime, WithdrawalsOverTime, ClaimsOverTime, TVLOverTime, DelegationsOverTime, YieldOverTime } from '$lib/types';
 
 /* ====================================================================================================================================================== */
 
@@ -305,4 +305,43 @@ export const getDelegationsOverTime = (chainData: ChainData, ticks: number) => {
   }
 
   return delegationsOverTime;
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to get yield captures over time:
+export const getYieldOverTime = (chainData: ChainData, ticks: number) => {
+
+  // Initializations:
+  const yieldOverTime: YieldOverTime = {
+    timestamps: getTimestamps(chainData, ticks),
+    yieldAmounts: [],
+    yieldCounts: [],
+    cumulativeYieldAmounts: [],
+    cumulativeYieldCounts: []
+  }
+  let cumulativeYieldAmount = 0;
+  let cumulativeYieldCount = 0;
+  
+  // Filtering Data:
+  for(let i = 0; i < ticks; i++) {
+    let yieldAmount = 0;
+    let yieldCount = 0;
+    chainData.yields.data.forEach(yieldTX => {
+      if(yieldTX.timestamp && yieldTX.timestamp <= yieldOverTime.timestamps[i]) {
+        if((i > 0 && yieldTX.timestamp > yieldOverTime.timestamps[i - 1]) || i === 0) {
+          yieldAmount += yieldTX.amount;
+          yieldCount++;
+        }
+      }
+    });
+    cumulativeYieldAmount += yieldAmount;
+    cumulativeYieldCount += yieldCount;
+    yieldOverTime.yieldAmounts.push(Math.floor(yieldAmount));
+    yieldOverTime.yieldCounts.push(yieldCount);
+    yieldOverTime.cumulativeYieldAmounts.push(Math.floor(cumulativeYieldAmount));
+    yieldOverTime.cumulativeYieldCounts.push(cumulativeYieldCount);
+  }
+
+  return yieldOverTime;
 }
