@@ -31,6 +31,8 @@ export interface ChainData {
   yieldOverTime?: YieldOverTime
   wallets?: Record<Hash, WalletData>
   winlessWithdrawals?: WinlessWithdrawals[]
+  tvlDistribution?: TVLDistribution
+  movingUsers?: MovingUsers
 }
 
 /* ========================================================================================================================================================================= */
@@ -297,6 +299,16 @@ export interface MultichainDistribution {
   twoChains: number
   threeChains: number
   fourChains: number
+}
+export interface TVLDistribution {
+  total: { amount: number, count: number }
+  1: { amount: number, count: number }
+  10: { amount: number, count: number }
+  100: { amount: number, count: number }
+  1000: { amount: number, count: number }
+  10000: { amount: number, count: number }
+  100000: { amount: number, count: number }
+  1000000: { amount: number, count: number }
 }
 
 /* ========================================================================================================================================================================= */

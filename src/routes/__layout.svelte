@@ -4,8 +4,8 @@
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
 	import { ethData, polyData, avaxData, opData } from '$lib/stores';
-	import { getChainName, getDepositsOverTime, getWithdrawalsOverTime, getClaimsOverTime, getTVLOverTime, getDelegationsOverTime, getYieldOverTime, getWalletData, getWinlessWithdrawals, getMovingUsers } from '$lib/functions';
 	import { fetchDeposits, fetchWithdrawals, fetchClaims, fetchDelegationsCreated, fetchDelegationsFunded, fetchDelegationsUpdated, fetchDelegationsWithdrawn, fetchYield, fetchSupply, fetchBalances, fetchDraws } from '$lib/data';
+	import { getChainName, getDepositsOverTime, getWithdrawalsOverTime, getClaimsOverTime, getTVLOverTime, getDelegationsOverTime, getYieldOverTime, getWalletData, getWinlessWithdrawals, getMovingUsers, getTVLDistribution } from '$lib/functions';
 	import Navbar from '$lib/Navbar.svelte';
 	import Footer from '$lib/Footer.svelte';
 	import '../app.css';
@@ -65,6 +65,7 @@
 					$ethData.yieldOverTime = getYieldOverTime($ethData, ticks);
 					$ethData.wallets = getWalletData($ethData);
 					$ethData.winlessWithdrawals = getWinlessWithdrawals($ethData.wallets);
+					$ethData.tvlDistribution = getTVLDistribution($ethData.balances.data);
 				} else if(chain === 'poly') {
 					polyData.set({ deposits, withdrawals, claims, delegationsCreated, delegationsFunded, delegationsUpdated, delegationsWithdrawn, yields, supply, balances, draws: draws.poly });
 					$polyData.depositsOverTime = getDepositsOverTime($polyData, ticks);
@@ -75,6 +76,7 @@
 					$polyData.yieldOverTime = getYieldOverTime($polyData, ticks);
 					$polyData.wallets = getWalletData($polyData);
 					$polyData.winlessWithdrawals = getWinlessWithdrawals($polyData.wallets);
+					$polyData.tvlDistribution = getTVLDistribution($polyData.balances.data);
 				} else if(chain === 'avax') {
 					avaxData.set({ deposits, withdrawals, claims, delegationsCreated, delegationsFunded, delegationsUpdated, delegationsWithdrawn, yields, supply, balances, draws: draws.avax });
 					$avaxData.depositsOverTime = getDepositsOverTime($avaxData, ticks);
@@ -85,6 +87,7 @@
 					$avaxData.yieldOverTime = getYieldOverTime($avaxData, ticks);
 					$avaxData.wallets = getWalletData($avaxData);
 					$avaxData.winlessWithdrawals = getWinlessWithdrawals($avaxData.wallets);
+					$avaxData.tvlDistribution = getTVLDistribution($avaxData.balances.data);
 				} else if(chain === 'op') {
 					opData.set({ deposits, withdrawals, claims, delegationsCreated, delegationsFunded, delegationsUpdated, delegationsWithdrawn, yields, supply, balances, draws: draws.op });
 					$opData.depositsOverTime = getDepositsOverTime($opData, ticks);
@@ -95,6 +98,7 @@
 					$opData.yieldOverTime = getYieldOverTime($opData, ticks);
 					$opData.wallets = getWalletData($opData);
 					$opData.winlessWithdrawals = getWinlessWithdrawals($opData.wallets);
+					$opData.tvlDistribution = getTVLDistribution($opData.balances.data);
 				}
 				
 			})());

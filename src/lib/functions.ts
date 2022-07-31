@@ -1,6 +1,6 @@
 
 // Type Imports:
-import type { Chain, Hash, ChainData, DepositData, WithdrawalData, BalanceData, WalletData, DepositsOverTime, WithdrawalsOverTime, ClaimsOverTime, TVLOverTime, DelegationsOverTime, YieldOverTime, WinlessWithdrawals, MultichainDistribution, MovingUsers } from '$lib/types';
+import type { Chain, Hash, ChainData, DepositData, WithdrawalData, BalanceData, WalletData, DepositsOverTime, WithdrawalsOverTime, ClaimsOverTime, TVLOverTime, DelegationsOverTime, YieldOverTime, WinlessWithdrawals, MultichainDistribution, TVLDistribution, MovingUsers } from '$lib/types';
 
 /* ====================================================================================================================================================== */
 
@@ -381,6 +381,66 @@ export const getTVLOverTime = (deposits: DepositsOverTime, withdrawals: Withdraw
   }
 
   return tvlOverTime;
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to get TVL distribution:
+export const getTVLDistribution = (balances: BalanceData[]) => {
+
+  // Initializations:
+  const tvlDistribution: TVLDistribution = {
+    total: { amount: 0, count: 0 },
+    1: { amount: 0, count: 0 },
+    10: { amount: 0, count: 0 },
+    100: { amount: 0, count: 0 },
+    1000: { amount: 0, count: 0 },
+    10000: { amount: 0, count: 0 },
+    100000: { amount: 0, count: 0 },
+    1000000: { amount: 0, count: 0 }
+  };
+
+  // Filtering Balances:
+  balances.forEach(entry => {
+    if(entry.balance >= 1) {
+      if(entry.balance >= 10) {
+        if(entry.balance >= 100) {
+          if(entry.balance >= 1000) {
+            if(entry.balance >= 10000) {
+              if(entry.balance >= 100000) {
+                if(entry.balance >= 1000000) {
+                  tvlDistribution[1000000].amount += entry.balance;
+                  tvlDistribution[1000000].count++;
+                } else {
+                  tvlDistribution[100000].amount += entry.balance;
+                  tvlDistribution[100000].count++;
+                }
+              } else {
+                tvlDistribution[10000].amount += entry.balance;
+                tvlDistribution[10000].count++;
+              }
+            } else {
+              tvlDistribution[1000].amount += entry.balance;
+              tvlDistribution[1000].count++;
+            }
+          } else {
+            tvlDistribution[100].amount += entry.balance;
+            tvlDistribution[100].count++;
+          }
+        } else {
+          tvlDistribution[10].amount += entry.balance;
+          tvlDistribution[10].count++;
+        }
+      } else {
+        tvlDistribution[1].amount += entry.balance;
+        tvlDistribution[1].count++;
+      }
+      tvlDistribution.total.amount += entry.balance;
+      tvlDistribution.total.count++;
+    }
+  });
+
+  return tvlDistribution;
 }
 
 /* ====================================================================================================================================================== */
