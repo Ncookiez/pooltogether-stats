@@ -1,6 +1,6 @@
 
 // Type Imports:
-import type { Chain, Hash, ChainData, DepositsOverTime, WithdrawalsOverTime, ClaimsOverTime, TVLOverTime, DelegationsOverTime, YieldOverTime } from '$lib/types';
+import type { Chain, Hash, ChainData, WalletData, DepositsOverTime, WithdrawalsOverTime, ClaimsOverTime, TVLOverTime, DelegationsOverTime, YieldOverTime, WinlessWithdrawals } from '$lib/types';
 
 /* ====================================================================================================================================================== */
 
@@ -46,6 +46,63 @@ export const getTimestamps = (chainData: ChainData, ticks: number) => {
 export const timestampsToDates = (timestamps: number[]) => {
   const dates = timestamps.map(timestamp => (new Date(timestamp * 1000)).toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }));
   return dates;
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to get wallet-specific data:
+export const getWalletData = (chainData: ChainData) => {
+
+  // Initializations:
+  const wallets: Record<Hash, WalletData> = {};
+
+  // Adding Data:
+  chainData.balances.data.forEach(entry => {
+    wallets[entry.wallet] = { txs: [], currentBalance: entry.balance };
+  });
+  chainData.deposits.data.forEach(deposit => {
+    if(deposit.timestamp) {
+      wallets[deposit.wallet].txs.push({ type: 'deposit', data: deposit });
+    }
+  });
+  chainData.withdrawals.data.forEach(withdrawal => {
+    if(withdrawal.timestamp) {
+      wallets[withdrawal.wallet].txs.push({ type: 'withdrawal', data: withdrawal });
+    }
+  });
+  chainData.claims.data.forEach(claim => {
+    if(claim.timestamp) {
+      wallets[claim.wallet].txs.push({ type: 'claim', data: claim });
+    }
+  });
+  chainData.delegationsCreated.data.forEach(delegation => {
+    if(wallets[delegation.delegator] && delegation.timestamp) {
+      wallets[delegation.delegator].txs.push({ type: 'delegationCreated', data: delegation });
+    }
+  });
+  chainData.delegationsFunded.data.forEach(delegation => {
+    if(wallets[delegation.delegator] && delegation.timestamp) {
+      wallets[delegation.delegator].txs.push({ type: 'delegationFunded', data: delegation });
+    }
+  });
+  chainData.delegationsUpdated.data.forEach(delegation => {
+    if(wallets[delegation.delegator] && delegation.timestamp) {
+      wallets[delegation.delegator].txs.push({ type: 'delegationUpdated', data: delegation });
+    }
+  });
+  chainData.delegationsWithdrawn.data.forEach(delegation => {
+    if(wallets[delegation.delegator] && delegation.timestamp) {
+      wallets[delegation.delegator].txs.push({ type: 'delegationWithdrawn', data: delegation });
+    }
+  });
+
+  // Sorting Transactions:
+  for(let stringWallet in wallets) {
+    const wallet = stringWallet as Hash;
+    wallets[wallet].txs.sort((a, b) => (a.data.timestamp as number) - (b.data.timestamp as number));
+  }
+
+  return wallets;
 }
 
 /* ====================================================================================================================================================== */
@@ -344,4 +401,54 @@ export const getYieldOverTime = (chainData: ChainData, ticks: number) => {
   }
 
   return yieldOverTime;
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to get winless withdrawals:
+export const getWinlessWithdrawals = (wallets: Record<Hash, WalletData>) => {
+
+  // Initializations:
+  const winlessWithdrawals: WinlessWithdrawals[] = [];
+
+  // Filtering Wallets:
+  for(let stringWallet in wallets) {
+    const wallet = stringWallet as Hash;
+    if(wallets[wallet].currentBalance > 0) {
+      delete wallets[wallet];
+    } else {
+      const claimTXs = wallets[wallet].txs.filter(tx => tx.type === 'claim');
+      if(claimTXs.length > 0) {
+        delete wallets[wallet];
+      } else {
+        let virtualBalance = 0;
+        let maxVirtualBalance = 0;
+        let firstDepositTimestamp = 0;
+        let lastWithdrawalTimestamp = 0;
+        wallets[wallet].txs.forEach(tx => {
+          if(tx.type === 'deposit') {
+            virtualBalance += tx.data.amount;
+            if(virtualBalance > maxVirtualBalance) {
+              maxVirtualBalance = virtualBalance;
+            }
+            if(firstDepositTimestamp === 0 && tx.data.timestamp) {
+              firstDepositTimestamp = tx.data.timestamp;
+            }
+          } else if(tx.type === 'withdrawal') {
+            virtualBalance -= tx.data.amount;
+            if(tx.data.timestamp) {
+              lastWithdrawalTimestamp = tx.data.timestamp;
+            }
+          }
+        });
+        if(virtualBalance > 0 || firstDepositTimestamp === 0 || lastWithdrawalTimestamp === 0) {
+          delete wallets[wallet];
+        } else {
+          winlessWithdrawals.push({ wallet, maxBalance: maxVirtualBalance, firstDepositTimestamp, lastWithdrawalTimestamp });
+        }
+      }
+    }
+  }
+
+  return winlessWithdrawals;
 }

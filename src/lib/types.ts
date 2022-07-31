@@ -5,6 +5,9 @@ export type Chain = 'eth' | 'poly' | 'avax' | 'op';
 // Hash Type:
 export type Hash = `0x${string}`;
 
+// Transaction Type:
+export type TX = DepositTX | WithdrawalTX | ClaimTX | DelegationCreatedTX | DelegationFundedTX | DelegationUpdatedTX | DelegationWithdrawnTX;
+
 /* ========================================================================================================================================================================= */
 
 // Chain Data Interface:
@@ -26,6 +29,8 @@ export interface ChainData {
   tvlOverTime?: TVLOverTime
   delegationsOverTime?: DelegationsOverTime
   yieldOverTime?: YieldOverTime
+  wallets?: Record<Hash, WalletData>
+  winlessWithdrawals?: WinlessWithdrawals[]
 }
 
 /* ========================================================================================================================================================================= */
@@ -153,6 +158,46 @@ export interface Line {
 
 /* ========================================================================================================================================================================= */
 
+// Transaction Interfaces:
+export interface DepositTX {
+  type: 'deposit'
+  data: DepositData
+}
+export interface WithdrawalTX {
+  type: 'withdrawal'
+  data: WithdrawalData
+}
+export interface ClaimTX {
+  type: 'claim'
+  data: ClaimData
+}
+export interface DelegationCreatedTX {
+  type: 'delegationCreated'
+  data: DelegationCreatedData
+}
+export interface DelegationFundedTX {
+  type: 'delegationFunded'
+  data: DelegationFundedData
+}
+export interface DelegationUpdatedTX {
+  type: 'delegationUpdated'
+  data: DelegationUpdatedData
+}
+export interface DelegationWithdrawnTX {
+  type: 'delegationWithdrawn'
+  data: DelegationWithdrawnData
+}
+
+/* ========================================================================================================================================================================= */
+
+// Wallet Data Interface:
+export interface WalletData {
+  txs: TX[]
+  currentBalance: number
+}
+
+/* ========================================================================================================================================================================= */
+
 // Over Time Interfaces:
 export interface DepositsOverTime {
   timestamps: number[]
@@ -210,4 +255,14 @@ export interface YieldOverTime {
   yieldCounts: number[]
   cumulativeYieldAmounts: number[]
   cumulativeYieldCounts: number[]
+}
+
+/* ========================================================================================================================================================================= */
+
+// Winless Withdrawals Interface:
+export interface WinlessWithdrawals {
+  wallet: Hash
+  maxBalance: number
+  firstDepositTimestamp: number
+  lastWithdrawalTimestamp: number
 }
