@@ -170,7 +170,9 @@
 <!-- Charts & Highlights -->
 <LineChart {...tvlChart} />
 <Highlight>
-	<span>{$opData.balances.data.filter(entry => entry.balance > 0).length.toLocaleString(undefined)} Depositors</span>
+	<span>There are currently</span>
+	<span class="highlight">{$opData.balances.data.filter(entry => entry.balance > 0).length.toLocaleString(undefined)}+ Depositors</span>
+	<span>on {chainName}!</span>
 </Highlight>
 <LineChart {...cumulativeDepositAmountsChart} />
 <LineChart {...cumulativeDepositCountsChart} />
@@ -204,6 +206,14 @@
 
 <style>
 
-	/* CSS Goes Here */
+	span {
+		font-size: 1.5em;
+	}
+
+	span.highlight {
+		color: var(--secondary-color);
+		font-weight: bold;
+		font-size: 1.5em;
+	}
 	
 </style>
