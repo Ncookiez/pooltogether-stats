@@ -22,6 +22,7 @@
 	const depositAmountsChart: LineChartInfo = { name: `${chain}DepositAmountsChart`, title: 'Deposit Amounts Over Time', xAxisValues: [], data: [{ label: 'Deposit Amounts', data: [] }], dollarValues: true };
 	const depositCountsChart: LineChartInfo = { name: `${chain}DepositCountsChart`, title: 'Deposits Over Time', xAxisValues: [], data: [{ label: 'Deposits', data: [] }] };
 	const avgDepositAmountsChart: LineChartInfo = { name: `${chain}AvgDepositAmountsChart`, title: 'Average Deposit Amounts Over Time', xAxisValues: [], data: [{ label: 'Average Deposit Amount', data: [] }], dollarValues: true };
+	const cumulativeUniqueWalletsChart: LineChartInfo = { name: `${chain}CumulativeUniqueWalletsChart`, title: 'Cumulative Unique Wallets Over Time', xAxisValues: [], data: [{ label: 'Wallets', data: [] }] };
 	const tvlDistributionChart: PieChartInfo = { name: `${chain}TvlDistributionsChart`, title: 'TVL Distribution By User Deposit Amount', sectionLabels: [], data: [], dollarValues: true };
 	const cumulativeDepositDistributionsChart: LineChartInfo = { name: `${chain}CumulativeDepositDistributionsChart`, title: 'Cumulative Deposit Amount Frequency Over Time', xAxisValues: [], data: [] };
 	const depositDistributionsChart: LineChartInfo = { name: `${chain}DepositDistributionsChart`, title: 'Deposit Amount Frequency Over Time', xAxisValues: [], data: [] };
@@ -105,6 +106,7 @@
 			depositAmountsChart.xAxisValues = depositsOverTimeTimestamps;
 			depositCountsChart.xAxisValues = depositsOverTimeTimestamps;
 			avgDepositAmountsChart.xAxisValues = depositsOverTimeTimestamps;
+			cumulativeUniqueWalletsChart.xAxisValues = depositsOverTimeTimestamps;
 			tvlDistributionChart.sectionLabels = tvlDistributionChartLabels;
 			cumulativeDepositDistributionsChart.xAxisValues = depositsOverTimeTimestamps;
 			depositDistributionsChart.xAxisValues = depositsOverTimeTimestamps;
@@ -132,6 +134,7 @@
 			depositAmountsChart.data[0].data = $opData.depositsOverTime.depositAmounts;
 			depositCountsChart.data[0].data = $opData.depositsOverTime.depositCounts;
 			avgDepositAmountsChart.data[0].data = $opData.depositsOverTime.avgDepositAmounts;
+			cumulativeUniqueWalletsChart.data[0].data = $opData.depositsOverTime.cumulativeUniqueWallets;
 			tvlDistributionChart.data = tvlDistributionChartData;
 			cumulativeDepositDistributionsChart.data.push(...cumulativeDepositDistributionsChartData);
 			depositDistributionsChart.data.push(...depositDistributionsChartData);
@@ -174,7 +177,7 @@
 <LineChart {...depositAmountsChart} />
 <LineChart {...depositCountsChart} />
 <LineChart {...avgDepositAmountsChart} />
-<!-- TODO - unique wallets over time (deposits) -->
+<LineChart {...cumulativeUniqueWalletsChart} />
 <PieChart {...tvlDistributionChart} />
 <LineChart {...cumulativeDepositDistributionsChart} />
 <LineChart {...depositDistributionsChart} />
@@ -183,7 +186,7 @@
 <LineChart {...cumulativeWithdrawalCountsChart} />
 <LineChart {...withdrawalAmountsChart} />
 <LineChart {...withdrawalCountsChart} />
-<!-- TODO - winless withdrawals - bigger highlight to mess around with minimum deposit and see timespans -->
+<!-- TODO - winless withdrawals - highlight to mess around with minimum deposit and see timespans -->
 <LineChart {...cumulativeClaimAmountsChart} />
 <LineChart {...cumulativeClaimCountsChart} />
 <LineChart {...claimAmountsChart} />
