@@ -3,7 +3,7 @@
 	// Imports:
 	import { onMount } from 'svelte';
 	import { getChainName, timestampsToDates } from '$lib/functions';
-	import { ethData, polyData, avaxData, opData } from '$lib/stores';
+	import { ethData, polyData, avaxData, opData, startTimestamp, endTimestamp } from '$lib/stores';
 	import PieChart from '$lib/PieChart.svelte';
 	import LineChart from '$lib/LineChart.svelte';
 	import Highlight from '$lib/Highlight.svelte';

@@ -43,6 +43,7 @@ html, body {
 
 ::-webkit-scrollbar-track {
   background: var(--light-purple);
+	box-shadow: 0 0 20px 2px black;
 }
 
 ::-webkit-scrollbar-thumb {

@@ -35,3 +35,11 @@ export const avaxData = writable<ChainData>(defaultChainData);
 
 // Optimism Data:
 export const opData = writable<ChainData>(defaultChainData);
+
+/* ========================================================================================================================================================================= */
+
+// Start Timestamp:
+export const startTimestamp = writable<number>(0);
+
+// End Timestamp:
+export const endTimestamp = writable<number>(9_999_999_999);

@@ -37,7 +37,11 @@ export const getRangeArray = (start: number, end: number, ticks: number) => {
 export const getTimestamps = (chainData: ChainData, ticks: number) => {
   const firstTimestamp = chainData.deposits.data[0].timestamp as number;
   const lastTimestamp = chainData.balances.timestamp as number;
-  return getRangeArray(firstTimestamp, lastTimestamp, ticks);
+  if(ticks === 1) {
+    return [firstTimestamp, lastTimestamp];
+  } else {
+    return getRangeArray(firstTimestamp, lastTimestamp, ticks);
+  }
 }
 
 /* ====================================================================================================================================================== */
@@ -67,6 +71,14 @@ export const getMultichainTimestamps = (ethData: ChainData, polyData: ChainData,
 export const timestampsToDates = (timestamps: number[]) => {
   const dates = timestamps.map(timestamp => (new Date(timestamp * 1000)).toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }));
   return dates;
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to convert timestamp to ISO date:
+export const timestampToISO = (timestamp: number) => {
+  const isoDate = (new Date(timestamp * 1000)).toISOString().slice(0, 10);
+  return isoDate;
 }
 
 /* ====================================================================================================================================================== */
