@@ -84,7 +84,7 @@ export const timestampToISO = (timestamp: number) => {
 /* ====================================================================================================================================================== */
 
 // Function to get wallet-specific data:
-export const getWalletData = (chainData: ChainData) => {
+export const getWalletData = (chainData: ChainData, timeFilters?: { start: number, end: number }) => {
 
   // Initializations:
   const wallets: Record<Hash, WalletData> = {};
@@ -95,37 +95,79 @@ export const getWalletData = (chainData: ChainData) => {
   });
   chainData.deposits.data.forEach(deposit => {
     if(deposit.timestamp) {
-      wallets[deposit.wallet].txs.push({ type: 'deposit', data: deposit });
+      if(timeFilters) {
+        if(deposit.timestamp > timeFilters.start && deposit.timestamp < timeFilters.end) {
+          wallets[deposit.wallet].txs.push({ type: 'deposit', data: deposit });
+        }
+      } else {
+        wallets[deposit.wallet].txs.push({ type: 'deposit', data: deposit });
+      }
     }
   });
   chainData.withdrawals.data.forEach(withdrawal => {
     if(withdrawal.timestamp) {
-      wallets[withdrawal.wallet].txs.push({ type: 'withdrawal', data: withdrawal });
+      if(timeFilters) {
+        if(withdrawal.timestamp > timeFilters.start && withdrawal.timestamp < timeFilters.end) {
+          wallets[withdrawal.wallet].txs.push({ type: 'withdrawal', data: withdrawal });
+        }
+      } else {
+        wallets[withdrawal.wallet].txs.push({ type: 'withdrawal', data: withdrawal });
+      }
     }
   });
   chainData.claims.data.forEach(claim => {
     if(claim.timestamp) {
-      wallets[claim.wallet].txs.push({ type: 'claim', data: claim });
+      if(timeFilters) {
+        if(claim.timestamp > timeFilters.start && claim.timestamp < timeFilters.end) {
+          wallets[claim.wallet].txs.push({ type: 'claim', data: claim });
+        }
+      } else {
+        wallets[claim.wallet].txs.push({ type: 'claim', data: claim });
+      }
     }
   });
   chainData.delegationsCreated.data.forEach(delegation => {
     if(wallets[delegation.delegator] && delegation.timestamp) {
-      wallets[delegation.delegator].txs.push({ type: 'delegationCreated', data: delegation });
+      if(timeFilters) {
+        if(delegation.timestamp > timeFilters.start && delegation.timestamp < timeFilters.end) {
+          wallets[delegation.delegator].txs.push({ type: 'delegationCreated', data: delegation });
+        }
+      } else {
+        wallets[delegation.delegator].txs.push({ type: 'delegationCreated', data: delegation });
+      }
     }
   });
   chainData.delegationsFunded.data.forEach(delegation => {
     if(wallets[delegation.delegator] && delegation.timestamp) {
-      wallets[delegation.delegator].txs.push({ type: 'delegationFunded', data: delegation });
+      if(timeFilters) {
+        if(delegation.timestamp > timeFilters.start && delegation.timestamp < timeFilters.end) {
+          wallets[delegation.delegator].txs.push({ type: 'delegationFunded', data: delegation });
+        }
+      } else {
+        wallets[delegation.delegator].txs.push({ type: 'delegationFunded', data: delegation });
+      }
     }
   });
   chainData.delegationsUpdated.data.forEach(delegation => {
     if(wallets[delegation.delegator] && delegation.timestamp) {
-      wallets[delegation.delegator].txs.push({ type: 'delegationUpdated', data: delegation });
+      if(timeFilters) {
+        if(delegation.timestamp > timeFilters.start && delegation.timestamp < timeFilters.end) {
+          wallets[delegation.delegator].txs.push({ type: 'delegationUpdated', data: delegation });
+        }
+      } else {
+        wallets[delegation.delegator].txs.push({ type: 'delegationUpdated', data: delegation });
+      }
     }
   });
   chainData.delegationsWithdrawn.data.forEach(delegation => {
     if(wallets[delegation.delegator] && delegation.timestamp) {
-      wallets[delegation.delegator].txs.push({ type: 'delegationWithdrawn', data: delegation });
+      if(timeFilters) {
+        if(delegation.timestamp > timeFilters.start && delegation.timestamp < timeFilters.end) {
+          wallets[delegation.delegator].txs.push({ type: 'delegationWithdrawn', data: delegation });
+        }
+      } else {
+        wallets[delegation.delegator].txs.push({ type: 'delegationWithdrawn', data: delegation });
+      }
     }
   });
 
@@ -717,7 +759,7 @@ export const getMultichainUsersDistribution = (ethBalances: BalanceData[], polyB
 /* ====================================================================================================================================================== */
 
 // Function to get users moving to a new chain:
-export const getMovingUsers = (withdrawals: WithdrawalData[], ethDeposits: DepositData[], polyDeposits: DepositData[], avaxDeposits: DepositData[], opDeposits: DepositData[]) => {
+export const getMovingUsers = (withdrawals: WithdrawalData[], ethDeposits: DepositData[], polyDeposits: DepositData[], avaxDeposits: DepositData[], opDeposits: DepositData[], timeFilters?: { start: number, end: number }) => {
 
   // Initializations:
   const movingUsers: MovingUsers = {
@@ -733,12 +775,12 @@ export const getMovingUsers = (withdrawals: WithdrawalData[], ethDeposits: Depos
   withdrawals.forEach(withdrawal => {
     const wallet = withdrawal.wallet;
     const timestamp = withdrawal.timestamp;
-    if(timestamp && !uniqueWallets.includes(wallet)) {
+    if((timestamp && !uniqueWallets.includes(wallet) && !timeFilters) || (timestamp && !uniqueWallets.includes(wallet) && timeFilters && timestamp > timeFilters.start && timestamp < timeFilters.end)) {
       uniqueWallets.push(wallet);
       movingUsers.totalWithdrawn.users++;
 
       // Moving To Ethereum:
-      let ethWalletDeposits = ethDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp);
+      let ethWalletDeposits = ethDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp && deposit.timestamp < (timeFilters?.end ?? 9_999_999_999));
       if(ethWalletDeposits.length > 0) {
         ethWalletDeposits.forEach(deposit => {
           movingUsers.movedToETH.amount += deposit.amount;
@@ -747,7 +789,7 @@ export const getMovingUsers = (withdrawals: WithdrawalData[], ethDeposits: Depos
       }
 
       // Moving To Polygon:
-      let polyWalletDeposits = polyDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp);
+      let polyWalletDeposits = polyDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp && deposit.timestamp < (timeFilters?.end ?? 9_999_999_999));
       if(polyWalletDeposits.length > 0) {
         polyWalletDeposits.forEach(deposit => {
           movingUsers.movedToPOLY.amount += deposit.amount;
@@ -756,7 +798,7 @@ export const getMovingUsers = (withdrawals: WithdrawalData[], ethDeposits: Depos
       }
 
       // Moving To Avalanche:
-      let avaxWalletDeposits = avaxDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp);
+      let avaxWalletDeposits = avaxDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp && deposit.timestamp < (timeFilters?.end ?? 9_999_999_999));
       if(avaxWalletDeposits.length > 0) {
         avaxWalletDeposits.forEach(deposit => {
           movingUsers.movedToAVAX.amount += deposit.amount;
@@ -765,7 +807,7 @@ export const getMovingUsers = (withdrawals: WithdrawalData[], ethDeposits: Depos
       }
 
       // Moving To Optimism:
-      let opWalletDeposits = opDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp);
+      let opWalletDeposits = opDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp && deposit.timestamp < (timeFilters?.end ?? 9_999_999_999));
       if(opWalletDeposits.length > 0) {
         opWalletDeposits.forEach(deposit => {
           movingUsers.movedToOP.amount += deposit.amount;

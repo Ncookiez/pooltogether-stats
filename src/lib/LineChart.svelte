@@ -15,6 +15,9 @@
 	export let xAxisValues: string[];
 	export let data: Line[];
 	export let dollarValues: boolean = false;
+	export let hide: boolean = false;
+	const dayInSeconds = 86400;
+	const maxTicks = 15;
 	let lineChart: Chart;
 
 	// Line Chart Settings:
@@ -54,6 +57,7 @@
 	// Function to set line chart data:
 	const setLineChartData = (chart: Chart, xAxisValues: string[], lines: Line[], dollarValues?: boolean) => {
 		chart.data.labels = xAxisValues;
+		chart.data.datasets = [];
 		lines.forEach(line => {
 			chart.data.datasets.push({
 				label: line.label,
@@ -66,9 +70,13 @@
 				tension: line.tension ?? defaultLineTension
 			});
 		});
-		if(dollarValues && chart.options.plugins?.tooltip && chart.options.scales?.y && chart.options.scales.y.ticks) {
-			chart.options.plugins.tooltip.callbacks = { label: (item) => { return `${item.dataset.label}: $${(item.raw as number).toLocaleString(undefined)}` } };
-			chart.options.scales.y.ticks.callback = (value) => { return '$' + value.toLocaleString(undefined) };
+		if(chart.options.plugins?.tooltip && chart.options.scales?.y && chart.options.scales.y.ticks && chart.options.scales.x && chart.options.scales.x.ticks) {
+			chart.options.plugins.tooltip.itemSort = (a, b) => { return (b.raw as number) - (a.raw as number) };
+			chart.options.scales.x.ticks.maxTicksLimit = Math.min(Math.ceil(((Date.parse(xAxisValues[xAxisValues.length - 1]) / 1000) - (Date.parse(xAxisValues[0]) / 1000)) / dayInSeconds) + 1, maxTicks);
+			if(dollarValues) {
+				chart.options.plugins.tooltip.callbacks = { label: (item) => { return `${item.dataset.label}: $${(item.raw as number).toLocaleString(undefined)}` } };
+				chart.options.scales.y.ticks.callback = (value) => { return '$' + value.toLocaleString(undefined) };
+			}
 		}
 	}
 
@@ -90,7 +98,7 @@
 <!-- #################################################################################################### -->
 
 <!-- Line Chart -->
-<div class="lineChart">
+<div class="lineChart" class:hide>
 	{#if title !== ''}
 		<h3>{title}</h3>
 	{/if}

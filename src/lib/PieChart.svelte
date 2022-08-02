@@ -16,6 +16,7 @@
 	export let hiddenPercentage: number = 5;
 	export let dollarValues: boolean = false;
 	export let appendedLabel: string | undefined = undefined;
+	export let hide: boolean = false;
 	let pieChart: Chart;
 
 	// Pie Chart Settings:
@@ -110,7 +111,7 @@
 <!-- #################################################################################################### -->
 
 <!-- Pie Chart -->
-<div class="pieChart">
+<div class="pieChart" class:hide>
 	{#if title !== ''}
 		<h3>{title}</h3>
 	{/if}

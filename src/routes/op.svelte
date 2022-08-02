@@ -2,8 +2,8 @@
 
 	// Imports:
 	import { onMount } from 'svelte';
-	import { getChainName, timestampsToDates } from '$lib/functions';
 	import { ethData, polyData, avaxData, opData, startTimestamp, endTimestamp } from '$lib/stores';
+	import { getChainName, getRangeArray, timestampsToDates, getDepositsOverTime, getWithdrawalsOverTime, getClaimsOverTime, getDelegationsOverTime, getYieldOverTime, getMovingUsers, getTVLOverTime } from '$lib/functions';
 	import PieChart from '$lib/PieChart.svelte';
 	import LineChart from '$lib/LineChart.svelte';
 	import Highlight from '$lib/Highlight.svelte';
@@ -14,6 +14,7 @@
 	// Initializations:
 	const chain: Chain = 'op';
 	const chainName = getChainName(chain);
+	const ticks = 50;
 
 	// Charts:
 	const tvlChart: LineChartInfo = { name: `${chain}TvlChart`, title: 'TVL Over Time', xAxisValues: [], data: [{ label: 'TVL', data: [] }], dollarValues: true };
@@ -42,61 +43,93 @@
 	const cumulativeDelegationCountsChart: LineChartInfo = { name: `${chain}CumulativeDelegationCountsChart`, title: 'Cumulative Delegations Over Time', xAxisValues: [], data: [{ label: 'Delegations', data: [] }] };
 	const yieldChart: LineChartInfo = { name: `${chain}YieldChart`, title: 'Yield vs Prizes', xAxisValues: [], data: [{ label: 'Yield', data: [] }, { label: 'Prizes', data: [], lineColor: '#FFB63680', backgroundColor: '#FFB636' }], dollarValues: true };
 
-	onMount(() => {
+	// Reactive Chart Data:
+	$: setChartData($startTimestamp, $endTimestamp);
+
+	// Function to set chart data:
+	const setChartData = (startTime: number, endTime: number) => {
 		if($opData.tvlOverTime && $opData.depositsOverTime && $opData.withdrawalsOverTime && $opData.claimsOverTime && $opData.delegationsOverTime && $opData.yieldOverTime && $opData.tvlDistribution && $ethData.movingUsers && $polyData.movingUsers && $avaxData.movingUsers) {
 
 			// Timestamp Initializations:
-			const tvlOverTimeTimestamps = timestampsToDates($opData.tvlOverTime.timestamps);
-			const depositsOverTimeTimestamps = timestampsToDates($opData.depositsOverTime.timestamps);
-			const withdrawalsOverTimeTimestamps = timestampsToDates($opData.withdrawalsOverTime.timestamps);
-			const claimsOverTimeTimestamps = timestampsToDates($opData.claimsOverTime.timestamps);
-			const delegationsOverTimeTimestamps = timestampsToDates($opData.delegationsOverTime.timestamps);
-			const yieldOverTimeTimestamps = timestampsToDates($opData.yieldOverTime.timestamps);
+			let timeFilters: { start: number, end: number } | undefined;
+			let customTimestamps: number[] | undefined;
 
-			// Section Label Initializations:
+			// Setting Custom Timestamps:
+			if(startTime !== 0 && endTime !== 9_999_999_999) {
+				timeFilters = { start: startTime, end: endTime };
+				customTimestamps = getRangeArray(startTime, endTime, ticks);
+			} else if(startTime !== 0 && $opData.maxTimestamp) {
+				timeFilters = { start: startTime, end: $opData.maxTimestamp };
+				customTimestamps = getRangeArray(startTime, $opData.maxTimestamp, ticks);
+			} else if(endTime !== 9_999_999_999 && $opData.minTimestamp) {
+				timeFilters = { start: $opData.minTimestamp, end: endTime };
+				customTimestamps = getRangeArray($opData.minTimestamp, endTime, ticks);
+			}
+
+			// Setting Raw Data:
+			const depositsOverTime = customTimestamps ? getDepositsOverTime($opData, ticks, customTimestamps) : $opData.depositsOverTime;
+			const withdrawalsOverTime = customTimestamps ? getWithdrawalsOverTime($opData, ticks, customTimestamps) : $opData.withdrawalsOverTime;
+			const claimsOverTime = customTimestamps ? getClaimsOverTime($opData, ticks, customTimestamps) : $opData.claimsOverTime;
+			const delegationsOverTime = customTimestamps ? getDelegationsOverTime($opData, ticks, customTimestamps) : $opData.delegationsOverTime;
+			const tvlOverTime = customTimestamps ? getTVLOverTime(depositsOverTime, withdrawalsOverTime, claimsOverTime) : $opData.tvlOverTime;
+			const yieldOverTime = customTimestamps ? getYieldOverTime($opData, ticks, customTimestamps) : $opData.yieldOverTime;
+			const tvlDistribution = $opData.tvlDistribution;
+			const ethMovingUsers = customTimestamps ? getMovingUsers($ethData.withdrawals.data, $ethData.deposits.data, $polyData.deposits.data, $avaxData.deposits.data, $opData.deposits.data, timeFilters) : $ethData.movingUsers;
+			const polyMovingUsers = customTimestamps ? getMovingUsers($polyData.withdrawals.data, $ethData.deposits.data, $polyData.deposits.data, $avaxData.deposits.data, $opData.deposits.data, timeFilters) : $polyData.movingUsers;
+			const avaxMovingUsers = customTimestamps ? getMovingUsers($avaxData.withdrawals.data, $ethData.deposits.data, $polyData.deposits.data, $avaxData.deposits.data, $opData.deposits.data, timeFilters) : $avaxData.movingUsers;
+
+			// Initializing Chart Timestamps:
+			const tvlOverTimeTimestamps = timestampsToDates(tvlOverTime.timestamps);
+			const depositsOverTimeTimestamps = timestampsToDates(depositsOverTime.timestamps);
+			const withdrawalsOverTimeTimestamps = timestampsToDates(withdrawalsOverTime.timestamps);
+			const claimsOverTimeTimestamps = timestampsToDates(claimsOverTime.timestamps);
+			const delegationsOverTimeTimestamps = timestampsToDates(delegationsOverTime.timestamps);
+			const yieldOverTimeTimestamps = timestampsToDates(yieldOverTime.timestamps);
+
+			// Initializing Chart Section Labels:
 			const tvlDistributionChartLabels: string[] = ['<$10', '$10-$100', '$100-$1k', '$1k-$10k', '$10k-$100k', '$100k-$1M', '>$1M'];
 			const movingUsersChartLabels: string[] = ['Ethereum', 'Polygon', 'Avalanche'];
 			const claimDistributionChartLabels: string[] = ['<$5', '$5-$10', '$10-$50', '$50-$100', '$100-$500', '$500-$1k', '>$1k'];
 
-			// Data Initializations:
+			// Initializing Chart Data:
 			const tvlDistributionChartData: number[] = [
-				$opData.tvlDistribution[1].amount,
-				$opData.tvlDistribution[10].amount,
-				$opData.tvlDistribution[100].amount,
-				$opData.tvlDistribution[1000].amount,
-				$opData.tvlDistribution[10000].amount,
-				$opData.tvlDistribution[100000].amount,
-				$opData.tvlDistribution[1000000].amount
+				tvlDistribution[1].amount,
+				tvlDistribution[10].amount,
+				tvlDistribution[100].amount,
+				tvlDistribution[1000].amount,
+				tvlDistribution[10000].amount,
+				tvlDistribution[100000].amount,
+				tvlDistribution[1000000].amount
 			];
 			const cumulativeDepositDistributionsChartData: Line[] = [
-				{ label: '<$10', data: $opData.depositsOverTime.cumulativeDistributions[1], lineColor: '#ffb636' },
-				{ label: '$10-$100', data: $opData.depositsOverTime.cumulativeDistributions[10], lineColor: '#ffbe4d' },
-				{ label: '$100-$1k', data: $opData.depositsOverTime.cumulativeDistributions[100], lineColor: '#ffc766' },
-				{ label: '$1k-$10k', data: $opData.depositsOverTime.cumulativeDistributions[1000], lineColor: '#ffd080' },
-				{ label: '$10k-$100k', data: $opData.depositsOverTime.cumulativeDistributions[10000], lineColor: '#ffda99' },
-				{ label: '>$100k', data: $opData.depositsOverTime.cumulativeDistributions[100000], lineColor: '#ffe3b3' }
+				{ label: '<$10', data: depositsOverTime.cumulativeDistributions[1], lineColor: '#ffb636' },
+				{ label: '$10-$100', data: depositsOverTime.cumulativeDistributions[10], lineColor: '#ffbe4d' },
+				{ label: '$100-$1k', data: depositsOverTime.cumulativeDistributions[100], lineColor: '#ffc766' },
+				{ label: '$1k-$10k', data: depositsOverTime.cumulativeDistributions[1000], lineColor: '#ffd080' },
+				{ label: '$10k-$100k', data: depositsOverTime.cumulativeDistributions[10000], lineColor: '#ffda99' },
+				{ label: '>$100k', data: depositsOverTime.cumulativeDistributions[100000], lineColor: '#ffe3b3' }
 			];
 			const depositDistributionsChartData: Line[] = [
-				{ label: '<$10', data: $opData.depositsOverTime.distributions[1], lineColor: '#ffb636' },
-				{ label: '$10-$100', data: $opData.depositsOverTime.distributions[10], lineColor: '#ffbe4d' },
-				{ label: '$100-$1k', data: $opData.depositsOverTime.distributions[100], lineColor: '#ffc766' },
-				{ label: '$1k-$10k', data: $opData.depositsOverTime.distributions[1000], lineColor: '#ffd080' },
-				{ label: '$10k-$100k', data: $opData.depositsOverTime.distributions[10000], lineColor: '#ffda99' },
-				{ label: '>$100k', data: $opData.depositsOverTime.distributions[100000], lineColor: '#ffe3b3' }
+				{ label: '<$10', data: depositsOverTime.distributions[1], lineColor: '#ffb636' },
+				{ label: '$10-$100', data: depositsOverTime.distributions[10], lineColor: '#ffbe4d' },
+				{ label: '$100-$1k', data: depositsOverTime.distributions[100], lineColor: '#ffc766' },
+				{ label: '$1k-$10k', data: depositsOverTime.distributions[1000], lineColor: '#ffd080' },
+				{ label: '$10k-$100k', data: depositsOverTime.distributions[10000], lineColor: '#ffda99' },
+				{ label: '>$100k', data: depositsOverTime.distributions[100000], lineColor: '#ffe3b3' }
 			];
 			const movingUsersChartData: number[] = [
-				$ethData.movingUsers.movedToOP.amount,
-				$polyData.movingUsers.movedToOP.amount,
-				$avaxData.movingUsers.movedToOP.amount
+				ethMovingUsers.movedToOP.amount,
+				polyMovingUsers.movedToOP.amount,
+				avaxMovingUsers.movedToOP.amount
 			];
 			const claimDistributionChartData: number[] = [
-				$opData.claimsOverTime.cumulativeDistributions[1][claimsOverTimeTimestamps.length - 2],
-				$opData.claimsOverTime.cumulativeDistributions[5][claimsOverTimeTimestamps.length - 2],
-				$opData.claimsOverTime.cumulativeDistributions[10][claimsOverTimeTimestamps.length - 2],
-				$opData.claimsOverTime.cumulativeDistributions[50][claimsOverTimeTimestamps.length - 2],
-				$opData.claimsOverTime.cumulativeDistributions[100][claimsOverTimeTimestamps.length - 2],
-				$opData.claimsOverTime.cumulativeDistributions[500][claimsOverTimeTimestamps.length - 2],
-				$opData.claimsOverTime.cumulativeDistributions[1000][claimsOverTimeTimestamps.length - 2]
+				claimsOverTime.cumulativeDistributions[1][claimsOverTimeTimestamps.length - 2],
+				claimsOverTime.cumulativeDistributions[5][claimsOverTimeTimestamps.length - 2],
+				claimsOverTime.cumulativeDistributions[10][claimsOverTimeTimestamps.length - 2],
+				claimsOverTime.cumulativeDistributions[50][claimsOverTimeTimestamps.length - 2],
+				claimsOverTime.cumulativeDistributions[100][claimsOverTimeTimestamps.length - 2],
+				claimsOverTime.cumulativeDistributions[500][claimsOverTimeTimestamps.length - 2],
+				claimsOverTime.cumulativeDistributions[1000][claimsOverTimeTimestamps.length - 2]
 			];
 
 			// Setting Chart X Axis Values / Section Labels:
@@ -128,33 +161,37 @@
 			yieldChart.xAxisValues = yieldOverTimeTimestamps;
 
 			// Setting Chart Data:
-			tvlChart.data[0].data = $opData.tvlOverTime.tvls;
-			cumulativeDepositAmountsChart.data[0].data = $opData.depositsOverTime.cumulativeDepositAmounts;
-			cumulativeDepositCountsChart.data[0].data = $opData.depositsOverTime.cumulativeDepositCounts;
-			depositAmountsChart.data[0].data = $opData.depositsOverTime.depositAmounts;
-			depositCountsChart.data[0].data = $opData.depositsOverTime.depositCounts;
-			avgDepositAmountsChart.data[0].data = $opData.depositsOverTime.avgDepositAmounts;
-			cumulativeUniqueWalletsChart.data[0].data = $opData.depositsOverTime.cumulativeUniqueWallets;
+			tvlChart.data[0].data = tvlOverTime.tvls;
+			cumulativeDepositAmountsChart.data[0].data = depositsOverTime.cumulativeDepositAmounts;
+			cumulativeDepositCountsChart.data[0].data = depositsOverTime.cumulativeDepositCounts;
+			depositAmountsChart.data[0].data = depositsOverTime.depositAmounts;
+			depositCountsChart.data[0].data = depositsOverTime.depositCounts;
+			avgDepositAmountsChart.data[0].data = depositsOverTime.avgDepositAmounts;
+			cumulativeUniqueWalletsChart.data[0].data = depositsOverTime.cumulativeUniqueWallets;
 			tvlDistributionChart.data = tvlDistributionChartData;
-			cumulativeDepositDistributionsChart.data.push(...cumulativeDepositDistributionsChartData);
-			depositDistributionsChart.data.push(...depositDistributionsChartData);
+			cumulativeDepositDistributionsChart.data = cumulativeDepositDistributionsChartData;
+			depositDistributionsChart.data = depositDistributionsChartData;
 			movingUsersChart.data = movingUsersChartData;
-			cumulativeWithdrawalAmountsChart.data[0].data = $opData.withdrawalsOverTime.cumulativeWithdrawalAmounts;
-			cumulativeWithdrawalCountsChart.data[0].data = $opData.withdrawalsOverTime.cumulativeWithdrawalCounts;
-			withdrawalAmountsChart.data[0].data = $opData.withdrawalsOverTime.withdrawalAmounts;
-			withdrawalCountsChart.data[0].data = $opData.withdrawalsOverTime.withdrawalCounts;
-			cumulativeClaimAmountsChart.data[0].data = $opData.claimsOverTime.cumulativeClaimAmounts;
-			cumulativeClaimCountsChart.data[0].data = $opData.claimsOverTime.cumulativeClaimCounts;
-			claimAmountsChart.data[0].data = $opData.claimsOverTime.claimAmounts;
-			claimCountsChart.data[0].data = $opData.claimsOverTime.claimCounts;
-			avgClaimAmountsChart.data[0].data = $opData.claimsOverTime.avgClaimAmounts;
+			cumulativeWithdrawalAmountsChart.data[0].data = withdrawalsOverTime.cumulativeWithdrawalAmounts;
+			cumulativeWithdrawalCountsChart.data[0].data = withdrawalsOverTime.cumulativeWithdrawalCounts;
+			withdrawalAmountsChart.data[0].data = withdrawalsOverTime.withdrawalAmounts;
+			withdrawalCountsChart.data[0].data = withdrawalsOverTime.withdrawalCounts;
+			cumulativeClaimAmountsChart.data[0].data = claimsOverTime.cumulativeClaimAmounts;
+			cumulativeClaimCountsChart.data[0].data = claimsOverTime.cumulativeClaimCounts;
+			claimAmountsChart.data[0].data = claimsOverTime.claimAmounts;
+			claimCountsChart.data[0].data = claimsOverTime.claimCounts;
+			avgClaimAmountsChart.data[0].data = claimsOverTime.avgClaimAmounts;
 			claimDistributionChart.data = claimDistributionChartData;
-			delegationTvlChart.data[0].data = $opData.delegationsOverTime.tvls;
-			cumulativeDelegationAmountsChart.data[0].data = $opData.delegationsOverTime.cumulativeDelegationAmounts;
-			cumulativeDelegationCountsChart.data[0].data = $opData.delegationsOverTime.cumulativeDelegationCounts;
-			yieldChart.data[0].data = $opData.yieldOverTime.cumulativeYieldAmounts;
-			yieldChart.data[1].data = $opData.claimsOverTime.cumulativeClaimAmounts;
+			delegationTvlChart.data[0].data = delegationsOverTime.tvls;
+			cumulativeDelegationAmountsChart.data[0].data = delegationsOverTime.cumulativeDelegationAmounts;
+			cumulativeDelegationCountsChart.data[0].data = delegationsOverTime.cumulativeDelegationCounts;
+			yieldChart.data[0].data = yieldOverTime.cumulativeYieldAmounts;
+			yieldChart.data[1].data = claimsOverTime.cumulativeClaimAmounts;
 		}
+	}
+
+	onMount(() => {
+		setChartData($startTimestamp, $endTimestamp);
 	});
 	
 </script>
@@ -169,7 +206,7 @@
 
 <!-- Charts & Highlights -->
 <LineChart {...tvlChart} />
-<Highlight>
+<Highlight hide={$endTimestamp !== 9_999_999_999}>
 	<span>There are currently</span>
 	<span class="highlight">{$opData.balances.data.filter(entry => entry.balance > 0).length.toLocaleString(undefined)}+ Depositors</span>
 	<span>on {chainName}!</span>
@@ -180,7 +217,7 @@
 <LineChart {...depositCountsChart} />
 <LineChart {...avgDepositAmountsChart} />
 <LineChart {...cumulativeUniqueWalletsChart} />
-<PieChart {...tvlDistributionChart} />
+<PieChart {...tvlDistributionChart} hide={$endTimestamp !== 9_999_999_999} />
 <LineChart {...cumulativeDepositDistributionsChart} />
 <LineChart {...depositDistributionsChart} />
 <PieChart {...movingUsersChart} />

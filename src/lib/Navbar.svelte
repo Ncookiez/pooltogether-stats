@@ -2,7 +2,7 @@
 
 	// Imports:
 	import { page } from "$app/stores";
-	import { getChainName, getTimestamps, timestampToISO } from "$lib/functions";
+	import { getChainName, timestampToISO } from "$lib/functions";
 	import { ethData, polyData, avaxData, opData, startTimestamp, endTimestamp } from '$lib/stores';
 
 	// Type Imports:
@@ -30,32 +30,38 @@
 
 	// Function to update min/max timestamps:
 	const updateMinMaxTimestamps = (ethData: ChainData, polyData: ChainData, avaxData: ChainData, opData: ChainData) => {
-		if(!timestampsSet && ethData.deposits.data.length > 0 && polyData.deposits.data.length > 0 && avaxData.deposits.data.length > 0 && opData.deposits.data.length > 0) {
-			chainMinMaxTimestamps.eth = getTimestamps(ethData, 1);
-			chainMinMaxTimestamps.poly = getTimestamps(polyData, 1);
-			chainMinMaxTimestamps.avax = getTimestamps(avaxData, 1);
-			chainMinMaxTimestamps.op = getTimestamps(opData, 1);
-			allChainsMinMaxTimestamps.push(Math.min(chainMinMaxTimestamps.eth[0], chainMinMaxTimestamps.poly[0], chainMinMaxTimestamps.avax[0], chainMinMaxTimestamps.op[0]));
-			allChainsMinMaxTimestamps.push(Math.max(chainMinMaxTimestamps.eth[1], chainMinMaxTimestamps.poly[1], chainMinMaxTimestamps.avax[1], chainMinMaxTimestamps.op[1]));
+		if(!timestampsSet && ethData.minTimestamp && ethData.maxTimestamp && polyData.minTimestamp && polyData.maxTimestamp && avaxData.minTimestamp && avaxData.maxTimestamp && opData.minTimestamp && opData.maxTimestamp) {
+			chainMinMaxTimestamps.eth = [ethData.minTimestamp, ethData.maxTimestamp];
+			chainMinMaxTimestamps.poly = [polyData.minTimestamp, polyData.maxTimestamp];
+			chainMinMaxTimestamps.avax = [avaxData.minTimestamp, avaxData.maxTimestamp];
+			chainMinMaxTimestamps.op = [opData.minTimestamp, opData.maxTimestamp];
+			allChainsMinMaxTimestamps.push(Math.min(ethData.minTimestamp, polyData.minTimestamp, avaxData.minTimestamp, opData.minTimestamp));
+			allChainsMinMaxTimestamps.push(Math.max(ethData.maxTimestamp, polyData.maxTimestamp, avaxData.maxTimestamp, opData.maxTimestamp));
 			timestampsSet = true;
 		}
 	}
 
 	// Function to update current selected chain's timestamps:
 	const updateCurrentChainTimestamps = () => {
+		let updated = false;
 		if(selectedChain) {
 			if(minDateValue) {
 				const minTimeValue = Date.parse(minDateValue) / 1000;
 				if(minTimeValue < chainMinMaxTimestamps[selectedChain][0] || minTimeValue > chainMinMaxTimestamps[selectedChain][1]) {
 					minDateValue = undefined;
+					updated = true;
 				}
 			}
 			if(maxDateValue) {
 				const maxTimeValue = Date.parse(maxDateValue) / 1000;
 				if(maxTimeValue < chainMinMaxTimestamps[selectedChain][0] || maxTimeValue > chainMinMaxTimestamps[selectedChain][1]) {
 					maxDateValue = undefined;
+					updated = true;
 				}
 			}
+		}
+		if(updated) {
+			updateTimestampStores();
 		}
 	}
 

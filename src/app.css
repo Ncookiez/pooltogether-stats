@@ -49,3 +49,7 @@ html, body {
 ::-webkit-scrollbar-thumb {
   background: var(--dark-purple);
 }
+
+.hide {
+	display: none !important;
+}

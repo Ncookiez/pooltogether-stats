@@ -1,6 +1,14 @@
+<script lang="ts">
+
+	// Initializations:
+	export let hide: boolean = false;
+	
+</script>
+
+<!-- #################################################################################################### -->
 
 <!-- Highlight -->
-<div class="highlight">
+<div class="highlight" class:hide>
 	<slot />
 </div>
 

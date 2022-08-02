@@ -23,6 +23,8 @@ export interface ChainData {
   supply: { lastQueriedBlock: number, data: SupplyData[] }
   balances: { lastQueriedBlock: number, timestamp: number | undefined, data: BalanceData[] }
   draws: { data: DrawData[] }
+  minTimestamp?: number
+  maxTimestamp?: number
   depositsOverTime?: DepositsOverTime
   withdrawalsOverTime?: WithdrawalsOverTime
   claimsOverTime?: ClaimsOverTime
