@@ -411,7 +411,6 @@ export const getTVLDistribution = (balances: BalanceData[]) => {
 
   // Initializations:
   const tvlDistribution: TVLDistribution = {
-    total: { amount: 0, count: 0 },
     1: { amount: 0, count: 0 },
     10: { amount: 0, count: 0 },
     100: { amount: 0, count: 0 },
@@ -456,8 +455,6 @@ export const getTVLDistribution = (balances: BalanceData[]) => {
         tvlDistribution[1].amount += entry.balance;
         tvlDistribution[1].count++;
       }
-      tvlDistribution.total.amount += entry.balance;
-      tvlDistribution.total.count++;
     }
   });
 
@@ -482,7 +479,8 @@ export const getDelegationsOverTime = (chainData: ChainData, ticks: number, cust
     cumulativeDelegationCounts: [],
     cumulativeDelegationWithdrawalAmounts: [],
     cumulativeDelegationWithdrawalCounts: [],
-    cumulativeUniqueWallets: []
+    cumulativeUniqueWallets: [],
+    tvls: []
   }
   let cumulativeDelegationAmount = 0;
   let cumulativeDelegationCount = 0;
@@ -538,6 +536,7 @@ export const getDelegationsOverTime = (chainData: ChainData, ticks: number, cust
     delegationsOverTime.cumulativeDelegationWithdrawalAmounts.push(Math.floor(cumulativeDelegationWithdrawalAmount));
     delegationsOverTime.cumulativeDelegationWithdrawalCounts.push(cumulativeDelegationWithdrawalCount);
     delegationsOverTime.cumulativeUniqueWallets.push(cumulativeUniqueWallets.length);
+    delegationsOverTime.tvls.push(Math.floor(cumulativeDelegationAmount - cumulativeDelegationWithdrawalAmount));
   }
 
   return delegationsOverTime;

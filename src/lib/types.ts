@@ -147,6 +147,7 @@ export interface PieChartInfo {
   sectionLabels: string[]
   data: number[]
   hiddenPercentage?: number
+  dollarValues?: boolean
   appendedLabel?: string
 }
 export interface Line {
@@ -256,6 +257,7 @@ export interface DelegationsOverTime {
   cumulativeDelegationWithdrawalAmounts: number[]
   cumulativeDelegationWithdrawalCounts: number[]
   cumulativeUniqueWallets: number[]
+  tvls: number[]
 }
 export interface YieldOverTime {
   timestamps: number[]
@@ -303,7 +305,6 @@ export interface MultichainDistribution {
   fourChains: number
 }
 export interface TVLDistribution {
-  total: { amount: number, count: number }
   1: { amount: number, count: number }
   10: { amount: number, count: number }
   100: { amount: number, count: number }

@@ -109,6 +109,7 @@
 		background: var(--dark-purple);
 		border: 2px solid var(--accent-color);
 		border-radius: 1em;
+		overflow: hidden;
 	}
 
 	h3 {

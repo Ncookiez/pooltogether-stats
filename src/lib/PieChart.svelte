@@ -14,12 +14,13 @@
 	export let sectionLabels: string[];
 	export let data: number[];
 	export let hiddenPercentage: number = 5;
+	export let dollarValues: boolean = false;
 	export let appendedLabel: string | undefined = undefined;
 	let pieChart: Chart;
 
 	// Pie Chart Settings:
 	const baseColor = 'white';
-	const appBackgroundColor = '#4c249f';
+	const borderColor = '#341762';
 	const defaultSectionBorderWidth = 10;
 
 	// Reactive Chart Updates:
@@ -46,10 +47,10 @@
 		chart.data.labels = sectionLabels;
 		chart.data.datasets[0].data = data;
 		chart.data.datasets[0].backgroundColor = getPieChartColors(data.length);
-		chart.data.datasets[0].borderColor = [appBackgroundColor];
+		chart.data.datasets[0].borderColor = [borderColor];
 		chart.data.datasets[0].borderWidth = defaultSectionBorderWidth;
 		if(chart.options.plugins?.tooltip && chart.options.plugins?.datalabels) {
-			chart.options.plugins.tooltip.callbacks = { label: (item) => { return `  ${item.label}: ${item.formattedValue}${appendedLabel ? ` ${appendedLabel}` : ''}` }};
+			chart.options.plugins.tooltip.callbacks = { label: (item) => { return `  ${item.label}: ${dollarValues ? '$' : ''}${item.parsed.toLocaleString(undefined, { maximumFractionDigits: 0 })}${appendedLabel ? ` ${appendedLabel}` : ''}` }};
 			chart.options.plugins.datalabels.formatter = (value: string, context: any) => {
 				let numValue = parseInt(value);
 				let totalValue = 0;
@@ -71,23 +72,23 @@
 		if(numColors === 1) {
 			return ['#9f82d7'];
 		} else if(numColors === 2) {
-			return ['#9f82d7', '#341762'];
+			return ['#9f82d7', '#4c249f'];
 		} else if(numColors === 3) {
-			return ['#9F82D7', '#6A4D9D', '#341762'];
+			return ['#9F82D7', '#7653BB', '#4c249f'];
 		} else if(numColors === 4) {
-			return ['#9F82D7', '#7B5EB0', '#583B89', '#341762'];
+			return ['#9F82D7', '#8363C4', '#6843B2', '#4c249f'];
 		} else if(numColors === 5) {
-			return ['#9F82D7', '#8467BA', '#6A4D9D', '#4F327F', '#341762'];
+			return ['#9F82D7', '#8A6BC9', '#7653BB', '#613CAD', '#4c249f'];
 		} else if(numColors === 6) {
-			return ['#9F82D7', '#8A6DC0', '#7457A8', '#5F4291', '#492C79', '#341762'];
+			return ['#9F82D7', '#8E6FCC', '#7E5CC1', '#6D4AB5', '#5D37AA', '#4c249f'];
 		} else if(numColors === 7) {
-			return ['#9F82D7', '#8D70C4', '#7B5EB0', '#6A4D9D', '#583B89', '#462976', '#341762'];
+			return ['#9F82D7', '#9172CE', '#8363C4', '#7653BB', '#6843B2', '#5A34A8', '#4c249f'];
 		} else if(numColors === 8) {
-			return ['#9F82D7', '#9073C6', '#8063B6', '#7154A5', '#624594', '#533683', '#432673', '#341762'];
+			return ['#9F82D7', '#9375CF', '#8767C7', '#7B5ABF', '#704CB7', '#643FAF', '#5831A7', '#4c249f'];
 		} else if(numColors === 9) {
-			return ['#9F82D7', '#9275C8', '#8467BA', '#775AAB', '#6A4D9D', '#5C3F8E', '#4F327F', '#412471', '#341762'];
+			return ['#9F82D7', '#9576D0', '#8A6BC9', '#805FC2', '#7653BB', '#6B47B4', '#613CAD', '#5630A6', '#4c249f'];
 		} else {
-			return ['#9F82D7', '#9376CA', '#876ABD', '#7B5EB0', '#6F52A3', '#644796', '#583B89', '#4C2F7C', '#40236F', '#341762'];
+			return ['#9F82D7', '#9678D1', '#8D6DCB', '#8363C4', '#7A58BE', '#714EB8', '#6843B2', '#5E39AB', '#552EA5', '#4c249f'];
 		}
 	}
 
@@ -120,6 +121,28 @@
 
 <style>
 
-	/* CSS Goes Here */
+	div.pieChart {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		height: 23.8em;
+		width: 40em;
+		padding: 1em;
+		background: var(--dark-purple);
+		border: 2px solid var(--accent-color);
+		border-radius: 1em;
+		overflow: hidden;
+	}
+
+	h3 {
+		width: 100%;
+		margin: 0 0 .5em .5em;
+		text-shadow: 2px 2px 10px black;
+	}
+
+	canvas {
+		max-height: 90%;
+		max-width: 90%;
+	}
 	
 </style>
