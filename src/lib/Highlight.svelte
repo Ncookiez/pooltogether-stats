@@ -17,6 +17,7 @@
 <style>
 
 	div.highlight {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;

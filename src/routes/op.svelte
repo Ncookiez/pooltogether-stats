@@ -15,6 +15,9 @@
 	const chain: Chain = 'op';
 	const chainName = getChainName(chain);
 	const ticks = 50;
+	const defaultMaxTimestamp = 9_999_999_999;
+	const dayInSeconds = 86400;
+	let minWinlessWithdrawalsBalance: number | undefined = undefined;
 
 	// Charts:
 	const tvlChart: LineChartInfo = { name: `${chain}TvlChart`, title: 'TVL Over Time', xAxisValues: [], data: [{ label: 'TVL', data: [] }], dollarValues: true };
@@ -46,6 +49,10 @@
 	// Reactive Chart Data:
 	$: setChartData($startTimestamp, $endTimestamp);
 
+	// Reactive Winless Withdrawals Data:
+	$: winlessWithdrawals = $opData.winlessWithdrawals ? $opData.winlessWithdrawals.filter(wallet => wallet.maxBalance > (minWinlessWithdrawalsBalance ?? 0)) : [];
+	$: winlessWithdrawalsAverageDays = winlessWithdrawals.length > 0 ? (winlessWithdrawals.reduce((a, b) => a + (b.lastWithdrawalTimestamp - b.firstDepositTimestamp), 0) / winlessWithdrawals.length / dayInSeconds).toLocaleString(undefined, { maximumFractionDigits: 0 }) : undefined;
+	
 	// Function to set chart data:
 	const setChartData = (startTime: number, endTime: number) => {
 		if($opData.tvlOverTime && $opData.depositsOverTime && $opData.withdrawalsOverTime && $opData.claimsOverTime && $opData.delegationsOverTime && $opData.yieldOverTime && $opData.tvlDistribution && $ethData.movingUsers && $polyData.movingUsers && $avaxData.movingUsers) {
@@ -55,13 +62,13 @@
 			let customTimestamps: number[] | undefined;
 
 			// Setting Custom Timestamps:
-			if(startTime !== 0 && endTime !== 9_999_999_999) {
+			if(startTime !== 0 && endTime !== defaultMaxTimestamp) {
 				timeFilters = { start: startTime, end: endTime };
 				customTimestamps = getRangeArray(startTime, endTime, ticks);
 			} else if(startTime !== 0 && $opData.maxTimestamp) {
 				timeFilters = { start: startTime, end: $opData.maxTimestamp };
 				customTimestamps = getRangeArray(startTime, $opData.maxTimestamp, ticks);
-			} else if(endTime !== 9_999_999_999 && $opData.minTimestamp) {
+			} else if(endTime !== defaultMaxTimestamp && $opData.minTimestamp) {
 				timeFilters = { start: $opData.minTimestamp, end: endTime };
 				customTimestamps = getRangeArray($opData.minTimestamp, endTime, ticks);
 			}
@@ -206,10 +213,10 @@
 
 <!-- Charts & Highlights -->
 <LineChart {...tvlChart} />
-<Highlight hide={$endTimestamp !== 9_999_999_999}>
-	<span>There are currently</span>
-	<span class="highlight">{$opData.balances.data.filter(entry => entry.balance > 0).length.toLocaleString(undefined)}+ Depositors</span>
-	<span>on {chainName}!</span>
+<Highlight hide={$endTimestamp !== defaultMaxTimestamp}>
+	<span class="big">There are currently</span>
+	<span class="big highlight">{$opData.balances.data.filter(entry => entry.balance > 0).length.toLocaleString(undefined)}+ Depositors</span>
+	<span class="big">on {chainName}!</span>
 </Highlight>
 <LineChart {...cumulativeDepositAmountsChart} />
 <LineChart {...cumulativeDepositCountsChart} />
@@ -217,7 +224,7 @@
 <LineChart {...depositCountsChart} />
 <LineChart {...avgDepositAmountsChart} />
 <LineChart {...cumulativeUniqueWalletsChart} />
-<PieChart {...tvlDistributionChart} hide={$endTimestamp !== 9_999_999_999} />
+<PieChart {...tvlDistributionChart} hide={$endTimestamp !== defaultMaxTimestamp} />
 <LineChart {...cumulativeDepositDistributionsChart} />
 <LineChart {...depositDistributionsChart} />
 <PieChart {...movingUsersChart} />
@@ -225,7 +232,15 @@
 <LineChart {...cumulativeWithdrawalCountsChart} />
 <LineChart {...withdrawalAmountsChart} />
 <LineChart {...withdrawalCountsChart} />
-<!-- TODO - winless withdrawals - highlight to mess around with minimum deposit and see timespans -->
+{#if $opData.winlessWithdrawals}
+	<Highlight>
+		<span>There are <span class="highlight">{winlessWithdrawals.length} wallets</span> that have withdrawn without claiming a prize.</span>
+		{#if winlessWithdrawals.length > 0}
+			<span>They remained deposited for <span class="highlight">{winlessWithdrawalsAverageDays} days</span> on average.</span>
+		{/if}
+		<span class="small">Filter by wallets with over $<input type="number" placeholder="?" bind:value={minWinlessWithdrawalsBalance}></span>
+	</Highlight>
+{/if}
 <LineChart {...cumulativeClaimAmountsChart} />
 <LineChart {...cumulativeClaimCountsChart} />
 <LineChart {...claimAmountsChart} />
@@ -233,7 +248,6 @@
 <LineChart {...avgClaimAmountsChart} />
 <PieChart {...claimDistributionChart} />
 <LineChart {...delegationTvlChart} />
-<!-- TODO - current unique wallets delegating with more than 0 -->
 <LineChart {...cumulativeDelegationAmountsChart} />
 <LineChart {...cumulativeDelegationCountsChart} />
 <LineChart {...yieldChart} />
@@ -243,14 +257,32 @@
 
 <style>
 
-	span {
-		font-size: 1.5em;
-	}
-
 	span.highlight {
 		color: var(--secondary-color);
 		font-weight: bold;
+	}
+
+	span.big {
 		font-size: 1.5em;
+	}
+
+	span.small {
+		position: absolute;
+		bottom: 2em;
+		color: var(--light-purple);
+		font-size: .9em;
+	}
+
+	span.small > input {
+		width: 5em;
+		margin-right: -4em;
+		color: var(--light-purple);
+		background: transparent;
+		border: none;
+	}
+	
+	span.small > input:focus {
+		outline: none;
 	}
 	
 </style>

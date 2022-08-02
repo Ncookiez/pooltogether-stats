@@ -2,6 +2,9 @@
 // Type Imports:
 import type { Chain, Hash, ChainData, DepositData, WithdrawalData, BalanceData, WalletData, DepositsOverTime, WithdrawalsOverTime, ClaimsOverTime, TVLOverTime, DelegationsOverTime, YieldOverTime, WinlessWithdrawals, MultichainDistribution, TVLDistribution, MovingUsers } from '$lib/types';
 
+// Initializations:
+const defaultMaxTimestamp = 9_999_999_999;
+
 /* ====================================================================================================================================================== */
 
 // Function to get chain name:
@@ -780,7 +783,7 @@ export const getMovingUsers = (withdrawals: WithdrawalData[], ethDeposits: Depos
       movingUsers.totalWithdrawn.users++;
 
       // Moving To Ethereum:
-      let ethWalletDeposits = ethDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp && deposit.timestamp < (timeFilters?.end ?? 9_999_999_999));
+      let ethWalletDeposits = ethDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp && deposit.timestamp < (timeFilters?.end ?? defaultMaxTimestamp));
       if(ethWalletDeposits.length > 0) {
         ethWalletDeposits.forEach(deposit => {
           movingUsers.movedToETH.amount += deposit.amount;
@@ -789,7 +792,7 @@ export const getMovingUsers = (withdrawals: WithdrawalData[], ethDeposits: Depos
       }
 
       // Moving To Polygon:
-      let polyWalletDeposits = polyDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp && deposit.timestamp < (timeFilters?.end ?? 9_999_999_999));
+      let polyWalletDeposits = polyDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp && deposit.timestamp < (timeFilters?.end ?? defaultMaxTimestamp));
       if(polyWalletDeposits.length > 0) {
         polyWalletDeposits.forEach(deposit => {
           movingUsers.movedToPOLY.amount += deposit.amount;
@@ -798,7 +801,7 @@ export const getMovingUsers = (withdrawals: WithdrawalData[], ethDeposits: Depos
       }
 
       // Moving To Avalanche:
-      let avaxWalletDeposits = avaxDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp && deposit.timestamp < (timeFilters?.end ?? 9_999_999_999));
+      let avaxWalletDeposits = avaxDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp && deposit.timestamp < (timeFilters?.end ?? defaultMaxTimestamp));
       if(avaxWalletDeposits.length > 0) {
         avaxWalletDeposits.forEach(deposit => {
           movingUsers.movedToAVAX.amount += deposit.amount;
@@ -807,7 +810,7 @@ export const getMovingUsers = (withdrawals: WithdrawalData[], ethDeposits: Depos
       }
 
       // Moving To Optimism:
-      let opWalletDeposits = opDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp && deposit.timestamp < (timeFilters?.end ?? 9_999_999_999));
+      let opWalletDeposits = opDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp && deposit.timestamp < (timeFilters?.end ?? defaultMaxTimestamp));
       if(opWalletDeposits.length > 0) {
         opWalletDeposits.forEach(deposit => {
           movingUsers.movedToOP.amount += deposit.amount;

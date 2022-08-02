@@ -13,6 +13,7 @@
 	const chainMinMaxTimestamps: Record<Chain, number[]> = { eth: [], poly: [], avax: [], op: [] };
 	const allChainsMinMaxTimestamps: number[] = [];
 	const dayInSeconds = 86400;
+	const defaultMaxTimestamp = 9_999_999_999;
 	let timestampsSet = false;
 	let minDateValue: string | undefined;
 	let maxDateValue: string | undefined;
@@ -26,7 +27,7 @@
 
 	// Reactive Input Timestamps:
 	$: minDate = timestampsSet ? !selectedChain ? timestampToISO(allChainsMinMaxTimestamps[0]) : timestampToISO(chainMinMaxTimestamps[selectedChain][0]) : timestampToISO(0);
-	$: maxDate = timestampsSet ? !selectedChain ? timestampToISO(allChainsMinMaxTimestamps[1]) : timestampToISO(chainMinMaxTimestamps[selectedChain][1]) : timestampToISO(9_999_999_999);
+	$: maxDate = timestampsSet ? !selectedChain ? timestampToISO(allChainsMinMaxTimestamps[1]) : timestampToISO(chainMinMaxTimestamps[selectedChain][1]) : timestampToISO(defaultMaxTimestamp);
 
 	// Function to update min/max timestamps:
 	const updateMinMaxTimestamps = (ethData: ChainData, polyData: ChainData, avaxData: ChainData, opData: ChainData) => {
@@ -75,13 +76,13 @@
 				if(maxTimeValue > minTimeValue) {
 					endTimestamp.set(maxTimeValue);
 				} else {
-					endTimestamp.set(9_999_999_999);
+					endTimestamp.set(defaultMaxTimestamp);
 				}
 			} else {
 				endTimestamp.set(maxTimeValue);
 			}
 		} else {
-			endTimestamp.set(9_999_999_999);
+			endTimestamp.set(defaultMaxTimestamp);
 		}
 	}
 	
