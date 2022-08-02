@@ -95,7 +95,7 @@
 	<!-- Banner -->
 	<div class="banner">
 		<img src="/images/pooltogether-logo.svg" alt="PoolTogether">
-		<span>Stats</span>
+		<span>Explorer</span>
 	</div>
 
 	<!-- Pages -->
@@ -136,6 +136,7 @@
 		background: var(--dark-purple);
 		box-shadow: 0 0 20px 2px black;
 		overflow: hidden;
+		z-index: 2;
 	}
 
 	div {

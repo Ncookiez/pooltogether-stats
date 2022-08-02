@@ -1,8 +1,8 @@
 <script lang="ts">
 
 	// Initializations:
-	const githubLink = `https://github.com/Ncookiez`;
-	const repoLink = `https://github.com/Ncookiez/pooltogether-stats`;
+	const githubLink = `https://github.com`;
+	const repoLink = `${githubLink}/Ncookiez/pooltogether-stats`;
 	
 </script>
 
@@ -13,7 +13,7 @@
 	<!-- Footer Content -->
 	<span>Made with </span>
 	<i id="heart" />
-	<span> by <a href="{githubLink}">Ncookie</a></span>
+	<span> by <a href="{githubLink}/Ncookiez">Ncookie</a> and <a href="{githubLink}/underethsea">Underthesea</a></span>
 
 	<!-- Vibing GIF -->
 	<img id="vibing" src="/images/vibing.gif" alt="We Do Be Vibin'">
@@ -43,6 +43,7 @@
 		text-transform: uppercase;
 		box-shadow: 0 0 20px 2px black;
 		overflow: hidden;
+		z-index: 1;
 	}
 	
 	a {

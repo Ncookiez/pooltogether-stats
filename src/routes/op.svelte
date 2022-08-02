@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import { ethData, polyData, avaxData, opData, startTimestamp, endTimestamp } from '$lib/stores';
 	import { getChainName, getRangeArray, timestampsToDates, getDepositsOverTime, getWithdrawalsOverTime, getClaimsOverTime, getDelegationsOverTime, getYieldOverTime, getMovingUsers, getTVLOverTime } from '$lib/functions';
+	import History from '$lib/History.svelte';
 	import PieChart from '$lib/PieChart.svelte';
 	import LineChart from '$lib/LineChart.svelte';
 	import Highlight from '$lib/Highlight.svelte';
@@ -207,8 +208,8 @@
 
 <!-- SvelteKit Dynamic Header -->
 <svelte:head>
-	<title>PoolTogether Stats | {chainName}</title>
-	<meta name="description" content="An app for querying and analyzing some PoolTogether statistics. Check out some {chainName}-specific stats!" />
+	<title>Pool Explorer | {chainName}</title>
+	<meta name="description" content="An app for exploring all there is to see about PoolTogether statistics. Check out some {chainName}-specific stats!" />
 </svelte:head>
 
 <!-- Charts & Highlights -->
@@ -232,15 +233,13 @@
 <LineChart {...cumulativeWithdrawalCountsChart} />
 <LineChart {...withdrawalAmountsChart} />
 <LineChart {...withdrawalCountsChart} />
-{#if $opData.winlessWithdrawals}
-	<Highlight>
-		<span>There are <span class="highlight">{winlessWithdrawals.length} wallets</span> that have withdrawn without claiming a prize.</span>
-		{#if winlessWithdrawals.length > 0}
-			<span>They remained deposited for <span class="highlight">{winlessWithdrawalsAverageDays} days</span> on average.</span>
-		{/if}
-		<span class="small">Filter by wallets with over $<input type="number" placeholder="?" bind:value={minWinlessWithdrawalsBalance}></span>
-	</Highlight>
-{/if}
+<Highlight>
+	<span>There are <span class="highlight">{winlessWithdrawals.length.toLocaleString(undefined)} wallets</span> that have withdrawn without claiming a prize.</span>
+	{#if winlessWithdrawals.length > 0}
+		<span>They remained deposited for <span class="highlight">{winlessWithdrawalsAverageDays} days</span> on average.</span>
+	{/if}
+	<span class="small">Filter by wallets with over $<input type="number" placeholder="?" bind:value={minWinlessWithdrawalsBalance}></span>
+</Highlight>
 <LineChart {...cumulativeClaimAmountsChart} />
 <LineChart {...cumulativeClaimCountsChart} />
 <LineChart {...claimAmountsChart} />
@@ -251,7 +250,7 @@
 <LineChart {...cumulativeDelegationAmountsChart} />
 <LineChart {...cumulativeDelegationCountsChart} />
 <LineChart {...yieldChart} />
-<!-- TODO - display latest deposits, latest winners, etc. (+draw data stuff) -->
+<!-- <History {chain} /> -->
 
 <!-- #################################################################################################### -->
 
