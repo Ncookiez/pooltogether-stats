@@ -295,11 +295,11 @@ export const fetchDraws = async () => {
 
   // Fetching Draws:
   try {
-    let apiResponse: ExplorerAPIDrawResponse[] = (await fetch(`${explorerApiURL}/cookies`).then(response => response.json())).reverse();
+    let apiResponse: ExplorerAPIDrawResponse[] = (await fetch(`${explorerApiURL}/cookies`).then(response => response.json()));
     apiResponse.forEach(drawEntry => {
       const draw = drawEntry.draw;
       const timestamp = parseInt(drawEntry.timestamp);
-      const result: { chain: Chain, wallet: Hash, claimable: number[], dropped: number[], avgBalance: number }[] = [];
+      const result: { chain: Chain, wallet: Hash, claimable: number[], dropped: number[], avgBalance: number | null }[] = [];
       drawEntry.result.forEach(walletEntry => {
         let chain: Chain | undefined;
         if(walletEntry.n === '1') {
@@ -315,7 +315,7 @@ export const fetchDraws = async () => {
           const wallet = walletEntry.a;
           const claimable = walletEntry.c.map(prize => parseInt(prize));
           const dropped = walletEntry.u.map(prize => parseInt(prize));
-          const avgBalance =  walletEntry.g;
+          const avgBalance = walletEntry.g;
           result.push({ chain, wallet, claimable, dropped, avgBalance });
         }
       });

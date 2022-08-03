@@ -5,21 +5,25 @@
 	import { ethData, polyData, avaxData, opData, startTimestamp, endTimestamp } from '$lib/stores';
 
 	// Type Imports:
-	import type { Chain } from '$lib/types';
+	import type { Chain, ChainData } from '$lib/types';
 
 	// Initializations:
 	export let chain: Chain;
 	const chainName = getChainName(chain);
 	const pageSize = 25;
+	const now = Date.now() / 1000;
+	const dayInSeconds = 86400;
 	let tabSelected: 'winners' | 'deposits' | 'delegations' = 'winners';
-	let selectedDraw = 0;
 	let listLength = pageSize;
+	let selectedDraw = 0;
+	let depositFilter = 0;
 
 	// Reactive Chain Data:
 	$: chainData = selectChainData(chain);
-	$: winners = chainData.draws.data[selectedDraw].result;
-	$: deposits = chainData.deposits.data;
-	$: delegations = chainData.delegationsFunded.data;
+	$: draws = getDraws(chainData, $startTimestamp, $endTimestamp);
+	$: winners = draws[selectedDraw].result;
+	$: deposits = getDeposits(chainData, depositFilter, $startTimestamp, $endTimestamp);
+	$: delegations = getDelegations(chainData, $startTimestamp, $endTimestamp);
 
 	// Function to select appropriate chain data:
 	const selectChainData = (chain: Chain) => {
@@ -31,6 +35,56 @@
 			return $avaxData;
 		} else {
 			return $opData;
+		}
+	}
+
+	// Function to get sorted and filtered draws:
+	const getDraws = (chainData: ChainData, startTime: number, endTime: number) => {
+		const allDraws = chainData.draws.data.slice().reverse();
+		const filteredDraws = allDraws.filter(draw => draw.timestamp >= startTime && draw.timestamp <= endTime);
+		return filteredDraws;
+	}
+
+	// Function to get sorted and filtered deposits:
+	const getDeposits = (chainData: ChainData, filter: number, startTime: number, endTime: number) => {
+		const allDeposits = chainData.deposits.data.slice().reverse();
+		const filteredDeposits = allDeposits.filter(deposit => deposit.amount >= filter && deposit.timestamp && deposit.timestamp >= startTime && deposit.timestamp <= endTime);
+		return filteredDeposits;
+	}
+
+	// Function to get sorted and filtered delegations:
+	const getDelegations = (chainData: ChainData, startTime: number, endTime: number) => {
+		const allDelegations = chainData.delegationsFunded.data.slice().reverse();
+		const filteredDelegations = allDelegations.filter(delegation => delegation.timestamp && delegation.timestamp >= startTime && delegation.timestamp <= endTime);
+		return filteredDelegations;
+	}
+
+	// Function to get 'time ago' string:
+	const getTimeDisplay = (timestamp: number) => {
+		const secondsSinceEvent = now - timestamp;
+		if(secondsSinceEvent > 0) {
+			if(secondsSinceEvent < dayInSeconds) {
+				if(secondsSinceEvent >= dayInSeconds / 24) {
+					const hours = Math.floor(secondsSinceEvent / (dayInSeconds / 24));
+					return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+				} else if(secondsSinceEvent >= dayInSeconds / 24 / 60) {
+					const mins = Math.floor(secondsSinceEvent / (dayInSeconds / 24 / 60));
+					return `${mins} minute${mins > 1 ? 's' : ''} ago`;
+				} else {
+					const secs = Math.floor(secondsSinceEvent / (dayInSeconds / 24 / 60 / 60));
+					return `${secs} second${secs > 1 ? 's' : ''} ago`;
+				}
+			} else {
+				const date = new Date(timestamp * 1000);
+				const currentYear = (new Date(now * 1000)).getFullYear();
+				if(currentYear === date.getFullYear()) {
+					return date.toLocaleString(undefined, {month: 'short', day: 'numeric'});
+				} else {
+					return date.toLocaleString(undefined, {month: 'short', day: 'numeric', year: 'numeric'});
+				}
+			}
+		} else {
+			return '';
 		}
 	}
 	
@@ -46,19 +100,23 @@
 			<div id="drawSelector">
 				<span>Draw:</span>
 				<select bind:value={selectedDraw}>
-					{#each chainData.draws.data as draw, i}
+					{#each draws as draw, i}
 						<option value="{i}">{draw.draw}</option>
 					{/each}
 				</select>
 			</div>
 		{:else if tabSelected === 'deposits'}
-			<!-- TODO - filter -->
+			<div id="depositFilter">
+				<span>Filter:</span>
+				<span class="dollar">$</span>
+				<input type="number" bind:value={depositFilter}>
+			</div>
 		{/if}
 	</div>
 	<div class="tabs">
-		<span class:selected={tabSelected === 'winners'} on:click={() => tabSelected = 'winners'}>Winners</span>
-		<span class:selected={tabSelected === 'deposits'} on:click={() => tabSelected = 'deposits'}>Deposits</span>
-		<span class:selected={tabSelected === 'delegations'} on:click={() => tabSelected = 'delegations'}>Delegations</span>
+		<span class:selected={tabSelected === 'winners'} on:click={() => { tabSelected = 'winners'; listLength = pageSize; }}>Winners</span>
+		<span class:selected={tabSelected === 'deposits'} on:click={() => { tabSelected = 'deposits'; listLength = pageSize; }}>Deposits</span>
+		<span class:selected={tabSelected === 'delegations'} on:click={() => { tabSelected = 'delegations'; listLength = pageSize; }}>Delegations</span>
 	</div>
 	<div class="content">
 		{#if tabSelected === 'winners'}
@@ -68,8 +126,12 @@
 			{:else}
 				{#each winners.slice(0, listLength) as winner}
 					<span class="winner listItem">
-						<span class="wallet">{winner.wallet.slice(0, 6)}…{winner.wallet.slice(-4)}</span>
-						<!-- TODO - include all winner content -->
+						<span class="wallet" title="{winner.wallet}">{winner.wallet.slice(0, 6)}…{winner.wallet.slice(-4)}</span>
+						<i class="icofont-arrow-right" />
+						<span class="prizes" title="{winner.claimable.map(value => ` $${value}`).toString().slice(1)}">Won ${winner.claimable.reduce((a, b) => a + b, 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+						{#if winner.avgBalance}
+							<span class="avgBalance">(Balance: ${winner.avgBalance.toLocaleString(undefined, { maximumFractionDigits: 0 })})</span>
+						{/if}
 					</span>
 				{/each}
 				{#if winners.length > listLength}
@@ -83,8 +145,12 @@
 			{:else}
 				{#each deposits.slice(0, listLength) as deposit}
 					<span class="deposit listItem">
-						<span class="wallet">{deposit.wallet.slice(0, 6)}…{deposit.wallet.slice(-4)}</span>
-						<!-- TODO - include all deposit content -->
+						<span class="wallet" title="{deposit.wallet}">{deposit.wallet.slice(0, 6)}…{deposit.wallet.slice(-4)}</span>
+						<i class="icofont-arrow-right" />
+						<span class="amount">Deposited {deposit.amount < 1 ? '<$1' : `$${deposit.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
+						{#if deposit.timestamp}
+							<span class="time">{getTimeDisplay(deposit.timestamp)}</span>
+						{/if}
 					</span>
 				{/each}
 				{#if deposits.length > listLength}
@@ -98,8 +164,12 @@
 			{:else}
 				{#each delegations.slice(0, listLength) as delegation}
 					<span class="delegation listItem">
-						<span class="wallet">{delegation.delegator.slice(0, 6)}…{delegation.delegator.slice(-4)}</span>
-						<!-- TODO - include all delegation content -->
+						<span class="wallet" title="{delegation.delegator}">{delegation.delegator.slice(0, 6)}…{delegation.delegator.slice(-4)}</span>
+						<i class="icofont-arrow-right" />
+						<span class="amount">Delegated ${delegation.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+						{#if delegation.timestamp}
+							<span class="time">{getTimeDisplay(delegation.timestamp)}</span>
+						{/if}
 					</span>
 				{/each}
 				{#if delegations.length > listLength}
@@ -158,6 +228,7 @@
 	div.content {
 		display: flex;
 		flex-direction: column;
+		gap: 1em;
 		padding: 1em 2em;
 		overflow: hidden auto;
 	}
@@ -182,6 +253,32 @@
 		background: var(--primary-color);
 	}
 
+	#depositFilter {
+		display: flex;
+		align-items: center;
+	}
+
+	#depositFilter > span.dollar {
+		margin-left: .5em;
+		padding: 0 .2em 0 .5em;
+		background: var(--light-purple);
+		border-radius: .5em 0 0 .5em;
+	}
+
+	#depositFilter > input {
+		width: 5em;
+		padding-right: .5em;
+		font-family: inherit;
+		font-size: inherit;
+		background: var(--light-purple);
+		border: none;
+		border-radius: 0 .5em .5em 0;
+	}
+
+	#depositFilter > input:focus {
+		outline: none;
+	}
+
 	#sleepingPooly {
 		width: 10em;
 		margin: 1em 0;
@@ -190,14 +287,19 @@
 	span.listItem {
 		display: flex;
 		align-items: center;
+		gap: 1em;
+	}
+
+	span.loadMore {
+		cursor: pointer;
 	}
 
 	span.wallet {
 		font-family: 'Courier Prime', monospace;
 	}
 
-	span.loadMore {
-		cursor: pointer;
+	span.avgBalance {
+		text-align: right;
 	}
 	
 </style>

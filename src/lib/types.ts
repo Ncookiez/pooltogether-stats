@@ -112,7 +112,7 @@ export interface DrawData {
     wallet: Hash
     claimable: number[]
     dropped: number[]
-    avgBalance: number
+    avgBalance: number | null
   }[]
 }
 
@@ -123,13 +123,13 @@ export interface ExplorerAPIDrawResponse {
   draw: number
   timestamp: string
   result: {
-    n: string   // Network
-    a: Hash     // Wallet Address
-    c: string[] // Claimable Prizes
-    u: string[] // Dropped Prizes
-    w: string   // Sum of Claimable Prizes
-    d: string   // Sum of Dropped Prizes
-    g: number   // Wallet's Average Balance
+    n: string         // Network
+    a: Hash           // Wallet Address
+    c: string[]       // Claimable Prizes
+    u: string[]       // Dropped Prizes
+    w: string         // Sum of Claimable Prizes
+    d: string         // Sum of Dropped Prizes
+    g: number | null  // Wallet's Average Balance
   }[]
 }
 
