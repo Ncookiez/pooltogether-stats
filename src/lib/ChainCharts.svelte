@@ -252,6 +252,14 @@
 <LineChart {...cumulativeDepositCountsChart} />
 <LineChart {...depositAmountsChart} />
 <LineChart {...depositCountsChart} />
+<Highlight hide={$endTimestamp !== defaultMaxTimestamp}>
+	<span class="big">Top 5 Whales:</span>
+	<span class="list">
+		{#each chainData.balances.data.slice(0, 5) as whale}
+			<span><span class="highlight">{whale.wallet.slice(0, 6)}…{whale.wallet.slice(-4)}</span> ${whale.balance.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+		{/each}
+	</span>
+</Highlight>
 <LineChart {...avgDepositAmountsChart} />
 <LineChart {...cumulativeUniqueWalletsChart} />
 <PieChart {...tvlDistributionChart} hide={$endTimestamp !== defaultMaxTimestamp} />
@@ -291,6 +299,20 @@
 
 	span.big {
 		font-size: 1.5em;
+	}
+
+	span.list {
+		display: flex;
+		flex-direction: column;
+		gap: .5em;
+		width: 40%;
+		margin-top: .5em;
+	}
+
+	span.list > span {
+		display: flex;
+		justify-content: space-between;
+		font-family: 'Courier Prime', monospace;
 	}
 
 	span.small {

@@ -295,7 +295,7 @@ export const fetchDraws = async () => {
 
   // Fetching Draws:
   try {
-    let apiResponse: ExplorerAPIDrawResponse[] = await fetch(`${explorerApiURL}/cookies`).then(response => response.json());
+    let apiResponse: ExplorerAPIDrawResponse[] = (await fetch(`${explorerApiURL}/cookies`).then(response => response.json())).reverse();
     apiResponse.forEach(drawEntry => {
       const draw = drawEntry.draw;
       const timestamp = parseInt(drawEntry.timestamp);

@@ -144,7 +144,7 @@
 		<div id="loadingModal">
 			{#if loadingData}
 				<img src="/images/loading.gif" alt="Loading">
-				<h2>Initializing some data... (this may take a minute)</h2>
+				<h2>Initializing some data... (this may take a couple minutes)</h2>
 				{#if !drawsLoaded}
 					<span class="dataProgress" transition:slide|local>
 						<span class="type">Prize Draw Data...</span>
