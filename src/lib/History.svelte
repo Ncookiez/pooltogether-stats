@@ -78,9 +78,9 @@
 				const date = new Date(timestamp * 1000);
 				const currentYear = (new Date(now * 1000)).getFullYear();
 				if(currentYear === date.getFullYear()) {
-					return date.toLocaleString(undefined, {month: 'short', day: 'numeric'});
+					return 'on ' + date.toLocaleString(undefined, {month: 'short', day: 'numeric'});
 				} else {
-					return date.toLocaleString(undefined, {month: 'short', day: 'numeric', year: 'numeric'});
+					return 'on ' + date.toLocaleString(undefined, {month: 'short', day: 'numeric', year: 'numeric'});
 				}
 			}
 		} else {
@@ -125,7 +125,7 @@
 				<span>No winners this draw!</span>
 			{:else}
 				{#each winners.slice(0, listLength) as winner}
-					<span class="winner listItem">
+					<span class="winner listItem" class:highlightItem={winner.claimable.reduce((a, b) => a + b, 0) >= 1000}>
 						<span class="wallet" title="{winner.wallet}">{winner.wallet.slice(0, 6)}…{winner.wallet.slice(-4)}</span>
 						<i class="icofont-arrow-right" />
 						<span class="prizes" title="{winner.claimable.map(value => ` $${value}`).toString().slice(1)}">Won ${winner.claimable.reduce((a, b) => a + b, 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
@@ -144,12 +144,12 @@
 				<span>No deposits found...</span>
 			{:else}
 				{#each deposits.slice(0, listLength) as deposit}
-					<span class="deposit listItem">
+					<span class="deposit listItem" class:highlightItem={deposit.amount >= 10000}>
 						<span class="wallet" title="{deposit.wallet}">{deposit.wallet.slice(0, 6)}…{deposit.wallet.slice(-4)}</span>
 						<i class="icofont-arrow-right" />
 						<span class="amount">Deposited {deposit.amount < 1 ? '<$1' : `$${deposit.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
 						{#if deposit.timestamp}
-							<span class="time">{getTimeDisplay(deposit.timestamp)}</span>
+							<span class="time">({getTimeDisplay(deposit.timestamp)})</span>
 						{/if}
 					</span>
 				{/each}
@@ -163,12 +163,12 @@
 				<span>No delegations found...</span>
 			{:else}
 				{#each delegations.slice(0, listLength) as delegation}
-					<span class="delegation listItem">
+					<span class="delegation listItem" class:highlightItem={delegation.amount >= 10000}>
 						<span class="wallet" title="{delegation.delegator}">{delegation.delegator.slice(0, 6)}…{delegation.delegator.slice(-4)}</span>
 						<i class="icofont-arrow-right" />
-						<span class="amount">Delegated ${delegation.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+						<span class="amount">Delegated {delegation.amount < 1 ? '<$1' : `$${delegation.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
 						{#if delegation.timestamp}
-							<span class="time">{getTimeDisplay(delegation.timestamp)}</span>
+							<span class="time">({getTimeDisplay(delegation.timestamp)})</span>
 						{/if}
 					</span>
 				{/each}
@@ -288,18 +288,35 @@
 		display: flex;
 		align-items: center;
 		gap: 1em;
+		padding: .2em .5em;
+		background: var(--primary-color);
+		border-radius: .5em;
+	}
+
+	span.highlightItem {
+		border: 2px solid var(--secondary-color);
 	}
 
 	span.loadMore {
+		margin: 0 auto;
+		color: var(--light-purple);
+		font-size: .9em;
 		cursor: pointer;
 	}
 
 	span.wallet {
+		color: var(--secondary-color);
 		font-family: 'Courier Prime', monospace;
 	}
 
 	span.avgBalance {
-		text-align: right;
+		color: var(--light-purple);
+		font-size: .9em;
+	}
+
+	span.time {
+		color: var(--light-purple);
+		font-size: .9em;
 	}
 	
 </style>
