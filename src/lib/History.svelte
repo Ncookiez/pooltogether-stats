@@ -10,12 +10,16 @@
 	// Initializations:
 	export let chain: Chain;
 	const chainName = getChainName(chain);
+	const pageSize = 25;
 	let tabSelected: 'winners' | 'deposits' | 'delegations' = 'winners';
 	let selectedDraw = 0;
-	let listLength = 25;
+	let listLength = pageSize;
 
 	// Reactive Chain Data:
 	$: chainData = selectChainData(chain);
+	$: winners = chainData.draws.data[selectedDraw].result;
+	$: deposits = chainData.deposits.data;
+	$: delegations = chainData.delegationsFunded.data;
 
 	// Function to select appropriate chain data:
 	const selectChainData = (chain: Chain) => {
@@ -58,33 +62,51 @@
 	</div>
 	<div class="content">
 		{#if tabSelected === 'winners'}
-			{#if chainData.draws.data[selectedDraw].result.length === 0}
+			{#if winners.length === 0}
 				<img id="sleepingPooly" src="/images/sleeping.png" alt="Sleeping Pooly">
 				<span>No winners this draw!</span>
 			{:else}
-				{#each chainData.draws.data[selectedDraw].result.slice(0, listLength) as winner}
+				{#each winners.slice(0, listLength) as winner}
 					<span class="winner listItem">
 						<span class="wallet">{winner.wallet.slice(0, 6)}…{winner.wallet.slice(-4)}</span>
 						<!-- TODO - include all winner content -->
 					</span>
 				{/each}
+				{#if winners.length > listLength}
+					<span class="loadMore" on:click={() => listLength += pageSize}><i class="icofont-arrow-down" /> Load More <i class="icofont-arrow-down" /></span>
+				{/if}
 			{/if}
 		{:else if tabSelected === 'deposits'}
-			{#each chainData.deposits.data.slice(0, listLength) as deposit}
-				<span class="deposit listItem">
-					<span class="wallet">{deposit.wallet.slice(0, 6)}…{deposit.wallet.slice(-4)}</span>
-					<!-- TODO - include all deposit content -->
-				</span>
-			{/each}
+			{#if deposits.length === 0}
+				<img id="sleepingPooly" src="/images/sleeping.png" alt="Sleeping Pooly">
+				<span>No deposits found...</span>
+			{:else}
+				{#each deposits.slice(0, listLength) as deposit}
+					<span class="deposit listItem">
+						<span class="wallet">{deposit.wallet.slice(0, 6)}…{deposit.wallet.slice(-4)}</span>
+						<!-- TODO - include all deposit content -->
+					</span>
+				{/each}
+				{#if deposits.length > listLength}
+					<span class="loadMore" on:click={() => listLength += pageSize}><i class="icofont-arrow-down" /> Load More <i class="icofont-arrow-down" /></span>
+				{/if}
+			{/if}
 		{:else if tabSelected === 'delegations'}
-			{#each chainData.delegationsFunded.data.slice(0, listLength) as delegation}
-				<span class="delegation listItem">
-					<span class="wallet">{delegation.delegator.slice(0, 6)}…{delegation.delegator.slice(-4)}</span>
-					<!-- TODO - include all delegation content -->
-				</span>
-			{/each}
+			{#if delegations.length === 0}
+				<img id="sleepingPooly" src="/images/sleeping.png" alt="Sleeping Pooly">
+				<span>No delegations found...</span>
+			{:else}
+				{#each delegations.slice(0, listLength) as delegation}
+					<span class="delegation listItem">
+						<span class="wallet">{delegation.delegator.slice(0, 6)}…{delegation.delegator.slice(-4)}</span>
+						<!-- TODO - include all delegation content -->
+					</span>
+				{/each}
+				{#if delegations.length > listLength}
+					<span class="loadMore" on:click={() => listLength += pageSize}><i class="icofont-arrow-down" /> Load More <i class="icofont-arrow-down" /></span>
+				{/if}
+			{/if}
 		{/if}
-		<!-- TODO - need way to increase list length (onclick or lazy loading) -->
 	</div>
 </div>
 
@@ -172,6 +194,10 @@
 
 	span.wallet {
 		font-family: 'Courier Prime', monospace;
+	}
+
+	span.loadMore {
+		cursor: pointer;
 	}
 	
 </style>
