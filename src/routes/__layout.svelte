@@ -21,6 +21,8 @@
 	let dataLoaded = false;
 	let loadingData = true;
 	let drawsLoaded = false;
+	let mainContent: HTMLElement;
+	let mainContentScrollY = 0;
 
 	// Function to load data:
 	const loadData = async () => {
@@ -137,9 +139,12 @@
 <Navbar />
 
 <!-- App Content -->
-<main>
+<main bind:this={mainContent} on:scroll={() => mainContentScrollY = mainContent.scrollTop}>
 	{#if dataLoaded}
 		<slot />
+		<div id="scrollButton" class:hide={mainContentScrollY > mainContent.scrollHeight - window.innerHeight} on:click={() => mainContent.scrollTo({ top: mainContent.scrollHeight, behavior: 'smooth' })}>
+			<i class="icofont-arrow-down" />
+		</div>
 	{:else}
 		<div id="loadingModal">
 			{#if loadingData}
@@ -193,6 +198,17 @@
 		margin-top: var(--navbar-height);
 		padding: 2em;
 		overflow: hidden auto;
+	}
+
+	#scrollButton {
+		position: fixed;
+		inset: auto 2em calc(1.5em + 50px) auto;
+		display: flex;
+		padding: 1em;
+		background: var(--light-purple);
+		border-radius: 50%;
+		cursor: pointer;
+		z-index: 1;
 	}
 
 	#loadingModal {
