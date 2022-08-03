@@ -142,7 +142,7 @@
 <main bind:this={mainContent} on:scroll={() => mainContentScrollY = mainContent.scrollTop}>
 	{#if dataLoaded}
 		<slot />
-		<div id="scrollButton" class:hide={mainContentScrollY > mainContent.scrollHeight - window.innerHeight} on:click={() => mainContent.scrollTo({ top: mainContent.scrollHeight, behavior: 'smooth' })}>
+		<div id="scrollButton" class:hide={mainContentScrollY >= mainContent.scrollHeight - window.innerHeight} on:click={() => mainContent.scrollTo({ top: mainContent.scrollHeight, behavior: 'smooth' })}>
 			<i class="icofont-arrow-down" />
 		</div>
 	{:else}

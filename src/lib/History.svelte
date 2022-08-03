@@ -25,6 +25,11 @@
 	$: deposits = getDeposits(chainData, depositFilter, $startTimestamp, $endTimestamp);
 	$: delegations = getDelegations(chainData, $startTimestamp, $endTimestamp);
 
+	// Draw Totals:
+	$: claimable = winners.reduce((a, b) => a + (b.claimable.reduce((a, b) => a + b, 0)), 0);
+	$: dropped = winners.reduce((a, b) => a + (b.dropped.reduce((a, b) => a + b, 0)), 0);
+	$: winning = winners.filter(wallet => wallet.claimable.length > 0).length;
+
 	// Function to select appropriate chain data:
 	const selectChainData = (chain: Chain) => {
 		if(chain === 'eth') {
@@ -94,6 +99,8 @@
 
 <!-- History -->
 <div class="history">
+
+	<!-- Header -->
 	<div class="header">
 		<h2>{chainName} History</h2>
 		{#if tabSelected === 'winners'}
@@ -105,6 +112,16 @@
 					{/each}
 				</select>
 			</div>
+			<i class="icofont-list" />
+			<div id="drawTotals">
+				<div class="wrapper">
+					<h3>{chainName}</h3>
+					<h3>Draw Totals</h3>
+					<span>Claimable: ${claimable.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+					<span>Dropped: ${dropped.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+					<span>Winners: {winning.toLocaleString(undefined)}</span>
+				</div>
+			</div>
 		{:else if tabSelected === 'deposits'}
 			<div id="depositFilter">
 				<span>Filter:</span>
@@ -113,12 +130,18 @@
 			</div>
 		{/if}
 	</div>
+
+	<!-- Tab Selection -->
 	<div class="tabs">
 		<span class:selected={tabSelected === 'winners'} on:click={() => { tabSelected = 'winners'; listLength = pageSize; }}>Winners</span>
 		<span class:selected={tabSelected === 'deposits'} on:click={() => { tabSelected = 'deposits'; listLength = pageSize; }}>Deposits</span>
 		<span class:selected={tabSelected === 'delegations'} on:click={() => { tabSelected = 'delegations'; listLength = pageSize; }}>Delegations</span>
 	</div>
+
+	<!-- Content -->
 	<div class="content">
+
+		<!-- Winners Tab -->
 		{#if tabSelected === 'winners'}
 			{#if winners.length === 0}
 				<img id="sleepingPooly" src="/images/sleeping.png" alt="Sleeping Pooly">
@@ -138,6 +161,8 @@
 					<span class="loadMore" on:click={() => listLength += pageSize}><i class="icofont-arrow-down" /> Load More <i class="icofont-arrow-down" /></span>
 				{/if}
 			{/if}
+
+		<!-- Deposits Tab -->
 		{:else if tabSelected === 'deposits'}
 			{#if deposits.length === 0}
 				<img id="sleepingPooly" src="/images/sleeping.png" alt="Sleeping Pooly">
@@ -157,6 +182,8 @@
 					<span class="loadMore" on:click={() => listLength += pageSize}><i class="icofont-arrow-down" /> Load More <i class="icofont-arrow-down" /></span>
 				{/if}
 			{/if}
+
+		<!-- Delegations Tab -->
 		{:else if tabSelected === 'delegations'}
 			{#if delegations.length === 0}
 				<img id="sleepingPooly" src="/images/sleeping.png" alt="Sleeping Pooly">
@@ -198,9 +225,11 @@
 	}
 
 	div.header {
+		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		gap: 1em;
 		padding: 0 2em;
 	}
 
@@ -220,6 +249,10 @@
 		user-select: none;
 	}
 
+	div.tabs > span:not(.selected):hover {
+		background: hsla(170, 86%, 57%, 0.1);
+	}
+
 	div.tabs > span.selected {
 		color: var(--dark-purple);
 		background: var(--accent-color);
@@ -235,7 +268,9 @@
 
 	#drawSelector {
 		display: flex;
+		justify-content: end;
 		align-items: center;
+		flex: 1;
 		gap: .5em;
 	}
 
@@ -248,9 +283,44 @@
 		border-radius: .5em;
 	}
 
+	#drawSelector > select:focus {
+		outline: none;
+	}
+
 	#drawSelector > select > option {
 		padding-right: .5em;
 		background: var(--primary-color);
+	}
+
+	#drawTotals {
+		position: absolute;
+		inset: 1.3em 1em auto auto;
+		display: none;
+	}
+
+	#drawTotals:hover {
+		display: flex;
+	}
+
+	#drawTotals > div.wrapper {
+		display: flex;
+		flex-direction: column;
+		margin-top: 1em;
+		padding: 1em;
+		background: var(--light-purple);
+		border: 2px solid var(--accent-color);
+		border-radius: .5em;
+		box-shadow: 0 0 20px 5px var(--dark-purple) inset;
+	}
+
+	#drawTotals span:first-of-type {
+		margin-top: .5em;
+		padding-top: .5em;
+		border-top: 2px solid currentColor;
+	}
+
+	div.header i.icofont-list:hover + #drawTotals {
+		display: flex;
 	}
 
 	#depositFilter {
