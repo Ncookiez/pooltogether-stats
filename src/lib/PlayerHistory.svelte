@@ -49,7 +49,7 @@
 
 	<!-- Header -->
 	<div class="header">
-		<h2>{wallet.slice(0,6)}…{wallet.slice(-4)} Player History</h2>
+		<h2 title="{wallet}">{wallet.slice(0,6)}…{wallet.slice(-4)} Player History</h2>
 	</div>
 
 	<!-- Content -->
@@ -66,7 +66,7 @@
 
 					<!-- Deposit -->
 					{#if tx.type === 'deposit'}
-						<span class="deposit">Deposited {tx.data.amount < 1 ? '<$1' : `$${tx.data.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
+						<span class="deposit">Deposited {tx.data.amount < 0.9 ? '<$1' : `$${tx.data.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
 
 					<!-- Claim -->
 					{:else if tx.type === 'claim'}
@@ -74,7 +74,7 @@
 
 					<!-- Withdrawal -->
 					{:else if tx.type === 'withdrawal'}
-						<span class="withdrawal">Withdrew {tx.data.amount < 1 ? '<$1' : `$${tx.data.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
+						<span class="withdrawal">Withdrew {tx.data.amount < 0.9 ? '<$1' : `$${tx.data.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
 
 					<!-- Delegation Created -->
 					{:else if tx.type === 'delegationCreated'}
@@ -86,7 +86,7 @@
 
 					<!-- Delegation Funded -->
 					{:else if tx.type === 'delegationFunded'}
-						<span class="delegationFunded">Funded a delegation with {tx.data.amount < 1 ? '<$1' : `$${tx.data.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
+						<span class="delegationFunded">Funded a delegation with {tx.data.amount < 0.9 ? '<$1' : `$${tx.data.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
 
 					<!-- Delegation Updated -->
 					{:else if tx.type === 'delegationUpdated'}
@@ -98,7 +98,7 @@
 
 					<!-- Delegation Withdrawn -->
 					{:else if tx.type === 'delegationWithdrawn'}
-						<span class="delegationWithdrawn">Withdrew {tx.data.amount < 1 ? '<$1' : `$${tx.data.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`} from a delegation</span>
+						<span class="delegationWithdrawn">Withdrew {tx.data.amount < 0.9 ? '<$1' : `$${tx.data.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`} from a delegation</span>
 					{/if}
 
 					{#if tx.data.timestamp}
@@ -136,7 +136,7 @@
 		align-items: center;
 		justify-content: space-between;
 		gap: 1em;
-		padding: 0 2em;
+		padding: 0 2em 1em;
 	}
 
 	div.content {
@@ -144,6 +144,7 @@
 		flex-direction: column;
 		gap: 1em;
 		padding: 1em 2em;
+		border-top: 2px solid var(--accent-color);
 		overflow: hidden auto;
 	}
 
@@ -159,6 +160,10 @@
 		padding: .2em .5em;
 		background: var(--primary-color);
 		border-radius: .5em;
+	}
+
+	span.listItem:hover {
+		background-color: #4d249f90;
 	}
 
 	span.listItem > img {

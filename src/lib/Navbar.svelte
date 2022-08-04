@@ -129,7 +129,7 @@
 	{/if}
 
 	<!-- Player Search -->
-	<div class="playerSearch" on:click={() => searchModalOpen = true}>
+	<div class="playerSearch" on:click={() => searchModalOpen = !searchModalOpen}>
 		<span>Search</span>
 		<i class="icofont-ui-search" />
 	</div>
@@ -138,8 +138,11 @@
 	{#if searchModalOpen}
 		<div class="cover" on:click={() => searchModalOpen = false} />
 		<div class="playerSearchModal">
-			<input type="text" placeholder="0x..." bind:value={searchWallet}>
-			<i class="icofont-arrow-right" on:click={() => search()} />
+			<span>Enter a wallet to search for:</span>
+			<form on:submit|preventDefault={() => search()}>
+				<input type="text" bind:value={searchWallet} placeholder="0x...">
+				<button type="submit"><i class="icofont-arrow-right" /></button>
+			</form>
 		</div>
 	{/if}
 
@@ -249,6 +252,61 @@
 
 	div.timestamps > span:hover {
 		background-color: var(--accent-color);
+	}
+
+	div.playerSearch {
+		gap: .3em;
+		height: 2rem;
+		margin-left: 2em;
+		padding: 0 .5em;
+		font-size: .9em;
+		background: var(--light-purple);
+		border-radius: .5em;
+		cursor: pointer;
+	}
+
+	div.playerSearch:hover {
+		background-color: var(--accent-color);
+	}
+
+	div.cover {
+		position: fixed;
+		inset: var(--navbar-height) 0 50px 0;
+		backdrop-filter: brightness(0.3) blur(3px);
+	}
+
+	div.playerSearchModal {
+		position: fixed;
+		inset: calc(var(--navbar-height) + 2em) 2em auto auto;
+		flex-direction: column;
+		gap: .7em;
+		padding: 1em;
+		background: var(--dark-purple);
+		border: 2px solid var(--light-purple);
+		border-radius: .5em;
+	}
+
+	div.playerSearchModal form {
+		display: flex;
+	}
+
+	div.playerSearchModal input {
+		padding: .2em .5em;
+		background: transparent;
+		border: 2px solid var(--accent-color);
+		border-radius: .5em 0 0 .5em;
+	}
+	
+	div.playerSearchModal input:focus {
+		outline: none;
+	}
+
+	div.playerSearchModal button {
+		padding: 0 .5em;
+		color: var(--dark-purple);
+		background: var(--accent-color);
+		border: none;
+		border-radius: 0 .5em .5em 0;
 	}
 	
 </style>

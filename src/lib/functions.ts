@@ -649,18 +649,15 @@ export const getWinlessWithdrawals = (wallets: Record<Hash, WalletData>) => {
   // Filtering Wallets:
   for(let stringWallet in wallets) {
     const wallet = stringWallet as Hash;
-    if(wallets[wallet].currentBalance > 0) {
-      delete wallets[wallet];
-    } else {
-      const claimTXs = wallets[wallet].txs.filter(tx => tx.type === 'claim');
-      if(claimTXs.length > 0) {
-        delete wallets[wallet];
-      } else {
+    const walletData = wallets[wallet];
+    if(walletData.currentBalance === 0) {
+      const claimTXs = walletData.txs.filter(tx => tx.type === 'claim');
+      if(claimTXs.length === 0) {
         let virtualBalance = 0;
         let maxVirtualBalance = 0;
         let firstDepositTimestamp = 0;
         let lastWithdrawalTimestamp = 0;
-        wallets[wallet].txs.forEach(tx => {
+        walletData.txs.forEach(tx => {
           if(tx.type === 'deposit') {
             virtualBalance += tx.data.amount;
             if(virtualBalance > maxVirtualBalance) {
@@ -676,9 +673,7 @@ export const getWinlessWithdrawals = (wallets: Record<Hash, WalletData>) => {
             }
           }
         });
-        if(virtualBalance > 0 || firstDepositTimestamp === 0 || lastWithdrawalTimestamp === 0) {
-          delete wallets[wallet];
-        } else {
+        if(virtualBalance <= 0 && firstDepositTimestamp > 0 && lastWithdrawalTimestamp > 0) {
           winlessWithdrawals.push({ wallet, maxBalance: maxVirtualBalance, firstDepositTimestamp, lastWithdrawalTimestamp });
         }
       }

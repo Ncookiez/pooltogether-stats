@@ -30,17 +30,20 @@
 	<meta name="description" content="An app for exploring all there is to see about PoolTogether statistics. Check out some individual wallet stats!" />
 </svelte:head>
 
-<!-- Player Header -->
-<h1>Player Stats: {wallet}</h1>
+{#if wallet}
 
-{#if wallet && playerData}
+	<!-- Player Header -->
+	<h1>Player Stats: <span title="{wallet}">{wallet.slice(0, 6)}…{wallet.slice(-4)}</span></h1>
 
-	<!-- Charts & Highlights -->
-	<PlayerCharts {wallet} {playerData} />
+	{#if playerData}
 
-	<!-- Player Event History -->
-	<PlayerHistory {wallet} {playerData} />
+		<!-- Charts & Highlights -->
+		<PlayerCharts {wallet} {playerData} />
 
+		<!-- Player Event History -->
+		<PlayerHistory {wallet} {playerData} />
+
+	{/if}
 {/if}
 
 <!-- #################################################################################################### -->

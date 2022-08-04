@@ -174,7 +174,7 @@
 					<span class="deposit listItem" class:highlightItem={deposit.amount >= 10000}>
 						<span class="wallet" title="{deposit.wallet}">{deposit.wallet.slice(0, 6)}…{deposit.wallet.slice(-4)}</span>
 						<i class="icofont-arrow-right" />
-						<span class="amount">Deposited {deposit.amount < 1 ? '<$1' : `$${deposit.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
+						<span class="amount">Deposited {deposit.amount < 0.9 ? '<$1' : `$${deposit.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
 						{#if deposit.timestamp}
 							<span class="time">({getTimeDisplay(deposit.timestamp)})</span>
 						{/if}
@@ -195,7 +195,7 @@
 					<span class="delegation listItem" class:highlightItem={delegation.amount >= 10000}>
 						<span class="wallet" title="{delegation.delegator}">{delegation.delegator.slice(0, 6)}…{delegation.delegator.slice(-4)}</span>
 						<i class="icofont-arrow-right" />
-						<span class="amount">Delegated {delegation.amount < 1 ? '<$1' : `$${delegation.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
+						<span class="amount">Delegated {delegation.amount < 0.9 ? '<$1' : `$${delegation.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
 						{#if delegation.timestamp}
 							<span class="time">({getTimeDisplay(delegation.timestamp)})</span>
 						{/if}
@@ -363,6 +363,10 @@
 		padding: .2em .5em;
 		background: var(--primary-color);
 		border-radius: .5em;
+	}
+
+	span.listItem:hover {
+		background-color: #4d249f90;
 	}
 
 	span.highlightItem {
