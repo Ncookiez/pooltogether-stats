@@ -167,30 +167,37 @@ export interface Line {
 
 // Transaction Interfaces:
 export interface DepositTX {
+  chain?: Chain
   type: 'deposit'
   data: DepositData
 }
 export interface WithdrawalTX {
+  chain?: Chain
   type: 'withdrawal'
   data: WithdrawalData
 }
 export interface ClaimTX {
+  chain?: Chain
   type: 'claim'
   data: ClaimData
 }
 export interface DelegationCreatedTX {
+  chain?: Chain
   type: 'delegationCreated'
   data: DelegationCreatedData
 }
 export interface DelegationFundedTX {
+  chain?: Chain
   type: 'delegationFunded'
   data: DelegationFundedData
 }
 export interface DelegationUpdatedTX {
+  chain?: Chain
   type: 'delegationUpdated'
   data: DelegationUpdatedData
 }
 export interface DelegationWithdrawnTX {
+  chain?: Chain
   type: 'delegationWithdrawn'
   data: DelegationWithdrawnData
 }
@@ -325,4 +332,17 @@ export interface MovingUsers {
   movedToPOLY: { amount: number, users: number }
   movedToAVAX: { amount: number, users: number }
   movedToOP: { amount: number, users: number }
+}
+
+/* ========================================================================================================================================================================= */
+
+// Player Data Interface:
+export interface PlayerData {
+  txs: TX[]
+  timestamps: number[]
+  depositsOverTime: number[]
+  claimsOverTime: number[]
+  withdrawalsOverTime: number[]
+  balancesOverTime: number[]
+  balances: { eth: number, poly: number, avax: number, op: number }
 }

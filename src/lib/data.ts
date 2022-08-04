@@ -1,4 +1,7 @@
 
+// Imports:
+import { utils } from 'ethers';
+
 // Type Imports:
 import type { Chain, Hash, ChainData, DepositData, WithdrawalData, ClaimData, DelegationCreatedData, DelegationFundedData, DelegationUpdatedData, DelegationWithdrawnData, YieldData, SupplyData, BalanceData, DrawData, ExplorerAPIDrawResponse } from '$lib/types';
 
@@ -312,7 +315,7 @@ export const fetchDraws = async () => {
           chain = 'op';
         }
         if(chain) {
-          const wallet = walletEntry.a;
+          const wallet = utils.getAddress(walletEntry.a) as Hash;
           const claimable = walletEntry.c.map(prize => parseInt(prize));
           const dropped = walletEntry.u.map(prize => parseInt(prize));
           const avgBalance = walletEntry.g;

@@ -1,6 +1,6 @@
 {
 	"name": "pooltogether-stats",
-	"version": "2.6.6",
+	"version": "2.7.0",
 	"type": "module",
 	"private": true,
 	"scripts": {
@@ -26,6 +26,7 @@
 	},
 	"dependencies": {
 		"chart.js": "^3.8.0",
-		"chartjs-plugin-datalabels": "^2.0.0"
+		"chartjs-plugin-datalabels": "^2.0.0",
+		"ethers": "^5.6.9"
 	}
 }

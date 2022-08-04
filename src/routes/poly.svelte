@@ -2,7 +2,7 @@
 
 	// Imports:
 	import { getChainName } from '$lib/functions';
-	import History from '$lib/History.svelte';
+	import ChainHistory from '$lib/ChainHistory.svelte';
 	import ChainCharts from '$lib/ChainCharts.svelte';
 
 	// Type Imports:
@@ -26,7 +26,7 @@
 <ChainCharts {chain} />
 
 <!-- Chain Event History -->
-<History {chain} />
+<ChainHistory {chain} />
 
 <!-- #################################################################################################### -->
 

@@ -235,12 +235,6 @@
 
 <!-- #################################################################################################### -->
 
-<!-- SvelteKit Dynamic Header -->
-<svelte:head>
-	<title>Pool Explorer | {chainName}</title>
-	<meta name="description" content="An app for exploring all there is to see about PoolTogether statistics. Check out some {chainName}-specific stats!" />
-</svelte:head>
-
 <!-- Charts & Highlights -->
 <LineChart {...tvlChart} />
 <Highlight hide={$endTimestamp !== defaultMaxTimestamp}>

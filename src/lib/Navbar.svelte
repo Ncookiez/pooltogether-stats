@@ -2,6 +2,7 @@
 
 	// Imports:
 	import { page } from "$app/stores";
+	import { goto } from '$app/navigation';
 	import { getChainName, timestampToISO } from "$lib/functions";
 	import { ethData, polyData, avaxData, opData, startTimestamp, endTimestamp } from '$lib/stores';
 
@@ -17,9 +18,11 @@
 	let timestampsSet = false;
 	let minDateValue: string | undefined;
 	let maxDateValue: string | undefined;
+	let searchModalOpen = false;
+	let searchWallet = '';
 
 	// Reactive Chain Selection:
-	$: selectedChain = $page.routeId !== '' ? $page.routeId as Chain : undefined;
+	$: selectedChain = !$page.routeId || $page.routeId === '[wallet=address]' ? undefined : $page.routeId as Chain;
 
 	// Reactive Timestamps:
 	$: updateMinMaxTimestamps($ethData, $polyData, $avaxData, $opData);
@@ -85,6 +88,15 @@
 			endTimestamp.set(defaultMaxTimestamp);
 		}
 	}
+
+	// Function to search for given wallet:
+	const search = () => {
+		if(searchWallet.startsWith('0x') && searchWallet.length === 42) {
+			goto(`/${searchWallet}`);
+			searchWallet = '';
+			searchModalOpen = false;
+		}
+	}
 	
 </script>
 
@@ -100,7 +112,7 @@
 
 	<!-- Pages -->
 	<div class="pages">
-		<a class="dashboard" class:selected={!selectedChain} href="/">Dashboard</a>
+		<a class="dashboard" class:selected={!$page.routeId} href="/">Dashboard</a>
 		{#each chains as chain}
 			<a class="{chain}" class:selected={selectedChain === chain} href="/{chain}"><img src="/images/{chain}.svg" alt="{chain.toUpperCase()}">{getChainName(chain)}</a>
 		{/each}
@@ -116,8 +128,20 @@
 		</div>
 	{/if}
 
-	<!-- Wallet Search -->
-	<!-- TODO - search for specific wallet and see all events -->
+	<!-- Player Search -->
+	<div class="playerSearch" on:click={() => searchModalOpen = true}>
+		<span>Search</span>
+		<i class="icofont-ui-search" />
+	</div>
+
+	<!-- Player Search Modal -->
+	{#if searchModalOpen}
+		<div class="cover" on:click={() => searchModalOpen = false} />
+		<div class="playerSearchModal">
+			<input type="text" placeholder="0x..." bind:value={searchWallet}>
+			<i class="icofont-arrow-right" on:click={() => search()} />
+		</div>
+	{/if}
 
 </nav>
 

@@ -25,10 +25,11 @@
 	$: deposits = getDeposits(chainData, depositFilter, $startTimestamp, $endTimestamp);
 	$: delegations = getDelegations(chainData, $startTimestamp, $endTimestamp);
 
-	// Draw Totals:
+	// Draw Info:
 	$: claimable = winners.reduce((a, b) => a + (b.claimable.reduce((a, b) => a + b, 0)), 0);
 	$: dropped = winners.reduce((a, b) => a + (b.dropped.reduce((a, b) => a + b, 0)), 0);
 	$: winning = winners.filter(wallet => wallet.claimable.length > 0).length;
+	$: when = getTimeDisplay(draws[selectedDraw].timestamp, true);
 
 	// Function to select appropriate chain data:
 	const selectChainData = (chain: Chain) => {
@@ -65,7 +66,7 @@
 	}
 
 	// Function to get 'time ago' string:
-	const getTimeDisplay = (timestamp: number) => {
+	const getTimeDisplay = (timestamp: number, shorten?: boolean) => {
 		const secondsSinceEvent = now - timestamp;
 		if(secondsSinceEvent > 0) {
 			if(secondsSinceEvent < dayInSeconds) {
@@ -83,9 +84,9 @@
 				const date = new Date(timestamp * 1000);
 				const currentYear = (new Date(now * 1000)).getFullYear();
 				if(currentYear === date.getFullYear()) {
-					return 'on ' + date.toLocaleString(undefined, {month: 'short', day: 'numeric'});
+					return (shorten ? '' : 'on ') + date.toLocaleString(undefined, {month: 'short', day: 'numeric'});
 				} else {
-					return 'on ' + date.toLocaleString(undefined, {month: 'short', day: 'numeric', year: 'numeric'});
+					return (shorten ? '' : 'on ') + date.toLocaleString(undefined, {month: 'short', day: 'numeric', year: 'numeric'});
 				}
 			}
 		} else {
@@ -113,13 +114,14 @@
 				</select>
 			</div>
 			<i class="icofont-list" />
-			<div id="drawTotals">
+			<div id="drawInfo">
 				<div class="wrapper">
 					<h3>{chainName}</h3>
-					<h3>Draw Totals</h3>
+					<h3>Draw Info</h3>
 					<span>Claimable: ${claimable.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
 					<span>Dropped: ${dropped.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
 					<span>Winners: {winning.toLocaleString(undefined)}</span>
+					<span>When: {when}</span>
 				</div>
 			</div>
 		{:else if tabSelected === 'deposits'}
@@ -292,17 +294,17 @@
 		background: var(--primary-color);
 	}
 
-	#drawTotals {
+	#drawInfo {
 		position: absolute;
 		inset: 1.3em 1em auto auto;
 		display: none;
 	}
 
-	#drawTotals:hover {
+	#drawInfo:hover {
 		display: flex;
 	}
 
-	#drawTotals > div.wrapper {
+	#drawInfo > div.wrapper {
 		display: flex;
 		flex-direction: column;
 		margin-top: 1em;
@@ -313,13 +315,13 @@
 		box-shadow: 0 0 20px 5px var(--dark-purple) inset;
 	}
 
-	#drawTotals span:first-of-type {
+	#drawInfo span:first-of-type {
 		margin-top: .5em;
 		padding-top: .5em;
 		border-top: 2px solid currentColor;
 	}
 
-	div.header i.icofont-list:hover + #drawTotals {
+	div.header i.icofont-list:hover + #drawInfo {
 		display: flex;
 	}
 
