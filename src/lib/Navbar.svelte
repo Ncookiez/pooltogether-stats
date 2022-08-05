@@ -129,7 +129,7 @@
 	{/if}
 
 	<!-- Player Search -->
-	<div class="playerSearch" on:click={() => searchModalOpen = !searchModalOpen}>
+	<div class="playerSearch" on:click={() => searchModalOpen = !searchModalOpen} style="{!timestampsSet ? 'margin-left: auto' : ''}">
 		<span>Search</span>
 		<i class="icofont-ui-search" />
 	</div>

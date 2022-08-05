@@ -86,6 +86,23 @@ export const timestampToISO = (timestamp: number) => {
 
 /* ====================================================================================================================================================== */
 
+// Function to get block explorer links:
+export const getBlockExplorerLink = (chain: Chain, hash: Hash) => {
+  let link = '';
+  if(chain === 'eth') {
+    link = hash.length === 42 ? `https://etherscan.io/address/${hash}` : `https://etherscan.io/tx/${hash}`;
+  } else if(chain === 'poly') {
+    link = hash.length === 42 ? `https://polygonscan.com/address/${hash}` : `https://polygonscan.com/tx/${hash}`;
+  } else if(chain === 'avax') {
+    link = hash.length === 42 ? `https://snowtrace.io/address/${hash}` : `https://snowtrace.io/tx/${hash}`;
+  } else if(chain === 'op') {
+    link = hash.length === 42 ? `https://optimistic.etherscan.io/address/${hash}` : `https://optimistic.etherscan.io/tx/${hash}`;
+  }
+  return link;
+}
+
+/* ====================================================================================================================================================== */
+
 // Function to get wallet-specific data:
 export const getWalletData = (chainData: ChainData, timeFilters?: { start: number, end: number }) => {
 

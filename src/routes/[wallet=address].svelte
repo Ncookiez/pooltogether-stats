@@ -33,7 +33,7 @@
 {#if wallet}
 
 	<!-- Player Header -->
-	<h1>Player Stats: <span title="{wallet}">{wallet.slice(0, 6)}…{wallet.slice(-4)}</span></h1>
+	<h1>Player Stats: <span title="{wallet}">{wallet.slice(0, 6)}…{wallet.slice(-4)}</span> <i class="icofont-copy-invert" on:click={() => navigator.clipboard.writeText(wallet ?? '')} /></h1>
 
 	{#if playerData}
 
@@ -51,9 +51,22 @@
 <style>
 
 	h1 {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: .5em;
 		width: 81rem;
 		margin: .5em 0;
 		text-align: center;
+	}
+
+	i {
+		font-size: .7em;
+		cursor: pointer;
+	}
+
+	i:hover {
+		color: var(--light-purple);
 	}
 	
 </style>

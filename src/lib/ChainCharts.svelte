@@ -264,7 +264,7 @@
 <LineChart {...cumulativeWithdrawalCountsChart} />
 <LineChart {...withdrawalAmountsChart} />
 <LineChart {...withdrawalCountsChart} />
-<Highlight>
+<Highlight hide={$endTimestamp !== defaultMaxTimestamp}>
 	<span>There are <span class="highlight">{winlessWithdrawals.length.toLocaleString(undefined)} wallets</span> that have withdrawn without claiming a prize.</span>
 	{#if winlessWithdrawals.length > 0}
 		<span>They remained deposited for <span class="highlight">{winlessWithdrawalsAverageDays} days</span> on average.</span>
