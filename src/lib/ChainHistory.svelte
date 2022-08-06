@@ -1,7 +1,7 @@
 <script lang="ts">
 
 	// Imports:
-	import { getChainName } from '$lib/functions';
+	import { getChainName, getBlockExplorerLink } from '$lib/functions';
 	import { ethData, polyData, avaxData, opData, startTimestamp, endTimestamp } from '$lib/stores';
 
 	// Type Imports:
@@ -178,6 +178,7 @@
 						{#if deposit.timestamp}
 							<span class="time">({getTimeDisplay(deposit.timestamp)})</span>
 						{/if}
+						<a class="blockExplorerLink" href="{getBlockExplorerLink(chain, deposit.txHash)}" target="__blank"><i class="icofont-external-link" /></a>
 					</span>
 				{/each}
 				{#if deposits.length > listLength}
@@ -199,6 +200,7 @@
 						{#if delegation.timestamp}
 							<span class="time">({getTimeDisplay(delegation.timestamp)})</span>
 						{/if}
+						<a class="blockExplorerLink" href="{getBlockExplorerLink(chain, delegation.txHash)}" target="__blank"><i class="icofont-external-link" /></a>
 					</span>
 				{/each}
 				{#if delegations.length > listLength}
@@ -367,6 +369,12 @@
 
 	span.listItem:hover {
 		background-color: #4d249f90;
+	}
+
+	span.listItem > a.blockExplorerLink {
+		margin-left: auto;
+		color: inherit;
+		text-decoration: none;
 	}
 
 	span.highlightItem {

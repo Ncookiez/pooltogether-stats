@@ -1,5 +1,8 @@
 <script lang="ts">
 
+	// Imports:
+	import { getBlockExplorerLink } from './functions';
+
 	// Type Imports:
 	import type { Hash, PlayerData } from '$lib/types';
 
@@ -104,6 +107,7 @@
 					{#if tx.data.timestamp}
 						<span class="time">({getTimeDisplay(tx.data.timestamp)})</span>
 					{/if}
+					<a class="blockExplorerLink" href="{getBlockExplorerLink(tx.chain, tx.data.txHash)}" target="__blank"><i class="icofont-external-link" /></a>
 				</span>
 			{/each}
 			{#if playerData.txs.length > listLength}
@@ -186,6 +190,12 @@
 	span.time {
 		color: var(--light-purple);
 		font-size: .9em;
+	}
+
+	a.blockExplorerLink {
+		margin-left: auto;
+		color: inherit;
+		text-decoration: none;
 	}
 	
 </style>

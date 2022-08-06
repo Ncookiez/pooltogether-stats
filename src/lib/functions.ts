@@ -87,7 +87,7 @@ export const timestampToISO = (timestamp: number) => {
 /* ====================================================================================================================================================== */
 
 // Function to get block explorer links:
-export const getBlockExplorerLink = (chain: Chain, hash: Hash) => {
+export const getBlockExplorerLink = (chain: Chain | undefined, hash: Hash) => {
   let link = '';
   if(chain === 'eth') {
     link = hash.length === 42 ? `https://etherscan.io/address/${hash}` : `https://etherscan.io/tx/${hash}`;
