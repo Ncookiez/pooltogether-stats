@@ -27,7 +27,7 @@
 	const depositCountsChart: LineChartInfo = { name: `${chain}DepositCountsChart`, title: 'Deposits Over Time', xAxisValues: [], data: [{ label: 'Deposits', data: [] }] };
 	const avgDepositAmountsChart: LineChartInfo = { name: `${chain}AvgDepositAmountsChart`, title: 'Average Deposit Amounts Over Time', xAxisValues: [], data: [{ label: 'Average Deposit Amount', data: [] }], dollarValues: true };
 	const cumulativeUniqueWalletsChart: LineChartInfo = { name: `${chain}CumulativeUniqueWalletsChart`, title: 'Cumulative Unique Wallets Over Time', xAxisValues: [], data: [{ label: 'Wallets', data: [] }] };
-	const tvlDistributionChart: PieChartInfo = { name: `${chain}TvlDistributionsChart`, title: 'TVL Distribution By User Deposit Amount', sectionLabels: [], data: [], dollarValues: true };
+	const tvlDistributionChart: PieChartInfo = { name: `${chain}TvlDistributionsChart`, title: 'TVL Distribution By User Balances', sectionLabels: [], data: [], dollarValues: true };
 	const cumulativeDepositDistributionsChart: LineChartInfo = { name: `${chain}CumulativeDepositDistributionsChart`, title: 'Cumulative Deposit Amount Frequency Over Time', xAxisValues: [], data: [] };
 	const depositDistributionsChart: LineChartInfo = { name: `${chain}DepositDistributionsChart`, title: 'Deposit Amount Frequency Over Time', xAxisValues: [], data: [] };
 	const movingUsersChart: PieChartInfo = { name: `${chain}MovingUsersChart`, title: `Value Moved From Other Chains`, sectionLabels: [], data: [], hiddenPercentage: 10, dollarValues: true };
@@ -190,7 +190,6 @@
 			claimAmountsChart.xAxisValues = claimsOverTimeTimestamps;
 			claimCountsChart.xAxisValues = claimsOverTimeTimestamps;
 			avgClaimAmountsChart.xAxisValues = claimsOverTimeTimestamps;
-			tvlDistributionChart.sectionLabels = tvlDistributionChartLabels;
 			claimDistributionChart.sectionLabels = claimDistributionChartLabels;
 			delegationTvlChart.xAxisValues = delegationsOverTimeTimestamps;
 			cumulativeDelegationAmountsChart.xAxisValues = delegationsOverTimeTimestamps;

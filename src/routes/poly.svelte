@@ -2,8 +2,8 @@
 
 	// Imports:
 	import { getChainName } from '$lib/functions';
-	import ChainHistory from '$lib/ChainHistory.svelte';
 	import ChainCharts from '$lib/ChainCharts.svelte';
+	import ChainHistory from '$lib/ChainHistory.svelte';
 
 	// Type Imports:
 	import type { Chain } from '$lib/types';
