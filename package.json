@@ -1,13 +1,14 @@
 {
 	"name": "pooltogether-stats",
-	"version": "2.8.1",
+	"version": "2.8.2",
 	"type": "module",
 	"private": true,
 	"scripts": {
 		"query": "node queries.js",
 		"stats": "node stats.js",
-		"dev": "vite dev",
-		"build": "vite build",
+		"dev": "npm run build-workers && vite dev",
+		"build": "npm run build-workers && vite build",
+		"build-workers": "tsc -p ./workers",
 		"package": "svelte-kit package",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync",

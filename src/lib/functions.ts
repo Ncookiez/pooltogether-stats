@@ -1,6 +1,6 @@
 
 // Type Imports:
-import type { Chain, Hash, ChainData, AggregatedData, DepositData, WithdrawalData, BalanceData, WalletData, DepositsOverTime, WithdrawalsOverTime, ClaimsOverTime, TVLOverTime, DelegationsOverTime, YieldOverTime, WinlessWithdrawals, MultichainDistribution, TVLDistribution, MovingUsers, PlayerData } from '$lib/types';
+import type { Chain, Hash, ChainData, AggregatedData, DepositData, WithdrawalData, BalanceData, WalletData, DepositsOverTime, WithdrawalsOverTime, ClaimsOverTime, TVLOverTime, DelegationsOverTime, YieldOverTime, WinlessWithdrawals, MultichainDistribution, TVLDistribution, MovingUsers, PlayerData } from './types';
 
 // Initializations:
 const defaultMaxTimestamp = 9_999_999_999;
@@ -1001,8 +1001,8 @@ export const getAggregatedData = (ethData: ChainData, polyData: ChainData, avaxD
     yields: { data: [] },
     balances: { timestamp: 0, data: [] },
     draws: { data: [] },
-    minTimestamp: 0,
-    maxTimestamp: defaultMaxTimestamp
+    minTimestamp: ethData.minTimestamp ?? 0,
+    maxTimestamp: ethData.maxTimestamp ?? defaultMaxTimestamp
   }
   const chains: Chain[] = ['eth', 'poly', 'avax', 'op'];
 
@@ -1077,10 +1077,10 @@ export const getAggregatedData = (ethData: ChainData, polyData: ChainData, avaxD
     });
 
     // Timestamps:
-    if(chainData.minTimestamp && chainData.minTimestamp > aggregatedData.minTimestamp) {
+    if(chainData.minTimestamp && chainData.minTimestamp < aggregatedData.minTimestamp) {
       aggregatedData.minTimestamp = chainData.minTimestamp;
     }
-    if(chainData.maxTimestamp && chainData.maxTimestamp < aggregatedData.maxTimestamp) {
+    if(chainData.maxTimestamp && chainData.maxTimestamp > aggregatedData.maxTimestamp) {
       aggregatedData.maxTimestamp = chainData.maxTimestamp;
     }
   });
@@ -1130,6 +1130,6 @@ export const getTimeDisplay = (timestamp: number, shorten?: boolean) => {
       }
     }
   } else {
-    return '';
+    return '?';
   }
 }

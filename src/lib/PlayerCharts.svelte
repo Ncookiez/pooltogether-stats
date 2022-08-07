@@ -1,6 +1,7 @@
 <script lang="ts">
 
 	// Imports:
+	import { onMount } from 'svelte';
 	import { timestampsToDates } from '$lib/functions';
 	import PieChart from '$lib/PieChart.svelte';
 	import LineChart from '$lib/LineChart.svelte';
@@ -20,10 +21,10 @@
 	const withdrawalsChart: LineChartInfo = { name: `${wallet}WithdrawalsChart`, title: 'Cumulative Withdrawals Over Time', xAxisValues: [], data: [{ label: 'Withdrawals', data: [] }], dollarValues: true };
 
 	// Reactive Chart Data:
-	$: setChartData(playerData);
+	$: playerData, setChartData();
 
 	// Function to set chart data:
-	const setChartData = (playerData: PlayerData) => {
+	const setChartData = () => {
 
 		// Initializing Chart Timestamps:
 		const timestamps = timestampsToDates(playerData.timestamps);
@@ -42,6 +43,10 @@
 		claimsChart.data[0].data = playerData.claimsOverTime;
 		withdrawalsChart.data[0].data = playerData.withdrawalsOverTime;
 	}
+
+	onMount(() => {
+		setChartData();
+	});
 	
 </script>
 

@@ -3,9 +3,9 @@
 	// Imports:
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
+	import { getChainName } from '$lib/functions';
 	import { ethData, polyData, avaxData, opData, aggregatedData } from '$lib/stores';
 	import { fetchDeposits, fetchWithdrawals, fetchClaims, fetchDelegationsCreated, fetchDelegationsFunded, fetchDelegationsUpdated, fetchDelegationsWithdrawn, fetchYield, fetchSupply, fetchBalances, fetchDraws } from '$lib/data';
-	import { getChainName, getTimestamps, getDepositsOverTime, getWithdrawalsOverTime, getClaimsOverTime, getTVLOverTime, getDelegationsOverTime, getYieldOverTime, getWalletData, getWinlessWithdrawals, getMovingUsers, getTVLDistribution, getAggregatedData } from '$lib/functions';
 	import Navbar from '$lib/Navbar.svelte';
 	import Footer from '$lib/Footer.svelte';
 	import '../app.css';
@@ -17,10 +17,12 @@
 	const chains: Chain[] = ['eth', 'poly', 'avax', 'op'];
 	const chainLoadingProgress: Record<Chain, number> = { eth: 0, poly: 0, avax: 0, op: 0 };
 	const maxChainLoadingProgress = 10;
-	const ticks = 50;
+	const dataWorkerPath = '/workers/dataWorker.js';
+	const dataCalculationTimeout = 120000;
 	let dataLoaded = false;
 	let loadingData = true;
 	let drawsLoaded = false;
+	let calculating = false;
 	let mainContent: HTMLElement;
 	let mainContentScrollY = 0;
 
@@ -55,69 +57,101 @@
 				chainLoadingProgress[chain]++;
 				const balances = await fetchBalances(chain);
 				chainLoadingProgress[chain]++;
-
-				// Assigning Chain-Specific Data:
-				if(chain === 'eth') {
-					ethData.set({ deposits, withdrawals, claims, delegationsCreated, delegationsFunded, delegationsUpdated, delegationsWithdrawn, yields, supply, balances, draws: draws.eth });
-					[$ethData.minTimestamp, $ethData.maxTimestamp] = getTimestamps($ethData, 1);
-					$ethData.depositsOverTime = getDepositsOverTime($ethData, ticks);
-					$ethData.withdrawalsOverTime = getWithdrawalsOverTime($ethData, ticks);
-					$ethData.claimsOverTime = getClaimsOverTime($ethData, ticks);
-					$ethData.tvlOverTime = getTVLOverTime($ethData.depositsOverTime, $ethData.withdrawalsOverTime, $ethData.claimsOverTime);
-					$ethData.delegationsOverTime = getDelegationsOverTime($ethData, ticks);
-					$ethData.yieldOverTime = getYieldOverTime($ethData, ticks);
-					$ethData.wallets = getWalletData($ethData);
-					$ethData.winlessWithdrawals = getWinlessWithdrawals($ethData.wallets);
-					$ethData.tvlDistribution = getTVLDistribution($ethData.balances.data);
-				} else if(chain === 'poly') {
-					polyData.set({ deposits, withdrawals, claims, delegationsCreated, delegationsFunded, delegationsUpdated, delegationsWithdrawn, yields, supply, balances, draws: draws.poly });
-					[$polyData.minTimestamp, $polyData.maxTimestamp] = getTimestamps($polyData, 1);
-					$polyData.depositsOverTime = getDepositsOverTime($polyData, ticks);
-					$polyData.withdrawalsOverTime = getWithdrawalsOverTime($polyData, ticks);
-					$polyData.claimsOverTime = getClaimsOverTime($polyData, ticks);
-					$polyData.tvlOverTime = getTVLOverTime($polyData.depositsOverTime, $polyData.withdrawalsOverTime, $polyData.claimsOverTime);
-					$polyData.delegationsOverTime = getDelegationsOverTime($polyData, ticks);
-					$polyData.yieldOverTime = getYieldOverTime($polyData, ticks);
-					$polyData.wallets = getWalletData($polyData);
-					$polyData.winlessWithdrawals = getWinlessWithdrawals($polyData.wallets);
-					$polyData.tvlDistribution = getTVLDistribution($polyData.balances.data);
-				} else if(chain === 'avax') {
-					avaxData.set({ deposits, withdrawals, claims, delegationsCreated, delegationsFunded, delegationsUpdated, delegationsWithdrawn, yields, supply, balances, draws: draws.avax });
-					[$avaxData.minTimestamp, $avaxData.maxTimestamp] = getTimestamps($avaxData, 1);
-					$avaxData.depositsOverTime = getDepositsOverTime($avaxData, ticks);
-					$avaxData.withdrawalsOverTime = getWithdrawalsOverTime($avaxData, ticks);
-					$avaxData.claimsOverTime = getClaimsOverTime($avaxData, ticks);
-					$avaxData.tvlOverTime = getTVLOverTime($avaxData.depositsOverTime, $avaxData.withdrawalsOverTime, $avaxData.claimsOverTime);
-					$avaxData.delegationsOverTime = getDelegationsOverTime($avaxData, ticks);
-					$avaxData.yieldOverTime = getYieldOverTime($avaxData, ticks);
-					$avaxData.wallets = getWalletData($avaxData);
-					$avaxData.winlessWithdrawals = getWinlessWithdrawals($avaxData.wallets);
-					$avaxData.tvlDistribution = getTVLDistribution($avaxData.balances.data);
-				} else if(chain === 'op') {
-					opData.set({ deposits, withdrawals, claims, delegationsCreated, delegationsFunded, delegationsUpdated, delegationsWithdrawn, yields, supply, balances, draws: draws.op });
-					[$opData.minTimestamp, $opData.maxTimestamp] = getTimestamps($opData, 1);
-					$opData.depositsOverTime = getDepositsOverTime($opData, ticks);
-					$opData.withdrawalsOverTime = getWithdrawalsOverTime($opData, ticks);
-					$opData.claimsOverTime = getClaimsOverTime($opData, ticks);
-					$opData.tvlOverTime = getTVLOverTime($opData.depositsOverTime, $opData.withdrawalsOverTime, $opData.claimsOverTime);
-					$opData.delegationsOverTime = getDelegationsOverTime($opData, ticks);
-					$opData.yieldOverTime = getYieldOverTime($opData, ticks);
-					$opData.wallets = getWalletData($opData);
-					$opData.winlessWithdrawals = getWinlessWithdrawals($opData.wallets);
-					$opData.tvlDistribution = getTVLDistribution($opData.balances.data);
+				if((chainLoadingProgress.eth + chainLoadingProgress.poly + chainLoadingProgress.avax + chainLoadingProgress.op) >= (chains.length * maxChainLoadingProgress)) {
+					calculating = true;
 				}
-				
+
+				// Assigning Chain-Specific Data Through Workers:
+				await new Promise<void>((resolve, reject) => {
+					const timeout = setTimeout(() => { reject('Calculating data timed out.'); }, dataCalculationTimeout);
+					const dataWorker = new Worker(dataWorkerPath);
+					if(chain === 'eth') {
+						ethData.set({ deposits, withdrawals, claims, delegationsCreated, delegationsFunded, delegationsUpdated, delegationsWithdrawn, yields, supply, balances, draws: draws.eth });
+						dataWorker.postMessage([$ethData]);
+						dataWorker.onmessage = (event) => {
+							clearTimeout(timeout);
+							ethData.set(event.data);
+							resolve();
+						}
+					} else if(chain === 'poly') {
+						polyData.set({ deposits, withdrawals, claims, delegationsCreated, delegationsFunded, delegationsUpdated, delegationsWithdrawn, yields, supply, balances, draws: draws.poly });
+						dataWorker.postMessage([$polyData]);
+						dataWorker.onmessage = (event) => {
+							clearTimeout(timeout);
+							polyData.set(event.data);
+							resolve();
+						}
+					} else if(chain === 'avax') {
+						avaxData.set({ deposits, withdrawals, claims, delegationsCreated, delegationsFunded, delegationsUpdated, delegationsWithdrawn, yields, supply, balances, draws: draws.avax });
+						dataWorker.postMessage([$avaxData]);
+						dataWorker.onmessage = (event) => {
+							clearTimeout(timeout);
+							avaxData.set(event.data);
+							resolve();
+						}
+					} else if(chain === 'op') {
+						opData.set({ deposits, withdrawals, claims, delegationsCreated, delegationsFunded, delegationsUpdated, delegationsWithdrawn, yields, supply, balances, draws: draws.op });
+						dataWorker.postMessage([$opData]);
+						dataWorker.onmessage = (event) => {
+							clearTimeout(timeout);
+							opData.set(event.data);
+							resolve();
+						}
+					}
+				});
 			})());
 			await Promise.all(promises);
 
-			// Assigning Extra Multi-Chain Data:
-			$ethData.movingUsers = getMovingUsers($ethData.withdrawals.data, $ethData.deposits.data, $polyData.deposits.data, $avaxData.deposits.data, $opData.deposits.data);
-			$polyData.movingUsers = getMovingUsers($polyData.withdrawals.data, $ethData.deposits.data, $polyData.deposits.data, $avaxData.deposits.data, $opData.deposits.data);
-			$avaxData.movingUsers = getMovingUsers($avaxData.withdrawals.data, $ethData.deposits.data, $polyData.deposits.data, $avaxData.deposits.data, $opData.deposits.data);
-			$opData.movingUsers = getMovingUsers($opData.withdrawals.data, $ethData.deposits.data, $polyData.deposits.data, $avaxData.deposits.data, $opData.deposits.data);
+			// Assigning Aggregated Data Through Workers:
+			await new Promise<void>((resolve, reject) => {
+				const timeout = setTimeout(() => { reject('Calculating aggregated data timed out.'); }, dataCalculationTimeout);
+				const dataWorker = new Worker(dataWorkerPath);
+				dataWorker.postMessage([$ethData, $polyData, $avaxData, $opData]);
+				dataWorker.onmessage = (event) => {
+					clearTimeout(timeout);
+					aggregatedData.set(event.data);
+					resolve();
+				}
+			});
 
-			// Assigning Aggregated Data:
-			aggregatedData.set(getAggregatedData($ethData, $polyData, $avaxData, $opData));
+			// Assigning Moving Users Data Through Workers:
+			let movingUsersPromises = chains.map(chain => (async () => {
+				await new Promise<void>((resolve, reject) => {
+					const timeout = setTimeout(() => { reject('Calculating moving users data timed out.'); }, dataCalculationTimeout);
+					const dataWorker = new Worker(dataWorkerPath);
+					const depositData = [$ethData.deposits.data, $polyData.deposits.data, $avaxData.deposits.data, $opData.deposits.data];
+					if(chain === 'eth') {
+						dataWorker.postMessage([$ethData.withdrawals.data, ...depositData]);
+						dataWorker.onmessage = (event) => {
+							clearTimeout(timeout);
+							$ethData.movingUsers = event.data;
+							resolve();
+						}
+					} else if(chain === 'poly') {
+						dataWorker.postMessage([$polyData.withdrawals.data, ...depositData]);
+						dataWorker.onmessage = (event) => {
+							clearTimeout(timeout);
+							$polyData.movingUsers = event.data;
+							resolve();
+						}
+					} else if(chain === 'avax') {
+						dataWorker.postMessage([$avaxData.withdrawals.data, ...depositData]);
+						dataWorker.onmessage = (event) => {
+							clearTimeout(timeout);
+							$avaxData.movingUsers = event.data;
+							resolve();
+						}
+					} else if(chain === 'op') {
+						dataWorker.postMessage([$opData.withdrawals.data, ...depositData]);
+						dataWorker.onmessage = (event) => {
+							clearTimeout(timeout);
+							$opData.movingUsers = event.data;
+							resolve();
+						}
+					}
+				});
+			})());
+			await Promise.all(movingUsersPromises);
 
 			return true;
 		} catch(err) {
@@ -152,7 +186,7 @@
 		<div id="loadingModal">
 			{#if loadingData}
 				<img src="/images/loading.gif" alt="Loading">
-				{#if chainLoadingProgress.eth === maxChainLoadingProgress && chainLoadingProgress.poly === maxChainLoadingProgress && chainLoadingProgress.avax === maxChainLoadingProgress && chainLoadingProgress.op === maxChainLoadingProgress}
+				{#if calculating}
 					<h2>Wrapping up some calculations...</h2>
 				{:else}
 					<h2>Initializing some data... (this may take a couple minutes)</h2>

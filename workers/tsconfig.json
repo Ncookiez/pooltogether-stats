@@ -1,0 +1,12 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"skipLibCheck": true,
+		"sourceMap": false,
+		"strict": true,
+		"outFile": "../static/workers/dataWorker.js"
+	},
+	"files": ["dataWorker.ts"]
+}
