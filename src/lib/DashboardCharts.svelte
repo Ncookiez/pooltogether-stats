@@ -2,7 +2,7 @@
 
 	// Imports:
 	import { onMount } from 'svelte';
-	import { ethData, polyData, avaxData, opData, startTimestamp, endTimestamp } from '$lib/stores';
+	import { ethData, polyData, avaxData, opData, aggregatedData, startTimestamp, endTimestamp } from '$lib/stores';
 	import { getRangeArray, timestampsToDates, getDepositsOverTime, getWithdrawalsOverTime, getClaimsOverTime, getDelegationsOverTime, getYieldOverTime, getTVLOverTime } from '$lib/functions';
 	import PieChart from '$lib/PieChart.svelte';
 	import LineChart from '$lib/LineChart.svelte';
@@ -17,7 +17,7 @@
 
 	// Charts:
 	const tvlChart: LineChartInfo = { name: `tvlChart`, title: 'TVL Over Time', xAxisValues: [], data: [{ label: 'TVL', data: [] }], dollarValues: true };
-	// <TODO>
+	// <TODO> stacked chart over time
 	// const chainDistributionChart: LineChartInfo = {};
 	const cumulativeDepositAmountsChart: LineChartInfo = { name: `cumulativeDepositAmountsChart`, title: 'Cumulative Deposit Amounts Over Time', xAxisValues: [], data: [{ label: 'Deposit Amounts', data: [] }], dollarValues: true };
 	const cumulativeDepositCountsChart: LineChartInfo = { name: `cumulativeDepositCountsChart`, title: 'Cumulative Deposits Over Time', xAxisValues: [], data: [{ label: 'Deposits', data: [] }] };
@@ -46,83 +46,29 @@
 	const yieldChart: LineChartInfo = { name: `yieldChart`, title: 'Yield vs Prizes', xAxisValues: [], data: [{ label: 'Yield', data: [] }, { label: 'Prizes', data: [], lineColor: '#FFB63680', backgroundColor: '#FFB636' }], dollarValues: true };
 
 	// Reactive Depositor Count:
-	$: depositorsCount = getDepositors($ethData.balances.data, $polyData.balances.data, $avaxData.balances.data, $opData.balances.data).length;
-
-	// Reactive Top Whales:
-	$: chainTopWhales = [...$ethData.balances.data.slice(0, 5), ...$polyData.balances.data.slice(0, 5), ...$avaxData.balances.data.slice(0, 5), ...$opData.balances.data.slice(0, 5)];
-	$: topWhales = chainTopWhales.sort((a, b) => b.balance - a.balance).slice(0, 5);
+	$: numDepositors = getNumDepositors($ethData.balances.data, $polyData.balances.data, $avaxData.balances.data, $opData.balances.data);
 
 	// Reactive Chart Data:
 	$: setChartData($startTimestamp, $endTimestamp);
 
-	// Function to get depositors:
-	const getDepositors = (ethDepositors: BalanceData[], polyDepositors: BalanceData[], avaxDepositors: BalanceData[], opDepositors: BalanceData[]) => {
+	// Function to get number of depositors:
+	const getNumDepositors = (ethDepositors: BalanceData[], polyDepositors: BalanceData[], avaxDepositors: BalanceData[], opDepositors: BalanceData[]) => {
 
 		// Initiailizations:
-		const depositors: BalanceData[] = [];
 		const uniqueWallets: Hash[] = [];
 
 		// Filtering Ethereum Depositors:
-		ethDepositors.forEach(deposit => {
-			if(deposit.balance > 0) {
-				if(uniqueWallets.includes(deposit.wallet)) {
-					const foundDepositor = depositors.findIndex(depositor => depositor.wallet === deposit.wallet);
-					if(foundDepositor !== -1) {
-						depositors[foundDepositor].balance += deposit.balance;
+		[ethDepositors, polyDepositors, avaxDepositors, opDepositors].forEach(chainDepositors => {
+			chainDepositors.forEach(deposit => {
+				if(deposit.balance > 0) {
+					if(!uniqueWallets.includes(deposit.wallet)) {
+						uniqueWallets.push(deposit.wallet);
 					}
-				} else {
-					depositors.push(deposit);
-					uniqueWallets.push(deposit.wallet);
 				}
-			}
+			});
 		});
 
-		// Filtering Polygon Depositors:
-		polyDepositors.forEach(deposit => {
-			if(deposit.balance > 0) {
-				if(uniqueWallets.includes(deposit.wallet)) {
-					const foundDepositor = depositors.findIndex(depositor => depositor.wallet === deposit.wallet);
-					if(foundDepositor !== -1) {
-						depositors[foundDepositor].balance += deposit.balance;
-					}
-				} else {
-					depositors.push(deposit);
-					uniqueWallets.push(deposit.wallet);
-				}
-			}
-		});
-
-		// Filtering Avalanche Depositors:
-		avaxDepositors.forEach(deposit => {
-			if(deposit.balance > 0) {
-				if(uniqueWallets.includes(deposit.wallet)) {
-					const foundDepositor = depositors.findIndex(depositor => depositor.wallet === deposit.wallet);
-					if(foundDepositor !== -1) {
-						depositors[foundDepositor].balance += deposit.balance;
-					}
-				} else {
-					depositors.push(deposit);
-					uniqueWallets.push(deposit.wallet);
-				}
-			}
-		});
-
-		// Filtering Optimism Depositors:
-		opDepositors.forEach(deposit => {
-			if(deposit.balance > 0) {
-				if(uniqueWallets.includes(deposit.wallet)) {
-					const foundDepositor = depositors.findIndex(depositor => depositor.wallet === deposit.wallet);
-					if(foundDepositor !== -1) {
-						depositors[foundDepositor].balance += deposit.balance;
-					}
-				} else {
-					depositors.push(deposit);
-					uniqueWallets.push(deposit.wallet);
-				}
-			}
-		});
-
-		return depositors;
+		return uniqueWallets.length;
 	}
 
 	// Function to set chart data:
@@ -137,9 +83,7 @@
 									if($ethData.maxTimestamp && $polyData.maxTimestamp && $avaxData.maxTimestamp && $opData.maxTimestamp) {
 
 										// Timestamp Initializations:
-										const minTimestamp = Math.min($ethData.minTimestamp, $polyData.minTimestamp, $avaxData.minTimestamp, $opData.minTimestamp);
-										const maxTimestamp = Math.max($ethData.maxTimestamp, $polyData.maxTimestamp, $avaxData.maxTimestamp, $opData.maxTimestamp);
-										const timestamps = getRangeArray(Math.max(minTimestamp, startTime), Math.min(maxTimestamp, endTime), ticks);
+										const timestamps = getRangeArray(Math.max($aggregatedData.minTimestamp, startTime), Math.min($aggregatedData.maxTimestamp, endTime), ticks);
 										const dateTimestamps = timestampsToDates(timestamps);
 
 										// Setting Ethereum's Raw Data:
@@ -292,8 +236,8 @@
 <LineChart {...tvlChart} />
 <Highlight hide={$endTimestamp !== defaultMaxTimestamp}>
 	<span class="big">There are currently</span>
-	<span class="big highlight">{depositorsCount.toLocaleString(undefined)}+ Depositors</span>
-	<span class="big">on PoolTogether!</span>
+	<span class="big highlight">{numDepositors.toLocaleString(undefined)}+ Depositors</span>
+	<span class="big">on PoolTogether V4!</span>
 </Highlight>
 <LineChart {...cumulativeDepositAmountsChart} />
 <LineChart {...cumulativeDepositCountsChart} />
@@ -302,8 +246,11 @@
 <Highlight hide={$endTimestamp !== defaultMaxTimestamp}>
 	<span class="big">Top 5 Whales:</span>
 	<span class="list">
-		{#each topWhales as whale}
-			<span><span class="highlight">{whale.wallet.slice(0, 6)}…{whale.wallet.slice(-4)}</span> ${whale.balance.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+		{#each $aggregatedData.balances.data.slice(0, 5) as whale}
+			<span>
+				<a href="{`/${whale.wallet}`}" class="highlight" title="{whale.wallet}">{whale.wallet.slice(0, 6)}…{whale.wallet.slice(-4)}</a>
+				<span>${whale.balance.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+			</span>
 		{/each}
 	</span>
 </Highlight>
@@ -331,9 +278,10 @@
 
 <style>
 
-	span.highlight {
+	.highlight {
 		color: var(--secondary-color);
 		font-weight: bold;
+		text-decoration: none;
 	}
 
 	span.big {

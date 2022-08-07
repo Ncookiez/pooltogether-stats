@@ -1,27 +1,21 @@
 <script lang="ts">
 
 	// Imports:
-	import { getChainName, getBlockExplorerLink, getTimeDisplay } from '$lib/functions';
-	import { ethData, polyData, avaxData, opData, startTimestamp, endTimestamp } from '$lib/stores';
-
-	// Type Imports:
-	import type { Chain, ChainData } from '$lib/types';
+	import { getBlockExplorerLink, getTimeDisplay } from '$lib/functions';
+	import { aggregatedData, startTimestamp, endTimestamp } from '$lib/stores';
 
 	// Initializations:
-	export let chain: Chain;
-	const chainName = getChainName(chain);
 	const pageSize = 25;
 	let tabSelected: 'winners' | 'deposits' | 'delegations' = 'winners';
 	let listLength = pageSize;
 	let selectedDraw = 0;
 	let depositFilter = 0;
 
-	// Reactive Chain Data:
-	$: chainData = selectChainData(chain);
-	$: draws = getDraws(chainData, $startTimestamp, $endTimestamp);
+	// Reactive Data:
+	$: draws = getDraws($startTimestamp, $endTimestamp);
 	$: winners = draws[selectedDraw].result;
-	$: deposits = getDeposits(chainData, depositFilter, $startTimestamp, $endTimestamp);
-	$: delegations = getDelegations(chainData, $startTimestamp, $endTimestamp);
+	$: deposits = getDeposits(depositFilter, $startTimestamp, $endTimestamp);
+	$: delegations = getDelegations($startTimestamp, $endTimestamp);
 
 	// Draw Info:
 	$: claimable = winners.reduce((a, b) => a + (b.claimable.reduce((a, b) => a + b, 0)), 0);
@@ -29,36 +23,23 @@
 	$: winning = winners.filter(wallet => wallet.claimable.length > 0).length;
 	$: when = getTimeDisplay(draws[selectedDraw].timestamp, true);
 
-	// Function to select appropriate chain data:
-	const selectChainData = (chain: Chain) => {
-		if(chain === 'eth') {
-			return $ethData;
-		} else if(chain === 'poly') {
-			return $polyData;
-		} else if(chain === 'avax') {
-			return $avaxData;
-		} else {
-			return $opData;
-		}
-	}
-
 	// Function to get sorted and filtered draws:
-	const getDraws = (chainData: ChainData, startTime: number, endTime: number) => {
-		const allDraws = chainData.draws.data.slice();
+	const getDraws = (startTime: number, endTime: number) => {
+		const allDraws = $aggregatedData.draws.data.slice();
 		const filteredDraws = allDraws.filter(draw => draw.timestamp >= startTime && draw.timestamp <= endTime).reverse();
 		return filteredDraws;
 	}
 
 	// Function to get sorted and filtered deposits:
-	const getDeposits = (chainData: ChainData, filter: number, startTime: number, endTime: number) => {
-		const allDeposits = chainData.deposits.data.slice();
+	const getDeposits = (filter: number, startTime: number, endTime: number) => {
+		const allDeposits = $aggregatedData.deposits.data.slice();
 		const filteredDeposits = allDeposits.filter(deposit => deposit.amount >= filter && deposit.timestamp && deposit.timestamp >= startTime && deposit.timestamp <= endTime).reverse();
 		return filteredDeposits;
 	}
 
 	// Function to get sorted and filtered delegations:
-	const getDelegations = (chainData: ChainData, startTime: number, endTime: number) => {
-		const allDelegations = chainData.delegationsFunded.data.slice();
+	const getDelegations = (startTime: number, endTime: number) => {
+		const allDelegations = $aggregatedData.delegationsFunded.data.slice();
 		const filteredDelegations = allDelegations.filter(delegation => delegation.timestamp && delegation.timestamp >= startTime && delegation.timestamp <= endTime).reverse();
 		return filteredDelegations;
 	}
@@ -72,7 +53,7 @@
 
 	<!-- Header -->
 	<div class="header">
-		<h2>{chainName} History</h2>
+		<h2>PoolTogether V4 History</h2>
 		{#if tabSelected === 'winners'}
 			<div id="drawSelector">
 				<span>Draw:</span>
@@ -85,7 +66,6 @@
 			<i class="icofont-list" />
 			<div id="drawInfo">
 				<div class="wrapper">
-					<h3>{chainName}</h3>
 					<h3>Draw Info</h3>
 					<span>Claimable: ${claimable.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
 					<span>Dropped: ${dropped.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
@@ -120,6 +100,9 @@
 			{:else}
 				{#each winners.slice(0, listLength) as winner}
 					<span class="winner listItem" class:highlightItem={winner.claimable.reduce((a, b) => a + b, 0) >= 1000}>
+						{#if winner.chain}
+							<img src="/images/{winner.chain}.svg" alt="{winner.chain}">
+						{/if}
 						<a href="{`/${winner.wallet}`}" class="wallet" title="{winner.wallet}">{winner.wallet.slice(0, 6)}…{winner.wallet.slice(-4)}</a>
 						<i class="icofont-arrow-right" />
 						<span class="prizes" title="{winner.claimable.map(value => ` $${value}`).toString().slice(1)}">Won ${winner.claimable.reduce((a, b) => a + b, 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
@@ -141,13 +124,16 @@
 			{:else}
 				{#each deposits.slice(0, listLength) as deposit}
 					<span class="deposit listItem" class:highlightItem={deposit.amount >= 10000}>
+						{#if deposit.chain}
+							<img src="/images/{deposit.chain}.svg" alt="{deposit.chain}">
+						{/if}
 						<a href="{`/${deposit.wallet}`}" class="wallet" title="{deposit.wallet}">{deposit.wallet.slice(0, 6)}…{deposit.wallet.slice(-4)}</a>
 						<i class="icofont-arrow-right" />
 						<span class="amount">Deposited {deposit.amount < 0.9 ? '<$1' : `$${deposit.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
 						{#if deposit.timestamp}
 							<span class="time">({getTimeDisplay(deposit.timestamp)})</span>
 						{/if}
-						<a class="blockExplorerLink" href="{getBlockExplorerLink(chain, deposit.txHash)}" target="__blank"><i class="icofont-external-link" /></a>
+						<a class="blockExplorerLink" href="{getBlockExplorerLink(deposit.chain, deposit.txHash)}" target="__blank"><i class="icofont-external-link" /></a>
 					</span>
 				{/each}
 				{#if deposits.length > listLength}
@@ -163,13 +149,16 @@
 			{:else}
 				{#each delegations.slice(0, listLength) as delegation}
 					<span class="delegation listItem" class:highlightItem={delegation.amount >= 10000}>
+						{#if delegation.chain}
+							<img src="/images/{delegation.chain}.svg" alt="{delegation.chain}">
+						{/if}
 						<a href="{`/${delegation.delegator}`}" class="wallet" title="{delegation.delegator}">{delegation.delegator.slice(0, 6)}…{delegation.delegator.slice(-4)}</a>
 						<i class="icofont-arrow-right" />
 						<span class="amount">Delegated {delegation.amount < 0.9 ? '<$1' : `$${delegation.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
 						{#if delegation.timestamp}
 							<span class="time">({getTimeDisplay(delegation.timestamp)})</span>
 						{/if}
-						<a class="blockExplorerLink" href="{getBlockExplorerLink(chain, delegation.txHash)}" target="__blank"><i class="icofont-external-link" /></a>
+						<a class="blockExplorerLink" href="{getBlockExplorerLink(delegation.chain, delegation.txHash)}" target="__blank"><i class="icofont-external-link" /></a>
 					</span>
 				{/each}
 				{#if delegations.length > listLength}
@@ -338,6 +327,11 @@
 
 	span.listItem:hover {
 		background-color: #4d249f90;
+	}
+
+	span.listItem > img {
+		height: 2em;
+		width: 2em;
 	}
 
 	span.listItem > a.blockExplorerLink {

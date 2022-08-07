@@ -1,9 +1,10 @@
 
 // Type Imports:
-import type { Chain, Hash, ChainData, DepositData, WithdrawalData, BalanceData, WalletData, DepositsOverTime, WithdrawalsOverTime, ClaimsOverTime, TVLOverTime, DelegationsOverTime, YieldOverTime, WinlessWithdrawals, MultichainDistribution, TVLDistribution, MovingUsers, PlayerData } from '$lib/types';
+import type { Chain, Hash, ChainData, AggregatedData, DepositData, WithdrawalData, BalanceData, WalletData, DepositsOverTime, WithdrawalsOverTime, ClaimsOverTime, TVLOverTime, DelegationsOverTime, YieldOverTime, WinlessWithdrawals, MultichainDistribution, TVLDistribution, MovingUsers, PlayerData } from '$lib/types';
 
 // Initializations:
 const defaultMaxTimestamp = 9_999_999_999;
+const dayInSeconds = 86400;
 
 /* ====================================================================================================================================================== */
 
@@ -980,5 +981,155 @@ export const getPlayerData = (wallet: Hash | undefined, ethData: ChainData, poly
     }
 
     return playerData;
+  }
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to get aggregated data:
+export const getAggregatedData = (ethData: ChainData, polyData: ChainData, avaxData: ChainData, opData: ChainData) => {
+
+  // Initializations:
+  const aggregatedData: AggregatedData = {
+    deposits: { data: [] },
+    withdrawals: { data: [] },
+    claims: { data: [] },
+    delegationsCreated: { data: [] },
+    delegationsFunded: { data: [] },
+    delegationsUpdated: { data: [] },
+    delegationsWithdrawn: { data: [] },
+    yields: { data: [] },
+    balances: { timestamp: 0, data: [] },
+    draws: { data: [] },
+    minTimestamp: 0,
+    maxTimestamp: defaultMaxTimestamp
+  }
+  const chains: Chain[] = ['eth', 'poly', 'avax', 'op'];
+
+  // Aggregating Data:
+  [ethData, polyData, avaxData, opData].forEach((chainData, chainNum) => {
+
+    // Deposits:
+    chainData.deposits.data.forEach(deposit => {
+      aggregatedData.deposits.data.push({ ...deposit, chain: chains[chainNum] });
+    });
+
+    // Withdrawals:
+    chainData.withdrawals.data.forEach(withdrawal => {
+      aggregatedData.withdrawals.data.push({ ...withdrawal, chain: chains[chainNum] });
+    });
+
+    // Claims:
+    chainData.claims.data.forEach(claim => {
+      aggregatedData.claims.data.push({ ...claim, chain: chains[chainNum] });
+    });
+
+    // Delegations Created:
+    chainData.delegationsCreated.data.forEach(delegation => {
+      aggregatedData.delegationsCreated.data.push({ ...delegation, chain: chains[chainNum] });
+    });
+
+    // Delegations Funded:
+    chainData.delegationsFunded.data.forEach(delegation => {
+      aggregatedData.delegationsFunded.data.push({ ...delegation, chain: chains[chainNum] });
+    });
+
+    // Delegations Updated:
+    chainData.delegationsUpdated.data.forEach(delegation => {
+      aggregatedData.delegationsUpdated.data.push({ ...delegation, chain: chains[chainNum] });
+    });
+
+    // Delegations Withdrawn:
+    chainData.delegationsWithdrawn.data.forEach(delegation => {
+      aggregatedData.delegationsWithdrawn.data.push({ ...delegation, chain: chains[chainNum] });
+    });
+
+    // Yields:
+    chainData.yields.data.forEach(yieldTX => {
+      aggregatedData.yields.data.push({ ...yieldTX, chain: chains[chainNum] });
+    });
+
+    // Balances:
+    if(chainData.balances.timestamp && aggregatedData.balances.timestamp && chainData.balances.timestamp > aggregatedData.balances.timestamp) {
+      aggregatedData.balances.timestamp = chainData.balances.timestamp;
+    }
+    chainData.balances.data.forEach(entry => {
+      const foundEntry = aggregatedData.balances.data.find(oldEntry => oldEntry.wallet === entry.wallet);
+      if(foundEntry) {
+        foundEntry.balance += entry.balance;
+      } else {
+        aggregatedData.balances.data.push(entry);
+      }
+    });
+
+    // Draws:
+    if(aggregatedData.draws.data.length === 0) {
+      chainData.draws.data.forEach(draw => {
+        aggregatedData.draws.data.push({ draw: draw.draw, timestamp: draw.timestamp, result: [] });
+      });
+    }
+    chainData.draws.data.forEach((draw, i) => {
+      if(draw.draw === aggregatedData.draws.data[i].draw) {
+        aggregatedData.draws.data[i].result.push(...draw.result.map(result => ({ ...result, chain: chains[chainNum] })));
+      } else {
+        console.warn('Aggregating Data Error: Draw Number Mismatch!');
+      }
+    });
+
+    // Timestamps:
+    if(chainData.minTimestamp && chainData.minTimestamp > aggregatedData.minTimestamp) {
+      aggregatedData.minTimestamp = chainData.minTimestamp;
+    }
+    if(chainData.maxTimestamp && chainData.maxTimestamp < aggregatedData.maxTimestamp) {
+      aggregatedData.maxTimestamp = chainData.maxTimestamp;
+    }
+  });
+
+  // Sorting Data:
+  aggregatedData.deposits.data.sort((a, b) => (a.timestamp as number) - (b.timestamp as number));
+  aggregatedData.withdrawals.data.sort((a, b) => (a.timestamp as number) - (b.timestamp as number));
+  aggregatedData.claims.data.sort((a, b) => (a.timestamp as number) - (b.timestamp as number));
+  aggregatedData.delegationsCreated.data.sort((a, b) => (a.timestamp as number) - (b.timestamp as number));
+  aggregatedData.delegationsFunded.data.sort((a, b) => (a.timestamp as number) - (b.timestamp as number));
+  aggregatedData.delegationsUpdated.data.sort((a, b) => (a.timestamp as number) - (b.timestamp as number));
+  aggregatedData.delegationsWithdrawn.data.sort((a, b) => (a.timestamp as number) - (b.timestamp as number));
+  aggregatedData.yields.data.sort((a, b) => (a.timestamp as number) - (b.timestamp as number));
+  aggregatedData.balances.data.sort((a, b) => b.balance - a.balance);
+  aggregatedData.draws.data.forEach(draw => {
+    draw.result.sort((a, b) => b.claimable.reduce((a, b) => a + b, 0) - a.claimable.reduce((a, b) => a + b, 0));
+  });
+
+  return aggregatedData;
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to get 'time ago' string:
+export const getTimeDisplay = (timestamp: number, shorten?: boolean) => {
+  const now = Date.now() / 1000;
+  const secondsSinceEvent = now - timestamp;
+  if(secondsSinceEvent > 0) {
+    if(secondsSinceEvent < dayInSeconds) {
+      if(secondsSinceEvent >= dayInSeconds / 24) {
+        const hours = Math.floor(secondsSinceEvent / (dayInSeconds / 24));
+        return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+      } else if(secondsSinceEvent >= dayInSeconds / 24 / 60) {
+        const mins = Math.floor(secondsSinceEvent / (dayInSeconds / 24 / 60));
+        return `${mins} minute${mins > 1 ? 's' : ''} ago`;
+      } else {
+        const secs = Math.floor(secondsSinceEvent / (dayInSeconds / 24 / 60 / 60));
+        return `${secs} second${secs > 1 ? 's' : ''} ago`;
+      }
+    } else {
+      const date = new Date(timestamp * 1000);
+      const currentYear = (new Date(now * 1000)).getFullYear();
+      if(currentYear === date.getFullYear()) {
+        return (shorten ? '' : 'on ') + date.toLocaleString(undefined, {month: 'short', day: 'numeric'});
+      } else {
+        return (shorten ? '' : 'on ') + date.toLocaleString(undefined, {month: 'short', day: 'numeric', year: 'numeric'});
+      }
+    }
+  } else {
+    return '';
   }
 }

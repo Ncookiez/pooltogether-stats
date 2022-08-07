@@ -1,7 +1,7 @@
 <script lang="ts">
 
 	// Imports:
-	import { getBlockExplorerLink } from './functions';
+	import { getBlockExplorerLink, getTimeDisplay } from '$lib/functions';
 
 	// Type Imports:
 	import type { Hash, PlayerData } from '$lib/types';
@@ -10,38 +10,7 @@
 	export let wallet: Hash;
 	export let playerData: PlayerData;
 	const pageSize = 25;
-	const now = Date.now() / 1000;
-	const dayInSeconds = 86400;
 	let listLength = pageSize;
-
-	// Function to get 'time ago' string:
-	const getTimeDisplay = (timestamp: number) => {
-		const secondsSinceEvent = now - timestamp;
-		if(secondsSinceEvent > 0) {
-			if(secondsSinceEvent < dayInSeconds) {
-				if(secondsSinceEvent >= dayInSeconds / 24) {
-					const hours = Math.floor(secondsSinceEvent / (dayInSeconds / 24));
-					return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-				} else if(secondsSinceEvent >= dayInSeconds / 24 / 60) {
-					const mins = Math.floor(secondsSinceEvent / (dayInSeconds / 24 / 60));
-					return `${mins} minute${mins > 1 ? 's' : ''} ago`;
-				} else {
-					const secs = Math.floor(secondsSinceEvent / (dayInSeconds / 24 / 60 / 60));
-					return `${secs} second${secs > 1 ? 's' : ''} ago`;
-				}
-			} else {
-				const date = new Date(timestamp * 1000);
-				const currentYear = (new Date(now * 1000)).getFullYear();
-				if(currentYear === date.getFullYear()) {
-					return 'on ' + date.toLocaleString(undefined, {month: 'short', day: 'numeric'});
-				} else {
-					return 'on ' + date.toLocaleString(undefined, {month: 'short', day: 'numeric', year: 'numeric'});
-				}
-			}
-		} else {
-			return '';
-		}
-	}
 	
 </script>
 
@@ -82,9 +51,9 @@
 					<!-- Delegation Created -->
 					{:else if tx.type === 'delegationCreated'}
 						{#if tx.data.delegator === wallet}
-							<span class="delegationCreated">Created a delegation to <span class="wallet">{tx.data.delegatee.slice(0, 6)}…{tx.data.delegatee.slice(-4)}</span></span>
+							<span class="delegationCreated">Created a delegation to <a href="{`/${tx.data.delegatee}`}" class="wallet">{tx.data.delegatee.slice(0, 6)}…{tx.data.delegatee.slice(-4)}</a></span>
 						{:else}
-							<span class="delegationReceived">Received a delegation from <span class="wallet">{tx.data.delegator.slice(0, 6)}…{tx.data.delegator.slice(-4)}</span></span>
+							<span class="delegationReceived">Received a delegation from <a href="{`/${tx.data.delegator}`}" class="wallet">{tx.data.delegator.slice(0, 6)}…{tx.data.delegator.slice(-4)}</a></span>
 						{/if}
 
 					<!-- Delegation Funded -->
@@ -94,9 +63,9 @@
 					<!-- Delegation Updated -->
 					{:else if tx.type === 'delegationUpdated'}
 						{#if tx.data.delegator === wallet}
-							<span class="delegationUpdated">Updated a delegation to point to <span class="wallet">{tx.data.newDelegatee.slice(0, 6)}…{tx.data.newDelegatee.slice(-4)}</span></span>
+							<span class="delegationUpdated">Updated a delegation to point to <a href="{`/${tx.data.newDelegatee}`}" class="wallet">{tx.data.newDelegatee.slice(0, 6)}…{tx.data.newDelegatee.slice(-4)}</a></span>
 						{:else}
-							<span class="delegationReceived">Received a delegation from <span class="wallet">{tx.data.delegator.slice(0, 6)}…{tx.data.delegator.slice(-4)}</span></span>
+							<span class="delegationReceived">Received a delegation from <a href="{`/${tx.data.delegator}`}" class="wallet">{tx.data.delegator.slice(0, 6)}…{tx.data.delegator.slice(-4)}</a></span>
 						{/if}
 
 					<!-- Delegation Withdrawn -->
@@ -182,9 +151,10 @@
 		cursor: pointer;
 	}
 
-	span.wallet {
+	.wallet {
 		color: var(--secondary-color);
 		font-family: 'Courier Prime', monospace;
+		text-decoration: none;
 	}
 
 	span.time {

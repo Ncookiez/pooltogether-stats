@@ -3,9 +3,9 @@
 	// Imports:
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
-	import { ethData, polyData, avaxData, opData } from '$lib/stores';
+	import { ethData, polyData, avaxData, opData, aggregatedData } from '$lib/stores';
 	import { fetchDeposits, fetchWithdrawals, fetchClaims, fetchDelegationsCreated, fetchDelegationsFunded, fetchDelegationsUpdated, fetchDelegationsWithdrawn, fetchYield, fetchSupply, fetchBalances, fetchDraws } from '$lib/data';
-	import { getChainName, getTimestamps, getDepositsOverTime, getWithdrawalsOverTime, getClaimsOverTime, getTVLOverTime, getDelegationsOverTime, getYieldOverTime, getWalletData, getWinlessWithdrawals, getMovingUsers, getTVLDistribution } from '$lib/functions';
+	import { getChainName, getTimestamps, getDepositsOverTime, getWithdrawalsOverTime, getClaimsOverTime, getTVLOverTime, getDelegationsOverTime, getYieldOverTime, getWalletData, getWinlessWithdrawals, getMovingUsers, getTVLDistribution, getAggregatedData } from '$lib/functions';
 	import Navbar from '$lib/Navbar.svelte';
 	import Footer from '$lib/Footer.svelte';
 	import '../app.css';
@@ -116,6 +116,9 @@
 			$avaxData.movingUsers = getMovingUsers($avaxData.withdrawals.data, $ethData.deposits.data, $polyData.deposits.data, $avaxData.deposits.data, $opData.deposits.data);
 			$opData.movingUsers = getMovingUsers($opData.withdrawals.data, $ethData.deposits.data, $polyData.deposits.data, $avaxData.deposits.data, $opData.deposits.data);
 
+			// Assigning Aggregated Data:
+			aggregatedData.set(getAggregatedData($ethData, $polyData, $avaxData, $opData));
+
 			return true;
 		} catch(err) {
 			console.error(err);
@@ -149,27 +152,31 @@
 		<div id="loadingModal">
 			{#if loadingData}
 				<img src="/images/loading.gif" alt="Loading">
-				<h2>Initializing some data... (this may take a couple minutes)</h2>
-				{#if !drawsLoaded}
-					<span class="dataProgress" transition:slide|local>
-						<span class="type">Prize Draw Data...</span>
-						<span class="status">
-							<img src="/images/excitedPooly.gif" alt="Pooly">
-							<img class="trophy" src="/images/trophy.webp" alt="Trophy">
-						</span>
-					</span>
-				{/if}
-				{#each chains as chain}
-					{#if chainLoadingProgress[chain] < maxChainLoadingProgress}
+				{#if chainLoadingProgress.eth === maxChainLoadingProgress && chainLoadingProgress.poly === maxChainLoadingProgress && chainLoadingProgress.avax === maxChainLoadingProgress && chainLoadingProgress.op === maxChainLoadingProgress}
+					<h2>Wrapping up some calculations...</h2>
+				{:else}
+					<h2>Initializing some data... (this may take a couple minutes)</h2>
+					{#if !drawsLoaded}
 						<span class="dataProgress" transition:slide|local>
-							<span class="type">{getChainName(chain)} Data...</span>
+							<span class="type">Prize Draw Data...</span>
 							<span class="status">
-								<img src="/images/excitedPooly.gif" alt="Pooly" style="margin-left: {(chainLoadingProgress[chain] / maxChainLoadingProgress) * 80}%">
+								<img src="/images/excitedPooly.gif" alt="Pooly">
 								<img class="trophy" src="/images/trophy.webp" alt="Trophy">
 							</span>
 						</span>
 					{/if}
-				{/each}
+					{#each chains as chain}
+						{#if chainLoadingProgress[chain] < maxChainLoadingProgress}
+							<span class="dataProgress" transition:slide|local>
+								<span class="type">{getChainName(chain)} Data...</span>
+								<span class="status">
+									<img src="/images/excitedPooly.gif" alt="Pooly" style="margin-left: {(chainLoadingProgress[chain] / maxChainLoadingProgress) * 80}%">
+									<img class="trophy" src="/images/trophy.webp" alt="Trophy">
+								</span>
+							</span>
+						{/if}
+					{/each}
+				{/if}
 			{:else}
 				<span class="error">
 					<img src="/images/ngmi.webp" alt="Whoops">

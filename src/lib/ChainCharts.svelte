@@ -249,7 +249,10 @@
 	<span class="big">Top 5 Whales:</span>
 	<span class="list">
 		{#each chainData.balances.data.slice(0, 5) as whale}
-			<span><span class="highlight">{whale.wallet.slice(0, 6)}…{whale.wallet.slice(-4)}</span> ${whale.balance.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+			<span>
+				<a href="{`/${whale.wallet}`}" class="highlight" title="{whale.wallet}">{whale.wallet.slice(0, 6)}…{whale.wallet.slice(-4)}</a>
+				<span>${whale.balance.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+			</span>
 		{/each}
 	</span>
 </Highlight>
@@ -285,9 +288,10 @@
 
 <style>
 
-	span.highlight {
+	.highlight {
 		color: var(--secondary-color);
 		font-weight: bold;
+		text-decoration: none;
 	}
 
 	span.big {

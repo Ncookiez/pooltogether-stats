@@ -37,6 +37,22 @@ export interface ChainData {
   movingUsers?: MovingUsers
 }
 
+// Aggregated Data Interface:
+export interface AggregatedData {
+  deposits: { data: (DepositData & { chain: Chain })[] }
+  withdrawals: { data: (WithdrawalData & { chain: Chain })[] }
+  claims: { data: (ClaimData & { chain: Chain })[] }
+  delegationsCreated: { data: (DelegationCreatedData & { chain: Chain })[] }
+  delegationsFunded: { data: (DelegationFundedData & { chain: Chain })[] }
+  delegationsUpdated: { data: (DelegationUpdatedData & { chain: Chain })[] }
+  delegationsWithdrawn: { data: (DelegationWithdrawnData & { chain: Chain })[] }
+  yields: { data: (YieldData & { chain: Chain })[] }
+  balances: { timestamp: number | undefined, data: BalanceData[] }
+  draws: { data: DrawData[] }
+  minTimestamp: number
+  maxTimestamp: number
+}
+
 /* ========================================================================================================================================================================= */
 
 // Data Type Interfaces:
@@ -109,6 +125,7 @@ export interface DrawData {
   draw: number
   timestamp: number
   result: {
+    chain?: Chain
     wallet: Hash
     claimable: number[]
     dropped: number[]

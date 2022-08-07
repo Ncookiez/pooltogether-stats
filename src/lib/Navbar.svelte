@@ -71,21 +71,23 @@
 
 	// Function to update timestamp stores:
 	const updateTimestampStores = () => {
-		const minTimeValue = minDateValue ? Date.parse(minDateValue) / 1000 : undefined;
-		const maxTimeValue = maxDateValue ? Date.parse(maxDateValue) / 1000 + dayInSeconds - 1 : undefined;
-		minTimeValue ? startTimestamp.set(minTimeValue) : startTimestamp.set(0);
-		if(maxTimeValue) {
-			if(minTimeValue) {
-				if(maxTimeValue > minTimeValue) {
-					endTimestamp.set(maxTimeValue);
+		if(timestampsSet) {
+			const minTimeValue = minDateValue ? Date.parse(minDateValue) / 1000 : undefined;
+			const maxTimeValue = maxDateValue ? Date.parse(maxDateValue) / 1000 + dayInSeconds - 1 : undefined;
+			minTimeValue ? startTimestamp.set(minTimeValue) : startTimestamp.set(0);
+			if(maxTimeValue) {
+				if(minTimeValue) {
+					if(maxTimeValue > minTimeValue) {
+						endTimestamp.set(maxTimeValue);
+					} else {
+						endTimestamp.set(defaultMaxTimestamp);
+					}
 				} else {
-					endTimestamp.set(defaultMaxTimestamp);
+					endTimestamp.set(maxTimeValue);
 				}
 			} else {
-				endTimestamp.set(maxTimeValue);
+				endTimestamp.set(defaultMaxTimestamp);
 			}
-		} else {
-			endTimestamp.set(defaultMaxTimestamp);
 		}
 	}
 
@@ -119,17 +121,15 @@
 	</div>
 
 	<!-- Timestamp Selection -->
-	{#if timestampsSet}
-		<div class="timestamps">
-			<input type="date" min="{minDate}" max="{maxDate}" bind:value={minDateValue}>
-			<i class="icofont-arrow-right" />
-			<input type="date" min="{minDate}" max="{maxDate}" bind:value={maxDateValue}>
-			<span on:click={() => updateTimestampStores()}><i class="icofont-clock-time" /></span>
-		</div>
-	{/if}
+	<div class="timestamps">
+		<input type="date" min="{minDate}" max="{maxDate}" bind:value={minDateValue} disabled={!timestampsSet}>
+		<i class="icofont-arrow-right" />
+		<input type="date" min="{minDate}" max="{maxDate}" bind:value={maxDateValue} disabled={!timestampsSet}>
+		<span on:click={() => updateTimestampStores()}><i class="icofont-clock-time" /></span>
+	</div>
 
 	<!-- Player Search -->
-	<div class="playerSearch" on:click={() => searchModalOpen = !searchModalOpen} style="{!timestampsSet ? 'margin-left: auto' : ''}">
+	<div class="playerSearch" on:click={() => searchModalOpen = !searchModalOpen}>
 		<span>Search</span>
 		<i class="icofont-ui-search" />
 	</div>

@@ -2,7 +2,7 @@
 
 	// Imports:
 	import DashboardCharts from '$lib/DashboardCharts.svelte';
-	// import DashboardHistory from '$lib/DashboardHistory.svelte';
+	import DashboardHistory from '$lib/DashboardHistory.svelte';
 	
 </script>
 
@@ -18,8 +18,7 @@
 <DashboardCharts />
 
 <!-- Event History -->
-<!-- TODO -->
-<!-- <DashboardHistory /> -->
+<DashboardHistory />
 
 <!-- #################################################################################################### -->
 
