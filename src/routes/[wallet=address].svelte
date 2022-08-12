@@ -7,6 +7,7 @@
 	import { ethData, polyData, avaxData, opData } from '$lib/stores';
 	import PlayerCharts from '$lib/PlayerCharts.svelte';
 	import PlayerHistory from '$lib/PlayerHistory.svelte';
+	import PlayerSummary from '$lib/PlayerSummary.svelte';
 
 	// Type Imports:
 	import type { Hash } from '$lib/types';
@@ -36,6 +37,9 @@
 	<h1>Player Stats: <span title="{wallet}">{wallet.slice(0, 6)}…{wallet.slice(-4)}</span> <i class="icofont-copy-invert" on:click={() => navigator.clipboard.writeText(wallet ?? '')} /></h1>
 
 	{#if playerData}
+
+		<!-- Player Summary -->
+		<PlayerSummary {wallet} {playerData} />
 
 		<!-- Charts & Highlights -->
 		<PlayerCharts {wallet} {playerData} />

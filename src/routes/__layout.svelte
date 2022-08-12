@@ -58,15 +58,18 @@
 				chainLoadingProgress[chain]++;
 				const balances = await fetchBalances(chain);
 				chainLoadingProgress[chain]++;
+				console.log(`Queried all ${chain.toUpperCase()} data from API.`);
+
+				// Updating Status:
+				if((chainLoadingProgress.eth + chainLoadingProgress.poly + chainLoadingProgress.avax + chainLoadingProgress.op) >= (chains.length * maxChainLoadingProgress)) {
+					calculating = true;
+				}
 				if(chain === 'eth' && balances.timestamp) {
 					if(balances.timestamp > $lastUpdate) {
 						lastUpdate.set(balances.timestamp);
 					} else if($lastUpdate > 0) {
 						usingLocalStorageData = true;
 					}
-				}
-				if((chainLoadingProgress.eth + chainLoadingProgress.poly + chainLoadingProgress.avax + chainLoadingProgress.op) >= (chains.length * maxChainLoadingProgress)) {
-					calculating = true;
 				}
 
 				// Assigning Chain-Specific Data Through Workers:
@@ -107,13 +110,19 @@
 						}
 					}
 				});
+				console.log(`Calculated main ${chain.toUpperCase()} stats.`);
 			})());
 			await Promise.all(promises);
 
 			// Assigning Aggregated Data Through Workers:
 			if(usingLocalStorageData) {
 				const storedAggregatedData = localStorage.getItem('aggregatedData');
-				if(storedAggregatedData) { aggregatedData.set(JSON.parse(storedAggregatedData)); };
+				if(storedAggregatedData) {
+					aggregatedData.set(JSON.parse(storedAggregatedData));
+					console.log(`Fetched aggregated data from local storage.`);
+				} else {
+					console.error(`Could not find aggregated data in local storage.`);
+				}
 			} else {
 				await new Promise<void>((resolve, reject) => {
 					const timeout = setTimeout(() => { reject('Calculating aggregated data timed out.'); }, dataCalculationTimeout);
@@ -122,6 +131,7 @@
 					dataWorker.onmessage = (event) => {
 						clearTimeout(timeout);
 						aggregatedData.set(event.data);
+						console.log(`Calculated aggregated data.`);
 						resolve();
 					}
 				});
@@ -133,10 +143,15 @@
 				const polyStoredMovingUsers = localStorage.getItem('polyMovingUsers');
 				const avaxStoredMovingUsers = localStorage.getItem('avaxMovingUsers');
 				const opStoredMovingUsers = localStorage.getItem('opMovingUsers');
-				if(ethStoredMovingUsers) { $ethData.movingUsers = JSON.parse(ethStoredMovingUsers); };
-				if(polyStoredMovingUsers) { $polyData.movingUsers = JSON.parse(polyStoredMovingUsers); };
-				if(avaxStoredMovingUsers) { $avaxData.movingUsers = JSON.parse(avaxStoredMovingUsers); };
-				if(opStoredMovingUsers) { $opData.movingUsers = JSON.parse(opStoredMovingUsers); };
+				if(ethStoredMovingUsers && polyStoredMovingUsers && avaxStoredMovingUsers && opStoredMovingUsers) {
+					$ethData.movingUsers = JSON.parse(ethStoredMovingUsers);
+					$polyData.movingUsers = JSON.parse(polyStoredMovingUsers);
+					$avaxData.movingUsers = JSON.parse(avaxStoredMovingUsers);
+					$opData.movingUsers = JSON.parse(opStoredMovingUsers);
+					console.log(`Fetched moving users' data from local storage.`);
+				} else {
+					console.error(`Could not find moving users' data in local storage.`);
+				}
 			} else {
 				let movingUsersPromises = chains.map(chain => (async () => {
 					await new Promise<void>((resolve, reject) => {
@@ -173,6 +188,7 @@
 							}
 						}
 					});
+					console.log(`Calculated ${chain.toUpperCase()} moving users' stats.`);
 				})());
 				await Promise.all(movingUsersPromises);
 			}
