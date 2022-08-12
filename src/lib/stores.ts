@@ -1,5 +1,6 @@
 
 // Imports:
+import { browser } from '$app/env';
 import { writable } from 'svelte/store';
 
 // Type Imports:
@@ -45,20 +46,35 @@ const defaultAggregatedData: AggregatedData = {
 
 // Ethereum Data:
 export const ethData = writable<ChainData>(defaultChainData);
+ethData.subscribe((value) => {
+  if(browser && value.movingUsers) { localStorage.setItem('ethMovingUsers', JSON.stringify(value.movingUsers)); };
+});
 
 // Polygon Data:
 export const polyData = writable<ChainData>(defaultChainData);
+polyData.subscribe((value) => {
+  if(browser && value.movingUsers) { localStorage.setItem('polyMovingUsers', JSON.stringify(value.movingUsers)); };
+});
 
 // Avalanche Data:
 export const avaxData = writable<ChainData>(defaultChainData);
+avaxData.subscribe((value) => {
+  if(browser && value.movingUsers) { localStorage.setItem('avaxMovingUsers', JSON.stringify(value.movingUsers)); };
+});
 
 // Optimism Data:
 export const opData = writable<ChainData>(defaultChainData);
+opData.subscribe((value) => {
+  if(browser && value.movingUsers) { localStorage.setItem('opMovingUsers', JSON.stringify(value.movingUsers)); };
+});
 
 /* ========================================================================================================================================================================= */
 
 // Aggregated Data:
 export const aggregatedData = writable<AggregatedData>(defaultAggregatedData);
+aggregatedData.subscribe((value) => {
+  if(browser) { localStorage.setItem('aggregatedData', JSON.stringify(value)); };
+});
 
 /* ========================================================================================================================================================================= */
 
@@ -67,3 +83,12 @@ export const startTimestamp = writable<number>(0);
 
 // End Timestamp:
 export const endTimestamp = writable<number>(defaultMaxTimestamp);
+
+/* ========================================================================================================================================================================= */
+
+// Last Data Update Timestamp:
+const storedLastUpdate: number = browser ? parseInt(localStorage.getItem('lastUpdate') ?? '0') : 0;
+export const lastUpdate = writable<number>(storedLastUpdate);
+lastUpdate.subscribe((value) => {
+  if(browser && value > storedLastUpdate) { localStorage.setItem('lastUpdate', value.toString()); };
+});

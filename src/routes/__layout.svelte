@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
 	import { getChainName } from '$lib/functions';
-	import { ethData, polyData, avaxData, opData, aggregatedData } from '$lib/stores';
+	import { ethData, polyData, avaxData, opData, aggregatedData, lastUpdate } from '$lib/stores';
 	import { fetchDeposits, fetchWithdrawals, fetchClaims, fetchDelegationsCreated, fetchDelegationsFunded, fetchDelegationsUpdated, fetchDelegationsWithdrawn, fetchYield, fetchSupply, fetchBalances, fetchDraws } from '$lib/data';
 	import Navbar from '$lib/Navbar.svelte';
 	import Footer from '$lib/Footer.svelte';
@@ -23,6 +23,7 @@
 	let loadingData = true;
 	let drawsLoaded = false;
 	let calculating = false;
+	let usingLocalStorageData = false;
 	let mainContent: HTMLElement;
 	let mainContentScrollY = 0;
 
@@ -57,6 +58,13 @@
 				chainLoadingProgress[chain]++;
 				const balances = await fetchBalances(chain);
 				chainLoadingProgress[chain]++;
+				if(chain === 'eth' && balances.timestamp) {
+					if(balances.timestamp > $lastUpdate) {
+						lastUpdate.set(balances.timestamp);
+					} else if($lastUpdate > 0) {
+						usingLocalStorageData = true;
+					}
+				}
 				if((chainLoadingProgress.eth + chainLoadingProgress.poly + chainLoadingProgress.avax + chainLoadingProgress.op) >= (chains.length * maxChainLoadingProgress)) {
 					calculating = true;
 				}
@@ -103,55 +111,71 @@
 			await Promise.all(promises);
 
 			// Assigning Aggregated Data Through Workers:
-			await new Promise<void>((resolve, reject) => {
-				const timeout = setTimeout(() => { reject('Calculating aggregated data timed out.'); }, dataCalculationTimeout);
-				const dataWorker = new Worker(dataWorkerPath);
-				dataWorker.postMessage([$ethData, $polyData, $avaxData, $opData]);
-				dataWorker.onmessage = (event) => {
-					clearTimeout(timeout);
-					aggregatedData.set(event.data);
-					resolve();
-				}
-			});
-
-			// Assigning Moving Users Data Through Workers:
-			let movingUsersPromises = chains.map(chain => (async () => {
+			if(usingLocalStorageData) {
+				const storedAggregatedData = localStorage.getItem('aggregatedData');
+				if(storedAggregatedData) { aggregatedData.set(JSON.parse(storedAggregatedData)); };
+			} else {
 				await new Promise<void>((resolve, reject) => {
-					const timeout = setTimeout(() => { reject('Calculating moving users data timed out.'); }, dataCalculationTimeout);
+					const timeout = setTimeout(() => { reject('Calculating aggregated data timed out.'); }, dataCalculationTimeout);
 					const dataWorker = new Worker(dataWorkerPath);
-					const depositData = [$ethData.deposits.data, $polyData.deposits.data, $avaxData.deposits.data, $opData.deposits.data];
-					if(chain === 'eth') {
-						dataWorker.postMessage([$ethData.withdrawals.data, ...depositData]);
-						dataWorker.onmessage = (event) => {
-							clearTimeout(timeout);
-							$ethData.movingUsers = event.data;
-							resolve();
-						}
-					} else if(chain === 'poly') {
-						dataWorker.postMessage([$polyData.withdrawals.data, ...depositData]);
-						dataWorker.onmessage = (event) => {
-							clearTimeout(timeout);
-							$polyData.movingUsers = event.data;
-							resolve();
-						}
-					} else if(chain === 'avax') {
-						dataWorker.postMessage([$avaxData.withdrawals.data, ...depositData]);
-						dataWorker.onmessage = (event) => {
-							clearTimeout(timeout);
-							$avaxData.movingUsers = event.data;
-							resolve();
-						}
-					} else if(chain === 'op') {
-						dataWorker.postMessage([$opData.withdrawals.data, ...depositData]);
-						dataWorker.onmessage = (event) => {
-							clearTimeout(timeout);
-							$opData.movingUsers = event.data;
-							resolve();
-						}
+					dataWorker.postMessage([$ethData, $polyData, $avaxData, $opData]);
+					dataWorker.onmessage = (event) => {
+						clearTimeout(timeout);
+						aggregatedData.set(event.data);
+						resolve();
 					}
 				});
-			})());
-			await Promise.all(movingUsersPromises);
+			}
+
+			// Assigning Moving Users Data Through Workers:
+			if(usingLocalStorageData) {
+				const ethStoredMovingUsers = localStorage.getItem('ethMovingUsers');
+				const polyStoredMovingUsers = localStorage.getItem('polyMovingUsers');
+				const avaxStoredMovingUsers = localStorage.getItem('avaxMovingUsers');
+				const opStoredMovingUsers = localStorage.getItem('opMovingUsers');
+				if(ethStoredMovingUsers) { $ethData.movingUsers = JSON.parse(ethStoredMovingUsers); };
+				if(polyStoredMovingUsers) { $polyData.movingUsers = JSON.parse(polyStoredMovingUsers); };
+				if(avaxStoredMovingUsers) { $avaxData.movingUsers = JSON.parse(avaxStoredMovingUsers); };
+				if(opStoredMovingUsers) { $opData.movingUsers = JSON.parse(opStoredMovingUsers); };
+			} else {
+				let movingUsersPromises = chains.map(chain => (async () => {
+					await new Promise<void>((resolve, reject) => {
+						const timeout = setTimeout(() => { reject('Calculating moving users data timed out.'); }, dataCalculationTimeout);
+						const dataWorker = new Worker(dataWorkerPath);
+						const depositData = [$ethData.deposits.data, $polyData.deposits.data, $avaxData.deposits.data, $opData.deposits.data];
+						if(chain === 'eth') {
+							dataWorker.postMessage([$ethData.withdrawals.data, ...depositData]);
+							dataWorker.onmessage = (event) => {
+								clearTimeout(timeout);
+								$ethData.movingUsers = event.data;
+								resolve();
+							}
+						} else if(chain === 'poly') {
+							dataWorker.postMessage([$polyData.withdrawals.data, ...depositData]);
+							dataWorker.onmessage = (event) => {
+								clearTimeout(timeout);
+								$polyData.movingUsers = event.data;
+								resolve();
+							}
+						} else if(chain === 'avax') {
+							dataWorker.postMessage([$avaxData.withdrawals.data, ...depositData]);
+							dataWorker.onmessage = (event) => {
+								clearTimeout(timeout);
+								$avaxData.movingUsers = event.data;
+								resolve();
+							}
+						} else if(chain === 'op') {
+							dataWorker.postMessage([$opData.withdrawals.data, ...depositData]);
+							dataWorker.onmessage = (event) => {
+								clearTimeout(timeout);
+								$opData.movingUsers = event.data;
+								resolve();
+							}
+						}
+					});
+				})());
+				await Promise.all(movingUsersPromises);
+			}
 
 			return true;
 		} catch(err) {
