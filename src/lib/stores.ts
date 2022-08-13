@@ -72,9 +72,6 @@ opData.subscribe((value) => {
 
 // Aggregated Data:
 export const aggregatedData = writable<AggregatedData>(defaultAggregatedData);
-aggregatedData.subscribe((value) => {
-  if(browser) { localStorage.setItem('aggregatedData', JSON.stringify(value)); };
-});
 
 /* ========================================================================================================================================================================= */
 

@@ -24,6 +24,7 @@
 	let drawsLoaded = false;
 	let calculating = false;
 	let usingLocalStorageData = false;
+	let movingUsersDataFound = false;
 	let mainContent: HTMLElement;
 	let mainContentScrollY = 0;
 
@@ -58,7 +59,7 @@
 				chainLoadingProgress[chain]++;
 				const balances = await fetchBalances(chain);
 				chainLoadingProgress[chain]++;
-				console.log(`Queried all ${chain.toUpperCase()} data from API.`);
+				console.log(`${chain.toUpperCase()}: Queried all data from API.`);
 
 				// Updating Status:
 				if((chainLoadingProgress.eth + chainLoadingProgress.poly + chainLoadingProgress.avax + chainLoadingProgress.op) >= (chains.length * maxChainLoadingProgress)) {
@@ -74,7 +75,7 @@
 
 				// Assigning Chain-Specific Data Through Workers:
 				await new Promise<void>((resolve, reject) => {
-					const timeout = setTimeout(() => { reject('Calculating data timed out.'); }, dataCalculationTimeout);
+					const timeout = setTimeout(() => { reject(`${chain.toUpperCase()}: Timed out during main data calculations.`); }, dataCalculationTimeout);
 					const dataWorker = new Worker(dataWorkerPath);
 					if(chain === 'eth') {
 						ethData.set({ deposits, withdrawals, claims, delegationsCreated, delegationsFunded, delegationsUpdated, delegationsWithdrawn, yields, supply, balances, draws: draws.eth });
@@ -110,32 +111,22 @@
 						}
 					}
 				});
-				console.log(`Calculated main ${chain.toUpperCase()} stats.`);
+				console.log(`${chain.toUpperCase()}: Calculated main stats.`);
 			})());
 			await Promise.all(promises);
 
 			// Assigning Aggregated Data Through Workers:
-			if(usingLocalStorageData) {
-				const storedAggregatedData = localStorage.getItem('aggregatedData');
-				if(storedAggregatedData) {
-					aggregatedData.set(JSON.parse(storedAggregatedData));
-					console.log(`Fetched aggregated data from local storage.`);
-				} else {
-					console.error(`Could not find aggregated data in local storage.`);
+			await new Promise<void>((resolve, reject) => {
+				const timeout = setTimeout(() => { reject(`Timed out during aggregated data calculations.`); }, dataCalculationTimeout);
+				const dataWorker = new Worker(dataWorkerPath);
+				dataWorker.postMessage([$ethData, $polyData, $avaxData, $opData]);
+				dataWorker.onmessage = (event) => {
+					clearTimeout(timeout);
+					aggregatedData.set(event.data);
+					console.log(`Calculated aggregated data.`);
+					resolve();
 				}
-			} else {
-				await new Promise<void>((resolve, reject) => {
-					const timeout = setTimeout(() => { reject('Calculating aggregated data timed out.'); }, dataCalculationTimeout);
-					const dataWorker = new Worker(dataWorkerPath);
-					dataWorker.postMessage([$ethData, $polyData, $avaxData, $opData]);
-					dataWorker.onmessage = (event) => {
-						clearTimeout(timeout);
-						aggregatedData.set(event.data);
-						console.log(`Calculated aggregated data.`);
-						resolve();
-					}
-				});
-			}
+			});
 
 			// Assigning Moving Users Data Through Workers:
 			if(usingLocalStorageData) {
@@ -148,14 +139,14 @@
 					$polyData.movingUsers = JSON.parse(polyStoredMovingUsers);
 					$avaxData.movingUsers = JSON.parse(avaxStoredMovingUsers);
 					$opData.movingUsers = JSON.parse(opStoredMovingUsers);
+					movingUsersDataFound = true;
 					console.log(`Fetched moving users' data from local storage.`);
-				} else {
-					console.error(`Could not find moving users' data in local storage.`);
 				}
-			} else {
+			}
+			if(!movingUsersDataFound) {
 				let movingUsersPromises = chains.map(chain => (async () => {
 					await new Promise<void>((resolve, reject) => {
-						const timeout = setTimeout(() => { reject('Calculating moving users data timed out.'); }, dataCalculationTimeout);
+						const timeout = setTimeout(() => { reject(`${chain.toUpperCase()}: Timed out during moving users' data calculations.`); }, dataCalculationTimeout);
 						const dataWorker = new Worker(dataWorkerPath);
 						const depositData = [$ethData.deposits.data, $polyData.deposits.data, $avaxData.deposits.data, $opData.deposits.data];
 						if(chain === 'eth') {
@@ -188,7 +179,7 @@
 							}
 						}
 					});
-					console.log(`Calculated ${chain.toUpperCase()} moving users' stats.`);
+					console.log(`${chain.toUpperCase()}: Calculated moving users' stats.`);
 				})());
 				await Promise.all(movingUsersPromises);
 			}
