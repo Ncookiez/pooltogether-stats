@@ -2,7 +2,7 @@
 
 	// Imports:
 	import { onMount } from 'svelte';
-	import { ethData, polyData, avaxData, opData, aggregatedData, startTimestamp, endTimestamp } from '$lib/stores';
+	import { ethData, polyData, avaxData, opData, aggregatedData, multichainUsersData, startTimestamp, endTimestamp } from '$lib/stores';
 	import { getRangeArray, timestampsToDates, getDepositsOverTime, getWithdrawalsOverTime, getClaimsOverTime, getDelegationsOverTime, getYieldOverTime, getTVLOverTime } from '$lib/functions';
 	import PieChart from '$lib/PieChart.svelte';
 	import LineChart from '$lib/LineChart.svelte';
@@ -17,8 +17,7 @@
 
 	// Charts:
 	const tvlChart: LineChartInfo = { name: `tvlChart`, title: 'TVL Over Time', xAxisValues: [], data: [{ label: 'TVL', data: [] }], dollarValues: true };
-	// <TODO> stacked chart over time
-	// const chainDistributionChart: LineChartInfo = {};
+	const chainDistributionChart: LineChartInfo = { name: `chainDistributionChart`, title: 'TVL Chain Distribution Over Time', xAxisValues: [], data: [{ label: '% Of TVL', data: [] }] };
 	const cumulativeDepositAmountsChart: LineChartInfo = { name: `cumulativeDepositAmountsChart`, title: 'Cumulative Deposit Amounts Over Time', xAxisValues: [], data: [{ label: 'Deposit Amounts', data: [] }], dollarValues: true };
 	const cumulativeDepositCountsChart: LineChartInfo = { name: `cumulativeDepositCountsChart`, title: 'Cumulative Deposits Over Time', xAxisValues: [], data: [{ label: 'Deposits', data: [] }] };
 	const depositAmountsChart: LineChartInfo = { name: `depositAmountsChart`, title: 'Deposit Amounts Over Time', xAxisValues: [], data: [{ label: 'Deposit Amounts', data: [] }], dollarValues: true };
@@ -26,8 +25,7 @@
 	const avgDepositAmountsChart: LineChartInfo = { name: `avgDepositAmountsChart`, title: 'Average Deposit Amounts Over Time', xAxisValues: [], data: [{ label: 'Average Deposit Amount', data: [] }], dollarValues: true };
 	const cumulativeUniqueWalletsChart: LineChartInfo = { name: `cumulativeUniqueWalletsChart`, title: 'Cumulative Unique Wallets Over Time', xAxisValues: [], data: [{ label: 'Wallets', data: [] }] };
 	const tvlDistributionChart: PieChartInfo = { name: `tvlDistributionsChart`, title: 'TVL Distribution By User Balances', sectionLabels: [], data: [], dollarValues: true };
-	// <TODO>
-	// const multichainUsers: PieChartInfo = {};
+	const multichainUsersChart: PieChartInfo = { name: `multichainUsersChart`, title: 'Multichain Users', sectionLabels: [], data: [], appendedLabel: 'Users' };
 	const cumulativeDepositDistributionsChart: LineChartInfo = { name: `cumulativeDepositDistributionsChart`, title: 'Cumulative Deposit Amount Frequency Over Time', xAxisValues: [], data: [] };
 	const depositDistributionsChart: LineChartInfo = { name: `depositDistributionsChart`, title: 'Deposit Amount Frequency Over Time', xAxisValues: [], data: [] };
 	const cumulativeWithdrawalAmountsChart: LineChartInfo = { name: `cumulativeWithdrawalAmountsChart`, title: 'Cumulative Withdrawal Amounts Over Time', xAxisValues: [], data: [{ label: 'Withdrawal Amounts', data: [] }], dollarValues: true };
@@ -124,6 +122,7 @@
 
 										// Initializing Chart Section Labels:
 										const tvlDistributionChartLabels: string[] = ['<$10', '$10-$100', '$100-$1k', '$1k-$10k', '$10k-$100k', '$100k-$1M', '>$1M'];
+										const multichainUsersChartLabels: string[] = ['1 Chain', '2 Chains', '3 Chains', '4 Chains'];
 										const claimDistributionChartLabels: string[] = ['<$5', '$5-$10', '$10-$50', '$50-$100', '$100-$500', '$500-$1k', '>$1k'];
 
 										// Initializing Chart Data:
@@ -135,6 +134,12 @@
 											ethTvlDistribution[10000].amount + polyTvlDistribution[10000].amount + avaxTvlDistribution[10000].amount + opTvlDistribution[10000].amount,
 											ethTvlDistribution[100000].amount + polyTvlDistribution[100000].amount + avaxTvlDistribution[100000].amount + opTvlDistribution[100000].amount,
 											ethTvlDistribution[1000000].amount + polyTvlDistribution[1000000].amount + avaxTvlDistribution[1000000].amount + opTvlDistribution[1000000].amount
+										];
+										const multichainUsersChartData: number[] = [
+											$multichainUsersData.oneChain,
+											$multichainUsersData.twoChains,
+											$multichainUsersData.threeChains,
+											$multichainUsersData.fourChains
 										];
 										const cumulativeDepositDistributionsChartData: Line[] = [
 											{ label: '<$10', data: ethDepositsOverTime.cumulativeDistributions[1].map((val, i) => val + polyDepositsOverTime.cumulativeDistributions[1][i] + avaxDepositsOverTime.cumulativeDistributions[1][i] + opDepositsOverTime.cumulativeDistributions[1][i]), lineColor: '#ffb636' },
@@ -164,6 +169,7 @@
 
 										// Setting Chart X Axis Values / Section Labels:
 										tvlChart.xAxisValues = dateTimestamps;
+										chainDistributionChart.xAxisValues = dateTimestamps;
 										cumulativeDepositAmountsChart.xAxisValues = dateTimestamps;
 										cumulativeDepositCountsChart.xAxisValues = dateTimestamps;
 										depositAmountsChart.xAxisValues = dateTimestamps;
@@ -171,6 +177,7 @@
 										avgDepositAmountsChart.xAxisValues = dateTimestamps;
 										cumulativeUniqueWalletsChart.xAxisValues = dateTimestamps;
 										tvlDistributionChart.sectionLabels = tvlDistributionChartLabels;
+										multichainUsersChart.sectionLabels = multichainUsersChartLabels;
 										cumulativeDepositDistributionsChart.xAxisValues = dateTimestamps;
 										depositDistributionsChart.xAxisValues = dateTimestamps;
 										cumulativeWithdrawalAmountsChart.xAxisValues = dateTimestamps;
@@ -190,6 +197,10 @@
 								
 										// Setting Chart Data:
 										tvlChart.data[0].data = ethTvlOverTime.tvls.map((val, i) => val + polyTvlOverTime.tvls[i] + avaxTvlOverTime.tvls[i] + opTvlOverTime.tvls[i]);
+										chainDistributionChart.data[0].data = ethTvlOverTime.tvls;
+										chainDistributionChart.data[1].data = polyTvlOverTime.tvls;
+										chainDistributionChart.data[2].data = avaxTvlOverTime.tvls;
+										chainDistributionChart.data[3].data = opTvlOverTime.tvls;
 										cumulativeDepositAmountsChart.data[0].data = ethDepositsOverTime.cumulativeDepositAmounts.map((val, i) => val + polyDepositsOverTime.cumulativeDepositAmounts[i] + avaxDepositsOverTime.cumulativeDepositAmounts[i] + opDepositsOverTime.cumulativeDepositAmounts[i]);
 										cumulativeDepositCountsChart.data[0].data = ethDepositsOverTime.cumulativeDepositCounts.map((val, i) => val + polyDepositsOverTime.cumulativeDepositCounts[i] + avaxDepositsOverTime.cumulativeDepositCounts[i] + opDepositsOverTime.cumulativeDepositCounts[i]);
 										depositAmountsChart.data[0].data = ethDepositsOverTime.depositAmounts.map((val, i) => val + polyDepositsOverTime.depositAmounts[i] + avaxDepositsOverTime.depositAmounts[i] + opDepositsOverTime.depositAmounts[i]);
@@ -197,6 +208,7 @@
 										avgDepositAmountsChart.data[0].data = ethDepositsOverTime.avgDepositAmounts.map((val, i) => val + polyDepositsOverTime.avgDepositAmounts[i] + avaxDepositsOverTime.avgDepositAmounts[i] + opDepositsOverTime.avgDepositAmounts[i]);
 										cumulativeUniqueWalletsChart.data[0].data = ethDepositsOverTime.cumulativeUniqueWallets.map((val, i) => val + polyDepositsOverTime.cumulativeUniqueWallets[i] + avaxDepositsOverTime.cumulativeUniqueWallets[i] + opDepositsOverTime.cumulativeUniqueWallets[i]);
 										tvlDistributionChart.data = tvlDistributionChartData;
+										multichainUsersChart.data = multichainUsersChartData;
 										cumulativeDepositDistributionsChart.data = cumulativeDepositDistributionsChartData;
 										depositDistributionsChart.data = depositDistributionsChartData;
 										cumulativeWithdrawalAmountsChart.data[0].data = ethWithdrawalsOverTime.cumulativeWithdrawalAmounts.map((val, i) => val + polyWithdrawalsOverTime.cumulativeWithdrawalAmounts[i] + avaxWithdrawalsOverTime.cumulativeWithdrawalAmounts[i] + opWithdrawalsOverTime.cumulativeWithdrawalAmounts[i]);
@@ -257,6 +269,7 @@
 <LineChart {...avgDepositAmountsChart} />
 <LineChart {...cumulativeUniqueWalletsChart} />
 <PieChart {...tvlDistributionChart} hide={$endTimestamp !== defaultMaxTimestamp} />
+<PieChart {...multichainUsersChart} hide={$endTimestamp !== defaultMaxTimestamp} />
 <LineChart {...cumulativeDepositDistributionsChart} />
 <LineChart {...depositDistributionsChart} />
 <LineChart {...cumulativeWithdrawalAmountsChart} />
