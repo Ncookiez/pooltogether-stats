@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
 	import { getChainName } from '$lib/functions';
-	import { ethData, polyData, avaxData, opData, aggregatedData, lastUpdate } from '$lib/stores';
+	import { ethData, polyData, avaxData, opData, aggregatedData, multichainUsersData, lastUpdate } from '$lib/stores';
 	import { fetchDeposits, fetchWithdrawals, fetchClaims, fetchDelegationsCreated, fetchDelegationsFunded, fetchDelegationsUpdated, fetchDelegationsWithdrawn, fetchYield, fetchSupply, fetchBalances, fetchDraws } from '$lib/data';
 	import Navbar from '$lib/Navbar.svelte';
 	import Footer from '$lib/Footer.svelte';
@@ -25,6 +25,7 @@
 	let calculating = false;
 	let usingLocalStorageData = false;
 	let movingUsersDataFound = false;
+	let multichainUsersDataFound = false;
 	let mainContent: HTMLElement;
 	let mainContentScrollY = 0;
 
@@ -128,7 +129,7 @@
 				}
 			});
 
-			// Assigning Moving Users Data Through Workers:
+			// Assigning Moving Users Data & Multichain Users Data Through LocalStorage Or Workers:
 			if(usingLocalStorageData) {
 				const ethStoredMovingUsers = localStorage.getItem('ethMovingUsers');
 				const polyStoredMovingUsers = localStorage.getItem('polyMovingUsers');
@@ -141,6 +142,12 @@
 					$opData.movingUsers = JSON.parse(opStoredMovingUsers);
 					movingUsersDataFound = true;
 					console.log(`Fetched moving users' data from local storage.`);
+				}
+				const multichainUsers = localStorage.getItem('multichainUsers');
+				if(multichainUsers) {
+					multichainUsersData.set(JSON.parse(multichainUsers));
+					multichainUsersDataFound = true;
+					console.log(`Fetched multichain users' data from local storage.`);
 				}
 			}
 			if(!movingUsersDataFound) {
@@ -182,6 +189,19 @@
 					console.log(`${chain.toUpperCase()}: Calculated moving users' stats.`);
 				})());
 				await Promise.all(movingUsersPromises);
+			}
+			if(!multichainUsersDataFound) {
+				await new Promise<void>((resolve, reject) => {
+					const timeout = setTimeout(() => { reject(`Timed out during multichain users' data calculations.`); }, dataCalculationTimeout);
+					const dataWorker = new Worker(dataWorkerPath);
+					dataWorker.postMessage([$ethData.balances.data, $polyData.balances.data, $avaxData.balances.data, $opData.balances.data]);
+					dataWorker.onmessage = (event) => {
+						clearTimeout(timeout);
+						multichainUsersData.set(JSON.parse(event.data));
+						resolve();
+					}
+				});
+				console.log(`Calculated multichain users' stats.`);
 			}
 
 			return true;

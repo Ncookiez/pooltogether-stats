@@ -4,7 +4,7 @@ import { browser } from '$app/env';
 import { writable } from 'svelte/store';
 
 // Type Imports:
-import type { ChainData, AggregatedData } from '$lib/types';
+import type { ChainData, AggregatedData, MultichainDistribution } from '$lib/types';
 
 // Initializations:
 const defaultMaxTimestamp = 9_999_999_999;
@@ -42,6 +42,15 @@ const defaultAggregatedData: AggregatedData = {
   maxTimestamp: defaultMaxTimestamp
 }
 
+// Default Multichain Users Data:
+const defaultMultichainUsersData: MultichainDistribution = {
+  totalUsers: 0,
+  oneChain: 0,
+  twoChains: 0,
+  threeChains: 0,
+  fourChains: 0
+}
+
 /* ========================================================================================================================================================================= */
 
 // Ethereum Data:
@@ -72,6 +81,14 @@ opData.subscribe((value) => {
 
 // Aggregated Data:
 export const aggregatedData = writable<AggregatedData>(defaultAggregatedData);
+
+/* ========================================================================================================================================================================= */
+
+// Multichain Users Data:
+export const multichainUsersData = writable<MultichainDistribution>(defaultMultichainUsersData);
+multichainUsersData.subscribe((value) => {
+  if(browser) { localStorage.setItem('multichainUsers', JSON.stringify(value)); };
+});
 
 /* ========================================================================================================================================================================= */
 

@@ -8,11 +8,19 @@ const ticks = 50;
 // Function to react to incoming messages:
 onmessage = (event) => {
   if(event.data.length === 1) {
-    const data = calculateData(event.data[0]);
+    const chainData: ChainData = event.data[0];
+    const data = calculateData(chainData);
     postMessage(data);
   } else if(event.data.length === 4) {
-    const aggregatedData = getAggregatedData(event.data[0], event.data[1], event.data[2], event.data[3]);
-    postMessage(aggregatedData);
+    if(event.data[0].deposits) {
+      const chainsData: ChainData[] = event.data;
+      const aggregatedData = getAggregatedData(chainsData[0], chainsData[1], chainsData[2], chainsData[3]);
+      postMessage(aggregatedData);
+    } else {
+      const chainsBalances: BalanceData[][] = event.data;
+      const multichainUsersData = getMultichainUsersDistribution(chainsBalances[0], chainsBalances[1], chainsBalances[2], chainsBalances[3]);
+      postMessage(multichainUsersData);
+    }
   } else if(event.data.length === 5) {
     const movingUsers = getMovingUsers(event.data[0], event.data[1], event.data[2], event.data[3], event.data[4]);
     postMessage(movingUsers);
@@ -807,6 +815,77 @@ const getAggregatedData = (ethData: ChainData, polyData: ChainData, avaxData: Ch
 
 /* ====================================================================================================================================================== */
 
+// Function to get multichain users' distribution:
+const getMultichainUsersDistribution = (ethBalances: BalanceData[], polyBalances: BalanceData[], avaxBalances: BalanceData[], opBalances: BalanceData[]) => {
+
+  // Initializations:
+  const multichainDistribution: MultichainDistribution = {
+    totalUsers: 0,
+    oneChain: 0,
+    twoChains: 0,
+    threeChains: 0,
+    fourChains: 0
+  }
+  const wallets: Record<Hash, number> = {};
+
+  // Filtering Balances:
+  ethBalances.forEach(entry => {
+    if(entry.balance > 0) {
+      if(wallets[entry.wallet]) {
+        wallets[entry.wallet]++;
+      } else {
+        wallets[entry.wallet] = 1;
+      }
+    }
+  });
+  polyBalances.forEach(entry => {
+    if(entry.balance > 0) {
+      if(wallets[entry.wallet]) {
+        wallets[entry.wallet]++;
+      } else {
+        wallets[entry.wallet] = 1;
+      }
+    }
+  });
+  avaxBalances.forEach(entry => {
+    if(entry.balance > 0) {
+      if(wallets[entry.wallet]) {
+        wallets[entry.wallet]++;
+      } else {
+        wallets[entry.wallet] = 1;
+      }
+    }
+  });
+  opBalances.forEach(entry => {
+    if(entry.balance > 0) {
+      if(wallets[entry.wallet]) {
+        wallets[entry.wallet]++;
+      } else {
+        wallets[entry.wallet] = 1;
+      }
+    }
+  });
+
+  // Updating Data:
+  for(let stringWallet in wallets) {
+    const wallet = stringWallet as Hash;
+    if(wallets[wallet] === 1) {
+      multichainDistribution.oneChain++;
+    } else if(wallets[wallet] === 2) {
+      multichainDistribution.twoChains++;
+    } else if(wallets[wallet] === 3) {
+      multichainDistribution.threeChains++;
+    } else if(wallets[wallet] === 4) {
+      multichainDistribution.fourChains++;
+    }
+    multichainDistribution.totalUsers++;
+  }
+
+  return multichainDistribution;
+}
+
+/* ====================================================================================================================================================== */
+
 // Chain Type:
 type Chain = 'eth' | 'poly' | 'avax' | 'op';
 
@@ -1019,6 +1098,13 @@ interface TVLDistribution {
   10000: { amount: number, count: number }
   100000: { amount: number, count: number }
   1000000: { amount: number, count: number }
+}
+interface MultichainDistribution {
+  totalUsers: number
+  oneChain: number
+  twoChains: number
+  threeChains: number
+  fourChains: number
 }
 
 // Wallet Data Interface:
