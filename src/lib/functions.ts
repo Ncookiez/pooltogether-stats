@@ -678,7 +678,7 @@ export const getPlayerData = (wallet: Hash | undefined, ethData: ChainData, poly
       // Getting Timestamps:
       const firstTimestamp = playerData.txs[0].data.timestamp as number;
       const lastTimestamp = playerData.txs[playerData.txs.length - 1].data.timestamp as number;
-      playerData.timestamps = getRangeArray(firstTimestamp, lastTimestamp, ticks);
+      playerData.timestamps = getRangeArray(firstTimestamp, lastTimestamp, ticks, true);
   
       // Getting Data Over Time:
       for(let i = 0; i < ticks; i++) {

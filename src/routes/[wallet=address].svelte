@@ -31,46 +31,23 @@
 	<meta name="description" content="An app for exploring all there is to see about PoolTogether statistics. Check out some individual wallet stats!" />
 </svelte:head>
 
-{#if wallet}
+{#if wallet && playerData}
 
-	<!-- Player Header -->
-	<h1>Player Stats: <span title="{wallet}">{wallet.slice(0, 6)}…{wallet.slice(-4)}</span> <i class="icofont-copy-invert" on:click={() => navigator.clipboard.writeText(wallet ?? '')} /></h1>
+	<!-- Player Summary -->
+	<PlayerSummary {wallet} {playerData} />
 
-	{#if playerData}
+	<!-- Charts & Highlights -->
+	<PlayerCharts {wallet} {playerData} />
 
-		<!-- Player Summary -->
-		<PlayerSummary {wallet} {playerData} />
+	<!-- Player Event History -->
+	<PlayerHistory {wallet} {playerData} />
 
-		<!-- Charts & Highlights -->
-		<PlayerCharts {wallet} {playerData} />
-
-		<!-- Player Event History -->
-		<PlayerHistory {wallet} {playerData} />
-
-	{/if}
 {/if}
 
 <!-- #################################################################################################### -->
 
 <style>
 
-	h1 {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		gap: .5em;
-		width: 81rem;
-		margin: .5em 0;
-		text-align: center;
-	}
-
-	i {
-		font-size: .7em;
-		cursor: pointer;
-	}
-
-	i:hover {
-		color: var(--light-purple);
-	}
+	/* CSS Goes Here */
 	
 </style>
