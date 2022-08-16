@@ -15,6 +15,7 @@
 	export let xAxisValues: string[];
 	export let data: Line[];
 	export let dollarValues: boolean = false;
+	export let stacked: boolean = false;
 	export let hide: boolean = false;
 	const dayInSeconds = 86400;
 	const maxTicks = 15;
@@ -30,7 +31,7 @@
 	const defaultLineTension = 0.2;
 
 	// Reactive Chart Updates:
-	$: onUpdate(xAxisValues, data, dollarValues);
+	$: onUpdate(xAxisValues, data, dollarValues, stacked);
 
 	// Basic Line Chart Config:
 	const lineChartConfig: ChartConfiguration = {
@@ -55,7 +56,7 @@
 	}
 
 	// Function to set line chart data:
-	const setLineChartData = (chart: Chart, xAxisValues: string[], lines: Line[], dollarValues?: boolean) => {
+	const setLineChartData = (chart: Chart, xAxisValues: string[], lines: Line[], dollarValues?: boolean, stacked?: boolean) => {
 		chart.data.labels = xAxisValues;
 		chart.data.datasets = [];
 		lines.forEach(line => {
@@ -67,7 +68,8 @@
 				borderWidth: line.lineWidth ?? defaultLineWidth,
 				pointRadius: line.pointRadius ?? defaultPointRadius,
 				pointHoverRadius: line.pointHoverRadius ?? defaultPointHoverRadius,
-				tension: line.tension ?? defaultLineTension
+				tension: line.tension ?? defaultLineTension,
+				fill: stacked ? true : false
 			});
 		});
 		if(chart.options.plugins?.tooltip && chart.options.scales?.y && chart.options.scales.y.ticks && chart.options.scales.x && chart.options.scales.x.ticks) {
@@ -77,13 +79,20 @@
 				chart.options.plugins.tooltip.callbacks = { label: (item) => { return `${item.dataset.label}: $${(item.raw as number).toLocaleString(undefined)}` } };
 				chart.options.scales.y.ticks.callback = (value) => { return '$' + value.toLocaleString(undefined) };
 			}
+			if(stacked) {
+				chart.options.scales.y.min = 0;
+				chart.options.scales.y.max = 100;
+				// @ts-ignore
+				chart.options.scales.y.stacked = true;
+				chart.options.plugins.tooltip.callbacks = { label: (item) => { return `${item.dataset.label}: ${(item.raw as number).toFixed(2)}%` } };
+			}
 		}
 	}
 
 	// Function to update chart data:
-	const onUpdate = (xAxisValues: string[], data: Line[], dollarValues: boolean) => {
+	const onUpdate = (xAxisValues: string[], data: Line[], dollarValues: boolean, stacked: boolean) => {
 		if(lineChart) {
-			setLineChartData(lineChart, xAxisValues, data, dollarValues); 
+			setLineChartData(lineChart, xAxisValues, data, dollarValues, stacked); 
 			lineChart.update();
 		}
 	}

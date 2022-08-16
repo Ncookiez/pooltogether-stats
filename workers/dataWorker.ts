@@ -53,7 +53,7 @@ const getRangeArray = (start: number, end: number) => {
   const range: number[] = [];
   const tick = (end - start) / ticks;
   let value = start;
-  while(value <= end) {
+  while(Math.ceil(value) < end) {
     value += tick;
     range.push(Math.ceil(value));
   }
@@ -345,7 +345,8 @@ const getTVLOverTime = (deposits: DepositsOverTime, withdrawals: WithdrawalsOver
 
   // Calculating TVL Over Time:
   for(let i = 0; i < tvlOverTime.timestamps.length; i++) {
-    tvlOverTime.tvls.push(deposits.cumulativeDepositAmounts[i] + claims.cumulativeClaimAmounts[i] - withdrawals.cumulativeWithdrawalAmounts[i]);
+    const tvl = deposits.cumulativeDepositAmounts[i] + claims.cumulativeClaimAmounts[i] - withdrawals.cumulativeWithdrawalAmounts[i];
+    tvlOverTime.tvls.push(tvl);
   }
 
   return tvlOverTime;
@@ -788,10 +789,10 @@ const getAggregatedData = (ethData: ChainData, polyData: ChainData, avaxData: Ch
     });
 
     // Timestamps:
-    if(chainData.minTimestamp && chainData.minTimestamp < aggregatedData.minTimestamp) {
+    if(chainData.minTimestamp && (chainData.minTimestamp < aggregatedData.minTimestamp || aggregatedData.minTimestamp === 0)) {
       aggregatedData.minTimestamp = chainData.minTimestamp;
     }
-    if(chainData.maxTimestamp && chainData.maxTimestamp > aggregatedData.maxTimestamp) {
+    if(chainData.maxTimestamp && (chainData.maxTimestamp > aggregatedData.maxTimestamp || aggregatedData.maxTimestamp === defaultMaxTimestamp)) {
       aggregatedData.maxTimestamp = chainData.maxTimestamp;
     }
   });

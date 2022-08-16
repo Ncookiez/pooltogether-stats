@@ -17,12 +17,21 @@ var ticks = 50;
 // Function to react to incoming messages:
 onmessage = function (event) {
     if (event.data.length === 1) {
-        var data = calculateData(event.data[0]);
+        var chainData = event.data[0];
+        var data = calculateData(chainData);
         postMessage(data);
     }
     else if (event.data.length === 4) {
-        var aggregatedData = getAggregatedData(event.data[0], event.data[1], event.data[2], event.data[3]);
-        postMessage(aggregatedData);
+        if (event.data[0].deposits) {
+            var chainsData = event.data;
+            var aggregatedData = getAggregatedData(chainsData[0], chainsData[1], chainsData[2], chainsData[3]);
+            postMessage(aggregatedData);
+        }
+        else {
+            var chainsBalances = event.data;
+            var multichainUsersData = getMultichainUsersDistribution(chainsBalances[0], chainsBalances[1], chainsBalances[2], chainsBalances[3]);
+            postMessage(multichainUsersData);
+        }
     }
     else if (event.data.length === 5) {
         var movingUsers = getMovingUsers(event.data[0], event.data[1], event.data[2], event.data[3], event.data[4]);
@@ -54,7 +63,7 @@ var getRangeArray = function (start, end) {
     var range = [];
     var tick = (end - start) / ticks;
     var value = start;
-    while (value <= end) {
+    while (Math.ceil(value) < end) {
         value += tick;
         range.push(Math.ceil(value));
     }
@@ -346,7 +355,8 @@ var getTVLOverTime = function (deposits, withdrawals, claims) {
     };
     // Calculating TVL Over Time:
     for (var i = 0; i < tvlOverTime.timestamps.length; i++) {
-        tvlOverTime.tvls.push(deposits.cumulativeDepositAmounts[i] + claims.cumulativeClaimAmounts[i] - withdrawals.cumulativeWithdrawalAmounts[i]);
+        var tvl = deposits.cumulativeDepositAmounts[i] + claims.cumulativeClaimAmounts[i] - withdrawals.cumulativeWithdrawalAmounts[i];
+        tvlOverTime.tvls.push(tvl);
     }
     return tvlOverTime;
 };
@@ -758,10 +768,10 @@ var getAggregatedData = function (ethData, polyData, avaxData, opData) {
             }
         });
         // Timestamps:
-        if (chainData.minTimestamp && chainData.minTimestamp < aggregatedData.minTimestamp) {
+        if (chainData.minTimestamp && (chainData.minTimestamp < aggregatedData.minTimestamp || aggregatedData.minTimestamp === 0)) {
             aggregatedData.minTimestamp = chainData.minTimestamp;
         }
-        if (chainData.maxTimestamp && chainData.maxTimestamp > aggregatedData.maxTimestamp) {
+        if (chainData.maxTimestamp && (chainData.maxTimestamp > aggregatedData.maxTimestamp || aggregatedData.maxTimestamp === defaultMaxTimestamp)) {
             aggregatedData.maxTimestamp = chainData.maxTimestamp;
         }
     });
@@ -779,4 +789,76 @@ var getAggregatedData = function (ethData, polyData, avaxData, opData) {
         draw.result.sort(function (a, b) { return b.claimable.reduce(function (a, b) { return a + b; }, 0) - a.claimable.reduce(function (a, b) { return a + b; }, 0); });
     });
     return aggregatedData;
+};
+/* ====================================================================================================================================================== */
+// Function to get multichain users' distribution:
+var getMultichainUsersDistribution = function (ethBalances, polyBalances, avaxBalances, opBalances) {
+    // Initializations:
+    var multichainDistribution = {
+        totalUsers: 0,
+        oneChain: 0,
+        twoChains: 0,
+        threeChains: 0,
+        fourChains: 0
+    };
+    var wallets = {};
+    // Filtering Balances:
+    ethBalances.forEach(function (entry) {
+        if (entry.balance > 0) {
+            if (wallets[entry.wallet]) {
+                wallets[entry.wallet]++;
+            }
+            else {
+                wallets[entry.wallet] = 1;
+            }
+        }
+    });
+    polyBalances.forEach(function (entry) {
+        if (entry.balance > 0) {
+            if (wallets[entry.wallet]) {
+                wallets[entry.wallet]++;
+            }
+            else {
+                wallets[entry.wallet] = 1;
+            }
+        }
+    });
+    avaxBalances.forEach(function (entry) {
+        if (entry.balance > 0) {
+            if (wallets[entry.wallet]) {
+                wallets[entry.wallet]++;
+            }
+            else {
+                wallets[entry.wallet] = 1;
+            }
+        }
+    });
+    opBalances.forEach(function (entry) {
+        if (entry.balance > 0) {
+            if (wallets[entry.wallet]) {
+                wallets[entry.wallet]++;
+            }
+            else {
+                wallets[entry.wallet] = 1;
+            }
+        }
+    });
+    // Updating Data:
+    for (var stringWallet in wallets) {
+        var wallet = stringWallet;
+        if (wallets[wallet] === 1) {
+            multichainDistribution.oneChain++;
+        }
+        else if (wallets[wallet] === 2) {
+            multichainDistribution.twoChains++;
+        }
+        else if (wallets[wallet] === 3) {
+            multichainDistribution.threeChains++;
+        }
+        else if (wallets[wallet] === 4) {
+            multichainDistribution.fourChains++;
+        }
+        multichainDistribution.totalUsers++;
+    }
+    return multichainDistribution;
 };

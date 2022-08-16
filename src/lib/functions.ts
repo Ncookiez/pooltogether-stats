@@ -24,11 +24,13 @@ export const getChainName = (chain: Chain) => {
 /* ====================================================================================================================================================== */
 
 // Function to get array of numbers:
-export const getRangeArray = (start: number, end: number, ticks: number) => {
+export const getRangeArray = (start: number, end: number, ticks: number, includeFirstValue?: boolean) => {
   const range: number[] = [];
-  const tick = (end - start) / ticks;
+  const timespan = end - start;
+  const tick = includeFirstValue ? (timespan / ticks) + (timespan / ticks / ticks) : timespan / ticks;
+  if(includeFirstValue) { range.push(Math.ceil(start)); };
   let value = start;
-  while(value <= end) {
+  while(Math.ceil(value) < end) {
     value += tick;
     range.push(Math.ceil(value));
   }
@@ -473,7 +475,8 @@ export const getTVLOverTime = (deposits: DepositsOverTime, withdrawals: Withdraw
 
   // Calculating TVL Over Time:
   for(let i = 0; i < tvlOverTime.timestamps.length; i++) {
-    tvlOverTime.tvls.push(deposits.cumulativeDepositAmounts[i] + claims.cumulativeClaimAmounts[i] - withdrawals.cumulativeWithdrawalAmounts[i]);
+    const tvl = deposits.cumulativeDepositAmounts[i] + claims.cumulativeClaimAmounts[i] - withdrawals.cumulativeWithdrawalAmounts[i];
+    tvlOverTime.tvls.push(tvl);
   }
 
   return tvlOverTime;

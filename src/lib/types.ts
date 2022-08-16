@@ -159,6 +159,7 @@ export interface LineChartInfo {
   xAxisValues: string[]
   data: Line[]
   dollarValues?: boolean
+  stacked?: boolean
 }
 export interface PieChartInfo {
   name: string

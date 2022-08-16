@@ -36,6 +36,7 @@
 			// Fetching & Assigning Draw Data:
 			const draws = await fetchDraws();
 			drawsLoaded = true;
+			console.log(`Queried draw data from API.`);
 
 			let promises = chains.map(chain => (async () => {
 
@@ -197,7 +198,7 @@
 					dataWorker.postMessage([$ethData.balances.data, $polyData.balances.data, $avaxData.balances.data, $opData.balances.data]);
 					dataWorker.onmessage = (event) => {
 						clearTimeout(timeout);
-						multichainUsersData.set(JSON.parse(event.data));
+						multichainUsersData.set(event.data);
 						resolve();
 					}
 				});
