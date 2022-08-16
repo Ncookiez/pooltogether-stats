@@ -17,23 +17,27 @@ var ticks = 50;
 // Function to react to incoming messages:
 onmessage = function (event) {
     if (event.data.length === 1) {
+        // Chain-Specific Data:
         var chainData = event.data[0];
         var data = calculateData(chainData);
         postMessage(data);
     }
     else if (event.data.length === 4) {
         if (event.data[0].deposits) {
+            // Aggregated Data:
             var chainsData = event.data;
             var aggregatedData = getAggregatedData(chainsData[0], chainsData[1], chainsData[2], chainsData[3]);
             postMessage(aggregatedData);
         }
         else {
+            // Multichain Users' Data:
             var chainsBalances = event.data;
             var multichainUsersData = getMultichainUsersDistribution(chainsBalances[0], chainsBalances[1], chainsBalances[2], chainsBalances[3]);
             postMessage(multichainUsersData);
         }
     }
     else if (event.data.length === 5) {
+        // Moving Users' Data:
         var movingUsers = getMovingUsers(event.data[0], event.data[1], event.data[2], event.data[3], event.data[4]);
         postMessage(movingUsers);
     }
@@ -59,9 +63,14 @@ var calculateData = function (chainData) {
 };
 /* ====================================================================================================================================================== */
 // Function to get array of numbers:
-var getRangeArray = function (start, end) {
+var getRangeArray = function (start, end, includeFirstValue) {
     var range = [];
-    var tick = (end - start) / ticks;
+    var timespan = end - start;
+    var tick = includeFirstValue ? (timespan / ticks) + (timespan / ticks / ticks) : timespan / ticks;
+    if (includeFirstValue) {
+        range.push(Math.ceil(start));
+    }
+    ;
     var value = start;
     while (Math.ceil(value) < end) {
         value += tick;
@@ -83,10 +92,10 @@ var getTimestamps = function (chainData, simple) {
 };
 /* ====================================================================================================================================================== */
 // Function to get deposits over time:
-var getDepositsOverTime = function (chainData) {
+var getDepositsOverTime = function (chainData, customTimestamps) {
     // Initializations:
     var depositsOverTime = {
-        timestamps: getTimestamps(chainData),
+        timestamps: customTimestamps !== null && customTimestamps !== void 0 ? customTimestamps : getTimestamps(chainData),
         depositAmounts: [],
         depositCounts: [],
         uniqueWallets: [],
@@ -108,7 +117,7 @@ var getDepositsOverTime = function (chainData) {
         var distributions = { 1: 0, 10: 0, 100: 0, 1000: 0, 10000: 0, 100000: 0 };
         chainData.deposits.data.forEach(function (deposit) {
             if (deposit.timestamp && deposit.timestamp <= depositsOverTime.timestamps[i]) {
-                if ((i > 0 && deposit.timestamp > depositsOverTime.timestamps[i - 1]) || i === 0) {
+                if ((i > 0 && deposit.timestamp > depositsOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
                     depositAmount += deposit.amount;
                     depositCount++;
                     if (!cumulativeUniqueWallets.includes(deposit.wallet)) {
@@ -182,10 +191,10 @@ var getDepositsOverTime = function (chainData) {
 };
 /* ====================================================================================================================================================== */
 // Function to get withdrawals over time:
-var getWithdrawalsOverTime = function (chainData) {
+var getWithdrawalsOverTime = function (chainData, customTimestamps) {
     // Initializations:
     var withdrawalsOverTime = {
-        timestamps: getTimestamps(chainData),
+        timestamps: customTimestamps !== null && customTimestamps !== void 0 ? customTimestamps : getTimestamps(chainData),
         withdrawalAmounts: [],
         withdrawalCounts: [],
         uniqueWallets: [],
@@ -203,7 +212,7 @@ var getWithdrawalsOverTime = function (chainData) {
         var newWallets = 0;
         chainData.withdrawals.data.forEach(function (withdrawal) {
             if (withdrawal.timestamp && withdrawal.timestamp <= withdrawalsOverTime.timestamps[i]) {
-                if ((i > 0 && withdrawal.timestamp > withdrawalsOverTime.timestamps[i - 1]) || i === 0) {
+                if ((i > 0 && withdrawal.timestamp > withdrawalsOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
                     withdrawalAmount += withdrawal.amount;
                     withdrawalCount++;
                     if (!cumulativeUniqueWallets.includes(withdrawal.wallet)) {
@@ -231,10 +240,10 @@ var getWithdrawalsOverTime = function (chainData) {
 };
 /* ====================================================================================================================================================== */
 // Function to get claims over time:
-var getClaimsOverTime = function (chainData) {
+var getClaimsOverTime = function (chainData, customTimestamps) {
     // Initializations:
     var claimsOverTime = {
-        timestamps: getTimestamps(chainData),
+        timestamps: customTimestamps !== null && customTimestamps !== void 0 ? customTimestamps : getTimestamps(chainData),
         claimAmounts: [],
         claimCounts: [],
         prizeCounts: [],
@@ -260,7 +269,7 @@ var getClaimsOverTime = function (chainData) {
         var distributions = { 1: 0, 5: 0, 10: 0, 50: 0, 100: 0, 500: 0, 1000: 0 };
         chainData.claims.data.forEach(function (claim) {
             if (claim.timestamp && claim.timestamp <= claimsOverTime.timestamps[i]) {
-                if ((i > 0 && claim.timestamp > claimsOverTime.timestamps[i - 1]) || i === 0) {
+                if ((i > 0 && claim.timestamp > claimsOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
                     var totalAmountClaimed = claim.prizes.reduce(function (a, b) { return a + b; }, 0);
                     claimAmount += totalAmountClaimed;
                     claimCount++;
@@ -362,10 +371,10 @@ var getTVLOverTime = function (deposits, withdrawals, claims) {
 };
 /* ====================================================================================================================================================== */
 // Function to get delegations over time:
-var getDelegationsOverTime = function (chainData) {
+var getDelegationsOverTime = function (chainData, customTimestamps) {
     // Initializations:
     var delegationsOverTime = {
-        timestamps: getTimestamps(chainData),
+        timestamps: customTimestamps !== null && customTimestamps !== void 0 ? customTimestamps : getTimestamps(chainData),
         delegationAmounts: [],
         delegationCounts: [],
         delegationWithdrawalAmounts: [],
@@ -392,7 +401,7 @@ var getDelegationsOverTime = function (chainData) {
         var newWallets = 0;
         chainData.delegationsCreated.data.forEach(function (delegation) {
             if (delegation.timestamp && delegation.timestamp <= delegationsOverTime.timestamps[i]) {
-                if ((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || i === 0) {
+                if ((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
                     delegationCount++;
                     if (!cumulativeUniqueWallets.includes(delegation.delegator)) {
                         cumulativeUniqueWallets.push(delegation.delegator);
@@ -403,14 +412,14 @@ var getDelegationsOverTime = function (chainData) {
         });
         chainData.delegationsFunded.data.forEach(function (delegation) {
             if (delegation.timestamp && delegation.timestamp <= delegationsOverTime.timestamps[i]) {
-                if ((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || i === 0) {
+                if ((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
                     delegationAmount += delegation.amount;
                 }
             }
         });
         chainData.delegationsWithdrawn.data.forEach(function (delegation) {
             if (delegation.timestamp && delegation.timestamp <= delegationsOverTime.timestamps[i]) {
-                if ((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || i === 0) {
+                if ((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
                     delegationWithdrawalAmount += delegation.amount;
                     delegationWithdrawalCount++;
                 }
@@ -441,10 +450,10 @@ var getDelegationsOverTime = function (chainData) {
 };
 /* ====================================================================================================================================================== */
 // Function to get yield captures over time:
-var getYieldOverTime = function (chainData) {
+var getYieldOverTime = function (chainData, customTimestamps) {
     // Initializations:
     var yieldOverTime = {
-        timestamps: getTimestamps(chainData),
+        timestamps: customTimestamps !== null && customTimestamps !== void 0 ? customTimestamps : getTimestamps(chainData),
         yieldAmounts: [],
         yieldCounts: [],
         cumulativeYieldAmounts: [],
@@ -457,7 +466,7 @@ var getYieldOverTime = function (chainData) {
         var yieldCount = 0;
         chainData.yields.data.forEach(function (yieldTX) {
             if (yieldTX.timestamp && yieldTX.timestamp <= yieldOverTime.timestamps[i]) {
-                if ((i > 0 && yieldTX.timestamp > yieldOverTime.timestamps[i - 1]) || i === 0) {
+                if ((i > 0 && yieldTX.timestamp > yieldOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
                     yieldAmount += yieldTX.amount;
                     yieldCount++;
                 }
@@ -702,7 +711,8 @@ var getAggregatedData = function (ethData, polyData, avaxData, opData) {
         balances: { timestamp: 0, data: [] },
         draws: { data: [] },
         minTimestamp: (_a = ethData.minTimestamp) !== null && _a !== void 0 ? _a : 0,
-        maxTimestamp: (_b = ethData.maxTimestamp) !== null && _b !== void 0 ? _b : defaultMaxTimestamp
+        maxTimestamp: (_b = ethData.maxTimestamp) !== null && _b !== void 0 ? _b : defaultMaxTimestamp,
+        timestamps: []
     };
     var chains = ['eth', 'poly', 'avax', 'op'];
     // Aggregating Data:
@@ -775,6 +785,8 @@ var getAggregatedData = function (ethData, polyData, avaxData, opData) {
             aggregatedData.maxTimestamp = chainData.maxTimestamp;
         }
     });
+    // Calculating Aggregated Timestamps:
+    aggregatedData.timestamps = getRangeArray(aggregatedData.minTimestamp, aggregatedData.maxTimestamp, true);
     // Sorting Data:
     aggregatedData.deposits.data.sort(function (a, b) { return a.timestamp - b.timestamp; });
     aggregatedData.withdrawals.data.sort(function (a, b) { return a.timestamp - b.timestamp; });
@@ -788,6 +800,66 @@ var getAggregatedData = function (ethData, polyData, avaxData, opData) {
     aggregatedData.draws.data.forEach(function (draw) {
         draw.result.sort(function (a, b) { return b.claimable.reduce(function (a, b) { return a + b; }, 0) - a.claimable.reduce(function (a, b) { return a + b; }, 0); });
     });
+    // Adding Ethereum Chain Data w/ Aggregated Timestamps:
+    var ethDepositsOverTime = getDepositsOverTime(ethData, aggregatedData.timestamps);
+    var ethWithdrawalsOverTime = getWithdrawalsOverTime(ethData, aggregatedData.timestamps);
+    var ethClaimsOverTime = getClaimsOverTime(ethData, aggregatedData.timestamps);
+    var ethDelegationsOverTime = getDelegationsOverTime(ethData, aggregatedData.timestamps);
+    var ethTvlOverTime = getTVLOverTime(ethDepositsOverTime, ethWithdrawalsOverTime, ethClaimsOverTime);
+    var ethYieldOverTime = getYieldOverTime(ethData, aggregatedData.timestamps);
+    aggregatedData.eth = {
+        depositsOverTime: ethDepositsOverTime,
+        withdrawalsOverTime: ethWithdrawalsOverTime,
+        claimsOverTime: ethClaimsOverTime,
+        delegationsOverTime: ethDelegationsOverTime,
+        tvlOverTime: ethTvlOverTime,
+        yieldOverTime: ethYieldOverTime
+    };
+    // Adding Polygon Chain Data w/ Aggregated Timestamps:
+    var polyDepositsOverTime = getDepositsOverTime(polyData, aggregatedData.timestamps);
+    var polyWithdrawalsOverTime = getWithdrawalsOverTime(polyData, aggregatedData.timestamps);
+    var polyClaimsOverTime = getClaimsOverTime(polyData, aggregatedData.timestamps);
+    var polyDelegationsOverTime = getDelegationsOverTime(polyData, aggregatedData.timestamps);
+    var polyTvlOverTime = getTVLOverTime(polyDepositsOverTime, polyWithdrawalsOverTime, polyClaimsOverTime);
+    var polyYieldOverTime = getYieldOverTime(polyData, aggregatedData.timestamps);
+    aggregatedData.poly = {
+        depositsOverTime: polyDepositsOverTime,
+        withdrawalsOverTime: polyWithdrawalsOverTime,
+        claimsOverTime: polyClaimsOverTime,
+        delegationsOverTime: polyDelegationsOverTime,
+        tvlOverTime: polyTvlOverTime,
+        yieldOverTime: polyYieldOverTime
+    };
+    // Adding Avalanche Chain Data w/ Aggregated Timestamps:
+    var avaxDepositsOverTime = getDepositsOverTime(avaxData, aggregatedData.timestamps);
+    var avaxWithdrawalsOverTime = getWithdrawalsOverTime(avaxData, aggregatedData.timestamps);
+    var avaxClaimsOverTime = getClaimsOverTime(avaxData, aggregatedData.timestamps);
+    var avaxDelegationsOverTime = getDelegationsOverTime(avaxData, aggregatedData.timestamps);
+    var avaxTvlOverTime = getTVLOverTime(avaxDepositsOverTime, avaxWithdrawalsOverTime, avaxClaimsOverTime);
+    var avaxYieldOverTime = getYieldOverTime(avaxData, aggregatedData.timestamps);
+    aggregatedData.avax = {
+        depositsOverTime: avaxDepositsOverTime,
+        withdrawalsOverTime: avaxWithdrawalsOverTime,
+        claimsOverTime: avaxClaimsOverTime,
+        delegationsOverTime: avaxDelegationsOverTime,
+        tvlOverTime: avaxTvlOverTime,
+        yieldOverTime: avaxYieldOverTime
+    };
+    // Adding Optimism Chain Data w/ Aggregated Timestamps:
+    var opDepositsOverTime = getDepositsOverTime(opData, aggregatedData.timestamps);
+    var opWithdrawalsOverTime = getWithdrawalsOverTime(opData, aggregatedData.timestamps);
+    var opClaimsOverTime = getClaimsOverTime(opData, aggregatedData.timestamps);
+    var opDelegationsOverTime = getDelegationsOverTime(opData, aggregatedData.timestamps);
+    var opTvlOverTime = getTVLOverTime(opDepositsOverTime, opWithdrawalsOverTime, opClaimsOverTime);
+    var opYieldOverTime = getYieldOverTime(opData, aggregatedData.timestamps);
+    aggregatedData.op = {
+        depositsOverTime: opDepositsOverTime,
+        withdrawalsOverTime: opWithdrawalsOverTime,
+        claimsOverTime: opClaimsOverTime,
+        delegationsOverTime: opDelegationsOverTime,
+        tvlOverTime: opTvlOverTime,
+        yieldOverTime: opYieldOverTime
+    };
     return aggregatedData;
 };
 /* ====================================================================================================================================================== */

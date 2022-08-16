@@ -8,22 +8,34 @@ const ticks = 50;
 // Function to react to incoming messages:
 onmessage = (event) => {
   if(event.data.length === 1) {
+
+    // Chain-Specific Data:
     const chainData: ChainData = event.data[0];
     const data = calculateData(chainData);
     postMessage(data);
+
   } else if(event.data.length === 4) {
     if(event.data[0].deposits) {
+
+      // Aggregated Data:
       const chainsData: ChainData[] = event.data;
       const aggregatedData = getAggregatedData(chainsData[0], chainsData[1], chainsData[2], chainsData[3]);
       postMessage(aggregatedData);
+
     } else {
+
+      // Multichain Users' Data:
       const chainsBalances: BalanceData[][] = event.data;
       const multichainUsersData = getMultichainUsersDistribution(chainsBalances[0], chainsBalances[1], chainsBalances[2], chainsBalances[3]);
       postMessage(multichainUsersData);
+
     }
   } else if(event.data.length === 5) {
+
+    // Moving Users' Data:
     const movingUsers = getMovingUsers(event.data[0], event.data[1], event.data[2], event.data[3], event.data[4]);
     postMessage(movingUsers);
+    
   } else {
     console.error('Invalid data sent to worker.');
   }
@@ -49,9 +61,11 @@ const calculateData = (chainData: ChainData) => {
 /* ====================================================================================================================================================== */
 
 // Function to get array of numbers:
-const getRangeArray = (start: number, end: number) => {
+const getRangeArray = (start: number, end: number, includeFirstValue?: boolean) => {
   const range: number[] = [];
-  const tick = (end - start) / ticks;
+  const timespan = end - start;
+  const tick = includeFirstValue ? (timespan / ticks) + (timespan / ticks / ticks) : timespan / ticks;
+  if(includeFirstValue) { range.push(Math.ceil(start)); };
   let value = start;
   while(Math.ceil(value) < end) {
     value += tick;
@@ -76,11 +90,11 @@ const getTimestamps = (chainData: ChainData, simple?: boolean) => {
 /* ====================================================================================================================================================== */
 
 // Function to get deposits over time:
-const getDepositsOverTime = (chainData: ChainData) => {
+const getDepositsOverTime = (chainData: ChainData, customTimestamps?: number[]) => {
 
   // Initializations:
   const depositsOverTime: DepositsOverTime = {
-    timestamps: getTimestamps(chainData),
+    timestamps: customTimestamps ?? getTimestamps(chainData),
     depositAmounts: [],
     depositCounts: [],
     uniqueWallets: [],
@@ -104,7 +118,7 @@ const getDepositsOverTime = (chainData: ChainData) => {
     let distributions = { 1: 0, 10: 0, 100: 0, 1000: 0, 10000: 0, 100000: 0 };
     chainData.deposits.data.forEach(deposit => {
       if(deposit.timestamp && deposit.timestamp <= depositsOverTime.timestamps[i]) {
-        if((i > 0 && deposit.timestamp > depositsOverTime.timestamps[i - 1]) || i === 0) {
+        if((i > 0 && deposit.timestamp > depositsOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
           depositAmount += deposit.amount;
           depositCount++;
           if(!cumulativeUniqueWallets.includes(deposit.wallet)) {
@@ -172,11 +186,11 @@ const getDepositsOverTime = (chainData: ChainData) => {
 /* ====================================================================================================================================================== */
 
 // Function to get withdrawals over time:
-const getWithdrawalsOverTime = (chainData: ChainData) => {
+const getWithdrawalsOverTime = (chainData: ChainData, customTimestamps?: number[]) => {
 
   // Initializations:
   const withdrawalsOverTime: WithdrawalsOverTime = {
-    timestamps: getTimestamps(chainData),
+    timestamps: customTimestamps ?? getTimestamps(chainData),
     withdrawalAmounts: [],
     withdrawalCounts: [],
     uniqueWallets: [],
@@ -196,7 +210,7 @@ const getWithdrawalsOverTime = (chainData: ChainData) => {
     let newWallets = 0;
     chainData.withdrawals.data.forEach(withdrawal => {
       if(withdrawal.timestamp && withdrawal.timestamp <= withdrawalsOverTime.timestamps[i]) {
-        if((i > 0 && withdrawal.timestamp > withdrawalsOverTime.timestamps[i - 1]) || i === 0) {
+        if((i > 0 && withdrawal.timestamp > withdrawalsOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
           withdrawalAmount += withdrawal.amount;
           withdrawalCount++;
           if(!cumulativeUniqueWallets.includes(withdrawal.wallet)) {
@@ -223,11 +237,11 @@ const getWithdrawalsOverTime = (chainData: ChainData) => {
 /* ====================================================================================================================================================== */
 
 // Function to get claims over time:
-const getClaimsOverTime = (chainData: ChainData) => {
+const getClaimsOverTime = (chainData: ChainData, customTimestamps?: number[]) => {
 
   // Initializations:
   const claimsOverTime: ClaimsOverTime = {
-    timestamps: getTimestamps(chainData),
+    timestamps: customTimestamps ?? getTimestamps(chainData),
     claimAmounts: [],
     claimCounts: [],
     prizeCounts: [],
@@ -255,7 +269,7 @@ const getClaimsOverTime = (chainData: ChainData) => {
     let distributions = { 1: 0, 5: 0, 10: 0, 50: 0, 100: 0, 500: 0, 1000: 0 };
     chainData.claims.data.forEach(claim => {
       if(claim.timestamp && claim.timestamp <= claimsOverTime.timestamps[i]) {
-        if((i > 0 && claim.timestamp > claimsOverTime.timestamps[i - 1]) || i === 0) {
+        if((i > 0 && claim.timestamp > claimsOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
           const totalAmountClaimed = claim.prizes.reduce((a, b) => a + b, 0);
           claimAmount += totalAmountClaimed;
           claimCount++;
@@ -355,11 +369,11 @@ const getTVLOverTime = (deposits: DepositsOverTime, withdrawals: WithdrawalsOver
 /* ====================================================================================================================================================== */
 
 // Function to get delegations over time:
-const getDelegationsOverTime = (chainData: ChainData) => {
+const getDelegationsOverTime = (chainData: ChainData, customTimestamps?: number[]) => {
 
   // Initializations:
   const delegationsOverTime: DelegationsOverTime = {
-    timestamps: getTimestamps(chainData),
+    timestamps: customTimestamps ?? getTimestamps(chainData),
     delegationAmounts: [],
     delegationCounts: [],
     delegationWithdrawalAmounts: [],
@@ -388,7 +402,7 @@ const getDelegationsOverTime = (chainData: ChainData) => {
     let newWallets = 0;
     chainData.delegationsCreated.data.forEach(delegation => {
       if(delegation.timestamp && delegation.timestamp <= delegationsOverTime.timestamps[i]) {
-        if((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || i === 0) {
+        if((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
           delegationCount++;
           if(!cumulativeUniqueWallets.includes(delegation.delegator)) {
             cumulativeUniqueWallets.push(delegation.delegator);
@@ -399,14 +413,14 @@ const getDelegationsOverTime = (chainData: ChainData) => {
     });
     chainData.delegationsFunded.data.forEach(delegation => {
       if(delegation.timestamp && delegation.timestamp <= delegationsOverTime.timestamps[i]) {
-        if((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || i === 0) {
+        if((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
           delegationAmount += delegation.amount;
         }
       }
     });
     chainData.delegationsWithdrawn.data.forEach(delegation => {
       if(delegation.timestamp && delegation.timestamp <= delegationsOverTime.timestamps[i]) {
-        if((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || i === 0) {
+        if((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
           delegationWithdrawalAmount += delegation.amount;
           delegationWithdrawalCount++;
         }
@@ -436,11 +450,11 @@ const getDelegationsOverTime = (chainData: ChainData) => {
 /* ====================================================================================================================================================== */
 
 // Function to get yield captures over time:
-const getYieldOverTime = (chainData: ChainData) => {
+const getYieldOverTime = (chainData: ChainData, customTimestamps?: number[]) => {
 
   // Initializations:
   const yieldOverTime: YieldOverTime = {
-    timestamps: getTimestamps(chainData),
+    timestamps: customTimestamps ?? getTimestamps(chainData),
     yieldAmounts: [],
     yieldCounts: [],
     cumulativeYieldAmounts: [],
@@ -455,7 +469,7 @@ const getYieldOverTime = (chainData: ChainData) => {
     let yieldCount = 0;
     chainData.yields.data.forEach(yieldTX => {
       if(yieldTX.timestamp && yieldTX.timestamp <= yieldOverTime.timestamps[i]) {
-        if((i > 0 && yieldTX.timestamp > yieldOverTime.timestamps[i - 1]) || i === 0) {
+        if((i > 0 && yieldTX.timestamp > yieldOverTime.timestamps[i - 1]) || (i === 0 && customTimestamps === undefined)) {
           yieldAmount += yieldTX.amount;
           yieldCount++;
         }
@@ -714,7 +728,8 @@ const getAggregatedData = (ethData: ChainData, polyData: ChainData, avaxData: Ch
     balances: { timestamp: 0, data: [] },
     draws: { data: [] },
     minTimestamp: ethData.minTimestamp ?? 0,
-    maxTimestamp: ethData.maxTimestamp ?? defaultMaxTimestamp
+    maxTimestamp: ethData.maxTimestamp ?? defaultMaxTimestamp,
+    timestamps: []
   }
   const chains: Chain[] = ['eth', 'poly', 'avax', 'op'];
 
@@ -797,6 +812,9 @@ const getAggregatedData = (ethData: ChainData, polyData: ChainData, avaxData: Ch
     }
   });
 
+  // Calculating Aggregated Timestamps:
+  aggregatedData.timestamps = getRangeArray(aggregatedData.minTimestamp, aggregatedData.maxTimestamp, true);
+
   // Sorting Data:
   aggregatedData.deposits.data.sort((a, b) => (a.timestamp as number) - (b.timestamp as number));
   aggregatedData.withdrawals.data.sort((a, b) => (a.timestamp as number) - (b.timestamp as number));
@@ -810,6 +828,70 @@ const getAggregatedData = (ethData: ChainData, polyData: ChainData, avaxData: Ch
   aggregatedData.draws.data.forEach(draw => {
     draw.result.sort((a, b) => b.claimable.reduce((a, b) => a + b, 0) - a.claimable.reduce((a, b) => a + b, 0));
   });
+
+  // Adding Ethereum Chain Data w/ Aggregated Timestamps:
+  const ethDepositsOverTime = getDepositsOverTime(ethData, aggregatedData.timestamps);
+  const ethWithdrawalsOverTime = getWithdrawalsOverTime(ethData, aggregatedData.timestamps);
+  const ethClaimsOverTime = getClaimsOverTime(ethData, aggregatedData.timestamps);
+  const ethDelegationsOverTime = getDelegationsOverTime(ethData, aggregatedData.timestamps);
+  const ethTvlOverTime = getTVLOverTime(ethDepositsOverTime, ethWithdrawalsOverTime, ethClaimsOverTime);
+  const ethYieldOverTime = getYieldOverTime(ethData, aggregatedData.timestamps);
+  aggregatedData.eth = {
+    depositsOverTime: ethDepositsOverTime,
+    withdrawalsOverTime: ethWithdrawalsOverTime,
+    claimsOverTime: ethClaimsOverTime,
+    delegationsOverTime: ethDelegationsOverTime,
+    tvlOverTime: ethTvlOverTime,
+    yieldOverTime: ethYieldOverTime
+  }
+
+  // Adding Polygon Chain Data w/ Aggregated Timestamps:
+  const polyDepositsOverTime = getDepositsOverTime(polyData, aggregatedData.timestamps);
+  const polyWithdrawalsOverTime = getWithdrawalsOverTime(polyData, aggregatedData.timestamps);
+  const polyClaimsOverTime = getClaimsOverTime(polyData, aggregatedData.timestamps);
+  const polyDelegationsOverTime = getDelegationsOverTime(polyData, aggregatedData.timestamps);
+  const polyTvlOverTime = getTVLOverTime(polyDepositsOverTime, polyWithdrawalsOverTime, polyClaimsOverTime);
+  const polyYieldOverTime = getYieldOverTime(polyData, aggregatedData.timestamps);
+  aggregatedData.poly = {
+    depositsOverTime: polyDepositsOverTime,
+    withdrawalsOverTime: polyWithdrawalsOverTime,
+    claimsOverTime: polyClaimsOverTime,
+    delegationsOverTime: polyDelegationsOverTime,
+    tvlOverTime: polyTvlOverTime,
+    yieldOverTime: polyYieldOverTime
+  }
+
+  // Adding Avalanche Chain Data w/ Aggregated Timestamps:
+  const avaxDepositsOverTime = getDepositsOverTime(avaxData, aggregatedData.timestamps);
+  const avaxWithdrawalsOverTime = getWithdrawalsOverTime(avaxData, aggregatedData.timestamps);
+  const avaxClaimsOverTime = getClaimsOverTime(avaxData, aggregatedData.timestamps);
+  const avaxDelegationsOverTime = getDelegationsOverTime(avaxData, aggregatedData.timestamps);
+  const avaxTvlOverTime = getTVLOverTime(avaxDepositsOverTime, avaxWithdrawalsOverTime, avaxClaimsOverTime);
+  const avaxYieldOverTime = getYieldOverTime(avaxData, aggregatedData.timestamps);
+  aggregatedData.avax = {
+    depositsOverTime: avaxDepositsOverTime,
+    withdrawalsOverTime: avaxWithdrawalsOverTime,
+    claimsOverTime: avaxClaimsOverTime,
+    delegationsOverTime: avaxDelegationsOverTime,
+    tvlOverTime: avaxTvlOverTime,
+    yieldOverTime: avaxYieldOverTime
+  }
+
+  // Adding Optimism Chain Data w/ Aggregated Timestamps:
+  const opDepositsOverTime = getDepositsOverTime(opData, aggregatedData.timestamps);
+  const opWithdrawalsOverTime = getWithdrawalsOverTime(opData, aggregatedData.timestamps);
+  const opClaimsOverTime = getClaimsOverTime(opData, aggregatedData.timestamps);
+  const opDelegationsOverTime = getDelegationsOverTime(opData, aggregatedData.timestamps);
+  const opTvlOverTime = getTVLOverTime(opDepositsOverTime, opWithdrawalsOverTime, opClaimsOverTime);
+  const opYieldOverTime = getYieldOverTime(opData, aggregatedData.timestamps);
+  aggregatedData.op = {
+    depositsOverTime: opDepositsOverTime,
+    withdrawalsOverTime: opWithdrawalsOverTime,
+    claimsOverTime: opClaimsOverTime,
+    delegationsOverTime: opDelegationsOverTime,
+    tvlOverTime: opTvlOverTime,
+    yieldOverTime: opYieldOverTime
+  }
 
   return aggregatedData;
 }
@@ -1174,4 +1256,19 @@ interface AggregatedData {
   draws: { data: DrawData[] }
   minTimestamp: number
   maxTimestamp: number
+  timestamps: number[]
+  eth?: AggTimestampedChainData
+  poly?: AggTimestampedChainData
+  avax?: AggTimestampedChainData
+  op?: AggTimestampedChainData
+}
+
+// Chain Data w/ Aggregated Timestamps Interface:
+interface AggTimestampedChainData {
+  depositsOverTime: DepositsOverTime
+  withdrawalsOverTime: WithdrawalsOverTime
+  claimsOverTime: ClaimsOverTime
+  delegationsOverTime: DelegationsOverTime
+  tvlOverTime: TVLOverTime
+  yieldOverTime: YieldOverTime
 }

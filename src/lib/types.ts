@@ -51,6 +51,21 @@ export interface AggregatedData {
   draws: { data: DrawData[] }
   minTimestamp: number
   maxTimestamp: number
+  timestamps: number[]
+  eth?: AggTimestampedChainData
+  poly?: AggTimestampedChainData
+  avax?: AggTimestampedChainData
+  op?: AggTimestampedChainData
+}
+
+// Chain Data w/ Aggregated Timestamps Interface:
+export interface AggTimestampedChainData {
+  depositsOverTime: DepositsOverTime
+  withdrawalsOverTime: WithdrawalsOverTime
+  claimsOverTime: ClaimsOverTime
+  delegationsOverTime: DelegationsOverTime
+  tvlOverTime: TVLOverTime
+  yieldOverTime: YieldOverTime
 }
 
 /* ========================================================================================================================================================================= */
