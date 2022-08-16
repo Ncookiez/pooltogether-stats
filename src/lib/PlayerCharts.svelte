@@ -12,6 +12,7 @@
 	// Initializations:
 	export let wallet: Hash;
 	export let playerData: PlayerData;
+	let mounted = false;
 
 	// Charts:
 	const balanceChart: LineChartInfo = { name: `${wallet}BalanceChart`, title: 'Balance Over Time', xAxisValues: [], data: [{ label: 'Balance', data: [] }], dollarValues: true };
@@ -25,26 +26,29 @@
 
 	// Function to set chart data:
 	const setChartData = () => {
+		if(mounted) {
 
-		// Initializing Chart Timestamps:
-		const timestamps = timestampsToDates(playerData.timestamps);
-
-		// Setting Chart X Axis Values / Section Labels:
-		balanceChart.xAxisValues = timestamps;
-		chainAllocationsChart.sectionLabels = ['Ethereum', 'Polygon', 'Avalanche', 'Optimism'];
-		depositsChart.xAxisValues = timestamps;
-		claimsChart.xAxisValues = timestamps;
-		withdrawalsChart.xAxisValues = timestamps;
-
-		// Setting Chart Data:
-		balanceChart.data[0].data = playerData.balancesOverTime;
-		chainAllocationsChart.data = [Math.floor(playerData.balances.eth), Math.floor(playerData.balances.poly), Math.floor(playerData.balances.avax), Math.floor(playerData.balances.op)];
-		depositsChart.data[0].data = playerData.depositsOverTime;
-		claimsChart.data[0].data = playerData.claimsOverTime;
-		withdrawalsChart.data[0].data = playerData.withdrawalsOverTime;
+			// Initializing Chart Timestamps:
+			const timestamps = timestampsToDates(playerData.timestamps);
+	
+			// Setting Chart X Axis Values / Section Labels:
+			balanceChart.xAxisValues = timestamps;
+			chainAllocationsChart.sectionLabels = ['Ethereum', 'Polygon', 'Avalanche', 'Optimism'];
+			depositsChart.xAxisValues = timestamps;
+			claimsChart.xAxisValues = timestamps;
+			withdrawalsChart.xAxisValues = timestamps;
+	
+			// Setting Chart Data:
+			balanceChart.data[0].data = playerData.balancesOverTime;
+			chainAllocationsChart.data = [Math.floor(playerData.balances.eth), Math.floor(playerData.balances.poly), Math.floor(playerData.balances.avax), Math.floor(playerData.balances.op)];
+			depositsChart.data[0].data = playerData.depositsOverTime;
+			claimsChart.data[0].data = playerData.claimsOverTime;
+			withdrawalsChart.data[0].data = playerData.withdrawalsOverTime;
+		}
 	}
 
 	onMount(() => {
+		mounted = true;
 		setChartData();
 	});
 	
