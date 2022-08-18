@@ -31,5 +31,11 @@
 		border-radius: 1em;
 		overflow: hidden;
 	}
+
+	@media screen and (max-width: 600px) {
+		div.highlight {
+			height: 20em;
+		}
+	}
 	
 </style>

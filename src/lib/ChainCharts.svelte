@@ -271,9 +271,9 @@
 <LineChart {...withdrawalAmountsChart} />
 <LineChart {...withdrawalCountsChart} />
 <Highlight hide={$endTimestamp !== defaultMaxTimestamp}>
-	<span>There are <span class="highlight">{winlessWithdrawals.length.toLocaleString(undefined)} wallets</span> that have withdrawn without claiming a prize.</span>
+	<span class="center">There are <span class="highlight">{winlessWithdrawals.length.toLocaleString(undefined)} wallets</span> that have withdrawn without claiming a prize.</span>
 	{#if winlessWithdrawals.length > 0}
-		<span>They remained deposited for <span class="highlight">{winlessWithdrawalsAverageDays} days</span> on average.</span>
+		<span class="center">They remained deposited for <span class="highlight">{winlessWithdrawalsAverageDays} days</span> on average.</span>
 	{/if}
 	<span class="small">Filter by wallets with over $<input type="number" placeholder="?" bind:value={minWinlessWithdrawalsBalance}></span>
 </Highlight>
@@ -306,13 +306,14 @@
 		display: flex;
 		flex-direction: column;
 		gap: .5em;
-		width: 40%;
+		width: max(14em, 40%);
 		margin-top: .5em;
 	}
 
 	span.list > span {
 		display: flex;
 		justify-content: space-between;
+		gap: 1em;
 		font-family: 'Courier Prime', monospace;
 	}
 
@@ -333,6 +334,10 @@
 	
 	span.small > input:focus {
 		outline: none;
+	}
+
+	span.center {
+		text-align: center;
 	}
 	
 </style>

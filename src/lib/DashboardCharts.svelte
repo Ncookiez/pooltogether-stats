@@ -296,13 +296,14 @@
 		display: flex;
 		flex-direction: column;
 		gap: .5em;
-		width: 40%;
+		width: max(14em, 40%);
 		margin-top: .5em;
 	}
 
 	span.list > span {
 		display: flex;
 		justify-content: space-between;
+		gap: 1em;
 		font-family: 'Courier Prime', monospace;
 	}
 	

@@ -23,7 +23,7 @@
 <!-- #################################################################################################### -->
 
 <!-- Player Header -->
-<h1>Player Stats: <span title="{wallet}">{wallet.slice(0, 6)}…{wallet.slice(-4)}</span> <i class="icofont-copy-invert" on:click={() => navigator.clipboard.writeText(wallet ?? '')} /></h1>
+<h1>Player Stats: <span class="wallet" title="{wallet}">{wallet.slice(0, 6)}…{wallet.slice(-4)}</span> <i class="icofont-copy-invert" on:click={() => navigator.clipboard.writeText(wallet ?? '')} /></h1>
 
 <!-- Player Summary -->
 {#if playerData.txs.length > 0}
@@ -45,9 +45,10 @@
 		justify-content: center;
 		align-items: center;
 		gap: .5em;
-		width: 81rem;
+		width: 100%;
 		margin: .5em 0;
 		text-align: center;
+		flex-wrap: wrap;
 	}
 
 	i {
@@ -57,6 +58,10 @@
 
 	i:hover {
 		color: var(--light-purple);
+	}
+
+	span.wallet {
+		white-space: nowrap;
 	}
 
 	span.highlight {

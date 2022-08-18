@@ -73,6 +73,7 @@
 	<!-- Header -->
 	<div class="header">
 		<h2>{chainName} History</h2>
+		<h2 id="altHeader">History</h2>
 		{#if tabSelected === 'winners'}
 			<div id="drawSelector">
 				<span>Draw:</span>
@@ -122,7 +123,7 @@
 					<span class="winner listItem" class:highlightItem={winner.claimable.reduce((a, b) => a + b, 0) >= 1000}>
 						<a href="{`/${winner.wallet}`}" class="wallet" title="{winner.wallet}">{winner.wallet.slice(0, 6)}…{winner.wallet.slice(-4)}</a>
 						<i class="icofont-arrow-right" />
-						<span class="prizes" title="{winner.claimable.map(value => ` $${value}`).toString().slice(1)}">Won ${winner.claimable.reduce((a, b) => a + b, 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+						<span class="prizes" title="{winner.claimable.map(value => ` $${value}`).toString().slice(1)}"><span class="label">Won </span>${winner.claimable.reduce((a, b) => a + b, 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
 						{#if winner.avgBalance}
 							<span class="avgBalance">(Balance: ${winner.avgBalance.toLocaleString(undefined, { maximumFractionDigits: 0 })})</span>
 						{/if}
@@ -143,7 +144,7 @@
 					<span class="deposit listItem" class:highlightItem={deposit.amount >= 10000}>
 						<a href="{`/${deposit.wallet}`}" class="wallet" title="{deposit.wallet}">{deposit.wallet.slice(0, 6)}…{deposit.wallet.slice(-4)}</a>
 						<i class="icofont-arrow-right" />
-						<span class="amount">Deposited {deposit.amount < 0.9 ? '<$1' : `$${deposit.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
+						<span class="amount"><span class="label">Deposited </span>{deposit.amount < 0.9 ? '<$1' : `$${deposit.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
 						{#if deposit.timestamp}
 							<span class="time">({getTimeDisplay(deposit.timestamp)})</span>
 						{/if}
@@ -165,7 +166,7 @@
 					<span class="delegation listItem" class:highlightItem={delegation.amount >= 10000}>
 						<a href="{`/${delegation.delegator}`}" class="wallet" title="{delegation.delegator}">{delegation.delegator.slice(0, 6)}…{delegation.delegator.slice(-4)}</a>
 						<i class="icofont-arrow-right" />
-						<span class="amount">Delegated {delegation.amount < 0.9 ? '<$1' : `$${delegation.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
+						<span class="amount"><span class="label">Delegated </span>{delegation.amount < 0.9 ? '<$1' : `$${delegation.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
 						{#if delegation.timestamp}
 							<span class="time">({getTimeDisplay(delegation.timestamp)})</span>
 						{/if}
@@ -190,6 +191,7 @@
 		flex-direction: column;
 		height: calc(100vh - var(--navbar-height) - 50px - 4em);
 		width: 81em;
+		margin: 0 calc((100vw - 81em) / 2);
 		padding: 1em 0 0;
 		background: var(--dark-purple);
 		border: 2px solid var(--accent-color);
@@ -204,6 +206,10 @@
 		justify-content: space-between;
 		gap: 1em;
 		padding: 0 2em;
+	}
+
+	#altHeader {
+		display: none;
 	}
 
 	div.tabs {
@@ -372,6 +378,45 @@
 	span.time {
 		color: var(--light-purple);
 		font-size: .9em;
+	}
+
+	@media screen and (max-width: 600px) {
+		div.tabs {
+			padding: 0;
+		}
+		div.tabs > span {
+			padding: 1em;
+		}
+		span.avgBalance {
+			display: none;
+		}
+		span.time {
+			display: none;
+		}
+	}
+
+	@media screen and (max-width: 530px) {
+		span.deposit span.label {
+			display: none;
+		}
+	}
+
+	@media screen and (max-width: 460px) {
+		h2 {
+			display: none;
+		}
+		#altHeader {
+			display: block;
+		}
+		span.label {
+			display: none;
+		}
+	}
+
+	@media screen and (max-width: 410px) {
+		span.listItem {
+			gap: .5em;
+		}
 	}
 	
 </style>

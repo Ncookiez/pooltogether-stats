@@ -308,6 +308,7 @@
 		display: flex;
 		flex-direction: column;
 		margin-top: 4em;
+		text-align: center;
 	}
 
 	img {

@@ -96,6 +96,7 @@
 		flex-direction: column;
 		height: calc(100vh - var(--navbar-height) - 50px - 4em);
 		width: 81em;
+		margin: 0 calc((100vw - 81em) / 2);
 		padding: 1em 0 0;
 		background: var(--dark-purple);
 		border: 2px solid var(--accent-color);
@@ -166,6 +167,21 @@
 		margin-left: auto;
 		color: inherit;
 		text-decoration: none;
+	}
+
+	@media screen and (max-width: 600px) {
+		span.time {
+			display: none;
+		}
+	}
+
+	@media screen and (max-width: 540px) {
+		span.wallet {
+			display: none;
+		}
+		span.listItem > i:first-of-type {
+			display: none;
+		}
 	}
 	
 </style>

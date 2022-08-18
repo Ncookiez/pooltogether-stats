@@ -92,5 +92,17 @@
 		50% { background-position: right; }
 		100% { background-position: right; }
 	}
+
+	@media screen and (max-width: 370px) {
+		#vibing, #repoLink {
+			display: none;
+		}
+	}
+
+	@media screen and (max-width: 265px) {
+		footer {
+			display: none;
+		}
+	}
 	
 </style>

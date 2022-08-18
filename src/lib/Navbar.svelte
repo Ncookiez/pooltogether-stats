@@ -108,6 +108,7 @@
 
 	<!-- Banner -->
 	<div class="banner">
+		<img id="altLogo" src="/images/trophy.webp" alt="PoolTogether">
 		<img src="/images/pooltogether-logo.svg" alt="PoolTogether">
 		<span>Explorer</span>
 	</div>
@@ -116,7 +117,7 @@
 	<div class="pages">
 		<a class="dashboard" class:selected={!$page.routeId} href="/">Dashboard</a>
 		{#each chains as chain}
-			<a class="{chain}" class:selected={selectedChain === chain} href="/{chain}"><img src="/images/{chain}.svg" alt="{chain.toUpperCase()}">{getChainName(chain)}</a>
+			<a class="{chain}" class:selected={selectedChain === chain} href="/{chain}"><img src="/images/{chain}.svg" alt="{chain.toUpperCase()}"><span>{getChainName(chain)}</span></a>
 		{/each}
 	</div>
 
@@ -204,6 +205,10 @@
 	a > img {
 		height: 25px;
 		width: 25px;
+	}
+
+	#altLogo {
+		display: none;
 	}
 
 	div.banner {
@@ -307,6 +312,51 @@
 		background: var(--accent-color);
 		border: none;
 		border-radius: 0 .5em .5em 0;
+	}
+
+	@media screen and (max-width: 1530px) {
+		div.pages > a > span {
+			display: none;
+		}
+	}
+
+	@media screen and (max-width: 1235px) {
+		div.banner > img, div.banner > span {
+			display: none;
+		}
+		#altLogo {
+			display: block;
+		}
+		div.pages {
+			margin: 0 2em;
+		}
+	}
+
+	@media screen and (max-width: 850px) {
+		div.timestamps {
+			display: none;
+		}
+		div.playerSearch {
+			margin-left: auto;
+		}
+	}
+
+	@media screen and (max-width: 530px) {
+		nav {
+			flex-wrap: wrap;
+			padding: 1em 2em;
+		}
+		a {
+			height: calc(var(--navbar-height) / 4);
+		}
+		#altLogo {
+			height: 50px;
+		}
+		div.pages {
+			width: 100%;
+			margin: 0;
+			order: 3;
+		}
 	}
 	
 </style>
