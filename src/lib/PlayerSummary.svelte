@@ -9,6 +9,7 @@
 	// Initializations:
 	export let wallet: Hash;
 	export let playerData: PlayerData;
+	let copiedAddress: boolean = false;
 
 	// Reactive Player Stats:
 	$: currentBalance = playerData.balancesOverTime[playerData.balancesOverTime.length - 1];
@@ -17,13 +18,20 @@
 	$: numPrizes = claimTXs.map(tx => tx.data.prizes.length).reduce((a, b) => a + b, 0);
 	$: firstDepositTimestamp = playerData.txs.slice().reverse().find(tx => tx.type === 'deposit')?.data.timestamp;
 	$: firstDepositDate = firstDepositTimestamp ? (new Date(firstDepositTimestamp * 1000)).toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : undefined;
+
+	// Function to copy address to clipboard:
+	const copyAddress = () => {
+		navigator.clipboard.writeText(wallet);
+		copiedAddress = true;
+		setTimeout(() => copiedAddress = false, 3000);
+	}
 	
 </script>
 
 <!-- #################################################################################################### -->
 
 <!-- Player Header -->
-<h1>Player Stats: <span class="wallet" title="{wallet}">{wallet.slice(0, 6)}…{wallet.slice(-4)}</span> <i class="icofont-copy-invert" on:click={() => navigator.clipboard.writeText(wallet ?? '')} /></h1>
+<h1>Player Stats: <span class="wallet" title="{wallet}">{wallet.slice(0, 6)}…{wallet.slice(-4)}</span> <i class="icofont-copy-invert" on:click={copyAddress}><span class="copyTooltip" class:hide={!copiedAddress}>Copied!</span></i></h1>
 
 <!-- Player Summary -->
 {#if playerData.txs.length > 0}
@@ -52,6 +60,9 @@
 	}
 
 	i {
+		position: relative;
+		display: flex;
+		align-items: center;
 		font-size: .7em;
 		cursor: pointer;
 	}
@@ -62,6 +73,13 @@
 
 	span.wallet {
 		white-space: nowrap;
+	}
+
+	span.copyTooltip {
+		position: absolute;
+		left: 2em;
+		color: grey;
+		font-size: .7em;
 	}
 
 	span.highlight {

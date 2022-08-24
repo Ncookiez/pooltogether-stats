@@ -3,35 +3,56 @@
 import { utils } from 'ethers';
 
 // Type Imports:
-import type { Chain, Hash, ChainData, DepositData, WithdrawalData, ClaimData, DelegationCreatedData, DelegationFundedData, DelegationUpdatedData, DelegationWithdrawnData, YieldData, SupplyData, BalanceData, DrawData, ExplorerAPIDrawResponse } from '$lib/types';
+import type { Chain, Hash, ChainStats, ChainData, DepositData, WithdrawalData, ClaimData, DelegationCreatedData, DelegationFundedData, DelegationUpdatedData, DelegationWithdrawnData, YieldData, SupplyData, BalanceData, DrawData, ExplorerAPIDrawResponse, PlayerData } from '$lib/types';
 
 /* ========================================================================================================================================================================= */
 
 // Settings:
 const apiURL = 'https://pooltogether-stats.web.app';
 const explorerApiURL = 'https://poolexplorer.xyz';
-const pageSize = 20000;
+const defaultPageSize = 20000;
+
+/* ========================================================================================================================================================================= */
+
+// Function to fetch basic stats:
+export const fetchStats = async (chain: Chain) => {
+  try {
+    const apiResponse: { lastQueriedBlock: number, data: ChainStats[] } = await fetch(`${apiURL}/${chain}/stats`).then(response => response.json());
+    return apiResponse.data[0];
+  } catch {
+    throw new Error(`Error querying ${chain.toUpperCase()} stats.`);
+  }
+}
 
 /* ========================================================================================================================================================================= */
 
 // Function to fetch deposits data:
-export const fetchDeposits = async (chain: Chain) => {
+export const fetchDeposits = async (chain: Chain, pageSize?: number, page?: number) => {
 
   // Initializations:
   const deposits: ChainData['deposits'] = { lastQueriedBlock: 0, data: [] };
   let hasNextPage = false;
-  let page = 0;
+  let currentPage = 0;
+
+  // Type Initializations:
+  type APIResponse = { lastQueriedBlock: number, data: DepositData[], page: number, hasNextPage: boolean };
 
   // Fetching Deposits:
   try {
-    do {
-      let apiResponse: { lastQueriedBlock: number, data: DepositData[], page: number, hasNextPage: boolean } = await fetch(`${apiURL}/${chain}/deposits?page=${page++}&pageSize=${pageSize}`).then(response => response.json());
-      if(apiResponse.lastQueriedBlock > deposits.lastQueriedBlock) {
-        deposits.lastQueriedBlock = apiResponse.lastQueriedBlock;
-      }
-      deposits.data.push(...apiResponse.data);
-      hasNextPage = apiResponse.hasNextPage;
-    } while(hasNextPage);
+    if(page) {
+      const apiResponse: APIResponse = await fetch(`${apiURL}/${chain}/deposits?page=${page}&pageSize=${pageSize ?? defaultPageSize}`).then(response => response.json());
+      deposits.lastQueriedBlock = apiResponse.lastQueriedBlock;
+      deposits.data = apiResponse.data;
+    } else {
+      do {
+        const apiResponse: APIResponse = await fetch(`${apiURL}/${chain}/deposits?page=${currentPage++}&pageSize=${pageSize ?? defaultPageSize}`).then(response => response.json());
+        if(apiResponse.lastQueriedBlock > deposits.lastQueriedBlock) {
+          deposits.lastQueriedBlock = apiResponse.lastQueriedBlock;
+        }
+        deposits.data.push(...apiResponse.data);
+        hasNextPage = apiResponse.hasNextPage;
+      } while(hasNextPage);
+    }
   } catch {
     throw new Error(`Error querying ${chain.toUpperCase()} deposits.`);
   }
@@ -42,23 +63,32 @@ export const fetchDeposits = async (chain: Chain) => {
 /* ========================================================================================================================================================================= */
 
 // Function to fetch withdrawals data:
-export const fetchWithdrawals = async (chain: Chain) => {
+export const fetchWithdrawals = async (chain: Chain, pageSize?: number, page?: number) => {
 
   // Initializations:
   const withdrawals: ChainData['withdrawals'] = { lastQueriedBlock: 0, data: [] };
   let hasNextPage = false;
-  let page = 0;
+  let currentPage = 0;
+
+  // Type Initializations:
+  type APIResponse = { lastQueriedBlock: number, data: WithdrawalData[], page: number, hasNextPage: boolean };
 
   // Fetching Withdrawals:
   try {
-    do {
-      let apiResponse: { lastQueriedBlock: number, data: WithdrawalData[], page: number, hasNextPage: boolean } = await fetch(`${apiURL}/${chain}/withdrawals?page=${page++}&pageSize=${pageSize}`).then(response => response.json());
-      if(apiResponse.lastQueriedBlock > withdrawals.lastQueriedBlock) {
-        withdrawals.lastQueriedBlock = apiResponse.lastQueriedBlock;
-      }
-      withdrawals.data.push(...apiResponse.data);
-      hasNextPage = apiResponse.hasNextPage;
-    } while(hasNextPage);
+    if(page) {
+      const apiResponse: APIResponse = await fetch(`${apiURL}/${chain}/withdrawals?page=${page}&pageSize=${pageSize ?? defaultPageSize}`).then(response => response.json());
+      withdrawals.lastQueriedBlock = apiResponse.lastQueriedBlock;
+      withdrawals.data = apiResponse.data;
+    } else {
+      do {
+        const apiResponse: APIResponse = await fetch(`${apiURL}/${chain}/withdrawals?page=${currentPage++}&pageSize=${pageSize ?? defaultPageSize}`).then(response => response.json());
+        if(apiResponse.lastQueriedBlock > withdrawals.lastQueriedBlock) {
+          withdrawals.lastQueriedBlock = apiResponse.lastQueriedBlock;
+        }
+        withdrawals.data.push(...apiResponse.data);
+        hasNextPage = apiResponse.hasNextPage;
+      } while(hasNextPage);
+    }
   } catch {
     throw new Error(`Error querying ${chain.toUpperCase()} withdrawals.`);
   }
@@ -69,23 +99,32 @@ export const fetchWithdrawals = async (chain: Chain) => {
 /* ========================================================================================================================================================================= */
 
 // Function to fetch claims data:
-export const fetchClaims = async (chain: Chain) => {
+export const fetchClaims = async (chain: Chain, pageSize?: number, page?: number) => {
 
   // Initializations:
   const claims: ChainData['claims'] = { lastQueriedBlock: 0, data: [] };
   let hasNextPage = false;
-  let page = 0;
+  let currentPage = 0;
+
+  // Type Initializations:
+  type APIResponse = { lastQueriedBlock: number, data: ClaimData[], page: number, hasNextPage: boolean };
 
   // Fetching Claims:
   try {
-    do {
-      let apiResponse: { lastQueriedBlock: number, data: ClaimData[], page: number, hasNextPage: boolean } = await fetch(`${apiURL}/${chain}/claims?page=${page++}&pageSize=${pageSize}`).then(response => response.json());
-      if(apiResponse.lastQueriedBlock > claims.lastQueriedBlock) {
-        claims.lastQueriedBlock = apiResponse.lastQueriedBlock;
-      }
-      claims.data.push(...apiResponse.data);
-      hasNextPage = apiResponse.hasNextPage;
-    } while(hasNextPage);
+    if(page) {
+      const apiResponse: APIResponse = await fetch(`${apiURL}/${chain}/claims?page=${page}&pageSize=${pageSize ?? defaultPageSize}`).then(response => response.json());
+      claims.lastQueriedBlock = apiResponse.lastQueriedBlock;
+      claims.data = apiResponse.data;
+    } else {
+      do {
+        const apiResponse: APIResponse = await fetch(`${apiURL}/${chain}/claims?page=${currentPage++}&pageSize=${pageSize ?? defaultPageSize}`).then(response => response.json());
+        if(apiResponse.lastQueriedBlock > claims.lastQueriedBlock) {
+          claims.lastQueriedBlock = apiResponse.lastQueriedBlock;
+        }
+        claims.data.push(...apiResponse.data);
+        hasNextPage = apiResponse.hasNextPage;
+      } while(hasNextPage);
+    }
   } catch {
     throw new Error(`Error querying ${chain.toUpperCase()} claims.`);
   }
@@ -96,23 +135,32 @@ export const fetchClaims = async (chain: Chain) => {
 /* ========================================================================================================================================================================= */
 
 // Function to fetch delegations created data:
-export const fetchDelegationsCreated = async (chain: Chain) => {
+export const fetchDelegationsCreated = async (chain: Chain, pageSize?: number, page?: number) => {
 
   // Initializations:
   const delegationsCreated: ChainData['delegationsCreated'] = { lastQueriedBlock: 0, data: [] };
   let hasNextPage = false;
-  let page = 0;
+  let currentPage = 0;
+
+  // Type Initializations:
+  type APIResponse = { lastQueriedBlock: number, data: DelegationCreatedData[], page: number, hasNextPage: boolean };
 
   // Fetching Delegations Created:
   try {
-    do {
-      let apiResponse: { lastQueriedBlock: number, data: DelegationCreatedData[], page: number, hasNextPage: boolean } = await fetch(`${apiURL}/${chain}/delegationsCreated?page=${page++}&pageSize=${pageSize}`).then(response => response.json());
-      if(apiResponse.lastQueriedBlock > delegationsCreated.lastQueriedBlock) {
-        delegationsCreated.lastQueriedBlock = apiResponse.lastQueriedBlock;
-      }
-      delegationsCreated.data.push(...apiResponse.data);
-      hasNextPage = apiResponse.hasNextPage;
-    } while(hasNextPage);
+    if(page) {
+      const apiResponse: APIResponse = await fetch(`${apiURL}/${chain}/delegationsCreated?page=${page}&pageSize=${pageSize ?? defaultPageSize}`).then(response => response.json());
+      delegationsCreated.lastQueriedBlock = apiResponse.lastQueriedBlock;
+      delegationsCreated.data = apiResponse.data;
+    } else {
+      do {
+        const apiResponse: APIResponse = await fetch(`${apiURL}/${chain}/delegationsCreated?page=${currentPage++}&pageSize=${pageSize ?? defaultPageSize}`).then(response => response.json());
+        if(apiResponse.lastQueriedBlock > delegationsCreated.lastQueriedBlock) {
+          delegationsCreated.lastQueriedBlock = apiResponse.lastQueriedBlock;
+        }
+        delegationsCreated.data.push(...apiResponse.data);
+        hasNextPage = apiResponse.hasNextPage;
+      } while(hasNextPage);
+    }
   } catch {
     throw new Error(`Error querying ${chain.toUpperCase()} delegations created.`);
   }
@@ -123,23 +171,32 @@ export const fetchDelegationsCreated = async (chain: Chain) => {
 /* ========================================================================================================================================================================= */
 
 // Function to fetch delegations funded data:
-export const fetchDelegationsFunded = async (chain: Chain) => {
+export const fetchDelegationsFunded = async (chain: Chain, pageSize?: number, page?: number) => {
 
   // Initializations:
   const delegationsFunded: ChainData['delegationsFunded'] = { lastQueriedBlock: 0, data: [] };
   let hasNextPage = false;
-  let page = 0;
+  let currentPage = 0;
+
+  // Type Initializations:
+  type APIResponse = { lastQueriedBlock: number, data: DelegationFundedData[], page: number, hasNextPage: boolean };
 
   // Fetching Delegations Funded:
   try {
-    do {
-      let apiResponse: { lastQueriedBlock: number, data: DelegationFundedData[], page: number, hasNextPage: boolean } = await fetch(`${apiURL}/${chain}/delegationsFunded?page=${page++}&pageSize=${pageSize}`).then(response => response.json());
-      if(apiResponse.lastQueriedBlock > delegationsFunded.lastQueriedBlock) {
-        delegationsFunded.lastQueriedBlock = apiResponse.lastQueriedBlock;
-      }
-      delegationsFunded.data.push(...apiResponse.data);
-      hasNextPage = apiResponse.hasNextPage;
-    } while(hasNextPage);
+    if(page) {
+      const apiResponse: APIResponse = await fetch(`${apiURL}/${chain}/delegationsFunded?page=${page}&pageSize=${pageSize ?? defaultPageSize}`).then(response => response.json());
+      delegationsFunded.lastQueriedBlock = apiResponse.lastQueriedBlock;
+      delegationsFunded.data = apiResponse.data;
+    } else {
+      do {
+        const apiResponse: APIResponse = await fetch(`${apiURL}/${chain}/delegationsFunded?page=${currentPage++}&pageSize=${pageSize ?? defaultPageSize}`).then(response => response.json());
+        if(apiResponse.lastQueriedBlock > delegationsFunded.lastQueriedBlock) {
+          delegationsFunded.lastQueriedBlock = apiResponse.lastQueriedBlock;
+        }
+        delegationsFunded.data.push(...apiResponse.data);
+        hasNextPage = apiResponse.hasNextPage;
+      } while(hasNextPage);
+    }
   } catch {
     throw new Error(`Error querying ${chain.toUpperCase()} delegations funded.`);
   }
@@ -150,23 +207,32 @@ export const fetchDelegationsFunded = async (chain: Chain) => {
 /* ========================================================================================================================================================================= */
 
 // Function to fetch delegations updated data:
-export const fetchDelegationsUpdated = async (chain: Chain) => {
+export const fetchDelegationsUpdated = async (chain: Chain, pageSize?: number, page?: number) => {
 
   // Initializations:
   const delegationsUpdated: ChainData['delegationsUpdated'] = { lastQueriedBlock: 0, data: [] };
   let hasNextPage = false;
-  let page = 0;
+  let currentPage = 0;
+
+  // Type Initializations:
+  type APIResponse = { lastQueriedBlock: number, data: DelegationUpdatedData[], page: number, hasNextPage: boolean };
 
   // Fetching Delegations Updated:
   try {
-    do {
-      let apiResponse: { lastQueriedBlock: number, data: DelegationUpdatedData[], page: number, hasNextPage: boolean } = await fetch(`${apiURL}/${chain}/delegationsUpdated?page=${page++}&pageSize=${pageSize}`).then(response => response.json());
-      if(apiResponse.lastQueriedBlock > delegationsUpdated.lastQueriedBlock) {
-        delegationsUpdated.lastQueriedBlock = apiResponse.lastQueriedBlock;
-      }
-      delegationsUpdated.data.push(...apiResponse.data);
-      hasNextPage = apiResponse.hasNextPage;
-    } while(hasNextPage);
+    if(page) {
+      const apiResponse: APIResponse = await fetch(`${apiURL}/${chain}/delegationsUpdated?page=${page}&pageSize=${pageSize ?? defaultPageSize}`).then(response => response.json());
+      delegationsUpdated.lastQueriedBlock = apiResponse.lastQueriedBlock;
+      delegationsUpdated.data = apiResponse.data;
+    } else {
+      do {
+        const apiResponse: APIResponse = await fetch(`${apiURL}/${chain}/delegationsUpdated?page=${currentPage++}&pageSize=${pageSize ?? defaultPageSize}`).then(response => response.json());
+        if(apiResponse.lastQueriedBlock > delegationsUpdated.lastQueriedBlock) {
+          delegationsUpdated.lastQueriedBlock = apiResponse.lastQueriedBlock;
+        }
+        delegationsUpdated.data.push(...apiResponse.data);
+        hasNextPage = apiResponse.hasNextPage;
+      } while(hasNextPage);
+    }
   } catch {
     throw new Error(`Error querying ${chain.toUpperCase()} delegations updated.`);
   }
@@ -177,23 +243,32 @@ export const fetchDelegationsUpdated = async (chain: Chain) => {
 /* ========================================================================================================================================================================= */
 
 // Function to fetch delegations withdrawn data:
-export const fetchDelegationsWithdrawn = async (chain: Chain) => {
+export const fetchDelegationsWithdrawn = async (chain: Chain, pageSize?: number, page?: number) => {
 
   // Initializations:
   const delegationsWithdrawn: ChainData['delegationsWithdrawn'] = { lastQueriedBlock: 0, data: [] };
   let hasNextPage = false;
-  let page = 0;
+  let currentPage = 0;
+
+  // Type Initializations:
+  type APIResponse = { lastQueriedBlock: number, data: DelegationWithdrawnData[], page: number, hasNextPage: boolean };
 
   // Fetching Delegations Withdrawn:
   try {
-    do {
-      let apiResponse: { lastQueriedBlock: number, data: DelegationWithdrawnData[], page: number, hasNextPage: boolean } = await fetch(`${apiURL}/${chain}/delegationsWithdrawn?page=${page++}&pageSize=${pageSize}`).then(response => response.json());
-      if(apiResponse.lastQueriedBlock > delegationsWithdrawn.lastQueriedBlock) {
-        delegationsWithdrawn.lastQueriedBlock = apiResponse.lastQueriedBlock;
-      }
-      delegationsWithdrawn.data.push(...apiResponse.data);
-      hasNextPage = apiResponse.hasNextPage;
-    } while(hasNextPage);
+    if(page) {
+      const apiResponse: APIResponse = await fetch(`${apiURL}/${chain}/delegationsWithdrawn?page=${page}&pageSize=${pageSize ?? defaultPageSize}`).then(response => response.json());
+      delegationsWithdrawn.lastQueriedBlock = apiResponse.lastQueriedBlock;
+      delegationsWithdrawn.data = apiResponse.data;
+    } else {
+      do {
+        const apiResponse: APIResponse = await fetch(`${apiURL}/${chain}/delegationsWithdrawn?page=${currentPage++}&pageSize=${pageSize ?? defaultPageSize}`).then(response => response.json());
+        if(apiResponse.lastQueriedBlock > delegationsWithdrawn.lastQueriedBlock) {
+          delegationsWithdrawn.lastQueriedBlock = apiResponse.lastQueriedBlock;
+        }
+        delegationsWithdrawn.data.push(...apiResponse.data);
+        hasNextPage = apiResponse.hasNextPage;
+      } while(hasNextPage);
+    }
   } catch {
     throw new Error(`Error querying ${chain.toUpperCase()} delegations withdrawn.`);
   }
@@ -204,23 +279,32 @@ export const fetchDelegationsWithdrawn = async (chain: Chain) => {
 /* ========================================================================================================================================================================= */
 
 // Function to fetch yield data:
-export const fetchYield = async (chain: Chain) => {
+export const fetchYield = async (chain: Chain, pageSize?: number, page?: number) => {
 
   // Initializations:
   const yields: ChainData['yields'] = { lastQueriedBlock: 0, data: [] };
   let hasNextPage = false;
-  let page = 0;
+  let currentPage = 0;
+
+  // Type Initializations:
+  type APIResponse = { lastQueriedBlock: number, data: YieldData[], page: number, hasNextPage: boolean };
 
   // Fetching Yield:
   try {
-    do {
-      let apiResponse: { lastQueriedBlock: number, data: YieldData[], page: number, hasNextPage: boolean } = await fetch(`${apiURL}/${chain}/yield?page=${page++}&pageSize=${pageSize}`).then(response => response.json());
-      if(apiResponse.lastQueriedBlock > yields.lastQueriedBlock) {
-        yields.lastQueriedBlock = apiResponse.lastQueriedBlock;
-      }
-      yields.data.push(...apiResponse.data);
-      hasNextPage = apiResponse.hasNextPage;
-    } while(hasNextPage);
+    if(page) {
+      const apiResponse: APIResponse = await fetch(`${apiURL}/${chain}/yield?page=${page}&pageSize=${pageSize ?? defaultPageSize}`).then(response => response.json());
+      yields.lastQueriedBlock = apiResponse.lastQueriedBlock;
+      yields.data = apiResponse.data;
+    } else {
+      do {
+        const apiResponse: APIResponse = await fetch(`${apiURL}/${chain}/yield?page=${currentPage++}&pageSize=${pageSize ?? defaultPageSize}`).then(response => response.json());
+        if(apiResponse.lastQueriedBlock > yields.lastQueriedBlock) {
+          yields.lastQueriedBlock = apiResponse.lastQueriedBlock;
+        }
+        yields.data.push(...apiResponse.data);
+        hasNextPage = apiResponse.hasNextPage;
+      } while(hasNextPage);
+    }
   } catch {
     throw new Error(`Error querying ${chain.toUpperCase()} yield.`);
   }
@@ -231,23 +315,32 @@ export const fetchYield = async (chain: Chain) => {
 /* ========================================================================================================================================================================= */
 
 // Function to fetch supply data:
-export const fetchSupply = async (chain: Chain) => {
+export const fetchSupply = async (chain: Chain, pageSize?: number, page?: number) => {
 
   // Initializations:
   const supply: ChainData['supply'] = { lastQueriedBlock: 0, data: [] };
   let hasNextPage = false;
-  let page = 0;
+  let currentPage = 0;
+
+  // Type Initializations:
+  type APIResponse = { lastQueriedBlock: number, data: SupplyData[], page: number, hasNextPage: boolean };
 
   // Fetching Supply:
   try {
-    do {
-      let apiResponse: { lastQueriedBlock: number, data: SupplyData[], page: number, hasNextPage: boolean } = await fetch(`${apiURL}/${chain}/supply?page=${page++}&pageSize=${pageSize}`).then(response => response.json());
-      if(apiResponse.lastQueriedBlock > supply.lastQueriedBlock) {
-        supply.lastQueriedBlock = apiResponse.lastQueriedBlock;
-      }
-      supply.data.push(...apiResponse.data);
-      hasNextPage = apiResponse.hasNextPage;
-    } while(hasNextPage);
+    if(page) {
+      const apiResponse: APIResponse = await fetch(`${apiURL}/${chain}/supply?page=${page}&pageSize=${pageSize ?? defaultPageSize}`).then(response => response.json());
+      supply.lastQueriedBlock = apiResponse.lastQueriedBlock;
+      supply.data = apiResponse.data;
+    } else {
+      do {
+        const apiResponse: APIResponse = await fetch(`${apiURL}/${chain}/supply?page=${currentPage++}&pageSize=${pageSize ?? defaultPageSize}`).then(response => response.json());
+        if(apiResponse.lastQueriedBlock > supply.lastQueriedBlock) {
+          supply.lastQueriedBlock = apiResponse.lastQueriedBlock;
+        }
+        supply.data.push(...apiResponse.data);
+        hasNextPage = apiResponse.hasNextPage;
+      } while(hasNextPage);
+    }
   } catch {
     throw new Error(`Error querying ${chain.toUpperCase()} supply.`);
   }
@@ -258,24 +351,33 @@ export const fetchSupply = async (chain: Chain) => {
 /* ========================================================================================================================================================================= */
 
 // Function to fetch balances data:
-export const fetchBalances = async (chain: Chain) => {
+export const fetchBalances = async (chain: Chain, pageSize?: number, page?: number) => {
 
   // Initializations:
   const balances: ChainData['balances'] = { lastQueriedBlock: 0, timestamp: undefined, data: [] };
   let hasNextPage = false;
-  let page = 0;
+  let currentPage = 0;
+
+  // Type Initializations:
+  type APIResponse = { lastQueriedBlock: number, timestamp: number | undefined, data: BalanceData[], page: number, hasNextPage: boolean };
 
   // Fetching Balances:
   try {
-    do {
-      let apiResponse: { lastQueriedBlock: number, timestamp: number | undefined, data: BalanceData[], page: number, hasNextPage: boolean } = await fetch(`${apiURL}/${chain}/balances?page=${page++}&pageSize=${pageSize}`).then(response => response.json());
-      if(apiResponse.lastQueriedBlock > balances.lastQueriedBlock) {
-        balances.lastQueriedBlock = apiResponse.lastQueriedBlock;
-        balances.timestamp = apiResponse.timestamp;
-      }
-      balances.data.push(...apiResponse.data);
-      hasNextPage = apiResponse.hasNextPage;
-    } while(hasNextPage);
+    if(page) {
+      const apiResponse: APIResponse = await fetch(`${apiURL}/${chain}/balances?page=${page}&pageSize=${pageSize ?? defaultPageSize}`).then(response => response.json());
+      balances.lastQueriedBlock = apiResponse.lastQueriedBlock;
+      balances.data = apiResponse.data;
+    } else {
+      do {
+        const apiResponse: APIResponse = await fetch(`${apiURL}/${chain}/balances?page=${currentPage++}&pageSize=${pageSize ?? defaultPageSize}`).then(response => response.json());
+        if(apiResponse.lastQueriedBlock > balances.lastQueriedBlock) {
+          balances.lastQueriedBlock = apiResponse.lastQueriedBlock;
+          balances.timestamp = apiResponse.timestamp;
+        }
+        balances.data.push(...apiResponse.data);
+        hasNextPage = apiResponse.hasNextPage;
+      } while(hasNextPage);
+    }
   } catch {
     throw new Error(`Error querying ${chain.toUpperCase()} balances.`);
   }
@@ -336,4 +438,16 @@ export const fetchDraws = async () => {
   }
 
   return draws;
+}
+
+/* ========================================================================================================================================================================= */
+
+// Function to fetch player data:
+export const fetchPlayerData = async (player: Hash) => {
+  try {
+    const apiResponse: PlayerData = await fetch(`${apiURL}/wallet?address=${player}`).then(response => response.json());
+    return apiResponse;
+  } catch {
+    throw new Error(`Error querying player data for ${player}.`);
+  }
 }

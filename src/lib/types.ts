@@ -8,6 +8,27 @@ export type Hash = `0x${string}`;
 // Transaction Type:
 export type TX = DepositTX | WithdrawalTX | ClaimTX | DelegationCreatedTX | DelegationFundedTX | DelegationUpdatedTX | DelegationWithdrawnTX;
 
+// Loading Status Type:
+export type LoadingStatus = 'done' | 'loading' | 'failed' | 'none';
+
+/* ========================================================================================================================================================================= */
+
+// Chain Stats Interface:
+export interface ChainStats {
+  minTimestamp: number
+  maxTimestamp: number
+  depositsOverTime: DepositsOverTime
+  withdrawalsOverTime: WithdrawalsOverTime
+  claimsOverTime: ClaimsOverTime
+  tvlOverTime: TVLOverTime
+  delegationsOverTime: DelegationsOverTime
+  yieldOverTime: YieldOverTime
+  winlessWithdrawals: WinlessWithdrawals[]
+  tvlDistribution: TVLDistribution
+  currentUsers: Hash[]
+  topWhales: BalanceData[]
+}
+
 /* ========================================================================================================================================================================= */
 
 // Chain Data Interface:
@@ -378,4 +399,32 @@ export interface PlayerData {
   withdrawalsOverTime: number[]
   balancesOverTime: number[]
   balances: { eth: number, poly: number, avax: number, op: number }
+}
+
+/* ========================================================================================================================================================================= */
+
+// Selected Chains Interface:
+export interface SelectedChains {
+  eth: boolean
+  poly: boolean
+  avax: boolean
+  op: boolean
+}
+
+/* ========================================================================================================================================================================= */
+
+// Loading Interfaces:
+export interface Loading {
+  draws: LoadingStatus
+  eth: ChainLoading
+  poly: ChainLoading
+  avax: ChainLoading
+  op: ChainLoading
+}
+export interface ChainLoading {
+  basic: {
+    stats: LoadingStatus
+    deposits: LoadingStatus
+    delegations: LoadingStatus
+  }
 }

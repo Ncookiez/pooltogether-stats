@@ -2,19 +2,20 @@
 
 	// Imports:
 	import { onMount } from 'svelte';
-	import { ethData, polyData, avaxData, opData, aggregatedData, multichainUsersData, startTimestamp, endTimestamp } from '$lib/stores';
-	import { getRangeArray, timestampsToDates, getDepositsOverTime, getWithdrawalsOverTime, getClaimsOverTime, getDelegationsOverTime, getYieldOverTime, getTVLOverTime } from '$lib/functions';
+	import { getChainName, timestampsToDates } from '$lib/functions';
+	import { ethStats, polyStats, avaxStats, opStats, selectedChains } from '$lib/stores';
 	import PieChart from '$lib/PieChart.svelte';
 	import LineChart from '$lib/LineChart.svelte';
 	import Highlight from '$lib/Highlight.svelte';
 
 	// Type Imports:
-	import type { Hash, LineChartInfo, PieChartInfo, Line, BalanceData, TVLDistribution } from '$lib/types';
+	import type { Chain, Hash, LineChartInfo, PieChartInfo, Line, BalanceData, MultichainDistribution } from '$lib/types';
 
 	// Initializations:
-	const ticks = 50;
-	const defaultMaxTimestamp = 9_999_999_999;
-	let mounted = false;
+	const ticks: number = 50;
+	let mounted: boolean = false;
+	let numDepositors: number = 0;
+	let topWhales: BalanceData[] = [];
 
 	// Charts:
 	const tvlChart: LineChartInfo = { name: `tvlChart`, title: 'TVL Over Time', xAxisValues: [], data: [{ label: 'TVL', data: [] }], dollarValues: true };
@@ -44,190 +45,377 @@
 	const cumulativeDelegationCountsChart: LineChartInfo = { name: `cumulativeDelegationCountsChart`, title: 'Cumulative Delegations Over Time', xAxisValues: [], data: [{ label: 'Delegations', data: [] }] };
 	const yieldChart: LineChartInfo = { name: `yieldChart`, title: 'Yield vs Prizes', xAxisValues: [], data: [{ label: 'Yield', data: [] }, { label: 'Prizes', data: [], lineColor: '#FFB63680', backgroundColor: '#FFB636' }], dollarValues: true };
 
-	// Reactive Depositor Count:
-	$: numDepositors = getNumDepositors($ethData.balances.data, $polyData.balances.data, $avaxData.balances.data, $opData.balances.data);
+	// Reactive Chain Selections:
+	$: numChainsSelected = Object.values($selectedChains).reduce((a: boolean, b: boolean) => (a ? 1 : 0) + (b ? 1 : 0), 0) as number;
 
-	// Reactive Chart Data:
-	$: setChartData($startTimestamp, $endTimestamp);
+	// Reactive Data:
+	$: $selectedChains, getNumDepositors();
+	$: $selectedChains, getTopWhales();
+	$: $selectedChains, setChartData();
 
 	// Function to get number of depositors:
-	const getNumDepositors = (ethDepositors: BalanceData[], polyDepositors: BalanceData[], avaxDepositors: BalanceData[], opDepositors: BalanceData[]) => {
+	const getNumDepositors = () => {
+		if(mounted) {
 
-		// Initiailizations:
-		const uniqueWallets: Hash[] = [];
-
-		// Filtering Ethereum Depositors:
-		[ethDepositors, polyDepositors, avaxDepositors, opDepositors].forEach(chainDepositors => {
-			chainDepositors.forEach(deposit => {
-				if(deposit.balance > 0) {
-					if(!uniqueWallets.includes(deposit.wallet)) {
-						uniqueWallets.push(deposit.wallet);
+			// Initializations:
+			const uniqueWallets: Hash[] = [];
+	
+			// Filtering Depositors:
+			if($selectedChains.eth) {
+				$ethStats.currentUsers.forEach(wallet => {
+					uniqueWallets.push(wallet);
+				});
+			}
+			if($selectedChains.poly) {
+				$polyStats.currentUsers.forEach(wallet => {
+					if(!uniqueWallets.includes(wallet)) {
+						uniqueWallets.push(wallet);
 					}
-				}
-			});
-		});
+				});
+			}
+			if($selectedChains.avax) {
+				$avaxStats.currentUsers.forEach(wallet => {
+					if(!uniqueWallets.includes(wallet)) {
+						uniqueWallets.push(wallet);
+					}
+				});
+			}
+			if($selectedChains.op) {
+				$opStats.currentUsers.forEach(wallet => {
+					if(!uniqueWallets.includes(wallet)) {
+						uniqueWallets.push(wallet);
+					}
+				});
+			}
+	
+			numDepositors = uniqueWallets.length;
+		}
+	}
 
-		return uniqueWallets.length;
+	// Function to get top whales:
+	const getTopWhales = () => {
+		if(mounted) {
+
+			// Initializations:
+			const whales: BalanceData[] = [];
+	
+			// Filtering Whales:
+			if($selectedChains.eth) {
+				$ethStats.topWhales.forEach(whale => {
+					whales.push(whale);
+				});
+			}
+			if($selectedChains.poly) {
+				$polyStats.topWhales.forEach(whale => {
+					const foundWhale = whales.find(entry => entry.wallet === whale.wallet);
+					foundWhale ? foundWhale.balance += whale.balance : whales.push(whale);
+				});
+			}
+			if($selectedChains.avax) {
+				$avaxStats.topWhales.forEach(whale => {
+					const foundWhale = whales.find(entry => entry.wallet === whale.wallet);
+					foundWhale ? foundWhale.balance += whale.balance : whales.push(whale);
+				});
+			}
+			if($selectedChains.op) {
+				$opStats.topWhales.forEach(whale => {
+					const foundWhale = whales.find(entry => entry.wallet === whale.wallet);
+					foundWhale ? foundWhale.balance += whale.balance : whales.push(whale);
+				});
+			}
+	
+			topWhales = whales.sort((a, b) => b.balance - a.balance).slice(0, 5);
+		}
 	}
 
 	// Function to set chart data:
-	const setChartData = (startTime: number, endTime: number) => {
+	const setChartData = () => {
 		if(mounted) {
-			if($aggregatedData.eth && $aggregatedData.poly && $aggregatedData.avax && $aggregatedData.op) {
 
-				// Timestamp Initializations:
-				const customTimestamps = startTime > $aggregatedData.minTimestamp || endTime < $aggregatedData.maxTimestamp ? getRangeArray(Math.max($aggregatedData.minTimestamp, startTime), Math.min($aggregatedData.maxTimestamp, endTime), ticks, true) : undefined;
-				const dateTimestamps = timestampsToDates(customTimestamps ?? $aggregatedData.timestamps);
+			// Initializations:
+			const dateTimestamps = timestampsToDates($ethStats.depositsOverTime.timestamps);
+
+			// Initializing Chart Section Labels:
+			const tvlDistributionChartLabels: string[] = ['<$10', '$10-$100', '$100-$1k', '$1k-$10k', '$10k-$100k', '$100k-$1M', '>$1M'];
+			const multichainUsersChartLabels: string[] = ['1 Chain', '2 Chains', '3 Chains', '4 Chains'];
+			const claimDistributionChartLabels: string[] = ['<$5', '$5-$10', '$10-$50', '$50-$100', '$100-$500', '$500-$1k', '>$1k'];
+
+			// Initializing Chart Data:
+			const tvlDistributionChartData = calculateTVLDistribution();
+			const multichainUsersChartData = calculateMultichainDistribution();
+			const cumulativeDepositDistributionsChartData = calculateCumulativeDepositDistributions();
+			const depositDistributionsChartData = calculateDepositDistributions();
+			const claimDistributionChartData = calculateClaimDistributions();
+
+			// Setting Chart X Axis Values / Section Labels:
+			tvlChart.xAxisValues = dateTimestamps;
+			chainDistributionChart.xAxisValues = dateTimestamps;
+			cumulativeDepositAmountsChart.xAxisValues = dateTimestamps;
+			cumulativeDepositCountsChart.xAxisValues = dateTimestamps;
+			depositAmountsChart.xAxisValues = dateTimestamps;
+			depositCountsChart.xAxisValues = dateTimestamps;
+			avgDepositAmountsChart.xAxisValues = dateTimestamps;
+			cumulativeUniqueWalletsChart.xAxisValues = dateTimestamps;
+			tvlDistributionChart.sectionLabels = tvlDistributionChartLabels;
+			multichainUsersChart.sectionLabels = multichainUsersChartLabels;
+			cumulativeDepositDistributionsChart.xAxisValues = dateTimestamps;
+			depositDistributionsChart.xAxisValues = dateTimestamps;
+			cumulativeWithdrawalAmountsChart.xAxisValues = dateTimestamps;
+			cumulativeWithdrawalCountsChart.xAxisValues = dateTimestamps;
+			withdrawalAmountsChart.xAxisValues = dateTimestamps;
+			withdrawalCountsChart.xAxisValues = dateTimestamps;
+			cumulativeClaimAmountsChart.xAxisValues = dateTimestamps;
+			cumulativeClaimCountsChart.xAxisValues = dateTimestamps;
+			claimAmountsChart.xAxisValues = dateTimestamps;
+			claimCountsChart.xAxisValues = dateTimestamps;
+			avgClaimAmountsChart.xAxisValues = dateTimestamps;
+			claimDistributionChart.sectionLabels = claimDistributionChartLabels;
+			delegationTvlChart.xAxisValues = dateTimestamps;
+			cumulativeDelegationAmountsChart.xAxisValues = dateTimestamps;
+			cumulativeDelegationCountsChart.xAxisValues = dateTimestamps;
+			yieldChart.xAxisValues = dateTimestamps;
 	
-				// Setting Ethereum's Raw Data:
-				const ethDepositsOverTime = customTimestamps ? getDepositsOverTime($ethData, ticks, customTimestamps) : $aggregatedData.eth.depositsOverTime;
-				const ethWithdrawalsOverTime = customTimestamps ? getWithdrawalsOverTime($ethData, ticks, customTimestamps) : $aggregatedData.eth.withdrawalsOverTime;
-				const ethClaimsOverTime = customTimestamps ? getClaimsOverTime($ethData, ticks, customTimestamps) : $aggregatedData.eth.claimsOverTime;
-				const ethDelegationsOverTime = customTimestamps ? getDelegationsOverTime($ethData, ticks, customTimestamps) : $aggregatedData.eth.delegationsOverTime;
-				const ethTvlOverTime = customTimestamps ? getTVLOverTime(ethDepositsOverTime, ethWithdrawalsOverTime, ethClaimsOverTime) : $aggregatedData.eth.tvlOverTime;
-				const ethYieldOverTime = customTimestamps ? getYieldOverTime($ethData, ticks, customTimestamps) : $aggregatedData.eth.yieldOverTime;
-				const ethTvlDistribution = $ethData.tvlDistribution as TVLDistribution;
-	
-				// Setting Polygon's Raw Data:
-				const polyDepositsOverTime = customTimestamps ? getDepositsOverTime($polyData, ticks, customTimestamps) : $aggregatedData.poly.depositsOverTime;
-				const polyWithdrawalsOverTime = customTimestamps ? getWithdrawalsOverTime($polyData, ticks, customTimestamps) : $aggregatedData.poly.withdrawalsOverTime;
-				const polyClaimsOverTime = customTimestamps ? getClaimsOverTime($polyData, ticks, customTimestamps) : $aggregatedData.poly.claimsOverTime;
-				const polyDelegationsOverTime = customTimestamps ? getDelegationsOverTime($polyData, ticks, customTimestamps) : $aggregatedData.poly.delegationsOverTime;
-				const polyTvlOverTime = customTimestamps ? getTVLOverTime(polyDepositsOverTime, polyWithdrawalsOverTime, polyClaimsOverTime) : $aggregatedData.poly.tvlOverTime;
-				const polyYieldOverTime = customTimestamps ? getYieldOverTime($polyData, ticks, customTimestamps) : $aggregatedData.poly.yieldOverTime;
-				const polyTvlDistribution = $polyData.tvlDistribution as TVLDistribution;
-	
-				// Setting Avalanche's Raw Data:
-				const avaxDepositsOverTime = customTimestamps ? getDepositsOverTime($avaxData, ticks, customTimestamps) : $aggregatedData.avax.depositsOverTime;
-				const avaxWithdrawalsOverTime = customTimestamps ? getWithdrawalsOverTime($avaxData, ticks, customTimestamps) : $aggregatedData.avax.withdrawalsOverTime;
-				const avaxClaimsOverTime = customTimestamps ? getClaimsOverTime($avaxData, ticks, customTimestamps) : $aggregatedData.avax.claimsOverTime;
-				const avaxDelegationsOverTime = customTimestamps ? getDelegationsOverTime($avaxData, ticks, customTimestamps) : $aggregatedData.avax.delegationsOverTime;
-				const avaxTvlOverTime = customTimestamps ? getTVLOverTime(avaxDepositsOverTime, avaxWithdrawalsOverTime, avaxClaimsOverTime) : $aggregatedData.avax.tvlOverTime;
-				const avaxYieldOverTime = customTimestamps ? getYieldOverTime($avaxData, ticks, customTimestamps) : $aggregatedData.avax.yieldOverTime;
-				const avaxTvlDistribution = $avaxData.tvlDistribution as TVLDistribution;
-	
-				// Setting Optimism's Raw Data:
-				const opDepositsOverTime = customTimestamps ? getDepositsOverTime($opData, ticks, customTimestamps) : $aggregatedData.op.depositsOverTime;
-				const opWithdrawalsOverTime = customTimestamps ? getWithdrawalsOverTime($opData, ticks, customTimestamps) : $aggregatedData.op.withdrawalsOverTime;
-				const opClaimsOverTime = customTimestamps ? getClaimsOverTime($opData, ticks, customTimestamps) : $aggregatedData.op.claimsOverTime;
-				const opDelegationsOverTime = customTimestamps ? getDelegationsOverTime($opData, ticks, customTimestamps) : $aggregatedData.op.delegationsOverTime;
-				const opTvlOverTime = customTimestamps ? getTVLOverTime(opDepositsOverTime, opWithdrawalsOverTime, opClaimsOverTime) : $aggregatedData.op.tvlOverTime;
-				const opYieldOverTime = customTimestamps ? getYieldOverTime($opData, ticks, customTimestamps) : $aggregatedData.op.yieldOverTime;
-				const opTvlDistribution = $opData.tvlDistribution as TVLDistribution;
-	
-				// Initializing Chart Section Labels:
-				const tvlDistributionChartLabels: string[] = ['<$10', '$10-$100', '$100-$1k', '$1k-$10k', '$10k-$100k', '$100k-$1M', '>$1M'];
-				const multichainUsersChartLabels: string[] = ['1 Chain', '2 Chains', '3 Chains', '4 Chains'];
-				const claimDistributionChartLabels: string[] = ['<$5', '$5-$10', '$10-$50', '$50-$100', '$100-$500', '$500-$1k', '>$1k'];
-	
-				// Initializing Chart Data:
-				const tvlDistributionChartData: number[] = [
-					ethTvlDistribution[1].amount + polyTvlDistribution[1].amount + avaxTvlDistribution[1].amount + opTvlDistribution[1].amount,
-					ethTvlDistribution[10].amount + polyTvlDistribution[10].amount + avaxTvlDistribution[10].amount + opTvlDistribution[10].amount,
-					ethTvlDistribution[100].amount + polyTvlDistribution[100].amount + avaxTvlDistribution[100].amount + opTvlDistribution[100].amount,
-					ethTvlDistribution[1000].amount + polyTvlDistribution[1000].amount + avaxTvlDistribution[1000].amount + opTvlDistribution[1000].amount,
-					ethTvlDistribution[10000].amount + polyTvlDistribution[10000].amount + avaxTvlDistribution[10000].amount + opTvlDistribution[10000].amount,
-					ethTvlDistribution[100000].amount + polyTvlDistribution[100000].amount + avaxTvlDistribution[100000].amount + opTvlDistribution[100000].amount,
-					ethTvlDistribution[1000000].amount + polyTvlDistribution[1000000].amount + avaxTvlDistribution[1000000].amount + opTvlDistribution[1000000].amount
-				];
-				const multichainUsersChartData: number[] = [
-					$multichainUsersData.oneChain,
-					$multichainUsersData.twoChains,
-					$multichainUsersData.threeChains,
-					$multichainUsersData.fourChains
-				];
-				const cumulativeDepositDistributionsChartData: Line[] = [
-					{ label: '<$10', data: ethDepositsOverTime.cumulativeDistributions[1].map((val, i) => val + polyDepositsOverTime.cumulativeDistributions[1][i] + avaxDepositsOverTime.cumulativeDistributions[1][i] + opDepositsOverTime.cumulativeDistributions[1][i]), lineColor: '#ffb636' },
-					{ label: '$10-$100', data: ethDepositsOverTime.cumulativeDistributions[10].map((val, i) => val + polyDepositsOverTime.cumulativeDistributions[10][i] + avaxDepositsOverTime.cumulativeDistributions[10][i] + opDepositsOverTime.cumulativeDistributions[10][i]), lineColor: '#ffbe4d' },
-					{ label: '$100-$1k', data: ethDepositsOverTime.cumulativeDistributions[100].map((val, i) => val + polyDepositsOverTime.cumulativeDistributions[100][i] + avaxDepositsOverTime.cumulativeDistributions[100][i] + opDepositsOverTime.cumulativeDistributions[100][i]), lineColor: '#ffc766' },
-					{ label: '$1k-$10k', data: ethDepositsOverTime.cumulativeDistributions[1000].map((val, i) => val + polyDepositsOverTime.cumulativeDistributions[1000][i] + avaxDepositsOverTime.cumulativeDistributions[1000][i] + opDepositsOverTime.cumulativeDistributions[1000][i]), lineColor: '#ffd080' },
-					{ label: '$10k-$100k', data: ethDepositsOverTime.cumulativeDistributions[10000].map((val, i) => val + polyDepositsOverTime.cumulativeDistributions[10000][i] + avaxDepositsOverTime.cumulativeDistributions[10000][i] + opDepositsOverTime.cumulativeDistributions[10000][i]), lineColor: '#ffda99' },
-					{ label: '>$100k', data: ethDepositsOverTime.cumulativeDistributions[100000].map((val, i) => val + polyDepositsOverTime.cumulativeDistributions[100000][i] + avaxDepositsOverTime.cumulativeDistributions[100000][i] + opDepositsOverTime.cumulativeDistributions[100000][i]), lineColor: '#ffe3b3' }
-				];
-				const depositDistributionsChartData: Line[] = [
-					{ label: '<$10', data: ethDepositsOverTime.distributions[1].map((val, i) => val + polyDepositsOverTime.cumulativeDistributions[1][i] + avaxDepositsOverTime.cumulativeDistributions[1][i] + opDepositsOverTime.cumulativeDistributions[1][i]), lineColor: '#ffb636' },
-					{ label: '$10-$100', data: ethDepositsOverTime.distributions[10].map((val, i) => val + polyDepositsOverTime.cumulativeDistributions[10][i] + avaxDepositsOverTime.cumulativeDistributions[10][i] + opDepositsOverTime.cumulativeDistributions[10][i]), lineColor: '#ffbe4d' },
-					{ label: '$100-$1k', data: ethDepositsOverTime.distributions[100].map((val, i) => val + polyDepositsOverTime.cumulativeDistributions[100][i] + avaxDepositsOverTime.cumulativeDistributions[100][i] + opDepositsOverTime.cumulativeDistributions[100][i]), lineColor: '#ffc766' },
-					{ label: '$1k-$10k', data: ethDepositsOverTime.distributions[1000].map((val, i) => val + polyDepositsOverTime.cumulativeDistributions[1000][i] + avaxDepositsOverTime.cumulativeDistributions[1000][i] + opDepositsOverTime.cumulativeDistributions[1000][i]), lineColor: '#ffd080' },
-					{ label: '$10k-$100k', data: ethDepositsOverTime.distributions[10000].map((val, i) => val + polyDepositsOverTime.cumulativeDistributions[10000][i] + avaxDepositsOverTime.cumulativeDistributions[10000][i] + opDepositsOverTime.cumulativeDistributions[10000][i]), lineColor: '#ffda99' },
-					{ label: '>$100k', data: ethDepositsOverTime.distributions[100000].map((val, i) => val + polyDepositsOverTime.cumulativeDistributions[100000][i] + avaxDepositsOverTime.cumulativeDistributions[100000][i] + opDepositsOverTime.cumulativeDistributions[100000][i]), lineColor: '#ffe3b3' }
-				];
-				const claimDistributionChartData: number[] = [
-					ethClaimsOverTime.cumulativeDistributions[1][ticks - 1] + polyClaimsOverTime.cumulativeDistributions[1][ticks - 1] + avaxClaimsOverTime.cumulativeDistributions[1][ticks - 1] + opClaimsOverTime.cumulativeDistributions[1][ticks - 1],
-					ethClaimsOverTime.cumulativeDistributions[5][ticks - 1] + polyClaimsOverTime.cumulativeDistributions[5][ticks - 1] + avaxClaimsOverTime.cumulativeDistributions[5][ticks - 1] + opClaimsOverTime.cumulativeDistributions[5][ticks - 1],
-					ethClaimsOverTime.cumulativeDistributions[10][ticks - 1] + polyClaimsOverTime.cumulativeDistributions[10][ticks - 1] + avaxClaimsOverTime.cumulativeDistributions[10][ticks - 1] + opClaimsOverTime.cumulativeDistributions[10][ticks - 1],
-					ethClaimsOverTime.cumulativeDistributions[50][ticks - 1] + polyClaimsOverTime.cumulativeDistributions[50][ticks - 1] + avaxClaimsOverTime.cumulativeDistributions[50][ticks - 1] + opClaimsOverTime.cumulativeDistributions[50][ticks - 1],
-					ethClaimsOverTime.cumulativeDistributions[100][ticks - 1] + polyClaimsOverTime.cumulativeDistributions[100][ticks - 1] + avaxClaimsOverTime.cumulativeDistributions[100][ticks - 1] + opClaimsOverTime.cumulativeDistributions[100][ticks - 1],
-					ethClaimsOverTime.cumulativeDistributions[500][ticks - 1] + polyClaimsOverTime.cumulativeDistributions[500][ticks - 1] + avaxClaimsOverTime.cumulativeDistributions[500][ticks - 1] + opClaimsOverTime.cumulativeDistributions[500][ticks - 1],
-					ethClaimsOverTime.cumulativeDistributions[1000][ticks - 1] + polyClaimsOverTime.cumulativeDistributions[1000][ticks - 1] + avaxClaimsOverTime.cumulativeDistributions[1000][ticks - 1] + opClaimsOverTime.cumulativeDistributions[1000][ticks - 1]
-				];
-	
-				// Setting Chart X Axis Values / Section Labels:
-				tvlChart.xAxisValues = dateTimestamps;
-				chainDistributionChart.xAxisValues = dateTimestamps;
-				cumulativeDepositAmountsChart.xAxisValues = dateTimestamps;
-				cumulativeDepositCountsChart.xAxisValues = dateTimestamps;
-				depositAmountsChart.xAxisValues = dateTimestamps;
-				depositCountsChart.xAxisValues = dateTimestamps;
-				avgDepositAmountsChart.xAxisValues = dateTimestamps;
-				cumulativeUniqueWalletsChart.xAxisValues = dateTimestamps;
-				tvlDistributionChart.sectionLabels = tvlDistributionChartLabels;
-				multichainUsersChart.sectionLabels = multichainUsersChartLabels;
-				cumulativeDepositDistributionsChart.xAxisValues = dateTimestamps;
-				depositDistributionsChart.xAxisValues = dateTimestamps;
-				cumulativeWithdrawalAmountsChart.xAxisValues = dateTimestamps;
-				cumulativeWithdrawalCountsChart.xAxisValues = dateTimestamps;
-				withdrawalAmountsChart.xAxisValues = dateTimestamps;
-				withdrawalCountsChart.xAxisValues = dateTimestamps;
-				cumulativeClaimAmountsChart.xAxisValues = dateTimestamps;
-				cumulativeClaimCountsChart.xAxisValues = dateTimestamps;
-				claimAmountsChart.xAxisValues = dateTimestamps;
-				claimCountsChart.xAxisValues = dateTimestamps;
-				avgClaimAmountsChart.xAxisValues = dateTimestamps;
-				claimDistributionChart.sectionLabels = claimDistributionChartLabels;
-				delegationTvlChart.xAxisValues = dateTimestamps;
-				cumulativeDelegationAmountsChart.xAxisValues = dateTimestamps;
-				cumulativeDelegationCountsChart.xAxisValues = dateTimestamps;
-				yieldChart.xAxisValues = dateTimestamps;
-		
-				// Setting Chart Data:
-				tvlChart.data[0].data = ethTvlOverTime.tvls.map((val, i) => val + polyTvlOverTime.tvls[i] + avaxTvlOverTime.tvls[i] + opTvlOverTime.tvls[i]);
-				chainDistributionChart.data[0].data = ethTvlOverTime.tvls.map((val, i) => (val / tvlChart.data[0].data[i]) * 100);
-				chainDistributionChart.data[1].data = avaxTvlOverTime.tvls.map((val, i) => (val / tvlChart.data[0].data[i]) * 100);
-				chainDistributionChart.data[2].data = polyTvlOverTime.tvls.map((val, i) => (val / tvlChart.data[0].data[i]) * 100);
-				chainDistributionChart.data[3].data = opTvlOverTime.tvls.map((val, i) => (val / tvlChart.data[0].data[i]) * 100);
-				cumulativeDepositAmountsChart.data[0].data = ethDepositsOverTime.cumulativeDepositAmounts.map((val, i) => val + polyDepositsOverTime.cumulativeDepositAmounts[i] + avaxDepositsOverTime.cumulativeDepositAmounts[i] + opDepositsOverTime.cumulativeDepositAmounts[i]);
-				cumulativeDepositCountsChart.data[0].data = ethDepositsOverTime.cumulativeDepositCounts.map((val, i) => val + polyDepositsOverTime.cumulativeDepositCounts[i] + avaxDepositsOverTime.cumulativeDepositCounts[i] + opDepositsOverTime.cumulativeDepositCounts[i]);
-				depositAmountsChart.data[0].data = ethDepositsOverTime.depositAmounts.map((val, i) => val + polyDepositsOverTime.depositAmounts[i] + avaxDepositsOverTime.depositAmounts[i] + opDepositsOverTime.depositAmounts[i]);
-				depositCountsChart.data[0].data = ethDepositsOverTime.depositCounts.map((val, i) => val + polyDepositsOverTime.depositCounts[i] + avaxDepositsOverTime.depositCounts[i] + opDepositsOverTime.depositCounts[i]);
-				avgDepositAmountsChart.data[0].data = ethDepositsOverTime.avgDepositAmounts.map((val, i) => val + polyDepositsOverTime.avgDepositAmounts[i] + avaxDepositsOverTime.avgDepositAmounts[i] + opDepositsOverTime.avgDepositAmounts[i]);
-				cumulativeUniqueWalletsChart.data[0].data = ethDepositsOverTime.cumulativeUniqueWallets.map((val, i) => val + polyDepositsOverTime.cumulativeUniqueWallets[i] + avaxDepositsOverTime.cumulativeUniqueWallets[i] + opDepositsOverTime.cumulativeUniqueWallets[i]);
-				tvlDistributionChart.data = tvlDistributionChartData;
-				multichainUsersChart.data = multichainUsersChartData;
-				cumulativeDepositDistributionsChart.data = cumulativeDepositDistributionsChartData;
-				depositDistributionsChart.data = depositDistributionsChartData;
-				cumulativeWithdrawalAmountsChart.data[0].data = ethWithdrawalsOverTime.cumulativeWithdrawalAmounts.map((val, i) => val + polyWithdrawalsOverTime.cumulativeWithdrawalAmounts[i] + avaxWithdrawalsOverTime.cumulativeWithdrawalAmounts[i] + opWithdrawalsOverTime.cumulativeWithdrawalAmounts[i]);
-				cumulativeWithdrawalCountsChart.data[0].data = ethWithdrawalsOverTime.cumulativeWithdrawalCounts.map((val, i) => val + polyWithdrawalsOverTime.cumulativeWithdrawalCounts[i] + avaxWithdrawalsOverTime.cumulativeWithdrawalCounts[i] + opWithdrawalsOverTime.cumulativeWithdrawalCounts[i]);
-				withdrawalAmountsChart.data[0].data = ethWithdrawalsOverTime.withdrawalAmounts.map((val, i) => val + polyWithdrawalsOverTime.withdrawalAmounts[i] + avaxWithdrawalsOverTime.withdrawalAmounts[i] + opWithdrawalsOverTime.withdrawalAmounts[i]);
-				withdrawalCountsChart.data[0].data = ethWithdrawalsOverTime.withdrawalCounts.map((val, i) => val + polyWithdrawalsOverTime.withdrawalCounts[i] + avaxWithdrawalsOverTime.withdrawalCounts[i] + opWithdrawalsOverTime.withdrawalCounts[i]);
-				cumulativeClaimAmountsChart.data[0].data = ethClaimsOverTime.cumulativeClaimAmounts.map((val, i) => val + polyClaimsOverTime.cumulativeClaimAmounts[i] + avaxClaimsOverTime.cumulativeClaimAmounts[i] + opClaimsOverTime.cumulativeClaimAmounts[i]);
-				cumulativeClaimCountsChart.data[0].data = ethClaimsOverTime.cumulativeClaimCounts.map((val, i) => val + polyClaimsOverTime.cumulativeClaimCounts[i] + avaxClaimsOverTime.cumulativeClaimCounts[i] + opClaimsOverTime.cumulativeClaimCounts[i]);
-				claimAmountsChart.data[0].data = ethClaimsOverTime.claimAmounts.map((val, i) => val + polyClaimsOverTime.claimAmounts[i] + avaxClaimsOverTime.claimAmounts[i] + opClaimsOverTime.claimAmounts[i]);
-				claimCountsChart.data[0].data = ethClaimsOverTime.claimCounts.map((val, i) => val + polyClaimsOverTime.claimCounts[i] + avaxClaimsOverTime.claimCounts[i] + opClaimsOverTime.claimCounts[i]);
-				avgClaimAmountsChart.data[0].data = ethClaimsOverTime.avgClaimAmounts.map((val, i) => val + polyClaimsOverTime.avgClaimAmounts[i] + avaxClaimsOverTime.avgClaimAmounts[i] + opClaimsOverTime.avgClaimAmounts[i]);
-				claimDistributionChart.data = claimDistributionChartData;
-				delegationTvlChart.data[0].data = ethDelegationsOverTime.tvls.map((val, i) => val + polyDelegationsOverTime.tvls[i] + avaxDelegationsOverTime.tvls[i] + opDelegationsOverTime.tvls[i]);
-				cumulativeDelegationAmountsChart.data[0].data = ethDelegationsOverTime.cumulativeDelegationAmounts.map((val, i) => val + polyDelegationsOverTime.cumulativeDelegationAmounts[i] + avaxDelegationsOverTime.cumulativeDelegationAmounts[i] + opDelegationsOverTime.cumulativeDelegationAmounts[i]);
-				cumulativeDelegationCountsChart.data[0].data = ethDelegationsOverTime.cumulativeDelegationCounts.map((val, i) => val + polyDelegationsOverTime.cumulativeDelegationCounts[i] + avaxDelegationsOverTime.cumulativeDelegationCounts[i] + opDelegationsOverTime.cumulativeDelegationCounts[i]);
-				yieldChart.data[0].data = ethYieldOverTime.cumulativeYieldAmounts.map((val, i) => val + polyYieldOverTime.cumulativeYieldAmounts[i] + avaxYieldOverTime.cumulativeYieldAmounts[i] + opYieldOverTime.cumulativeYieldAmounts[i]);
-				yieldChart.data[1].data = ethClaimsOverTime.cumulativeClaimAmounts.map((val, i) => val + polyClaimsOverTime.cumulativeClaimAmounts[i] + avaxClaimsOverTime.cumulativeClaimAmounts[i] + opClaimsOverTime.cumulativeClaimAmounts[i]);
-			}
+			// Setting Chart Data:
+			tvlChart.data[0].data = $ethStats.tvlOverTime.tvls.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.tvlOverTime.tvls[i] : 0) + ($selectedChains.avax ? $avaxStats.tvlOverTime.tvls[i] : 0) + ($selectedChains.op ? $opStats.tvlOverTime.tvls[i] : 0));
+			chainDistributionChart.data[0].data = $ethStats.tvlOverTime.tvls.map((val, i) => $selectedChains.eth ? (val / tvlChart.data[0].data[i]) * 100 : 0);
+			chainDistributionChart.data[1].data = $avaxStats.tvlOverTime.tvls.map((val, i) => $selectedChains.avax ? (val / tvlChart.data[0].data[i]) * 100 : 0);
+			chainDistributionChart.data[2].data = $polyStats.tvlOverTime.tvls.map((val, i) => $selectedChains.poly ? (val / tvlChart.data[0].data[i]) * 100 : 0);
+			chainDistributionChart.data[3].data = $opStats.tvlOverTime.tvls.map((val, i) => $selectedChains.op ? (val / tvlChart.data[0].data[i]) * 100 : 0);
+			cumulativeDepositAmountsChart.data[0].data = $ethStats.depositsOverTime.cumulativeDepositAmounts.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.depositsOverTime.cumulativeDepositAmounts[i] : 0) + ($selectedChains.avax ? $avaxStats.depositsOverTime.cumulativeDepositAmounts[i] : 0) + ($selectedChains.op ? $opStats.depositsOverTime.cumulativeDepositAmounts[i] : 0));
+			cumulativeDepositCountsChart.data[0].data = $ethStats.depositsOverTime.cumulativeDepositCounts.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.depositsOverTime.cumulativeDepositCounts[i] : 0) + ($selectedChains.avax ? $avaxStats.depositsOverTime.cumulativeDepositCounts[i] : 0) + ($selectedChains.op ? $opStats.depositsOverTime.cumulativeDepositCounts[i] : 0));
+			depositAmountsChart.data[0].data = $ethStats.depositsOverTime.depositAmounts.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.depositsOverTime.depositAmounts[i] : 0) + ($selectedChains.avax ? $avaxStats.depositsOverTime.depositAmounts[i] : 0) + ($selectedChains.op ? $opStats.depositsOverTime.depositAmounts[i] : 0));
+			depositCountsChart.data[0].data = $ethStats.depositsOverTime.depositCounts.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.depositsOverTime.depositCounts[i] : 0) + ($selectedChains.avax ? $avaxStats.depositsOverTime.depositCounts[i] : 0) + ($selectedChains.op ? $opStats.depositsOverTime.depositCounts[i] : 0));
+			avgDepositAmountsChart.data[0].data = $ethStats.depositsOverTime.avgDepositAmounts.map((val, i) => (($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.depositsOverTime.avgDepositAmounts[i] : 0) + ($selectedChains.avax ? $avaxStats.depositsOverTime.avgDepositAmounts[i] : 0) + ($selectedChains.op ? $opStats.depositsOverTime.avgDepositAmounts[i] : 0)) / numChainsSelected);
+			cumulativeUniqueWalletsChart.data[0].data = $ethStats.depositsOverTime.cumulativeUniqueWallets.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.depositsOverTime.cumulativeUniqueWallets[i] : 0) + ($selectedChains.avax ? $avaxStats.depositsOverTime.cumulativeUniqueWallets[i] : 0) + ($selectedChains.op ? $opStats.depositsOverTime.cumulativeUniqueWallets[i] : 0));
+			tvlDistributionChart.data = tvlDistributionChartData;
+			multichainUsersChart.data = multichainUsersChartData;
+			cumulativeDepositDistributionsChart.data = cumulativeDepositDistributionsChartData;
+			depositDistributionsChart.data = depositDistributionsChartData;
+			cumulativeWithdrawalAmountsChart.data[0].data = $ethStats.withdrawalsOverTime.cumulativeWithdrawalAmounts.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.withdrawalsOverTime.cumulativeWithdrawalAmounts[i] : 0) + ($selectedChains.avax ? $avaxStats.withdrawalsOverTime.cumulativeWithdrawalAmounts[i] : 0) + ($selectedChains.op ? $opStats.withdrawalsOverTime.cumulativeWithdrawalAmounts[i] : 0));
+			cumulativeWithdrawalCountsChart.data[0].data = $ethStats.withdrawalsOverTime.cumulativeWithdrawalCounts.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.withdrawalsOverTime.cumulativeWithdrawalCounts[i] : 0) + ($selectedChains.avax ? $avaxStats.withdrawalsOverTime.cumulativeWithdrawalCounts[i] : 0) + ($selectedChains.op ? $opStats.withdrawalsOverTime.cumulativeWithdrawalCounts[i] : 0));
+			withdrawalAmountsChart.data[0].data = $ethStats.withdrawalsOverTime.withdrawalAmounts.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.withdrawalsOverTime.withdrawalAmounts[i] : 0) + ($selectedChains.avax ? $avaxStats.withdrawalsOverTime.withdrawalAmounts[i] : 0) + ($selectedChains.op ? $opStats.withdrawalsOverTime.withdrawalAmounts[i] : 0));
+			withdrawalCountsChart.data[0].data = $ethStats.withdrawalsOverTime.withdrawalCounts.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.withdrawalsOverTime.withdrawalCounts[i] : 0) + ($selectedChains.avax ? $avaxStats.withdrawalsOverTime.withdrawalCounts[i] : 0) + ($selectedChains.op ? $opStats.withdrawalsOverTime.withdrawalCounts[i] : 0));
+			cumulativeClaimAmountsChart.data[0].data = $ethStats.claimsOverTime.cumulativeClaimAmounts.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.claimsOverTime.cumulativeClaimAmounts[i] : 0) + ($selectedChains.avax ? $avaxStats.claimsOverTime.cumulativeClaimAmounts[i] : 0) + ($selectedChains.op ? $opStats.claimsOverTime.cumulativeClaimAmounts[i] : 0));
+			cumulativeClaimCountsChart.data[0].data = $ethStats.claimsOverTime.cumulativeClaimCounts.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.claimsOverTime.cumulativeClaimCounts[i] : 0) + ($selectedChains.avax ? $avaxStats.claimsOverTime.cumulativeClaimCounts[i] : 0) + ($selectedChains.op ? $opStats.claimsOverTime.cumulativeClaimCounts[i] : 0));
+			claimAmountsChart.data[0].data = $ethStats.claimsOverTime.claimAmounts.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.claimsOverTime.claimAmounts[i] : 0) + ($selectedChains.avax ? $avaxStats.claimsOverTime.claimAmounts[i] : 0) + ($selectedChains.op ? $opStats.claimsOverTime.claimAmounts[i] : 0));
+			claimCountsChart.data[0].data = $ethStats.claimsOverTime.claimCounts.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.claimsOverTime.claimCounts[i] : 0) + ($selectedChains.avax ? $avaxStats.claimsOverTime.claimCounts[i] : 0) + ($selectedChains.op ? $opStats.claimsOverTime.claimCounts[i] : 0));
+			avgClaimAmountsChart.data[0].data = $ethStats.claimsOverTime.avgClaimAmounts.map((val, i) => (($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.claimsOverTime.avgClaimAmounts[i] : 0) + ($selectedChains.avax ? $avaxStats.claimsOverTime.avgClaimAmounts[i] : 0) + ($selectedChains.op ? $opStats.claimsOverTime.avgClaimAmounts[i] : 0)) / numChainsSelected);
+			claimDistributionChart.data = claimDistributionChartData;
+			delegationTvlChart.data[0].data = $ethStats.delegationsOverTime.tvls.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.delegationsOverTime.tvls[i] : 0) + ($selectedChains.avax ? $avaxStats.delegationsOverTime.tvls[i] : 0) + ($selectedChains.op ? $opStats.delegationsOverTime.tvls[i] : 0));
+			cumulativeDelegationAmountsChart.data[0].data = $ethStats.delegationsOverTime.cumulativeDelegationAmounts.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.delegationsOverTime.cumulativeDelegationAmounts[i] : 0) + ($selectedChains.avax ? $avaxStats.delegationsOverTime.cumulativeDelegationAmounts[i] : 0) + ($selectedChains.op ? $opStats.delegationsOverTime.cumulativeDelegationAmounts[i] : 0));
+			cumulativeDelegationCountsChart.data[0].data = $ethStats.delegationsOverTime.cumulativeDelegationCounts.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.delegationsOverTime.cumulativeDelegationCounts[i] : 0) + ($selectedChains.avax ? $avaxStats.delegationsOverTime.cumulativeDelegationCounts[i] : 0) + ($selectedChains.op ? $opStats.delegationsOverTime.cumulativeDelegationCounts[i] : 0));
+			yieldChart.data[0].data = $ethStats.yieldOverTime.cumulativeYieldAmounts.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.yieldOverTime.cumulativeYieldAmounts[i] : 0) + ($selectedChains.avax ? $avaxStats.yieldOverTime.cumulativeYieldAmounts[i] : 0) + ($selectedChains.op ? $opStats.yieldOverTime.cumulativeYieldAmounts[i] : 0));
+			yieldChart.data[1].data = $ethStats.claimsOverTime.cumulativeClaimAmounts.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.claimsOverTime.cumulativeClaimAmounts[i] : 0) + ($selectedChains.avax ? $avaxStats.claimsOverTime.cumulativeClaimAmounts[i] : 0) + ($selectedChains.op ? $opStats.claimsOverTime.cumulativeClaimAmounts[i] : 0));
+
 		}
+	}
+
+	// Function to calculate multichain distribution:
+	const calculateMultichainDistribution = () => {
+
+		// Initializations:
+		const multichainDistribution: MultichainDistribution = { totalUsers: 0, oneChain: 0, twoChains: 0, threeChains: 0, fourChains: 0 };
+		const wallets: Record<Hash, number> = {};
+
+		// Sorting Wallets:
+		if($selectedChains.eth) {
+			$ethStats.currentUsers.forEach(wallet => {
+				wallets[wallet] ? wallets[wallet]++ : wallets[wallet] = 1;
+			});
+		}
+		if($selectedChains.poly) {
+			$polyStats.currentUsers.forEach(wallet => {
+				wallets[wallet] ? wallets[wallet]++ : wallets[wallet] = 1;
+			});
+		}
+		if($selectedChains.avax) {
+			$avaxStats.currentUsers.forEach(wallet => {
+				wallets[wallet] ? wallets[wallet]++ : wallets[wallet] = 1;
+			});
+		}
+		if($selectedChains.op) {
+			$opStats.currentUsers.forEach(wallet => {
+				wallets[wallet] ? wallets[wallet]++ : wallets[wallet] = 1;
+			});
+		}
+
+		// Updating Data:
+		for(let stringWallet in wallets) {
+			const wallet = stringWallet as Hash;
+			if(wallets[wallet] === 1) {
+				multichainDistribution.oneChain++;
+			} else if(wallets[wallet] === 2) {
+				multichainDistribution.twoChains++;
+			} else if(wallets[wallet] === 3) {
+				multichainDistribution.threeChains++;
+			} else if(wallets[wallet] === 4) {
+				multichainDistribution.fourChains++;
+			}
+			multichainDistribution.totalUsers++;
+		}
+
+		return [multichainDistribution.oneChain, multichainDistribution.twoChains, multichainDistribution.threeChains, multichainDistribution.fourChains];
+	}
+
+	// Function to calculate TVL distribution:
+	const calculateTVLDistribution = () => {
+
+		// Initializations:
+		const tvlDistribution: number[] = [0, 0, 0, 0, 0, 0, 0];
+
+		// Adding TVL Distributions:
+		if($selectedChains.eth) {
+			tvlDistribution[0] += $ethStats.tvlDistribution[1].amount;
+			tvlDistribution[1] += $ethStats.tvlDistribution[10].amount;
+			tvlDistribution[2] += $ethStats.tvlDistribution[100].amount;
+			tvlDistribution[3] += $ethStats.tvlDistribution[1000].amount;
+			tvlDistribution[4] += $ethStats.tvlDistribution[10000].amount;
+			tvlDistribution[5] += $ethStats.tvlDistribution[100000].amount;
+			tvlDistribution[6] += $ethStats.tvlDistribution[1000000].amount;
+		}
+		if($selectedChains.poly) {
+			tvlDistribution[0] += $polyStats.tvlDistribution[1].amount;
+			tvlDistribution[1] += $polyStats.tvlDistribution[10].amount;
+			tvlDistribution[2] += $polyStats.tvlDistribution[100].amount;
+			tvlDistribution[3] += $polyStats.tvlDistribution[1000].amount;
+			tvlDistribution[4] += $polyStats.tvlDistribution[10000].amount;
+			tvlDistribution[5] += $polyStats.tvlDistribution[100000].amount;
+			tvlDistribution[6] += $polyStats.tvlDistribution[1000000].amount;
+		}
+		if($selectedChains.avax) {
+			tvlDistribution[0] += $avaxStats.tvlDistribution[1].amount;
+			tvlDistribution[1] += $avaxStats.tvlDistribution[10].amount;
+			tvlDistribution[2] += $avaxStats.tvlDistribution[100].amount;
+			tvlDistribution[3] += $avaxStats.tvlDistribution[1000].amount;
+			tvlDistribution[4] += $avaxStats.tvlDistribution[10000].amount;
+			tvlDistribution[5] += $avaxStats.tvlDistribution[100000].amount;
+			tvlDistribution[6] += $avaxStats.tvlDistribution[1000000].amount;
+		}
+		if($selectedChains.op) {
+			tvlDistribution[0] += $opStats.tvlDistribution[1].amount;
+			tvlDistribution[1] += $opStats.tvlDistribution[10].amount;
+			tvlDistribution[2] += $opStats.tvlDistribution[100].amount;
+			tvlDistribution[3] += $opStats.tvlDistribution[1000].amount;
+			tvlDistribution[4] += $opStats.tvlDistribution[10000].amount;
+			tvlDistribution[5] += $opStats.tvlDistribution[100000].amount;
+			tvlDistribution[6] += $opStats.tvlDistribution[1000000].amount;
+		}
+
+		return tvlDistribution;
+	}
+
+	// Function to calculate cumulative deposit distributions:
+	const calculateCumulativeDepositDistributions = () => {
+
+		// Initializations:
+		const cumulativeDepositDistributions: Line[] = [
+			{ label: '<$10', data: [], lineColor: '#ffb636' },
+			{ label: '$10-$100', data: [], lineColor: '#ffbe4d' },
+			{ label: '$100-$1k', data: [], lineColor: '#ffc766' },
+			{ label: '$1k-$10k', data: [], lineColor: '#ffd080' },
+			{ label: '$10k-$100k', data: [], lineColor: '#ffda99' },
+			{ label: '>$100k', data: [], lineColor: '#ffe3b3' }
+		];
+
+		// Adding Cumulative Deposit Distributions:
+		cumulativeDepositDistributions[0].data = $ethStats.depositsOverTime.cumulativeDistributions[1].map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.depositsOverTime.cumulativeDistributions[1][i] : 0) + ($selectedChains.avax ? $avaxStats.depositsOverTime.cumulativeDistributions[1][i] : 0) + ($selectedChains.op ? $opStats.depositsOverTime.cumulativeDistributions[1][i] : 0));
+		cumulativeDepositDistributions[1].data = $ethStats.depositsOverTime.cumulativeDistributions[10].map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.depositsOverTime.cumulativeDistributions[10][i] : 0) + ($selectedChains.avax ? $avaxStats.depositsOverTime.cumulativeDistributions[10][i] : 0) + ($selectedChains.op ? $opStats.depositsOverTime.cumulativeDistributions[10][i] : 0));
+		cumulativeDepositDistributions[2].data = $ethStats.depositsOverTime.cumulativeDistributions[100].map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.depositsOverTime.cumulativeDistributions[100][i] : 0) + ($selectedChains.avax ? $avaxStats.depositsOverTime.cumulativeDistributions[100][i] : 0) + ($selectedChains.op ? $opStats.depositsOverTime.cumulativeDistributions[100][i] : 0));
+		cumulativeDepositDistributions[3].data = $ethStats.depositsOverTime.cumulativeDistributions[1000].map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.depositsOverTime.cumulativeDistributions[1000][i] : 0) + ($selectedChains.avax ? $avaxStats.depositsOverTime.cumulativeDistributions[1000][i] : 0) + ($selectedChains.op ? $opStats.depositsOverTime.cumulativeDistributions[1000][i] : 0));
+		cumulativeDepositDistributions[4].data = $ethStats.depositsOverTime.cumulativeDistributions[10000].map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.depositsOverTime.cumulativeDistributions[10000][i] : 0) + ($selectedChains.avax ? $avaxStats.depositsOverTime.cumulativeDistributions[10000][i] : 0) + ($selectedChains.op ? $opStats.depositsOverTime.cumulativeDistributions[10000][i] : 0));
+		cumulativeDepositDistributions[5].data = $ethStats.depositsOverTime.cumulativeDistributions[100000].map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.depositsOverTime.cumulativeDistributions[100000][i] : 0) + ($selectedChains.avax ? $avaxStats.depositsOverTime.cumulativeDistributions[100000][i] : 0) + ($selectedChains.op ? $opStats.depositsOverTime.cumulativeDistributions[100000][i] : 0));
+		
+		return cumulativeDepositDistributions;
+	}
+
+	// Function to calculate deposit distributions:
+	const calculateDepositDistributions = () => {
+
+		// Initializations:
+		const depositDistributions: Line[] = [
+			{ label: '<$10', data: [], lineColor: '#ffb636' },
+			{ label: '$10-$100', data: [], lineColor: '#ffbe4d' },
+			{ label: '$100-$1k', data: [], lineColor: '#ffc766' },
+			{ label: '$1k-$10k', data: [], lineColor: '#ffd080' },
+			{ label: '$10k-$100k', data: [], lineColor: '#ffda99' },
+			{ label: '>$100k', data: [], lineColor: '#ffe3b3' }
+		];
+
+		// Adding Deposit Distributions:
+		depositDistributions[0].data = $ethStats.depositsOverTime.distributions[1].map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.depositsOverTime.distributions[1][i] : 0) + ($selectedChains.avax ? $avaxStats.depositsOverTime.distributions[1][i] : 0) + ($selectedChains.op ? $opStats.depositsOverTime.distributions[1][i] : 0));
+		depositDistributions[1].data = $ethStats.depositsOverTime.distributions[10].map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.depositsOverTime.distributions[10][i] : 0) + ($selectedChains.avax ? $avaxStats.depositsOverTime.distributions[10][i] : 0) + ($selectedChains.op ? $opStats.depositsOverTime.distributions[10][i] : 0));
+		depositDistributions[2].data = $ethStats.depositsOverTime.distributions[100].map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.depositsOverTime.distributions[100][i] : 0) + ($selectedChains.avax ? $avaxStats.depositsOverTime.distributions[100][i] : 0) + ($selectedChains.op ? $opStats.depositsOverTime.distributions[100][i] : 0));
+		depositDistributions[3].data = $ethStats.depositsOverTime.distributions[1000].map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.depositsOverTime.distributions[1000][i] : 0) + ($selectedChains.avax ? $avaxStats.depositsOverTime.distributions[1000][i] : 0) + ($selectedChains.op ? $opStats.depositsOverTime.distributions[1000][i] : 0));
+		depositDistributions[4].data = $ethStats.depositsOverTime.distributions[10000].map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.depositsOverTime.distributions[10000][i] : 0) + ($selectedChains.avax ? $avaxStats.depositsOverTime.distributions[10000][i] : 0) + ($selectedChains.op ? $opStats.depositsOverTime.distributions[10000][i] : 0));
+		depositDistributions[5].data = $ethStats.depositsOverTime.distributions[100000].map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? $polyStats.depositsOverTime.distributions[100000][i] : 0) + ($selectedChains.avax ? $avaxStats.depositsOverTime.distributions[100000][i] : 0) + ($selectedChains.op ? $opStats.depositsOverTime.distributions[100000][i] : 0));
+
+		return depositDistributions;
+	}
+
+	// Function to calculate claim distributions:
+	const calculateClaimDistributions = () => {
+
+		// Initializations:
+		const claimDistribution: number[] = [0, 0, 0, 0, 0, 0, 0];
+
+		// Adding Claim Distributions:
+		if($selectedChains.eth) {
+			claimDistribution[0] += $ethStats.claimsOverTime.cumulativeDistributions[1][ticks - 1];
+			claimDistribution[1] += $ethStats.claimsOverTime.cumulativeDistributions[5][ticks - 1];
+			claimDistribution[2] += $ethStats.claimsOverTime.cumulativeDistributions[10][ticks - 1];
+			claimDistribution[3] += $ethStats.claimsOverTime.cumulativeDistributions[50][ticks - 1];
+			claimDistribution[4] += $ethStats.claimsOverTime.cumulativeDistributions[100][ticks - 1];
+			claimDistribution[5] += $ethStats.claimsOverTime.cumulativeDistributions[500][ticks - 1];
+			claimDistribution[6] += $ethStats.claimsOverTime.cumulativeDistributions[1000][ticks - 1];
+		}
+		if($selectedChains.poly) {
+			claimDistribution[0] += $polyStats.claimsOverTime.cumulativeDistributions[1][ticks - 1];
+			claimDistribution[1] += $polyStats.claimsOverTime.cumulativeDistributions[5][ticks - 1];
+			claimDistribution[2] += $polyStats.claimsOverTime.cumulativeDistributions[10][ticks - 1];
+			claimDistribution[3] += $polyStats.claimsOverTime.cumulativeDistributions[50][ticks - 1];
+			claimDistribution[4] += $polyStats.claimsOverTime.cumulativeDistributions[100][ticks - 1];
+			claimDistribution[5] += $polyStats.claimsOverTime.cumulativeDistributions[500][ticks - 1];
+			claimDistribution[6] += $polyStats.claimsOverTime.cumulativeDistributions[1000][ticks - 1];
+		}
+		if($selectedChains.avax) {
+			claimDistribution[0] += $avaxStats.claimsOverTime.cumulativeDistributions[1][ticks - 1];
+			claimDistribution[1] += $avaxStats.claimsOverTime.cumulativeDistributions[5][ticks - 1];
+			claimDistribution[2] += $avaxStats.claimsOverTime.cumulativeDistributions[10][ticks - 1];
+			claimDistribution[3] += $avaxStats.claimsOverTime.cumulativeDistributions[50][ticks - 1];
+			claimDistribution[4] += $avaxStats.claimsOverTime.cumulativeDistributions[100][ticks - 1];
+			claimDistribution[5] += $avaxStats.claimsOverTime.cumulativeDistributions[500][ticks - 1];
+			claimDistribution[6] += $avaxStats.claimsOverTime.cumulativeDistributions[1000][ticks - 1];
+		}
+		if($selectedChains.op) {
+			claimDistribution[0] += $opStats.claimsOverTime.cumulativeDistributions[1][ticks - 1];
+			claimDistribution[1] += $opStats.claimsOverTime.cumulativeDistributions[5][ticks - 1];
+			claimDistribution[2] += $opStats.claimsOverTime.cumulativeDistributions[10][ticks - 1];
+			claimDistribution[3] += $opStats.claimsOverTime.cumulativeDistributions[50][ticks - 1];
+			claimDistribution[4] += $opStats.claimsOverTime.cumulativeDistributions[100][ticks - 1];
+			claimDistribution[5] += $opStats.claimsOverTime.cumulativeDistributions[500][ticks - 1];
+			claimDistribution[6] += $opStats.claimsOverTime.cumulativeDistributions[1000][ticks - 1];
+		}
+
+		return claimDistribution;
+	}
+
+	// Function to get single selected chain:
+	const getSingleSelectedChain = () => {
+		let chainName: string = '';
+		Object.keys($selectedChains).forEach(stringChain => {
+			const chain = stringChain as Chain;
+			if($selectedChains[chain]) {
+				chainName = getChainName(chain);
+			}
+		});
+		return chainName;
 	}
 
 	onMount(() => {
 		mounted = true;
-		setChartData($startTimestamp, $endTimestamp);
+		setChartData();
+		getNumDepositors();
+		getTopWhales();
 	});
 	
 </script>
@@ -236,20 +424,20 @@
 
 <!-- Charts & Highlights -->
 <LineChart {...tvlChart} />
-<Highlight hide={$endTimestamp !== defaultMaxTimestamp}>
+<Highlight>
 	<span class="big">There are currently</span>
 	<span class="big highlight">{numDepositors.toLocaleString(undefined)}+ Depositors</span>
-	<span class="big">on PoolTogether V4!</span>
+	<span class="big">on {numChainsSelected !== 1 ? 'PoolTogether V4' : getSingleSelectedChain()}!</span>
 </Highlight>
 <LineChart {...chainDistributionChart} />
 <LineChart {...cumulativeDepositAmountsChart} />
 <LineChart {...cumulativeDepositCountsChart} />
 <LineChart {...depositAmountsChart} />
 <LineChart {...depositCountsChart} />
-<Highlight hide={$endTimestamp !== defaultMaxTimestamp}>
+<Highlight>
 	<span class="big">Top 5 Whales:</span>
 	<span class="list">
-		{#each $aggregatedData.balances.data.slice(0, 5) as whale}
+		{#each topWhales as whale}
 			<span>
 				<a href="{`/${whale.wallet}`}" class="highlight" title="{whale.wallet}">{whale.wallet.slice(0, 6)}…{whale.wallet.slice(-4)}</a>
 				<span>${whale.balance.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
@@ -259,8 +447,8 @@
 </Highlight>
 <LineChart {...avgDepositAmountsChart} />
 <LineChart {...cumulativeUniqueWalletsChart} />
-<PieChart {...tvlDistributionChart} hide={$endTimestamp !== defaultMaxTimestamp} />
-<PieChart {...multichainUsersChart} hide={$endTimestamp !== defaultMaxTimestamp} />
+<PieChart {...tvlDistributionChart} />
+<PieChart {...multichainUsersChart} />
 <LineChart {...cumulativeDepositDistributionsChart} />
 <LineChart {...depositDistributionsChart} />
 <LineChart {...cumulativeWithdrawalAmountsChart} />

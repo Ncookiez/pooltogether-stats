@@ -1,47 +1,154 @@
 <script lang="ts">
 
 	// Imports:
-	import { getBlockExplorerLink, getTimeDisplay } from '$lib/functions';
-	import { aggregatedData, startTimestamp, endTimestamp } from '$lib/stores';
+	import { getBlockExplorerLink, getTimeDisplay, getShortWallet } from '$lib/functions';
+	import { ethData, polyData, avaxData, opData, selectedChains, loading } from '$lib/stores';
+
+	// Type Imports:
+	import type { Chain, DrawData, DepositData, DelegationFundedData } from '$lib/types';
 
 	// Initializations:
+	const chains: Chain[] = ['eth', 'poly', 'avax', 'op'];
 	const pageSize = 25;
+	let draws: DrawData[] = [];
+	let deposits: (DepositData & { chain: Chain })[] = [];
+	let delegations: (DelegationFundedData & { chain: Chain })[] = [];
 	let tabSelected: 'winners' | 'deposits' | 'delegations' = 'winners';
 	let listLength = pageSize;
 	let selectedDraw = 0;
-	let depositFilter = 0;
+
+	// Reactive Loading Checks:
+	$: latestDepositsLoaded = chains.every(chain => $loading[chain].basic.deposits === 'done');
+	$: latestDelegationsLoaded = chains.every(chain => $loading[chain].basic.delegations === 'done');
+	$: latestDepositsErrored = !chains.every(chain => $loading[chain].basic.deposits !== 'failed');
+	$: latestDelegationsErrored = !chains.every(chain => $loading[chain].basic.delegations !== 'failed');
 
 	// Reactive Data:
-	$: draws = getDraws($startTimestamp, $endTimestamp);
-	$: winners = draws[selectedDraw].result;
-	$: deposits = getDeposits(depositFilter, $startTimestamp, $endTimestamp);
-	$: delegations = getDelegations($startTimestamp, $endTimestamp);
+	$: $selectedChains, $loading, getDraws();
+	$: $selectedChains, $loading, getDeposits();
+	$: $selectedChains, $loading, getDelegations();
+	$: winners = draws.length > 0 ? draws[selectedDraw].result.sort((a, b) => b.claimable.reduce((a, b) => a + b, 0) - a.claimable.reduce((a, b) => a + b, 0)) : undefined;
 
 	// Draw Info:
-	$: claimable = winners.reduce((a, b) => a + (b.claimable.reduce((a, b) => a + b, 0)), 0);
-	$: dropped = winners.reduce((a, b) => a + (b.dropped.reduce((a, b) => a + b, 0)), 0);
-	$: winning = winners.filter(wallet => wallet.claimable.length > 0).length;
-	$: when = getTimeDisplay(draws[selectedDraw].timestamp, true);
+	$: claimable = winners ? winners.reduce((a, b) => a + (b.claimable.reduce((a, b) => a + b, 0)), 0) : 0;
+	$: dropped = winners ? winners.reduce((a, b) => a + (b.dropped.reduce((a, b) => a + b, 0)), 0) : 0;
+	$: winning = winners ? winners.filter(wallet => wallet.claimable.length > 0).length : 0;
+	$: when = getTimeDisplay(winners ? draws[selectedDraw].timestamp : 0, true);
 
-	// Function to get sorted and filtered draws:
-	const getDraws = (startTime: number, endTime: number) => {
-		const allDraws = $aggregatedData.draws.data.slice();
-		const filteredDraws = allDraws.filter(draw => draw.timestamp >= startTime && draw.timestamp <= endTime).reverse();
-		return filteredDraws;
+	// Function to get aggregated and sorted draws:
+	const getDraws = () => {
+		if($loading.draws === 'done') {
+
+			// Initializations:
+			const allDraws: DrawData[] = [];
+	
+			// Setting Up Draw IDs:
+			$ethData.draws.data.forEach(entry => {
+				allDraws.push({ draw: entry.draw, timestamp: entry.timestamp, result: [] });
+			});
+	
+			// Filtering Draws:
+			if($selectedChains.eth) {
+				const chain: Chain = 'eth';
+				$ethData.draws.data.forEach((entry, i) => {
+					allDraws[i].result.push(...entry.result.map(result => ({ ...result, chain })));
+				});
+			}
+			if($selectedChains.poly) {
+				const chain: Chain = 'poly';
+				$polyData.draws.data.forEach((entry, i) => {
+					allDraws[i].result.push(...entry.result.map(result => ({ ...result, chain })));
+				});
+			}
+			if($selectedChains.avax) {
+				const chain: Chain = 'avax';
+				$avaxData.draws.data.forEach((entry, i) => {
+					allDraws[i].result.push(...entry.result.map(result => ({ ...result, chain })));
+				});
+			}
+			if($selectedChains.op) {
+				const chain: Chain = 'op';
+				$opData.draws.data.forEach((entry, i) => {
+					allDraws[i].result.push(...entry.result.map(result => ({ ...result, chain })));
+				});
+			}
+
+			draws = allDraws.reverse();
+		}
 	}
 
-	// Function to get sorted and filtered deposits:
-	const getDeposits = (filter: number, startTime: number, endTime: number) => {
-		const allDeposits = $aggregatedData.deposits.data.slice();
-		const filteredDeposits = allDeposits.filter(deposit => deposit.amount >= filter && deposit.timestamp && deposit.timestamp >= startTime && deposit.timestamp <= endTime).reverse();
-		return filteredDeposits;
+	// Function to get aggregated and sorted deposits:
+	const getDeposits = () => {
+		if(latestDepositsLoaded) {
+
+			// Initializations:
+			const allDeposits: (DepositData & { chain: Chain })[] = [];
+	
+			// Filtering Deposits:
+			if($selectedChains.eth) {
+				const chain: Chain = 'eth';
+				$ethData.deposits.data.forEach(deposit => {
+					allDeposits.push({ ...deposit, chain });
+				});
+			}
+			if($selectedChains.poly) {
+				const chain: Chain = 'poly';
+				$polyData.deposits.data.forEach(deposit => {
+					allDeposits.push({ ...deposit, chain });
+				});
+			}
+			if($selectedChains.avax) {
+				const chain: Chain = 'avax';
+				$avaxData.deposits.data.forEach(deposit => {
+					allDeposits.push({ ...deposit, chain });
+				});
+			}
+			if($selectedChains.op) {
+				const chain: Chain = 'op';
+				$opData.deposits.data.forEach(deposit => {
+					allDeposits.push({ ...deposit, chain });
+				});
+			}
+	
+			deposits = allDeposits.sort((a, b) => (b.timestamp as number) - (a.timestamp as number));
+		}
 	}
 
-	// Function to get sorted and filtered delegations:
-	const getDelegations = (startTime: number, endTime: number) => {
-		const allDelegations = $aggregatedData.delegationsFunded.data.slice();
-		const filteredDelegations = allDelegations.filter(delegation => delegation.timestamp && delegation.timestamp >= startTime && delegation.timestamp <= endTime).reverse();
-		return filteredDelegations;
+	// Function to get aggregated and sorted delegations:
+	const getDelegations = () => {
+		if(latestDelegationsLoaded) {
+			
+			// Initializations:
+			const allDelegations: (DelegationFundedData & { chain: Chain })[] = [];
+	
+			// Filtering Delegations:
+			if($selectedChains.eth) {
+				const chain: Chain = 'eth';
+				$ethData.delegationsFunded.data.forEach(delegation => {
+					allDelegations.push({ ...delegation, chain });
+				});
+			}
+			if($selectedChains.poly) {
+				const chain: Chain = 'poly';
+				$polyData.delegationsFunded.data.forEach(delegation => {
+					allDelegations.push({ ...delegation, chain });
+				});
+			}
+			if($selectedChains.avax) {
+				const chain: Chain = 'avax';
+				$avaxData.delegationsFunded.data.forEach(delegation => {
+					allDelegations.push({ ...delegation, chain });
+				});
+			}
+			if($selectedChains.op) {
+				const chain: Chain = 'op';
+				$opData.delegationsFunded.data.forEach(delegation => {
+					allDelegations.push({ ...delegation, chain });
+				});
+			}
+	
+			delegations = allDelegations.sort((a, b) => (b.timestamp as number) - (a.timestamp as number));
+		}
 	}
 	
 </script>
@@ -55,7 +162,7 @@
 	<div class="header">
 		<h2>PoolTogether V4 History</h2>
 		<h2 id="altHeader">History</h2>
-		{#if tabSelected === 'winners'}
+		{#if tabSelected === 'winners' && draws.length > 0}
 			<div id="drawSelector">
 				<span>Draw:</span>
 				<select bind:value={selectedDraw}>
@@ -74,12 +181,6 @@
 					<span>When: {when}</span>
 				</div>
 			</div>
-		{:else if tabSelected === 'deposits'}
-			<div id="depositFilter">
-				<span>Filter:</span>
-				<span class="dollar">$</span>
-				<input type="number" bind:value={depositFilter}>
-			</div>
 		{/if}
 	</div>
 
@@ -95,76 +196,108 @@
 
 		<!-- Winners Tab -->
 		{#if tabSelected === 'winners'}
-			{#if winners.length === 0}
-				<img id="sleepingPooly" src="/images/sleeping.png" alt="Sleeping Pooly">
-				<span>No winners this draw!</span>
-			{:else}
-				{#each winners.slice(0, listLength) as winner}
-					<span class="winner listItem" class:highlightItem={winner.claimable.reduce((a, b) => a + b, 0) >= 1000}>
-						{#if winner.chain}
-							<img src="/images/{winner.chain}.svg" alt="{winner.chain}">
-						{/if}
-						<a href="{`/${winner.wallet}`}" class="wallet" title="{winner.wallet}">{winner.wallet.slice(0, 6)}…{winner.wallet.slice(-4)}</a>
-						<i class="icofont-arrow-right" />
-						<span class="prizes" title="{winner.claimable.map(value => ` $${value}`).toString().slice(1)}"><span class="label">Won </span>${winner.claimable.reduce((a, b) => a + b, 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-						{#if winner.avgBalance}
-							<span class="avgBalance">(Balance: ${winner.avgBalance.toLocaleString(undefined, { maximumFractionDigits: 0 })})</span>
-						{/if}
-					</span>
-				{/each}
-				{#if winners.length > listLength}
-					<span class="loadMore" on:click={() => listLength += pageSize}><i class="icofont-arrow-down" /> Load More <i class="icofont-arrow-down" /></span>
+			{#if winners}
+				{#if winners.length === 0}
+					<img id="sleepingPooly" src="/images/sleeping.png" alt="Sleeping Pooly">
+					<span>No winners this draw!</span>
+				{:else}
+					{#each winners.slice(0, listLength) as winner}
+						<span class="winner listItem" class:highlightItem={winner.claimable.reduce((a, b) => a + b, 0) >= 1000}>
+							{#if winner.chain}
+								<img src="/images/{winner.chain}.svg" alt="{winner.chain}">
+							{/if}
+							<a href="{`/${winner.wallet}`}" class="wallet" title="{winner.wallet}">{getShortWallet(winner.wallet)}</a>
+							<i class="icofont-arrow-right" />
+							<span class="prizes" title="{winner.claimable.map(value => ` $${value}`).toString().slice(1)}"><span class="label">Won </span>${winner.claimable.reduce((a, b) => a + b, 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+							{#if winner.avgBalance}
+								<span class="avgBalance">(Balance: ${winner.avgBalance.toLocaleString(undefined, { maximumFractionDigits: 0 })})</span>
+							{/if}
+						</span>
+					{/each}
+					{#if winners.length > listLength}
+						<span class="loadMore" on:click={() => listLength += pageSize}><i class="icofont-arrow-down" /> Load More <i class="icofont-arrow-down" /></span>
+					{/if}
 				{/if}
+			{:else}
+				<span class="loadingInfo">
+					{#if $loading.draws === 'failed'}
+						<img src="/images/ngmi.webp" alt="Whoops">
+						<span>Something went wrong 0.o</span>
+					{:else}
+						<img src="/images/loading.gif" alt="Loading">
+						<span>Loading...</span>
+					{/if}
+				</span>
 			{/if}
 
 		<!-- Deposits Tab -->
 		{:else if tabSelected === 'deposits'}
-			{#if deposits.length === 0}
-				<img id="sleepingPooly" src="/images/sleeping.png" alt="Sleeping Pooly">
-				<span>No deposits found...</span>
-			{:else}
-				{#each deposits.slice(0, listLength) as deposit}
-					<span class="deposit listItem" class:highlightItem={deposit.amount >= 10000}>
-						{#if deposit.chain}
+			{#if latestDepositsLoaded}
+				{#if deposits.length === 0}
+					<img id="sleepingPooly" src="/images/sleeping.png" alt="Sleeping Pooly">
+					<span>No deposits found...</span>
+				{:else}
+					{#each deposits.slice(0, listLength) as deposit}
+						<span class="deposit listItem" class:highlightItem={deposit.amount >= 10000}>
 							<img src="/images/{deposit.chain}.svg" alt="{deposit.chain}">
-						{/if}
-						<a href="{`/${deposit.wallet}`}" class="wallet" title="{deposit.wallet}">{deposit.wallet.slice(0, 6)}…{deposit.wallet.slice(-4)}</a>
-						<i class="icofont-arrow-right" />
-						<span class="amount"><span class="label">Deposited </span>{deposit.amount < 0.9 ? '<$1' : `$${deposit.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
-						{#if deposit.timestamp}
-							<span class="time">({getTimeDisplay(deposit.timestamp)})</span>
-						{/if}
-						<a class="blockExplorerLink" href="{getBlockExplorerLink(deposit.chain, deposit.txHash)}" target="__blank"><i class="icofont-external-link" /></a>
-					</span>
-				{/each}
-				{#if deposits.length > listLength}
-					<span class="loadMore" on:click={() => listLength += pageSize}><i class="icofont-arrow-down" /> Load More <i class="icofont-arrow-down" /></span>
+							<a href="{`/${deposit.wallet}`}" class="wallet" title="{deposit.wallet}">{getShortWallet(deposit.wallet)}</a>
+							<i class="icofont-arrow-right" />
+							<span class="amount"><span class="label">Deposited </span>{deposit.amount < 0.9 ? '<$1' : `$${deposit.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
+							{#if deposit.timestamp}
+								<span class="time">({getTimeDisplay(deposit.timestamp)})</span>
+							{/if}
+							<a class="blockExplorerLink" href="{getBlockExplorerLink(deposit.chain, deposit.txHash)}" target="__blank"><i class="icofont-external-link" /></a>
+						</span>
+					{/each}
+					{#if deposits.length > listLength}
+						<span class="loadMore" on:click={() => listLength += pageSize}><i class="icofont-arrow-down" /> Load More <i class="icofont-arrow-down" /></span>
+					{/if}
 				{/if}
+			{:else}
+				<span class="loadingInfo">
+					{#if latestDepositsErrored}
+						<img src="/images/ngmi.webp" alt="Whoops">
+						<span>Something went wrong 0.o</span>
+					{:else}
+						<img src="/images/loading.gif" alt="Loading">
+						<span>Loading...</span>
+					{/if}
+				</span>
 			{/if}
 
 		<!-- Delegations Tab -->
 		{:else if tabSelected === 'delegations'}
-			{#if delegations.length === 0}
-				<img id="sleepingPooly" src="/images/sleeping.png" alt="Sleeping Pooly">
-				<span>No delegations found...</span>
-			{:else}
-				{#each delegations.slice(0, listLength) as delegation}
-					<span class="delegation listItem" class:highlightItem={delegation.amount >= 10000}>
-						{#if delegation.chain}
+			{#if latestDelegationsLoaded}
+				{#if delegations.length === 0}
+					<img id="sleepingPooly" src="/images/sleeping.png" alt="Sleeping Pooly">
+					<span>No delegations found...</span>
+				{:else}
+					{#each delegations.slice(0, listLength) as delegation}
+						<span class="delegation listItem" class:highlightItem={delegation.amount >= 10000}>
 							<img src="/images/{delegation.chain}.svg" alt="{delegation.chain}">
-						{/if}
-						<a href="{`/${delegation.delegator}`}" class="wallet" title="{delegation.delegator}">{delegation.delegator.slice(0, 6)}…{delegation.delegator.slice(-4)}</a>
-						<i class="icofont-arrow-right" />
-						<span class="amount"><span class="label">Delegated </span>{delegation.amount < 0.9 ? '<$1' : `$${delegation.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
-						{#if delegation.timestamp}
-							<span class="time">({getTimeDisplay(delegation.timestamp)})</span>
-						{/if}
-						<a class="blockExplorerLink" href="{getBlockExplorerLink(delegation.chain, delegation.txHash)}" target="__blank"><i class="icofont-external-link" /></a>
-					</span>
-				{/each}
-				{#if delegations.length > listLength}
-					<span class="loadMore" on:click={() => listLength += pageSize}><i class="icofont-arrow-down" /> Load More <i class="icofont-arrow-down" /></span>
+							<a href="{`/${delegation.delegator}`}" class="wallet" title="{delegation.delegator}">{getShortWallet(delegation.delegator)}</a>
+							<i class="icofont-arrow-right" />
+							<span class="amount"><span class="label">Delegated </span>{delegation.amount < 0.9 ? '<$1' : `$${delegation.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}</span>
+							{#if delegation.timestamp}
+								<span class="time">({getTimeDisplay(delegation.timestamp)})</span>
+							{/if}
+							<a class="blockExplorerLink" href="{getBlockExplorerLink(delegation.chain, delegation.txHash)}" target="__blank"><i class="icofont-external-link" /></a>
+						</span>
+					{/each}
+					{#if delegations.length > listLength}
+						<span class="loadMore" on:click={() => listLength += pageSize}><i class="icofont-arrow-down" /> Load More <i class="icofont-arrow-down" /></span>
+					{/if}
 				{/if}
+			{:else}
+				<span class="loadingInfo">
+					{#if latestDelegationsErrored}
+						<img src="/images/ngmi.webp" alt="Whoops">
+						<span>Something went wrong 0.o</span>
+					{:else}
+						<img src="/images/loading.gif" alt="Loading">
+						<span>Loading...</span>
+					{/if}
+				</span>
 			{/if}
 		{/if}
 	</div>
@@ -291,32 +424,6 @@
 		display: flex;
 	}
 
-	#depositFilter {
-		display: flex;
-		align-items: center;
-	}
-
-	#depositFilter > span.dollar {
-		margin-left: .5em;
-		padding: 0 .2em 0 .5em;
-		background: var(--light-purple);
-		border-radius: .5em 0 0 .5em;
-	}
-
-	#depositFilter > input {
-		width: 5em;
-		padding-right: .5em;
-		font-family: inherit;
-		font-size: inherit;
-		background: var(--light-purple);
-		border: none;
-		border-radius: 0 .5em .5em 0;
-	}
-
-	#depositFilter > input:focus {
-		outline: none;
-	}
-
 	#sleepingPooly {
 		width: 10em;
 		margin: 1em 0;
@@ -372,6 +479,18 @@
 	span.time {
 		color: var(--light-purple);
 		font-size: .9em;
+	}
+
+	span.loadingInfo {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1em;
+	}
+
+	span.loadingInfo img {
+		width: 5em;
+		margin-top: 1em;
 	}
 
 	@media screen and (max-width: 600px) {

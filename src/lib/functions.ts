@@ -746,3 +746,10 @@ export const getTimeDisplay = (timestamp: number, shorten?: boolean) => {
     return '?';
   }
 }
+
+/* ====================================================================================================================================================== */
+
+// Function to get shortened wallet string:
+export const getShortWallet = (address: string) => {
+  return `${address.slice(0, 6)}…${address.slice(-4)}`;
+}

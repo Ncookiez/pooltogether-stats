@@ -1,95 +1,17 @@
 <script lang="ts">
 
 	// Imports:
-	import { page } from "$app/stores";
 	import { goto } from '$app/navigation';
-	import { getChainName, timestampToISO } from "$lib/functions";
-	import { ethData, polyData, avaxData, opData, startTimestamp, endTimestamp } from '$lib/stores';
+	import { selectedChains } from '$lib/stores';
+	import { getChainName } from "$lib/functions";
 
 	// Type Imports:
-	import type { Chain, ChainData } from '$lib/types';
+	import type { Chain } from '$lib/types';
 
 	// Initializations:
 	const chains: Chain[] = ['eth', 'poly', 'avax', 'op'];
-	const chainMinMaxTimestamps: Record<Chain, number[]> = { eth: [], poly: [], avax: [], op: [] };
-	const allChainsMinMaxTimestamps: number[] = [];
-	const dayInSeconds = 86400;
-	const defaultMaxTimestamp = 9_999_999_999;
-	let timestampsSet = false;
-	let minDateValue: string | undefined;
-	let maxDateValue: string | undefined;
 	let searchModalOpen = false;
 	let searchWallet = '';
-
-	// Reactive Chain Selection:
-	$: selectedChain = !$page.routeId || $page.routeId === '[wallet=address]' ? undefined : $page.routeId as Chain;
-
-	// Reactive Timestamps:
-	$: updateMinMaxTimestamps($ethData, $polyData, $avaxData, $opData);
-	$: selectedChain, updateCurrentChainTimestamps();
-
-	// Reactive Input Timestamps:
-	$: minDate = timestampsSet ? !selectedChain ? timestampToISO(allChainsMinMaxTimestamps[0]) : timestampToISO(chainMinMaxTimestamps[selectedChain][0]) : timestampToISO(0);
-	$: maxDate = timestampsSet ? !selectedChain ? timestampToISO(allChainsMinMaxTimestamps[1]) : timestampToISO(chainMinMaxTimestamps[selectedChain][1]) : timestampToISO(defaultMaxTimestamp);
-
-	// Function to update min/max timestamps:
-	const updateMinMaxTimestamps = (ethData: ChainData, polyData: ChainData, avaxData: ChainData, opData: ChainData) => {
-		if(!timestampsSet && ethData.minTimestamp && ethData.maxTimestamp && polyData.minTimestamp && polyData.maxTimestamp && avaxData.minTimestamp && avaxData.maxTimestamp && opData.minTimestamp && opData.maxTimestamp) {
-			chainMinMaxTimestamps.eth = [ethData.minTimestamp, ethData.maxTimestamp];
-			chainMinMaxTimestamps.poly = [polyData.minTimestamp, polyData.maxTimestamp];
-			chainMinMaxTimestamps.avax = [avaxData.minTimestamp, avaxData.maxTimestamp];
-			chainMinMaxTimestamps.op = [opData.minTimestamp, opData.maxTimestamp];
-			allChainsMinMaxTimestamps.push(Math.min(ethData.minTimestamp, polyData.minTimestamp, avaxData.minTimestamp, opData.minTimestamp));
-			allChainsMinMaxTimestamps.push(Math.max(ethData.maxTimestamp, polyData.maxTimestamp, avaxData.maxTimestamp, opData.maxTimestamp));
-			timestampsSet = true;
-		}
-	}
-
-	// Function to update current selected chain's timestamps:
-	const updateCurrentChainTimestamps = () => {
-		let updated = false;
-		if(selectedChain) {
-			if(minDateValue) {
-				const minTimeValue = Date.parse(minDateValue) / 1000;
-				if(minTimeValue < chainMinMaxTimestamps[selectedChain][0] || minTimeValue > chainMinMaxTimestamps[selectedChain][1]) {
-					minDateValue = undefined;
-					updated = true;
-				}
-			}
-			if(maxDateValue) {
-				const maxTimeValue = Date.parse(maxDateValue) / 1000;
-				if(maxTimeValue < chainMinMaxTimestamps[selectedChain][0] || maxTimeValue > chainMinMaxTimestamps[selectedChain][1]) {
-					maxDateValue = undefined;
-					updated = true;
-				}
-			}
-		}
-		if(updated) {
-			updateTimestampStores();
-		}
-	}
-
-	// Function to update timestamp stores:
-	const updateTimestampStores = () => {
-		if(timestampsSet) {
-			const minTimeValue = minDateValue ? Date.parse(minDateValue) / 1000 : undefined;
-			const maxTimeValue = maxDateValue ? Date.parse(maxDateValue) / 1000 + dayInSeconds - 1 : undefined;
-			minTimeValue ? startTimestamp.set(minTimeValue) : startTimestamp.set(0);
-			if(maxTimeValue) {
-				if(minTimeValue) {
-					if(maxTimeValue > minTimeValue) {
-						endTimestamp.set(maxTimeValue);
-					} else {
-						endTimestamp.set(defaultMaxTimestamp);
-					}
-				} else {
-					endTimestamp.set(maxTimeValue);
-				}
-			} else {
-				endTimestamp.set(defaultMaxTimestamp);
-			}
-		}
-	}
 
 	// Function to search for given wallet:
 	const search = () => {
@@ -107,26 +29,20 @@
 <nav>
 
 	<!-- Banner -->
-	<div class="banner">
+	<div class="banner" on:click={() => goto('/')}>
 		<img id="altLogo" src="/images/trophy.webp" alt="PoolTogether">
 		<img src="/images/pooltogether-logo.svg" alt="PoolTogether">
 		<span>Explorer</span>
 	</div>
 
-	<!-- Pages -->
-	<div class="pages">
-		<a class="dashboard" class:selected={!$page.routeId} href="/">Dashboard</a>
+	<!-- Chain Selection -->
+	<div class="chains">
 		{#each chains as chain}
-			<a class="{chain}" class:selected={selectedChain === chain} href="/{chain}"><img src="/images/{chain}.svg" alt="{chain.toUpperCase()}"><span>{getChainName(chain)}</span></a>
+			<span class="{chain}" class:selected={$selectedChains[chain]} on:click={() => $selectedChains[chain] = !$selectedChains[chain]}>
+				<img src="/images/{chain}.svg" alt="{chain.toUpperCase()}">
+				<span>{getChainName(chain)}</span>
+			</span>
 		{/each}
-	</div>
-
-	<!-- Timestamp Selection -->
-	<div class="timestamps">
-		<input type="date" min="{minDate}" max="{maxDate}" bind:value={minDateValue} disabled={!timestampsSet}>
-		<i class="icofont-arrow-right" />
-		<input type="date" min="{minDate}" max="{maxDate}" bind:value={maxDateValue} disabled={!timestampsSet}>
-		<span on:click={() => updateTimestampStores()}><i class="icofont-clock-time" /></span>
 	</div>
 
 	<!-- Player Search -->
@@ -172,37 +88,27 @@
 		align-items: center;
 	}
 
-	a {
+	div.chains {
+		gap: 1em;
+		margin-left: auto;
+	}
+
+	div.chains > span {
 		display: flex;
 		align-items: center;
 		gap: .3em;
 		height: calc(var(--navbar-height) / 2);
 		color: inherit;
-		text-decoration: none;
-		border-bottom: 2px solid transparent;
-	}
-	
-	a.dashboard.selected, a.dashboard:hover {
-		border-color: currentColor;
+		cursor: pointer;
+		user-select: none;
 	}
 
-	a.eth.selected, a.eth:hover {
-		border-color: #627EEA;
+	div.chains > span:not(.selected) {
+		text-decoration: line-through;
+		filter: grayscale(1);
 	}
 
-	a.poly.selected, a.poly:hover {
-		border-color: #7B3FE4;
-	}
-
-	a.avax.selected, a.avax:hover {
-		border-color: #E84142;
-	}
-
-	a.op.selected, a.op:hover {
-		border-color: #FF0420;
-	}
-
-	a > img {
+	div.chains img {
 		height: 25px;
 		width: 25px;
 	}
@@ -213,6 +119,7 @@
 
 	div.banner {
 		gap: .5em;
+		cursor: pointer;
 	}
 
 	div.banner > img {
@@ -222,41 +129,6 @@
 	div.banner > span {
 		font-size: 2.7em;
 		font-weight: bold;
-	}
-
-	div.pages {
-		gap: 1.5em;
-		margin: 0 5em;
-	}
-
-	div.timestamps {
-		gap: .5em;
-		margin-left: auto;
-	}
-
-	div.timestamps > input, div.timestamps > span {
-		height: 2rem;
-		padding: 0 .5em;
-		background: var(--light-purple);
-		border-radius: .5em;
-	}
-
-	div.timestamps > input {
-		border: none;
-	}
-
-	div.timestamps > input:focus {
-		outline: 2px solid var(--accent-color);
-	}
-
-	div.timestamps > span {
-		display: flex;
-		align-items: center;
-		cursor: pointer;
-	}
-
-	div.timestamps > span:hover {
-		background-color: var(--accent-color);
 	}
 
 	div.playerSearch {
@@ -315,7 +187,7 @@
 	}
 
 	@media screen and (max-width: 1530px) {
-		div.pages > a > span {
+		div.chains > span > span {
 			display: none;
 		}
 	}
@@ -327,15 +199,12 @@
 		#altLogo {
 			display: block;
 		}
-		div.pages {
+		div.chains {
 			margin: 0 2em;
 		}
 	}
 
 	@media screen and (max-width: 850px) {
-		div.timestamps {
-			display: none;
-		}
 		div.playerSearch {
 			margin-left: auto;
 		}
@@ -346,16 +215,16 @@
 			flex-wrap: wrap;
 			padding: 1em 2em;
 		}
-		a {
-			height: calc(var(--navbar-height) / 4);
-		}
 		#altLogo {
 			height: 50px;
 		}
-		div.pages {
+		div.chains {
 			width: 100%;
 			margin: 0;
 			order: 3;
+		}
+		div.chains > span {
+			height: calc(var(--navbar-height) / 4);
 		}
 	}
 	
