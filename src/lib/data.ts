@@ -60,6 +60,24 @@ export const fetchDeposits = async (chain: Chain, pageSize?: number, page?: numb
   return deposits;
 }
 
+// Function to fetch last deposits:
+export const fetchLastDeposits = async (chain: Chain) => {
+
+  // Initializations:
+  const lastDeposits: ChainData['deposits'] = { lastQueriedBlock: 0, data: [] };
+
+  // Fetching Last Deposits:
+  try {
+    const apiResponse: ChainData['deposits'] = await fetch(`${apiURL}/${chain}/lastDeposits`).then(response => response.json());
+    lastDeposits.lastQueriedBlock = apiResponse.lastQueriedBlock;
+    lastDeposits.data = apiResponse.data;
+  } catch {
+    throw new Error(`Error querying ${chain.toUpperCase()} last deposits.`);
+  }
+
+  return lastDeposits;
+}
+
 /* ========================================================================================================================================================================= */
 
 // Function to fetch withdrawals data:
@@ -202,6 +220,24 @@ export const fetchDelegationsFunded = async (chain: Chain, pageSize?: number, pa
   }
 
   return delegationsFunded;
+}
+
+// Function to fetch last delegations funded:
+export const fetchLastDelegations = async (chain: Chain) => {
+
+  // Initializations:
+  const lastDelegations: ChainData['delegationsFunded'] = { lastQueriedBlock: 0, data: [] };
+
+  // Fetching Last Delegations:
+  try {
+    const apiResponse: ChainData['delegationsFunded'] = await fetch(`${apiURL}/${chain}/lastDelegations`).then(response => response.json());
+    lastDelegations.lastQueriedBlock = apiResponse.lastQueriedBlock;
+    lastDelegations.data = apiResponse.data;
+  } catch {
+    throw new Error(`Error querying ${chain.toUpperCase()} last delegations.`);
+  }
+
+  return lastDelegations;
 }
 
 /* ========================================================================================================================================================================= */

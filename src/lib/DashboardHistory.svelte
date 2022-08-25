@@ -13,7 +13,7 @@
 	let draws: DrawData[] = [];
 	let deposits: (DepositData & { chain: Chain })[] = [];
 	let delegations: (DelegationFundedData & { chain: Chain })[] = [];
-	let tabSelected: 'winners' | 'deposits' | 'delegations' = 'winners';
+	let tabSelected: 'winners' | 'deposits' | 'delegations' = 'deposits';
 	let listLength = pageSize;
 	let selectedDraw = 0;
 
@@ -186,9 +186,9 @@
 
 	<!-- Tab Selection -->
 	<div class="tabs">
-		<span class:selected={tabSelected === 'winners'} on:click={() => { tabSelected = 'winners'; listLength = pageSize; }}>Winners</span>
 		<span class:selected={tabSelected === 'deposits'} on:click={() => { tabSelected = 'deposits'; listLength = pageSize; }}>Deposits</span>
 		<span class:selected={tabSelected === 'delegations'} on:click={() => { tabSelected = 'delegations'; listLength = pageSize; }}>Delegations</span>
+		<span class:selected={tabSelected === 'winners'} on:click={() => { tabSelected = 'winners'; listLength = pageSize; }}>Winners</span>
 	</div>
 
 	<!-- Content -->

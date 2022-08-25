@@ -2,7 +2,7 @@
 
 	// Imports:
 	import { onMount } from 'svelte';
-	import { fetchStats, fetchDraws, fetchDeposits, fetchDelegationsFunded } from '$lib/data';
+	import { fetchStats, fetchDraws, fetchLastDeposits, fetchLastDelegations } from '$lib/data';
 	import { ethStats, ethData, polyStats, polyData, avaxStats, avaxData, opStats, opData, selectedChains, loading } from '$lib/stores';
 	import Navbar from '$lib/Navbar.svelte';
 	import Footer from '$lib/Footer.svelte';
@@ -13,13 +13,12 @@
 
 	// Initializations:
 	const chains: Chain[] = ['eth', 'poly', 'avax', 'op'];
-	const numLatestTXs: number = 1000;
 	let basicStatsErrored: boolean = false;
 	let mainContent: HTMLElement;
 	let mainContentScrollY: number = 0;
 
 	// Reactive Loading Check:
-	$: basicStatsLoaded = chains.every(chain => $loading[chain].basic.stats === 'done');
+	$: basicStatsLoaded = chains.every(chain => !$selectedChains[chain] || $loading[chain].basic.stats === 'done');
 
 	// Function to load draws:
 	const loadDraws = async () => {
@@ -65,7 +64,7 @@
 	const loadLatestDeposits = async (chain: Chain) => {
 		try {
 			$loading[chain].basic.deposits = 'loading';
-			const latestDeposits = await fetchDeposits(chain, numLatestTXs, 0);
+			const latestDeposits = await fetchLastDeposits(chain);
 			if(chain === 'eth') {
 				$ethData.deposits = latestDeposits;
 			} else if(chain === 'poly') {
@@ -87,7 +86,7 @@
 	const loadLatestDelegations = async (chain: Chain) => {
 		try {
 			$loading[chain].basic.delegations = 'loading';
-			const latestDelegations = await fetchDelegationsFunded(chain, numLatestTXs, 0);
+			const latestDelegations = await fetchLastDelegations(chain);
 			if(chain === 'eth') {
 				$ethData.delegationsFunded = latestDelegations;
 			} else if(chain === 'poly') {
