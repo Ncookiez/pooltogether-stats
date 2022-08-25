@@ -2,7 +2,7 @@
 
 	// Imports:
 	import { onMount } from 'svelte';
-	import { getChainName, timestampsToDates } from '$lib/functions';
+	import { getChainName, timestampsToDates, getShortWallet } from '$lib/functions';
 	import { ethStats, polyStats, avaxStats, opStats, selectedChains } from '$lib/stores';
 	import PieChart from '$lib/PieChart.svelte';
 	import LineChart from '$lib/LineChart.svelte';
@@ -439,7 +439,7 @@
 	<span class="list">
 		{#each topWhales as whale}
 			<span>
-				<a href="{`/${whale.wallet}`}" class="highlight" title="{whale.wallet}">{whale.wallet.slice(0, 6)}…{whale.wallet.slice(-4)}</a>
+				<a href="{`/${whale.wallet}`}" class="highlight" title="{whale.wallet}">{getShortWallet(whale.wallet)}</a>
 				<span>${whale.balance.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
 			</span>
 		{/each}

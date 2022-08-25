@@ -1,6 +1,7 @@
 <script lang="ts">
 
 	// Imports:
+	import { getShortWallet } from '$lib/functions';
 	import Highlight from '$lib/Highlight.svelte';
 
 	// Type Imports:
@@ -31,7 +32,7 @@
 <!-- #################################################################################################### -->
 
 <!-- Player Header -->
-<h1>Player Stats: <span class="wallet" title="{wallet}">{wallet.slice(0, 6)}…{wallet.slice(-4)}</span> <i class="icofont-copy-invert" on:click={copyAddress}><span class="copyTooltip" class:hide={!copiedAddress}>Copied!</span></i></h1>
+<h1>Player Stats: <span class="wallet" title="{wallet}">{getShortWallet(wallet)}</span> <i class="icofont-copy-invert" on:click={copyAddress}><span class="copyTooltip" class:hide={!copiedAddress}>Copied!</span></i></h1>
 
 <!-- Player Summary -->
 {#if playerData.txs.length > 0}

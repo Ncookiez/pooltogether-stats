@@ -1,7 +1,7 @@
 <script lang="ts">
 
 	// Imports:
-	import { getBlockExplorerLink, getTimeDisplay } from '$lib/functions';
+	import { getBlockExplorerLink, getTimeDisplay, getShortWallet } from '$lib/functions';
 
 	// Type Imports:
 	import type { Hash, PlayerData } from '$lib/types';
@@ -21,7 +21,7 @@
 
 	<!-- Header -->
 	<div class="header">
-		<h2 title="{wallet}">{wallet.slice(0,6)}…{wallet.slice(-4)} Player History</h2>
+		<h2 title="{wallet}">{getShortWallet(wallet)} Player History</h2>
 	</div>
 
 	<!-- Content -->
@@ -33,7 +33,7 @@
 			{#each playerData.txs.slice(0, listLength) as tx}
 				<span class="listItem">
 					<img src="/images/{tx.chain}.svg" alt="{tx.chain}">
-					<span class="wallet" title="{wallet}">{wallet.slice(0, 6)}…{wallet.slice(-4)}</span>
+					<span class="wallet" title="{wallet}">{getShortWallet(wallet)}</span>
 					<i class="icofont-arrow-right" />
 
 					<!-- Deposit -->
@@ -51,9 +51,9 @@
 					<!-- Delegation Created -->
 					{:else if tx.type === 'delegationCreated'}
 						{#if tx.data.delegator === wallet}
-							<span class="delegationCreated">Created a delegation to <a href="{`/${tx.data.delegatee}`}" class="wallet">{tx.data.delegatee.slice(0, 6)}…{tx.data.delegatee.slice(-4)}</a></span>
+							<span class="delegationCreated">Created a delegation to <a href="{`/${tx.data.delegatee}`}" class="wallet">{getShortWallet(tx.data.delegatee)}</a></span>
 						{:else}
-							<span class="delegationReceived">Received a delegation from <a href="{`/${tx.data.delegator}`}" class="wallet">{tx.data.delegator.slice(0, 6)}…{tx.data.delegator.slice(-4)}</a></span>
+							<span class="delegationReceived">Received a delegation from <a href="{`/${tx.data.delegator}`}" class="wallet">{getShortWallet(tx.data.delegator)}</a></span>
 						{/if}
 
 					<!-- Delegation Funded -->
@@ -63,9 +63,9 @@
 					<!-- Delegation Updated -->
 					{:else if tx.type === 'delegationUpdated'}
 						{#if tx.data.delegator === wallet}
-							<span class="delegationUpdated">Updated a delegation to point to <a href="{`/${tx.data.newDelegatee}`}" class="wallet">{tx.data.newDelegatee.slice(0, 6)}…{tx.data.newDelegatee.slice(-4)}</a></span>
+							<span class="delegationUpdated">Updated a delegation to point to <a href="{`/${tx.data.newDelegatee}`}" class="wallet">{getShortWallet(tx.data.newDelegatee)}</a></span>
 						{:else}
-							<span class="delegationReceived">Received a delegation from <a href="{`/${tx.data.delegator}`}" class="wallet">{tx.data.delegator.slice(0, 6)}…{tx.data.delegator.slice(-4)}</a></span>
+							<span class="delegationReceived">Received a delegation from <a href="{`/${tx.data.delegator}`}" class="wallet">{getShortWallet(tx.data.delegator)}</a></span>
 						{/if}
 
 					<!-- Delegation Withdrawn -->
