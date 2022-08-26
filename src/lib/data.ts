@@ -7,10 +7,12 @@ import type { Chain, Hash, ChainStats, ChainData, DepositData, WithdrawalData, C
 
 /* ========================================================================================================================================================================= */
 
-// Settings:
+// Initializations:
 const apiURL = 'https://pooltogether-stats.web.app';
 const explorerApiURL = 'https://poolexplorer.xyz';
 const defaultPageSize = 20000;
+const drawFormattingWorkerPath: string = '/workers/drawFormattingWorker.js';
+const workerTimeout: number = 120000;
 
 /* ========================================================================================================================================================================= */
 
@@ -427,47 +429,27 @@ export const fetchBalances = async (chain: Chain, pageSize?: number, page?: numb
 export const fetchDraws = async () => {
 
   // Initializations:
-  const draws: Record<Chain, { data: DrawData[] }> = {
-    eth: { data: [] },
-    poly: { data: [] },
-    avax: { data: [] },
-    op: { data: [] }
-  }
+  let draws: Record<Chain, { data: DrawData[] }> = { eth: { data: [] }, poly: { data: [] }, avax: { data: [] }, op: { data: [] } };
 
   // Fetching Draws:
   try {
     let apiResponse: ExplorerAPIDrawResponse[] = (await fetch(`${explorerApiURL}/cookies`).then(response => response.json()));
-    apiResponse.forEach(drawEntry => {
-      const draw = drawEntry.draw;
-      const timestamp = parseInt(drawEntry.timestamp);
-      const result: { chain: Chain, wallet: Hash, claimable: number[], dropped: number[], avgBalance: number | null }[] = [];
-      drawEntry.result.forEach(walletEntry => {
-        let chain: Chain | undefined;
-        if(walletEntry.n === '1') {
-          chain = 'eth';
-        } else if(walletEntry.n === '3') {
-          chain = 'poly';
-        } else if(walletEntry.n === '4') {
-          chain = 'avax';
-        } else if(walletEntry.n === '6') {
-          chain = 'op';
-        }
-        if(chain) {
-          const wallet = utils.getAddress(walletEntry.a) as Hash;
-          const claimable = walletEntry.c.map(prize => parseInt(prize));
-          const dropped = walletEntry.u.map(prize => parseInt(prize));
-          const avgBalance = walletEntry.g;
-          result.push({ chain, wallet, claimable, dropped, avgBalance });
-        }
-      });
-      const ethResults: DrawData['result'] = result.filter(entry => entry.chain === 'eth').map(entry => ({ wallet: entry.wallet, claimable: entry.claimable, dropped: entry.dropped, avgBalance: entry.avgBalance }));
-      const polyResults: DrawData['result'] = result.filter(entry => entry.chain === 'poly').map(entry => ({ wallet: entry.wallet, claimable: entry.claimable, dropped: entry.dropped, avgBalance: entry.avgBalance }));
-      const avaxResults: DrawData['result'] = result.filter(entry => entry.chain === 'avax').map(entry => ({ wallet: entry.wallet, claimable: entry.claimable, dropped: entry.dropped, avgBalance: entry.avgBalance }));
-      const opResults: DrawData['result'] = result.filter(entry => entry.chain === 'op').map(entry => ({ wallet: entry.wallet, claimable: entry.claimable, dropped: entry.dropped, avgBalance: entry.avgBalance }));
-      draws.eth.data.push({ draw, timestamp, result: ethResults });
-      draws.poly.data.push({ draw, timestamp, result: polyResults });
-      draws.avax.data.push({ draw, timestamp, result: avaxResults });
-      draws.op.data.push({ draw, timestamp, result: opResults });
+    await new Promise<void>((resolve, reject) => {
+      const timeout = setTimeout(() => reject(`Timed out while formatting draws.`), workerTimeout);
+      const dataWorker = new Worker(drawFormattingWorkerPath);
+      dataWorker.postMessage(apiResponse);
+      dataWorker.onmessage = (event) => {
+        clearTimeout(timeout);
+        draws = event.data;
+        (['eth', 'poly', 'avax', 'op'] as Chain[]).forEach(chain => {
+          draws[chain].data.forEach(entry => {
+            entry.result.forEach(player => {
+              player.wallet = utils.getAddress(player.wallet) as Hash;
+            });
+          });
+        });
+        resolve();
+      }
     });
   } catch {
     throw new Error(`Error querying draw data.`);

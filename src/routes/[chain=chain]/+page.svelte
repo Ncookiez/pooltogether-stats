@@ -25,6 +25,6 @@
 
 <!-- SvelteKit Dynamic Header -->
 <svelte:head>
-	<title>Pool Explorer</title>
-	<meta name="description" content="An app for exploring all there is to see about PoolTogether statistics." />
+	<title>Pool Stats</title>
+	<meta name="description" content="An app for all there is to see about PoolTogether statistics." />
 </svelte:head>

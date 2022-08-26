@@ -1,8 +1,9 @@
 
 // Type Imports:
-import type { Chain, Hash, ChainData, DepositsOverTime, WithdrawalsOverTime, ClaimsOverTime, TVLOverTime, DelegationsOverTime, YieldOverTime } from './types';
+import type { Chain, Hash, ChainData, DepositData, WithdrawalData, WalletData, DepositsOverTime, WithdrawalsOverTime, ClaimsOverTime, TVLOverTime, DelegationsOverTime, YieldOverTime, MovingUsers, PlayerData } from './types';
 
 // Initializations:
+const defaultMaxTimestamp = 9_999_999_999;
 const dayInSeconds = 86400;
 
 /* ====================================================================================================================================================== */
@@ -479,6 +480,218 @@ export const getYieldOverTime = (chainData: ChainData, ticks: number, customTime
   }
 
   return yieldOverTime;
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to get users moving to a new chain:
+export const getMovingUsers = (withdrawals: WithdrawalData[], ethDeposits: DepositData[], polyDeposits: DepositData[], avaxDeposits: DepositData[], opDeposits: DepositData[], timeFilters?: { start: number, end: number }) => {
+
+  // Initializations:
+  const movingUsers: MovingUsers = {
+    totalWithdrawn: { amount: 0, users: 0 },
+    movedToETH: { amount: 0, users: 0 },
+    movedToPOLY: { amount: 0, users: 0 },
+    movedToAVAX: { amount: 0, users: 0 },
+    movedToOP: { amount: 0, users: 0 }
+  }
+  const uniqueWallets: Hash[] = [];
+
+  // Finding Data:
+  withdrawals.forEach(withdrawal => {
+    const wallet = withdrawal.wallet;
+    const timestamp = withdrawal.timestamp;
+    if((timestamp && !uniqueWallets.includes(wallet) && !timeFilters) || (timestamp && !uniqueWallets.includes(wallet) && timeFilters && timestamp > timeFilters.start && timestamp < timeFilters.end)) {
+      uniqueWallets.push(wallet);
+      movingUsers.totalWithdrawn.users++;
+
+      // Moving To Ethereum:
+      let ethWalletDeposits = ethDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp && deposit.timestamp < (timeFilters?.end ?? defaultMaxTimestamp));
+      if(ethWalletDeposits.length > 0) {
+        ethWalletDeposits.forEach(deposit => {
+          movingUsers.movedToETH.amount += deposit.amount;
+        });
+        movingUsers.movedToETH.users++;
+      }
+
+      // Moving To Polygon:
+      let polyWalletDeposits = polyDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp && deposit.timestamp < (timeFilters?.end ?? defaultMaxTimestamp));
+      if(polyWalletDeposits.length > 0) {
+        polyWalletDeposits.forEach(deposit => {
+          movingUsers.movedToPOLY.amount += deposit.amount;
+        });
+        movingUsers.movedToPOLY.users++;
+      }
+
+      // Moving To Avalanche:
+      let avaxWalletDeposits = avaxDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp && deposit.timestamp < (timeFilters?.end ?? defaultMaxTimestamp));
+      if(avaxWalletDeposits.length > 0) {
+        avaxWalletDeposits.forEach(deposit => {
+          movingUsers.movedToAVAX.amount += deposit.amount;
+        });
+        movingUsers.movedToAVAX.users++;
+      }
+
+      // Moving To Optimism:
+      let opWalletDeposits = opDeposits.filter(deposit => deposit.wallet === wallet && deposit.timestamp && deposit.timestamp > timestamp && deposit.timestamp < (timeFilters?.end ?? defaultMaxTimestamp));
+      if(opWalletDeposits.length > 0) {
+        opWalletDeposits.forEach(deposit => {
+          movingUsers.movedToOP.amount += deposit.amount;
+        });
+        movingUsers.movedToOP.users++;
+      }
+    }
+    movingUsers.totalWithdrawn.amount += withdrawal.amount;
+  });
+
+  return movingUsers;
+}
+
+/* ====================================================================================================================================================== */
+
+// Function to get multi-chain, wallet-specific data:
+export const getPlayerData = (wallet: Hash | undefined, ethData: ChainData, polyData: ChainData, avaxData: ChainData, opData: ChainData, ticks: number) => {
+  if(wallet && ethData?.wallets && polyData?.wallets && avaxData?.wallets && opData?.wallets) {
+
+    // Initializations:
+    const playerData: PlayerData = {
+      txs: [],
+      timestamps: [],
+      depositsOverTime: [],
+      claimsOverTime: [],
+      withdrawalsOverTime: [],
+      balancesOverTime: [],
+      balances: { eth: 0, poly: 0, avax: 0, op: 0 }
+    }
+    const ethWallet: WalletData | undefined = ethData.wallets[wallet];
+    const polyWallet: WalletData | undefined = polyData.wallets[wallet];
+    const avaxWallet: WalletData | undefined = avaxData.wallets[wallet];
+    const opWallet: WalletData | undefined = opData.wallets[wallet];
+    let cumulativeDepositAmount = 0;
+    let cumulativeClaimAmount = 0;
+    let cumulativeWithdrawalAmount = 0;
+  
+    // Getting Basic Chain Data:
+    if(ethWallet) {
+      playerData.balances.eth = ethWallet.currentBalance;
+      ethWallet.txs.forEach(tx => tx.chain = 'eth');
+      playerData.txs.push(...ethWallet.txs);
+    }
+    if(polyWallet) {
+      playerData.balances.poly = polyWallet.currentBalance;
+      polyWallet.txs.forEach(tx => tx.chain = 'poly');
+      playerData.txs.push(...polyWallet.txs);
+    }
+    if(avaxWallet) {
+      playerData.balances.avax = avaxWallet.currentBalance;
+      avaxWallet.txs.forEach(tx => tx.chain = 'avax');
+      playerData.txs.push(...avaxWallet.txs);
+    }
+    if(opWallet) {
+      playerData.balances.op = opWallet.currentBalance;
+      opWallet.txs.forEach(tx => tx.chain = 'op');
+      playerData.txs.push(...opWallet.txs);
+    }
+
+    // Filtering Delegations Created:
+    const ethDelegationsCreated = ethData.delegationsCreated.data.filter(delegation => delegation.delegatee === wallet);
+    const polyDelegationsCreated = polyData.delegationsCreated.data.filter(delegation => delegation.delegatee === wallet);
+    const avaxDelegationsCreated = avaxData.delegationsCreated.data.filter(delegation => delegation.delegatee === wallet);
+    const opDelegationsCreated = opData.delegationsCreated.data.filter(delegation => delegation.delegatee === wallet);
+
+    // Filtering Delegations Updated:
+    const ethDelegationsUpdated = ethData.delegationsUpdated.data.filter(delegation => delegation.newDelegatee === wallet);
+    const polyDelegationsUpdated = polyData.delegationsUpdated.data.filter(delegation => delegation.newDelegatee === wallet);
+    const avaxDelegationsUpdated = avaxData.delegationsUpdated.data.filter(delegation => delegation.newDelegatee === wallet);
+    const opDelegationsUpdated = opData.delegationsUpdated.data.filter(delegation => delegation.newDelegatee === wallet);
+
+    // Adding Any Created Delegations:
+    if(ethDelegationsCreated.length > 0) {
+      ethDelegationsCreated.forEach(delegation => {
+        playerData.txs.push({ chain: 'eth', type: 'delegationCreated', data: delegation });
+      });
+    }
+    if(polyDelegationsCreated.length > 0) {
+      polyDelegationsCreated.forEach(delegation => {
+        playerData.txs.push({ chain: 'poly', type: 'delegationCreated', data: delegation });
+      });
+    }
+    if(avaxDelegationsCreated.length > 0) {
+      avaxDelegationsCreated.forEach(delegation => {
+        playerData.txs.push({ chain: 'avax', type: 'delegationCreated', data: delegation });
+      });
+    }
+    if(opDelegationsCreated.length > 0) {
+      opDelegationsCreated.forEach(delegation => {
+        playerData.txs.push({ chain: 'op', type: 'delegationCreated', data: delegation });
+      });
+    }
+
+    // Adding Any Updated Delegations:
+    if(ethDelegationsUpdated.length > 0) {
+      ethDelegationsUpdated.forEach(delegation => {
+        playerData.txs.push({ chain: 'eth', type: 'delegationUpdated', data: delegation });
+      });
+    }
+    if(polyDelegationsUpdated.length > 0) {
+      polyDelegationsUpdated.forEach(delegation => {
+        playerData.txs.push({ chain: 'poly', type: 'delegationUpdated', data: delegation });
+      });
+    }
+    if(avaxDelegationsUpdated.length > 0) {
+      avaxDelegationsUpdated.forEach(delegation => {
+        playerData.txs.push({ chain: 'avax', type: 'delegationUpdated', data: delegation });
+      });
+    }
+    if(opDelegationsUpdated.length > 0) {
+      opDelegationsUpdated.forEach(delegation => {
+        playerData.txs.push({ chain: 'op', type: 'delegationUpdated', data: delegation });
+      });
+    }
+
+    if(playerData.txs.length > 0) {
+
+      // Sorting Transactions:
+      playerData.txs.sort((a, b) => (a.data.timestamp as number) - (b.data.timestamp as number));
+  
+      // Getting Timestamps:
+      const firstTimestamp = playerData.txs[0].data.timestamp as number;
+      const lastTimestamp = playerData.txs[playerData.txs.length - 1].data.timestamp as number;
+      playerData.timestamps = getRangeArray(firstTimestamp, lastTimestamp, ticks, true);
+  
+      // Getting Data Over Time:
+      for(let i = 0; i < ticks; i++) {
+        let depositAmount = 0;
+        let claimAmount = 0;
+        let withdrawalAmount = 0;
+        playerData.txs.forEach(tx => {
+          if(tx.data.timestamp && tx.data.timestamp <= playerData.timestamps[i]) {
+            if((1 > 0 && tx.data.timestamp > playerData.timestamps[i - 1]) || i === 0) {
+              if(tx.type === 'deposit') {
+                depositAmount += tx.data.amount;
+              } else if(tx.type === 'claim') {
+                claimAmount += tx.data.prizes.reduce((a, b) => a + b, 0);
+              } else if(tx.type === 'withdrawal') {
+                withdrawalAmount += tx.data.amount;
+              }
+            }
+          }
+        });
+        cumulativeDepositAmount += depositAmount;
+        cumulativeClaimAmount += claimAmount;
+        cumulativeWithdrawalAmount += withdrawalAmount;
+        playerData.depositsOverTime.push(Math.floor(cumulativeDepositAmount));
+        playerData.claimsOverTime.push(Math.floor(cumulativeClaimAmount));
+        playerData.withdrawalsOverTime.push(Math.floor(cumulativeWithdrawalAmount));
+        playerData.balancesOverTime.push(Math.floor(cumulativeDepositAmount + cumulativeClaimAmount - cumulativeWithdrawalAmount));
+      }
+  
+      // Re-Sorting Transactions:
+      playerData.txs.sort((a, b) => (b.data.timestamp as number) - (a.data.timestamp as number));
+    }
+
+    return playerData;
+  }
 }
 
 /* ====================================================================================================================================================== */

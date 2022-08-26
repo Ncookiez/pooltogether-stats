@@ -52,41 +52,8 @@ export interface ChainData {
   tvlOverTime?: TVLOverTime
   delegationsOverTime?: DelegationsOverTime
   yieldOverTime?: YieldOverTime
-  wallets?: Record<Hash, WalletData>
   winlessWithdrawals?: WinlessWithdrawals[]
   tvlDistribution?: TVLDistribution
-  movingUsers?: MovingUsers
-}
-
-// Aggregated Data Interface:
-export interface AggregatedData {
-  deposits: { data: (DepositData & { chain: Chain })[] }
-  withdrawals: { data: (WithdrawalData & { chain: Chain })[] }
-  claims: { data: (ClaimData & { chain: Chain })[] }
-  delegationsCreated: { data: (DelegationCreatedData & { chain: Chain })[] }
-  delegationsFunded: { data: (DelegationFundedData & { chain: Chain })[] }
-  delegationsUpdated: { data: (DelegationUpdatedData & { chain: Chain })[] }
-  delegationsWithdrawn: { data: (DelegationWithdrawnData & { chain: Chain })[] }
-  yields: { data: (YieldData & { chain: Chain })[] }
-  balances: { timestamp: number | undefined, data: BalanceData[] }
-  draws: { data: DrawData[] }
-  minTimestamp: number
-  maxTimestamp: number
-  timestamps: number[]
-  eth?: AggTimestampedChainData
-  poly?: AggTimestampedChainData
-  avax?: AggTimestampedChainData
-  op?: AggTimestampedChainData
-}
-
-// Chain Data w/ Aggregated Timestamps Interface:
-export interface AggTimestampedChainData {
-  depositsOverTime: DepositsOverTime
-  withdrawalsOverTime: WithdrawalsOverTime
-  claimsOverTime: ClaimsOverTime
-  delegationsOverTime: DelegationsOverTime
-  tvlOverTime: TVLOverTime
-  yieldOverTime: YieldOverTime
 }
 
 /* ========================================================================================================================================================================= */
@@ -161,7 +128,7 @@ export interface DrawData {
   draw: number
   timestamp: number
   result: {
-    chain?: Chain
+    chain: Chain
     wallet: Hash
     claimable: number[]
     dropped: number[]
@@ -221,47 +188,39 @@ export interface Line {
 
 // Transaction Interfaces:
 export interface DepositTX {
-  chain?: Chain
+  chain: Chain
   type: 'deposit'
   data: DepositData
 }
 export interface WithdrawalTX {
-  chain?: Chain
+  chain: Chain
   type: 'withdrawal'
   data: WithdrawalData
 }
 export interface ClaimTX {
-  chain?: Chain
+  chain: Chain
   type: 'claim'
   data: ClaimData
 }
 export interface DelegationCreatedTX {
-  chain?: Chain
+  chain: Chain
   type: 'delegationCreated'
   data: DelegationCreatedData
 }
 export interface DelegationFundedTX {
-  chain?: Chain
+  chain: Chain
   type: 'delegationFunded'
   data: DelegationFundedData
 }
 export interface DelegationUpdatedTX {
-  chain?: Chain
+  chain: Chain
   type: 'delegationUpdated'
   data: DelegationUpdatedData
 }
 export interface DelegationWithdrawnTX {
-  chain?: Chain
+  chain: Chain
   type: 'delegationWithdrawn'
   data: DelegationWithdrawnData
-}
-
-/* ========================================================================================================================================================================= */
-
-// Wallet Data Interface:
-export interface WalletData {
-  txs: TX[]
-  currentBalance: number
 }
 
 /* ========================================================================================================================================================================= */
@@ -379,17 +338,6 @@ export interface TVLDistribution {
 
 /* ========================================================================================================================================================================= */
 
-// Moving Users Interface:
-export interface MovingUsers {
-  totalWithdrawn: { amount: number, users: number }
-  movedToETH: { amount: number, users: number }
-  movedToPOLY: { amount: number, users: number }
-  movedToAVAX: { amount: number, users: number }
-  movedToOP: { amount: number, users: number }
-}
-
-/* ========================================================================================================================================================================= */
-
 // Player Data Interface:
 export interface PlayerData {
   txs: TX[]
@@ -426,5 +374,19 @@ export interface ChainLoading {
     stats: LoadingStatus
     deposits: LoadingStatus
     delegations: LoadingStatus
+  }
+  advanced: {
+    stats: LoadingStatus
+    deposits: LoadingStatus
+    withdrawals: LoadingStatus
+    claims: LoadingStatus
+    delegationsCreated: LoadingStatus
+    delegationsFunded: LoadingStatus
+    delegationsUpdated: LoadingStatus
+    delegationsWithdrawn: LoadingStatus
+    yield: LoadingStatus
+    supply: LoadingStatus
+    balances: LoadingStatus
+    progress: number
   }
 }

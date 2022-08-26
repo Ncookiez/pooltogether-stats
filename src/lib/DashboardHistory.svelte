@@ -10,6 +10,10 @@
 	// Initializations:
 	const chains: Chain[] = ['eth', 'poly', 'avax', 'op'];
 	const pageSize = 25;
+	const drawHistoryWorkerPath: string = '/workers/drawHistoryWorker.js';
+	const depositHistoryWorkerPath: string = '/workers/depositHistoryWorker.js';
+	const delegationHistoryWorkerPath: string = '/workers/delegationHistoryWorker.js';
+	const workerTimeout: number = 60000;
 	let draws: DrawData[] = [];
 	let deposits: (DepositData & { chain: Chain })[] = [];
 	let delegations: (DelegationFundedData & { chain: Chain })[] = [];
@@ -36,118 +40,62 @@
 	$: when = getTimeDisplay(winners ? draws[selectedDraw].timestamp : 0, true);
 
 	// Function to get aggregated and sorted draws:
-	const getDraws = () => {
+	const getDraws = async () => {
 		if($loading.draws === 'done') {
-
-			// Initializations:
-			const allDraws: DrawData[] = [];
-	
-			// Setting Up Draw IDs:
-			$ethData.draws.data.forEach(entry => {
-				allDraws.push({ draw: entry.draw, timestamp: entry.timestamp, result: [] });
+			await new Promise<void>((resolve, reject) => {
+				const timeout = setTimeout(() => reject(`Timed out while handling draw history.`), workerTimeout);
+				const dataWorker = new Worker(drawHistoryWorkerPath);
+				const dataToPassToWorker = {
+					draws: { eth: $ethData.draws.data, poly: $polyData.draws.data, avax: $avaxData.draws.data, op: $opData.draws.data },
+					selectedChains: $selectedChains
+				}
+				dataWorker.postMessage(dataToPassToWorker);
+				dataWorker.onmessage = (event) => {
+					clearTimeout(timeout);
+					draws = event.data;
+					resolve();
+				}
 			});
-	
-			// Filtering Draws:
-			if($selectedChains.eth) {
-				const chain: Chain = 'eth';
-				$ethData.draws.data.forEach((entry, i) => {
-					allDraws[i].result.push(...entry.result.map(result => ({ ...result, chain })));
-				});
-			}
-			if($selectedChains.poly) {
-				const chain: Chain = 'poly';
-				$polyData.draws.data.forEach((entry, i) => {
-					allDraws[i].result.push(...entry.result.map(result => ({ ...result, chain })));
-				});
-			}
-			if($selectedChains.avax) {
-				const chain: Chain = 'avax';
-				$avaxData.draws.data.forEach((entry, i) => {
-					allDraws[i].result.push(...entry.result.map(result => ({ ...result, chain })));
-				});
-			}
-			if($selectedChains.op) {
-				const chain: Chain = 'op';
-				$opData.draws.data.forEach((entry, i) => {
-					allDraws[i].result.push(...entry.result.map(result => ({ ...result, chain })));
-				});
-			}
-
-			draws = allDraws.reverse();
 		}
 	}
 
 	// Function to get aggregated and sorted deposits:
-	const getDeposits = () => {
+	const getDeposits = async () => {
 		if(latestDepositsLoaded) {
-
-			// Initializations:
-			const allDeposits: (DepositData & { chain: Chain })[] = [];
-	
-			// Filtering Deposits:
-			if($selectedChains.eth) {
-				const chain: Chain = 'eth';
-				$ethData.deposits.data.forEach(deposit => {
-					allDeposits.push({ ...deposit, chain });
-				});
-			}
-			if($selectedChains.poly) {
-				const chain: Chain = 'poly';
-				$polyData.deposits.data.forEach(deposit => {
-					allDeposits.push({ ...deposit, chain });
-				});
-			}
-			if($selectedChains.avax) {
-				const chain: Chain = 'avax';
-				$avaxData.deposits.data.forEach(deposit => {
-					allDeposits.push({ ...deposit, chain });
-				});
-			}
-			if($selectedChains.op) {
-				const chain: Chain = 'op';
-				$opData.deposits.data.forEach(deposit => {
-					allDeposits.push({ ...deposit, chain });
-				});
-			}
-	
-			deposits = allDeposits.sort((a, b) => (b.timestamp as number) - (a.timestamp as number));
+			await new Promise<void>((resolve, reject) => {
+				const timeout = setTimeout(() => reject(`Timed out while handling deposit history.`), workerTimeout);
+				const dataWorker = new Worker(depositHistoryWorkerPath);
+				const dataToPassToWorker = {
+					deposits: { eth: $ethData.deposits.data, poly: $polyData.deposits.data, avax: $avaxData.deposits.data, op: $opData.deposits.data },
+					selectedChains: $selectedChains
+				}
+				dataWorker.postMessage(dataToPassToWorker);
+				dataWorker.onmessage = (event) => {
+					clearTimeout(timeout);
+					deposits = event.data;
+					resolve();
+				}
+			});
 		}
 	}
 
 	// Function to get aggregated and sorted delegations:
-	const getDelegations = () => {
+	const getDelegations = async () => {
 		if(latestDelegationsLoaded) {
-			
-			// Initializations:
-			const allDelegations: (DelegationFundedData & { chain: Chain })[] = [];
-	
-			// Filtering Delegations:
-			if($selectedChains.eth) {
-				const chain: Chain = 'eth';
-				$ethData.delegationsFunded.data.forEach(delegation => {
-					allDelegations.push({ ...delegation, chain });
-				});
-			}
-			if($selectedChains.poly) {
-				const chain: Chain = 'poly';
-				$polyData.delegationsFunded.data.forEach(delegation => {
-					allDelegations.push({ ...delegation, chain });
-				});
-			}
-			if($selectedChains.avax) {
-				const chain: Chain = 'avax';
-				$avaxData.delegationsFunded.data.forEach(delegation => {
-					allDelegations.push({ ...delegation, chain });
-				});
-			}
-			if($selectedChains.op) {
-				const chain: Chain = 'op';
-				$opData.delegationsFunded.data.forEach(delegation => {
-					allDelegations.push({ ...delegation, chain });
-				});
-			}
-	
-			delegations = allDelegations.sort((a, b) => (b.timestamp as number) - (a.timestamp as number));
+			await new Promise<void>((resolve, reject) => {
+				const timeout = setTimeout(() => reject(`Timed out while handling delegation history.`), workerTimeout);
+				const dataWorker = new Worker(delegationHistoryWorkerPath);
+				const dataToPassToWorker = {
+					delegations: { eth: $ethData.delegationsFunded.data, poly: $polyData.delegationsFunded.data, avax: $avaxData.delegationsFunded.data, op: $opData.delegationsFunded.data },
+					selectedChains: $selectedChains
+				}
+				dataWorker.postMessage(dataToPassToWorker);
+				dataWorker.onmessage = (event) => {
+					clearTimeout(timeout);
+					delegations = event.data;
+					resolve();
+				}
+			});
 		}
 	}
 	

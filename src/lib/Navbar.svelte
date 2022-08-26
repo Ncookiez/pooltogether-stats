@@ -2,16 +2,33 @@
 
 	// Imports:
 	import { goto } from '$app/navigation';
-	import { selectedChains } from '$lib/stores';
-	import { getChainName } from "$lib/functions";
+	import { slide } from 'svelte/transition';
+	import { getChainName, timestampToISO } from "$lib/functions";
+	import { ethData, startTimestamp, endTimestamp, selectedChains, loading, advancedMode } from '$lib/stores';
 
 	// Type Imports:
 	import type { Chain } from '$lib/types';
 
 	// Initializations:
 	const chains: Chain[] = ['eth', 'poly', 'avax', 'op'];
+	const maxChainLoadingProgress = 11;
+	const defaultMaxTimestamp = 9_999_999_999;
+	const dayInSeconds = 86400;
 	let searchModalOpen = false;
+	let advancedModeModalOpen = false;
 	let searchWallet = '';
+	let minDateValue: string | undefined;
+	let maxDateValue: string | undefined;
+	let chainDownload: Chain = 'eth';
+	let typeDownload: string = 'deposits';
+
+	// Reactive Loading Checks:
+	$: advancedStatsLoaded = $advancedMode && chains.every(chain => $loading[chain].advanced.stats === 'done');
+	$: advancedStatsErrored = $advancedMode && !chains.every(chain => Object.values($loading[chain].advanced).every(value => value !== 'failed'));
+
+	// Reactive Min/Max Timestamps:
+	$: minDate = advancedStatsLoaded ? timestampToISO($ethData.minTimestamp as number) : timestampToISO(0);
+	$: maxDate = advancedStatsLoaded ? timestampToISO($ethData.maxTimestamp as number) : timestampToISO(defaultMaxTimestamp);
 
 	// Function to search for given wallet:
 	const search = () => {
@@ -20,6 +37,31 @@
 			searchWallet = '';
 			searchModalOpen = false;
 		}
+	}
+
+	// Function to update timestamp stores:
+	const updateTimestampStores = () => {
+		const minTimeValue = minDateValue ? Date.parse(minDateValue) / 1000 : undefined;
+		const maxTimeValue = maxDateValue ? (Date.parse(maxDateValue) / 1000) + (dayInSeconds - 1) : undefined;
+		minTimeValue ? startTimestamp.set(minTimeValue) : startTimestamp.set(0);
+		if(maxTimeValue) {
+			if(minTimeValue) {
+				if(maxTimeValue > minTimeValue) {
+					endTimestamp.set(maxTimeValue);
+				} else {
+					endTimestamp.set(defaultMaxTimestamp);
+				}
+			} else {
+				endTimestamp.set(maxTimeValue);
+			}
+		} else {
+			endTimestamp.set(defaultMaxTimestamp);
+		}
+	}
+
+	// Function to download data:
+	const downloadData = () => {
+		// TODO>
 	}
 	
 </script>
@@ -32,7 +74,7 @@
 	<div class="banner" on:click={() => goto('/')}>
 		<img id="altLogo" src="/images/trophy.webp" alt="PoolTogether">
 		<img src="/images/pooltogether-logo.svg" alt="PoolTogether">
-		<span>Explorer</span>
+		<span>Stats</span>
 	</div>
 
 	<!-- Chain Selection -->
@@ -46,9 +88,14 @@
 	</div>
 
 	<!-- Player Search -->
-	<div class="playerSearch" on:click={() => searchModalOpen = !searchModalOpen}>
+	<div class="playerSearch" on:click={() => { advancedModeModalOpen = false; searchModalOpen = !searchModalOpen; }}>
 		<span>Search</span>
 		<i class="icofont-ui-search" />
+	</div>
+
+	<!-- Advanced Mode -->
+	<div class="advancedMode" on:click={() => { searchModalOpen = false; advancedModeModalOpen = !advancedModeModalOpen; }}>
+		<!-- <i class="icofont-instrument" /> -->
 	</div>
 
 	<!-- Player Search Modal -->
@@ -60,6 +107,81 @@
 				<input type="text" bind:value={searchWallet} placeholder="0x...">
 				<button type="submit"><i class="icofont-arrow-right" /></button>
 			</form>
+		</div>
+	{/if}
+
+	<!-- Advanced Mode Modal -->
+	{#if advancedModeModalOpen}
+		<div class="cover" on:click={() => advancedModeModalOpen = false} />
+		<div class="advancedModeModal">
+			{#if $advancedMode}
+				<h3>Advanced Mode</h3>
+				{#if advancedStatsLoaded}
+
+					<!-- Time Controls -->
+					<div class="timeControls">
+						<span>Timespan:</span>
+						<input type="date" min="{minDate}" max="{maxDate}" bind:value={minDateValue}>
+						<i class="icofont-arrow-right" />
+						<input type="date" min="{minDate}" max="{maxDate}" bind:value={maxDateValue}>
+						<span on:click={() => updateTimestampStores()}><i class="icofont-clock-time" /></span>
+					</div>
+
+					<!-- Data Downloads -->
+					<div class="downloads">
+						<span>Download:</span>
+						<select class="chainDownload" bind:value={chainDownload}>
+							{#each chains as chain}
+								<option value="{chain}">{getChainName(chain)}</option>
+							{/each}
+						</select>
+						<select class="typeDownload" bind:value={typeDownload}>
+							<option value="deposits">Deposits</option>
+							<option value="withdrawals">Withdrawals</option>
+							<option value="claims">Claims</option>
+							<option value="delegationsCreated">Delegations Created</option>
+							<option value="delegationsFunded">Delegations Funded</option>
+							<option value="delegationsUpdated">Delegations Updated</option>
+							<option value="delegationsWithdrawn">Delegations Withdrawn</option>
+							<option value="yields">Yield Collected</option>
+							<option value="supply">Token Supplies</option>
+							<option value="balances">Player Balances</option>
+							<option value="draws">Draws</option>
+						</select>
+						<span on:click={() => downloadData()}><i class="icofont-download" /></span>
+					</div>
+
+					<!-- Disable Advanced Mode Button -->
+					<span class="disableAdvanced button" on:click={() => $advancedMode = false}>Disable Advanced Mode</span>
+
+				{:else if advancedStatsErrored}
+					<!-- TODO - check if this is displaying correctly -->
+					<img src="/images/ngmi.webp" alt="Whoops">
+					<span>Something went wrong 0.o</span>
+				{:else}
+
+					<!-- Loading Display -->
+					{#each chains as chain}
+						{#if $loading[chain].advanced.progress < maxChainLoadingProgress}
+							<span class="loadingProgress" transition:slide|local>
+								{#if $loading[chain].advanced.progress !== (maxChainLoadingProgress - 1)}
+									<span class="chainLoading">Loading {getChainName(chain)} Data...</span>
+									<img src="/images/excitedPooly.gif" alt="Pooly">
+									<span class="chainLoadingPercentage">{(($loading[chain].advanced.progress / (maxChainLoadingProgress - 1)) * 100).toFixed(0)}%</span>
+								{:else}
+									<span class="chainLoading">Calculating {getChainName(chain)} Stats...</span>
+									<img src="/images/excitedPooly.gif" alt="Pooly">
+								{/if}
+							</span>
+						{/if}
+					{/each}
+
+				{/if}
+			{:else}
+				<span>Want time controls and raw data downloads?</span>
+				<span class="enableAdvanced button" on:click={() => $advancedMode = true}>Enable Advanced Mode</span>
+				<span class="small">It might take a little bit to load though :)</span>
+			{/if}
 		</div>
 	{/if}
 
@@ -134,7 +256,7 @@
 	div.playerSearch {
 		gap: .3em;
 		height: 2rem;
-		margin-left: 2em;
+		margin: 0 1.5em;
 		padding: 0 .5em;
 		font-size: .9em;
 		background: var(--light-purple);
@@ -146,13 +268,18 @@
 		background-color: var(--accent-color);
 	}
 
+	div.advancedMode {
+		font-size: 1.5em;
+		cursor: pointer;
+	}
+
 	div.cover {
 		position: fixed;
 		inset: var(--navbar-height) 0 50px 0;
 		backdrop-filter: brightness(0.3) blur(3px);
 	}
 
-	div.playerSearchModal {
+	div.playerSearchModal, div.advancedModeModal {
 		position: fixed;
 		inset: calc(var(--navbar-height) + 2em) 2em auto auto;
 		flex-direction: column;
@@ -184,6 +311,103 @@
 		background: var(--accent-color);
 		border: none;
 		border-radius: 0 .5em .5em 0;
+		cursor: pointer;
+	}
+
+	span.button {
+		padding: .5em 1em;
+		border-radius: .5em;
+		cursor: pointer;
+	}
+
+	span.enableAdvanced {
+		color: var(--dark-purple);
+		background: var(--accent-color);
+	}
+
+	span.disableAdvanced {
+		margin-top: 1em;
+		font-size: .7em;
+		background: darkred;
+	}
+
+	span.small {
+		color: grey;
+		font-size: .8em;
+	}
+
+	h3 {
+		padding: 0 7em .8em;
+		border-bottom: 2px solid white;
+	}
+
+	span.loadingProgress {
+		display: flex;
+		align-items: center;
+		gap: 1em;
+		width: 80%;
+	}
+
+	span.loadingProgress img {
+		height: 2em;
+		margin-left: auto;
+	}
+
+	div.timeControls, div.downloads {
+		gap: .5em;
+		margin-top: 1em;
+	}
+
+	div.timeControls > input {
+		height: 2rem;
+		padding: 0 .5em;
+		background: var(--light-purple);
+		border-radius: .5em;
+	}
+
+	div.timeControls > input {
+		border: none;
+	}
+
+	div.timeControls > input:focus {
+		outline: 2px solid var(--accent-color);
+	}
+
+	div.timeControls > span, div.downloads > span {
+		display: flex;
+		align-items: center;
+	}
+
+	div.timeControls > span:first-of-type, div.downloads > span:first-of-type {
+		font-size: .9em;
+	}
+
+	div.timeControls > span:last-of-type, div.downloads > span:last-of-type {
+		height: 2rem;
+		padding: 0 .5em;
+		background: var(--light-purple);
+		border-radius: .5em;
+		cursor: pointer;
+	}
+
+	div.timeControls > span:last-of-type:hover, div.downloads > span:last-of-type:hover {
+		background-color: var(--accent-color);
+	}
+
+	div.downloads > select {
+		font-family: inherit;
+		font-size: .9em;
+		background: transparent;
+		border: none;
+		border-bottom: 2px solid var(--light-purple);
+	}
+
+	div.downloads > select:focus {
+		outline: none;
+	}
+
+	div.downloads > select > option {
+		background: var(--primary-color);
 	}
 
 	@media screen and (max-width: 1530px) {

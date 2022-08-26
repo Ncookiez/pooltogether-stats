@@ -42,8 +42,8 @@
 
 <!-- SvelteKit Dynamic Header -->
 <svelte:head>
-	<title>Pool Explorer | {wallet ? `${getShortWallet(wallet)}` : 'Player Stats'}</title>
-	<meta name="description" content="An app for exploring all there is to see about PoolTogether statistics. Check out some individual wallet stats!" />
+	<title>Pool Stats | {wallet ? `${getShortWallet(wallet)}` : 'Player Stats'}</title>
+	<meta name="description" content="An app for all there is to see about PoolTogether statistics. Check out some individual wallet stats!" />
 </svelte:head>
 
 {#if wallet && playerData && dataLoaded}

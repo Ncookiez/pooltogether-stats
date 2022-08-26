@@ -4,10 +4,7 @@ import { browser } from '$app/env';
 import { writable } from 'svelte/store';
 
 // Type Imports:
-import type { ChainStats, ChainData, AggregatedData, MultichainDistribution, SelectedChains, Loading } from '$lib/types';
-
-// Initializations:
-const defaultMaxTimestamp = 9_999_999_999;
+import type { ChainStats, ChainData, SelectedChains, Loading } from '$lib/types';
 
 /* ========================================================================================================================================================================= */
 
@@ -26,32 +23,6 @@ const defaultChainData: ChainData = {
   draws: { data: [] }
 }
 
-// Default Aggregated Data:
-const defaultAggregatedData: AggregatedData = {
-  deposits: { data: [] },
-  withdrawals: { data: [] },
-  claims: { data: [] },
-  delegationsCreated: { data: [] },
-  delegationsFunded: { data: [] },
-  delegationsUpdated: { data: [] },
-  delegationsWithdrawn: { data: [] },
-  yields: { data: [] },
-  balances: { timestamp: 0, data: [] },
-  draws: { data: [] },
-  minTimestamp: 0,
-  maxTimestamp: defaultMaxTimestamp,
-  timestamps: []
-}
-
-// Default Multichain Users Data:
-const defaultMultichainUsersData: MultichainDistribution = {
-  totalUsers: 0,
-  oneChain: 0,
-  twoChains: 0,
-  threeChains: 0,
-  fourChains: 0
-}
-
 // Default Selected Chains:
 const defaultSelectedChains: SelectedChains = {
   eth: true,
@@ -63,10 +34,22 @@ const defaultSelectedChains: SelectedChains = {
 // Default Loading Status:
 const defaultLoadingStatus: Loading = {
   draws: 'none',
-  eth: { basic: { stats: 'none', deposits: 'none', delegations: 'none' } },
-  poly: { basic: { stats: 'none', deposits: 'none', delegations: 'none' } },
-  avax: { basic: { stats: 'none', deposits: 'none', delegations: 'none' } },
-  op: { basic: { stats: 'none', deposits: 'none', delegations: 'none' } }
+  eth: {
+    basic: { stats: 'none', deposits: 'none', delegations: 'none' },
+    advanced: { stats: 'none', deposits: 'none', withdrawals: 'none', claims: 'none', delegationsCreated: 'none', delegationsFunded: 'none', delegationsUpdated: 'none', delegationsWithdrawn: 'none', yield: 'none', supply: 'none', balances: 'none', progress: 0 }
+  },
+  poly: {
+    basic: { stats: 'none', deposits: 'none', delegations: 'none' },
+    advanced: { stats: 'none', deposits: 'none', withdrawals: 'none', claims: 'none', delegationsCreated: 'none', delegationsFunded: 'none', delegationsUpdated: 'none', delegationsWithdrawn: 'none', yield: 'none', supply: 'none', balances: 'none', progress: 0 }
+  },
+  avax: {
+    basic: { stats: 'none', deposits: 'none', delegations: 'none' },
+    advanced: { stats: 'none', deposits: 'none', withdrawals: 'none', claims: 'none', delegationsCreated: 'none', delegationsFunded: 'none', delegationsUpdated: 'none', delegationsWithdrawn: 'none', yield: 'none', supply: 'none', balances: 'none', progress: 0 }
+  },
+  op: {
+    basic: { stats: 'none', deposits: 'none', delegations: 'none' },
+    advanced: { stats: 'none', deposits: 'none', withdrawals: 'none', claims: 'none', delegationsCreated: 'none', delegationsFunded: 'none', delegationsUpdated: 'none', delegationsWithdrawn: 'none', yield: 'none', supply: 'none', balances: 'none', progress: 0 }
+  }
 }
 
 /* ========================================================================================================================================================================= */
@@ -99,30 +82,11 @@ export const opData = writable<ChainData>(JSON.parse(JSON.stringify(defaultChain
 
 /* ========================================================================================================================================================================= */
 
-// Aggregated Data:
-export const aggregatedData = writable<AggregatedData>(defaultAggregatedData);
-
-/* ========================================================================================================================================================================= */
-
-// Multichain Users Data:
-export const multichainUsersData = writable<MultichainDistribution>(defaultMultichainUsersData);
-
-/* ========================================================================================================================================================================= */
-
 // Start Timestamp:
 export const startTimestamp = writable<number>(0);
 
 // End Timestamp:
-export const endTimestamp = writable<number>(defaultMaxTimestamp);
-
-/* ========================================================================================================================================================================= */
-
-// Last Data Update Timestamp:
-const storedLastUpdate: number = browser ? parseInt(localStorage.getItem('lastUpdate') ?? '0') : 0;
-export const lastUpdate = writable<number>(storedLastUpdate);
-lastUpdate.subscribe((value) => {
-  if(browser && value > storedLastUpdate) { localStorage.setItem('lastUpdate', value.toString()); };
-});
+export const endTimestamp = writable<number>(9_999_999_999);
 
 /* ========================================================================================================================================================================= */
 
@@ -137,3 +101,12 @@ selectedChains.subscribe((value) => {
 
 // Loading Status:
 export const loading = writable<Loading>(defaultLoadingStatus);
+
+/* ========================================================================================================================================================================= */
+
+// Advanced Mode:
+const storedAdvancedMode: boolean = browser ? JSON.parse(localStorage.getItem('advancedMode') ?? 'false') : false;
+export const advancedMode = writable<boolean>(storedAdvancedMode);
+advancedMode.subscribe((value) => {
+  if(browser) { localStorage.setItem('advancedMode', JSON.stringify(value)); };
+});

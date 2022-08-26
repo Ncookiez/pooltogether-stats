@@ -9,6 +9,10 @@
 		"outDir": "../static/workers"
 	},
 	"files": [
-		"dataWorker.ts"
+		"drawHistoryWorker.ts",
+		"depositHistoryWorker.ts",
+		"delegationHistoryWorker.ts",
+		"drawFormattingWorker.ts",
+		"types.ts"
 	]
 }
