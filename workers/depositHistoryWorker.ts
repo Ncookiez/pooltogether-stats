@@ -11,7 +11,9 @@ onmessage = (event) => {
   chains.forEach(chain => {
     if(data.selectedChains[chain]) {
       data.deposits[chain].forEach(deposit => {
-        allDeposits.push({ ...deposit, chain });
+        if(deposit.amount > data.filter && deposit.timestamp && deposit.timestamp >= data.minTimestamp && deposit.timestamp <= data.maxTimestamp) {
+          allDeposits.push({ ...deposit, chain });
+        }
       });
     }
   });

@@ -29,6 +29,21 @@ export interface ChainStats {
   topWhales: BalanceData[]
 }
 
+// Advanced Chain Stats Interface:
+export interface AdvancedChainStats {
+  minTimestamp: number
+  maxTimestamp: number
+  depositsOverTime: DepositsOverTime
+  withdrawalsOverTime: WithdrawalsOverTime
+  claimsOverTime: ClaimsOverTime
+  tvlOverTime: TVLOverTime
+  delegationsOverTime: DelegationsOverTime
+  yieldOverTime: YieldOverTime
+  wallets: Record<Hash, WalletData>
+  winlessWithdrawals: WinlessWithdrawals[]
+  tvlDistribution: TVLDistribution
+}
+
 /* ========================================================================================================================================================================= */
 
 // Chain Data Interface:
@@ -44,16 +59,6 @@ export interface ChainData {
   supply: { lastQueriedBlock: number, data: SupplyData[] }
   balances: { lastQueriedBlock: number, timestamp: number | undefined, data: BalanceData[] }
   draws: { data: DrawData[] }
-  minTimestamp?: number
-  maxTimestamp?: number
-  depositsOverTime?: DepositsOverTime
-  withdrawalsOverTime?: WithdrawalsOverTime
-  claimsOverTime?: ClaimsOverTime
-  tvlOverTime?: TVLOverTime
-  delegationsOverTime?: DelegationsOverTime
-  yieldOverTime?: YieldOverTime
-  winlessWithdrawals?: WinlessWithdrawals[]
-  tvlDistribution?: TVLDistribution
 }
 
 /* ========================================================================================================================================================================= */
@@ -113,6 +118,10 @@ export interface YieldData {
   block: number
   timestamp: number | undefined
   amount: number
+}
+export interface WalletData {
+  txs: TX[]
+  currentBalance: number
 }
 export interface SupplyData {
   block: number
