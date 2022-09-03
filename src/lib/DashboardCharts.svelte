@@ -53,7 +53,7 @@
 	$: numChainsSelected = Object.values($selectedChains).reduce((a: boolean, b: boolean) => (a ? 1 : 0) + (b ? 1 : 0), 0) as number;
 
 	// Reactive Loading Checks:
-	$: advancedStatsLoaded = $advancedMode && chains.every(chain => !$selectedChains[chain] || $loading[chain].advanced.stats === 'done');
+	$: advancedStatsLoaded = $advancedMode && chains.every(chain => $loading[chain].advanced.stats === 'done');
 
 	// Reactive Data:
 	$: $selectedChains, getNumDepositors();
