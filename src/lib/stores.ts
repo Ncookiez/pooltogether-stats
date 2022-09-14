@@ -93,8 +93,4 @@ export const loading = writable<Loading>(defaultLoadingStatus);
 /* ========================================================================================================================================================================= */
 
 // Advanced Mode:
-const storedAdvancedMode: boolean = browser ? JSON.parse(localStorage.getItem('advancedMode') ?? 'false') : false;
-export const advancedMode = writable<boolean>(storedAdvancedMode);
-advancedMode.subscribe((value) => {
-  if(browser) { localStorage.setItem('advancedMode', JSON.stringify(value)); };
-});
+export const advancedMode = writable<boolean>(false);

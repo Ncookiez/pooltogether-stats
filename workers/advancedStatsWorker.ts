@@ -51,6 +51,7 @@ const calcDepositsOverTime = (chainData: ChainData, timestamps: number[]) => {
     cumulativeUniqueWallets: [],
     cumulativeDistributions: { 1: [], 10: [], 100: [], 1000: [], 10000: [], 100000: [] }
   }
+  const preTick = timestamps[0] - (timestamps[1] - timestamps[0]);
   let cumulativeDepositAmount = 0;
   let cumulativeDepositCount = 0;
   let cumulativeUniqueWallets: Hash[] = [];
@@ -64,7 +65,7 @@ const calcDepositsOverTime = (chainData: ChainData, timestamps: number[]) => {
     let distributions = { 1: 0, 10: 0, 100: 0, 1000: 0, 10000: 0, 100000: 0 };
     chainData.deposits.data.forEach(deposit => {
       if(deposit.timestamp && deposit.timestamp <= depositsOverTime.timestamps[i]) {
-        if(i > 0 && deposit.timestamp > depositsOverTime.timestamps[i - 1]) {
+        if((i > 0 && deposit.timestamp > depositsOverTime.timestamps[i - 1]) || (i === 0 && deposit.timestamp >= preTick)) {
           depositAmount += deposit.amount;
           depositCount++;
           if(!cumulativeUniqueWallets.includes(deposit.wallet)) {
@@ -145,6 +146,7 @@ const calcWithdrawalsOverTime = (chainData: ChainData, timestamps: number[]) => 
     cumulativeWithdrawalCounts: [],
     cumulativeUniqueWallets: []
   }
+  const preTick = timestamps[0] - (timestamps[1] - timestamps[0]);
   let cumulativeWithdrawalAmount = 0;
   let cumulativeWithdrawalCount = 0;
   let cumulativeUniqueWallets: Hash[] = [];
@@ -156,7 +158,7 @@ const calcWithdrawalsOverTime = (chainData: ChainData, timestamps: number[]) => 
     let newWallets = 0;
     chainData.withdrawals.data.forEach(withdrawal => {
       if(withdrawal.timestamp && withdrawal.timestamp <= withdrawalsOverTime.timestamps[i]) {
-        if(i > 0 && withdrawal.timestamp > withdrawalsOverTime.timestamps[i - 1]) {
+        if((i > 0 && withdrawal.timestamp > withdrawalsOverTime.timestamps[i - 1]) || (i === 0 && withdrawal.timestamp >= preTick)) {
           withdrawalAmount += withdrawal.amount;
           withdrawalCount++;
           if(!cumulativeUniqueWallets.includes(withdrawal.wallet)) {
@@ -200,6 +202,7 @@ const calcClaimsOverTime = (chainData: ChainData, timestamps: number[]) => {
     cumulativeUniqueWallets: [],
     cumulativeDistributions: { 1: [], 5: [], 10: [], 50: [], 100: [], 500: [], 1000: [] }
   }
+  const preTick = timestamps[0] - (timestamps[1] - timestamps[0]);
   let cumulativeClaimAmount = 0;
   let cumulativeClaimCount = 0;
   let cumulativePrizeCount = 0;
@@ -215,7 +218,7 @@ const calcClaimsOverTime = (chainData: ChainData, timestamps: number[]) => {
     let distributions = { 1: 0, 5: 0, 10: 0, 50: 0, 100: 0, 500: 0, 1000: 0 };
     chainData.claims.data.forEach(claim => {
       if(claim.timestamp && claim.timestamp <= claimsOverTime.timestamps[i]) {
-        if(i > 0 && claim.timestamp > claimsOverTime.timestamps[i - 1]) {
+        if((i > 0 && claim.timestamp > claimsOverTime.timestamps[i - 1]) || (i === 0 && claim.timestamp >= preTick)) {
           const totalAmountClaimed = claim.prizes.reduce((a, b) => a + b, 0);
           claimAmount += totalAmountClaimed;
           claimCount++;
@@ -333,6 +336,7 @@ const calcDelegationsOverTime = (chainData: ChainData, timestamps: number[]) => 
     cumulativeUniqueWallets: [],
     tvls: []
   }
+  const preTick = timestamps[0] - (timestamps[1] - timestamps[0]);
   let cumulativeDelegationAmount = 0;
   let cumulativeDelegationCount = 0;
   let cumulativeDelegationWithdrawalAmount = 0;
@@ -348,7 +352,7 @@ const calcDelegationsOverTime = (chainData: ChainData, timestamps: number[]) => 
     let newWallets = 0;
     chainData.delegationsCreated.data.forEach(delegation => {
       if(delegation.timestamp && delegation.timestamp <= delegationsOverTime.timestamps[i]) {
-        if(i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) {
+        if((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || (i === 0 && delegation.timestamp >= preTick)) {
           delegationCount++;
           if(!cumulativeUniqueWallets.includes(delegation.delegator)) {
             cumulativeUniqueWallets.push(delegation.delegator);
@@ -359,14 +363,14 @@ const calcDelegationsOverTime = (chainData: ChainData, timestamps: number[]) => 
     });
     chainData.delegationsFunded.data.forEach(delegation => {
       if(delegation.timestamp && delegation.timestamp <= delegationsOverTime.timestamps[i]) {
-        if(i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) {
+        if((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || (i === 0 && delegation.timestamp >= preTick)) {
           delegationAmount += delegation.amount;
         }
       }
     });
     chainData.delegationsWithdrawn.data.forEach(delegation => {
       if(delegation.timestamp && delegation.timestamp <= delegationsOverTime.timestamps[i]) {
-        if(i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) {
+        if((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || (i === 0 && delegation.timestamp >= preTick)) {
           delegationWithdrawalAmount += delegation.amount;
           delegationWithdrawalCount++;
         }
@@ -406,6 +410,7 @@ const calcYieldOverTime = (chainData: ChainData, timestamps: number[]) => {
     cumulativeYieldAmounts: [],
     cumulativeYieldCounts: []
   }
+  const preTick = timestamps[0] - (timestamps[1] - timestamps[0]);
   let cumulativeYieldAmount = 0;
   let cumulativeYieldCount = 0;
   
@@ -415,7 +420,7 @@ const calcYieldOverTime = (chainData: ChainData, timestamps: number[]) => {
     let yieldCount = 0;
     chainData.yields.data.forEach(yieldTX => {
       if(yieldTX.timestamp && yieldTX.timestamp <= yieldOverTime.timestamps[i]) {
-        if(i > 0 && yieldTX.timestamp > yieldOverTime.timestamps[i - 1]) {
+        if((i > 0 && yieldTX.timestamp > yieldOverTime.timestamps[i - 1]) || (i === 0 && yieldTX.timestamp >= preTick)) {
           yieldAmount += yieldTX.amount;
           yieldCount++;
         }

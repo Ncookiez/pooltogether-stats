@@ -41,6 +41,7 @@ var calcDepositsOverTime = function (chainData, timestamps) {
         cumulativeUniqueWallets: [],
         cumulativeDistributions: { 1: [], 10: [], 100: [], 1000: [], 10000: [], 100000: [] }
     };
+    var preTick = timestamps[0] - (timestamps[1] - timestamps[0]);
     var cumulativeDepositAmount = 0;
     var cumulativeDepositCount = 0;
     var cumulativeUniqueWallets = [];
@@ -52,7 +53,7 @@ var calcDepositsOverTime = function (chainData, timestamps) {
         var distributions = { 1: 0, 10: 0, 100: 0, 1000: 0, 10000: 0, 100000: 0 };
         chainData.deposits.data.forEach(function (deposit) {
             if (deposit.timestamp && deposit.timestamp <= depositsOverTime.timestamps[i]) {
-                if (i > 0 && deposit.timestamp > depositsOverTime.timestamps[i - 1]) {
+                if ((i > 0 && deposit.timestamp > depositsOverTime.timestamps[i - 1]) || (i === 0 && deposit.timestamp >= preTick)) {
                     depositAmount += deposit.amount;
                     depositCount++;
                     if (!cumulativeUniqueWallets.includes(deposit.wallet)) {
@@ -138,6 +139,7 @@ var calcWithdrawalsOverTime = function (chainData, timestamps) {
         cumulativeWithdrawalCounts: [],
         cumulativeUniqueWallets: []
     };
+    var preTick = timestamps[0] - (timestamps[1] - timestamps[0]);
     var cumulativeWithdrawalAmount = 0;
     var cumulativeWithdrawalCount = 0;
     var cumulativeUniqueWallets = [];
@@ -147,7 +149,7 @@ var calcWithdrawalsOverTime = function (chainData, timestamps) {
         var newWallets = 0;
         chainData.withdrawals.data.forEach(function (withdrawal) {
             if (withdrawal.timestamp && withdrawal.timestamp <= withdrawalsOverTime.timestamps[i]) {
-                if (i > 0 && withdrawal.timestamp > withdrawalsOverTime.timestamps[i - 1]) {
+                if ((i > 0 && withdrawal.timestamp > withdrawalsOverTime.timestamps[i - 1]) || (i === 0 && withdrawal.timestamp >= preTick)) {
                     withdrawalAmount += withdrawal.amount;
                     withdrawalCount++;
                     if (!cumulativeUniqueWallets.includes(withdrawal.wallet)) {
@@ -191,6 +193,7 @@ var calcClaimsOverTime = function (chainData, timestamps) {
         cumulativeUniqueWallets: [],
         cumulativeDistributions: { 1: [], 5: [], 10: [], 50: [], 100: [], 500: [], 1000: [] }
     };
+    var preTick = timestamps[0] - (timestamps[1] - timestamps[0]);
     var cumulativeClaimAmount = 0;
     var cumulativeClaimCount = 0;
     var cumulativePrizeCount = 0;
@@ -204,7 +207,7 @@ var calcClaimsOverTime = function (chainData, timestamps) {
         var distributions = { 1: 0, 5: 0, 10: 0, 50: 0, 100: 0, 500: 0, 1000: 0 };
         chainData.claims.data.forEach(function (claim) {
             if (claim.timestamp && claim.timestamp <= claimsOverTime.timestamps[i]) {
-                if (i > 0 && claim.timestamp > claimsOverTime.timestamps[i - 1]) {
+                if ((i > 0 && claim.timestamp > claimsOverTime.timestamps[i - 1]) || (i === 0 && claim.timestamp >= preTick)) {
                     var totalAmountClaimed = claim.prizes.reduce(function (a, b) { return a + b; }, 0);
                     claimAmount += totalAmountClaimed;
                     claimCount++;
@@ -323,6 +326,7 @@ var calcDelegationsOverTime = function (chainData, timestamps) {
         cumulativeUniqueWallets: [],
         tvls: []
     };
+    var preTick = timestamps[0] - (timestamps[1] - timestamps[0]);
     var cumulativeDelegationAmount = 0;
     var cumulativeDelegationCount = 0;
     var cumulativeDelegationWithdrawalAmount = 0;
@@ -336,7 +340,7 @@ var calcDelegationsOverTime = function (chainData, timestamps) {
         var newWallets = 0;
         chainData.delegationsCreated.data.forEach(function (delegation) {
             if (delegation.timestamp && delegation.timestamp <= delegationsOverTime.timestamps[i]) {
-                if (i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) {
+                if ((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || (i === 0 && delegation.timestamp >= preTick)) {
                     delegationCount++;
                     if (!cumulativeUniqueWallets.includes(delegation.delegator)) {
                         cumulativeUniqueWallets.push(delegation.delegator);
@@ -347,14 +351,14 @@ var calcDelegationsOverTime = function (chainData, timestamps) {
         });
         chainData.delegationsFunded.data.forEach(function (delegation) {
             if (delegation.timestamp && delegation.timestamp <= delegationsOverTime.timestamps[i]) {
-                if (i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) {
+                if ((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || (i === 0 && delegation.timestamp >= preTick)) {
                     delegationAmount += delegation.amount;
                 }
             }
         });
         chainData.delegationsWithdrawn.data.forEach(function (delegation) {
             if (delegation.timestamp && delegation.timestamp <= delegationsOverTime.timestamps[i]) {
-                if (i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) {
+                if ((i > 0 && delegation.timestamp > delegationsOverTime.timestamps[i - 1]) || (i === 0 && delegation.timestamp >= preTick)) {
                     delegationWithdrawalAmount += delegation.amount;
                     delegationWithdrawalCount++;
                 }
@@ -394,6 +398,7 @@ var calcYieldOverTime = function (chainData, timestamps) {
         cumulativeYieldAmounts: [],
         cumulativeYieldCounts: []
     };
+    var preTick = timestamps[0] - (timestamps[1] - timestamps[0]);
     var cumulativeYieldAmount = 0;
     var cumulativeYieldCount = 0;
     var _loop_5 = function (i) {
@@ -401,7 +406,7 @@ var calcYieldOverTime = function (chainData, timestamps) {
         var yieldCount = 0;
         chainData.yields.data.forEach(function (yieldTX) {
             if (yieldTX.timestamp && yieldTX.timestamp <= yieldOverTime.timestamps[i]) {
-                if (i > 0 && yieldTX.timestamp > yieldOverTime.timestamps[i - 1]) {
+                if ((i > 0 && yieldTX.timestamp > yieldOverTime.timestamps[i - 1]) || (i === 0 && yieldTX.timestamp >= preTick)) {
                     yieldAmount += yieldTX.amount;
                     yieldCount++;
                 }
