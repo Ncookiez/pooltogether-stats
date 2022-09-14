@@ -302,7 +302,6 @@ interface DepositHistoryEventData {
   selectedChains: Record<Chain, boolean>
   minTimestamp: number
   maxTimestamp: number
-  filter: number
 }
 
 // Delegation History Event Data Interface:

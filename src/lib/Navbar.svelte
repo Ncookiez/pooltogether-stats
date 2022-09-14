@@ -46,7 +46,7 @@
 
 	// Reactive Min/Max Timestamps:
 	$: minDate = timestampToISO(defaultMinTimestamp);
-	$: maxDate = timestampToISO(defaultMaxTimestamp);
+	$: maxDate = timestampToISO((Date.now() / 1000) + dayInSeconds);
 
 	// Function to search for given wallet:
 	const search = () => {

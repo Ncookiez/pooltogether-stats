@@ -83,11 +83,7 @@ export const endTimestamp = writable<number>(9_999_999_999);
 /* ========================================================================================================================================================================= */
 
 // Selected Chains:
-const storedSelectedChains: SelectedChains = browser ? JSON.parse(localStorage.getItem('selectedChains') ?? JSON.stringify(defaultSelectedChains)) : defaultSelectedChains;
-export const selectedChains = writable<SelectedChains>(storedSelectedChains);
-selectedChains.subscribe((value) => {
-  if(browser) { localStorage.setItem('selectedChains', JSON.stringify(value)); };
-});
+export const selectedChains = writable<SelectedChains>(defaultSelectedChains);
 
 /* ========================================================================================================================================================================= */
 

@@ -5,29 +5,25 @@ var ticks = 50;
 // Function to react to incoming messages:
 onmessage = function (event) {
     // Initializations:
-    var data = event.data;
+    var data = event.data[0];
+    var advancedStats = event.data[1];
+    var minTimestamp = event.data[2];
+    var maxTimestamp = event.data[3];
     // Getting Timestamps:
-    var timestamps = getTimestamps(data.minTimestamp, data.maxTimestamp);
+    var timestamps = getTimestamps(minTimestamp, maxTimestamp);
     // Calculating Advanced Stats:
-    data.depositsOverTime = calcDepositsOverTime(data, timestamps);
-    data.withdrawalsOverTime = calcWithdrawalsOverTime(data, timestamps);
-    data.claimsOverTime = calcClaimsOverTime(data, timestamps);
-    data.tvlOverTime = calcTVLOverTime(data.depositsOverTime, data.withdrawalsOverTime, data.claimsOverTime);
-    data.delegationsOverTime = calcDelegationsOverTime(data, timestamps);
-    data.yieldOverTime = calcYieldOverTime(data, timestamps);
-    if (!data.wallets) {
-        data.wallets = getWalletData(data);
-    }
-    ;
-    if (!data.winlessWithdrawals) {
-        data.winlessWithdrawals = calcWinlessWithdrawals(data.wallets);
-    }
-    ;
-    if (!data.tvlDistribution) {
-        data.tvlDistribution = calcTVLDistribution(data.balances.data);
-    }
-    ;
-    postMessage(data);
+    var depositsOverTime = calcDepositsOverTime(data, timestamps);
+    var withdrawalsOverTime = calcWithdrawalsOverTime(data, timestamps);
+    var claimsOverTime = calcClaimsOverTime(data, timestamps);
+    var tvlOverTime = calcTVLOverTime(depositsOverTime, withdrawalsOverTime, claimsOverTime);
+    var delegationsOverTime = calcDelegationsOverTime(data, timestamps);
+    var yieldOverTime = calcYieldOverTime(data, timestamps);
+    var wallets = advancedStats ? advancedStats.wallets : getWalletData(data);
+    var winlessWithdrawals = advancedStats ? advancedStats.winlessWithdrawals : calcWinlessWithdrawals(wallets);
+    var tvlDistribution = advancedStats ? advancedStats.tvlDistribution : calcTVLDistribution(data.balances.data);
+    // Setting Advanced Stats:
+    var newAdvancedStats = { minTimestamp: minTimestamp, maxTimestamp: maxTimestamp, depositsOverTime: depositsOverTime, withdrawalsOverTime: withdrawalsOverTime, claimsOverTime: claimsOverTime, tvlOverTime: tvlOverTime, delegationsOverTime: delegationsOverTime, yieldOverTime: yieldOverTime, wallets: wallets, winlessWithdrawals: winlessWithdrawals, tvlDistribution: tvlDistribution };
+    postMessage(newAdvancedStats);
 };
 /* ====================================================================================================================================================== */
 // Function to calculate deposits over time:

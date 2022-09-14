@@ -37,8 +37,8 @@
 	$: $selectedChains, $loading, $startTimestamp, $endTimestamp, getDeposits();
 	$: $selectedChains, $loading, $startTimestamp, $endTimestamp, getDelegations();
 	$: firstValidDraw = draws.findIndex(draw => draw.timestamp >= $startTimestamp && draw.timestamp <= $endTimestamp);
-	$: selectedDraw = draws.length > 0 ? firstValidDraw !== -1 ? firstValidDraw : 0 : 0;
-	$: winners = draws.length > 0 ? draws[selectedDraw].result.sort((a, b) => b.claimable.reduce((a, b) => a + b, 0) - a.claimable.reduce((a, b) => a + b, 0)) : undefined;
+	$: selectedDraw = firstValidDraw !== -1 ? firstValidDraw : 0;
+	$: winners = draws.length > 0 && firstValidDraw !== -1 ? draws[selectedDraw].result.sort((a, b) => b.claimable.reduce((a, b) => a + b, 0) - a.claimable.reduce((a, b) => a + b, 0)) : undefined;
 
 	// Draw Info:
 	$: claimable = winners ? winners.reduce((a, b) => a + (b.claimable.reduce((a, b) => a + b, 0)), 0) : 0;
@@ -76,8 +76,7 @@
 					deposits: { eth: $ethData.deposits.data, poly: $polyData.deposits.data, avax: $avaxData.deposits.data, op: $opData.deposits.data },
 					selectedChains: $selectedChains,
 					minTimestamp: $advancedMode ? $startTimestamp : 0,
-					maxTimestamp: $advancedMode ? $endTimestamp : defaultMaxTimestamp,
-					filter: $advancedMode ? depositFilter : 0
+					maxTimestamp: $advancedMode ? $endTimestamp : defaultMaxTimestamp
 				}
 				dataWorker.postMessage(dataToPassToWorker);
 				dataWorker.onmessage = (event) => {
@@ -122,7 +121,7 @@
 	<div class="header">
 		<h2>PoolTogether V4 History</h2>
 		<h2 id="altHeader">History</h2>
-		{#if tabSelected === 'winners' && draws.length > 0}
+		{#if tabSelected === 'winners' && draws.length > 0 && firstValidDraw !== -1}
 			<div id="drawSelector">
 				<span>Draw:</span>
 				<select bind:value={selectedDraw}>
@@ -143,7 +142,7 @@
 					<span>When: {when}</span>
 				</div>
 			</div>
-		{:else if tabSelected === 'deposits' && deposits.length > 0 && $advancedMode}
+		{:else if tabSelected === 'deposits' && deposits.length > 0 && $advancedMode && depositsLoaded}
 			<div id="depositFilter">
 				<span>Filter:</span>
 				<span class="dollar">$</span>
@@ -191,6 +190,9 @@
 					{#if $loading.draws === 'failed'}
 						<img src="/images/ngmi.webp" alt="Whoops">
 						<span>Something went wrong 0.o</span>
+					{:else if firstValidDraw === -1}
+						<img id="sleepingPooly" src="/images/sleeping.png" alt="Sleeping Pooly">
+						<span>No draws within your selected time period.</span>
 					{:else}
 						<img src="/images/loading.gif" alt="Loading">
 						<span>Loading...</span>
@@ -205,7 +207,7 @@
 					<img id="sleepingPooly" src="/images/sleeping.png" alt="Sleeping Pooly">
 					<span>No deposits found...</span>
 				{:else}
-					{#each deposits.slice(0, listLength) as deposit}
+					{#each deposits.filter(deposit => deposit.amount > depositFilter).slice(0, listLength) as deposit}
 						<span class="deposit listItem" class:highlightItem={deposit.amount >= 10000}>
 							<img src="/images/{deposit.chain}.svg" alt="{deposit.chain}">
 							<a href="{`/${deposit.wallet}`}" class="wallet" title="{deposit.wallet}">{getShortWallet(deposit.wallet)}</a>
@@ -235,7 +237,7 @@
 
 		<!-- Delegations Tab -->
 		{:else if tabSelected === 'delegations'}
-			{#if latestDelegationsLoaded && (!advancedMode || delegationsLoaded)}
+			{#if latestDelegationsLoaded && (!$advancedMode || delegationsLoaded)}
 				{#if delegations.length === 0}
 					<img id="sleepingPooly" src="/images/sleeping.png" alt="Sleeping Pooly">
 					<span>No delegations found...</span>

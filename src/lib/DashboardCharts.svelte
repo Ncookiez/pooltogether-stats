@@ -137,10 +137,11 @@
 
 	// Function to set chart data:
 	const setChartData = () => {
-		if(mounted && $ethStats && $polyStats && $avaxStats && $opStats && (!$advancedMode || advancedStatsLoaded)) {
+		if(mounted && $ethStats && $polyStats && $avaxStats && $opStats) {
 
 			// Initializations:
-			const dateTimestamps = $advancedMode ? timestampsToDates($ethAdvancedStats.depositsOverTime.timestamps) : timestampsToDates($ethStats.depositsOverTime.timestamps);
+			const usingAdvancedStats = $advancedMode && advancedStatsLoaded;
+			const dateTimestamps = usingAdvancedStats ? timestampsToDates($ethAdvancedStats.depositsOverTime.timestamps) : timestampsToDates($ethStats.depositsOverTime.timestamps);
 
 			// Initializing Chart Section Labels:
 			const tvlDistributionChartLabels: string[] = ['<$10', '$10-$100', '$100-$1k', '$1k-$10k', '$10k-$100k', '$100k-$1M', '>$1M'];
@@ -183,12 +184,12 @@
 			yieldChart.xAxisValues = dateTimestamps;
 
 			// Setting Stats:
-			const [ethTVLs, polyTVLs, avaxTVLs, opTVLs] = $advancedMode ? [$ethAdvancedStats.tvlOverTime.tvls, $polyAdvancedStats.tvlOverTime.tvls, $avaxAdvancedStats.tvlOverTime.tvls, $opAdvancedStats.tvlOverTime.tvls] : [$ethStats.tvlOverTime.tvls, $polyStats.tvlOverTime.tvls, $avaxStats.tvlOverTime.tvls, $opStats.tvlOverTime.tvls];
-			const [ethDepositsOverTime, polyDepositsOverTime, avaxDepositsOverTime, opDepositsOverTime] = $advancedMode ? [$ethAdvancedStats.depositsOverTime, $polyAdvancedStats.depositsOverTime, $avaxAdvancedStats.depositsOverTime, $opAdvancedStats.depositsOverTime] : [$ethStats.depositsOverTime, $polyStats.depositsOverTime, $avaxStats.depositsOverTime, $opStats.depositsOverTime];
-			const [ethWithdrawalsOverTime, polyWithdrawalsOverTime, avaxWithdrawalsOverTime, opWithdrawalsOverTime] = $advancedMode ? [$ethAdvancedStats.withdrawalsOverTime, $polyAdvancedStats.withdrawalsOverTime, $avaxAdvancedStats.withdrawalsOverTime, $opAdvancedStats.withdrawalsOverTime] : [$ethStats.withdrawalsOverTime, $polyStats.withdrawalsOverTime, $avaxStats.withdrawalsOverTime, $opStats.withdrawalsOverTime];
-			const [ethClaimsOverTime, polyClaimsOverTime, avaxClaimsOverTime, opClaimsOverTime] = $advancedMode ? [$ethAdvancedStats.claimsOverTime, $polyAdvancedStats.claimsOverTime, $avaxAdvancedStats.claimsOverTime, $opAdvancedStats.claimsOverTime] : [$ethStats.claimsOverTime, $polyStats.claimsOverTime, $avaxStats.claimsOverTime, $opStats.claimsOverTime];
-			const [ethDelegationsOverTime, polyDelegationsOverTime, avaxDelegationsOverTime, opDelegationsOverTime] = $advancedMode ? [$ethAdvancedStats.delegationsOverTime, $polyAdvancedStats.delegationsOverTime, $avaxAdvancedStats.delegationsOverTime, $opAdvancedStats.delegationsOverTime] : [$ethStats.delegationsOverTime, $polyStats.delegationsOverTime, $avaxStats.delegationsOverTime, $opStats.delegationsOverTime];
-			const [ethYieldOverTime, polyYieldOverTime, avaxYieldOverTime, opYieldOverTime] = $advancedMode ? [$ethAdvancedStats.yieldOverTime, $polyAdvancedStats.yieldOverTime, $avaxAdvancedStats.yieldOverTime, $opAdvancedStats.yieldOverTime] : [$ethStats.yieldOverTime, $polyStats.yieldOverTime, $avaxStats.yieldOverTime, $opStats.yieldOverTime];
+			const [ethTVLs, polyTVLs, avaxTVLs, opTVLs] = usingAdvancedStats ? [$ethAdvancedStats.tvlOverTime.tvls, $polyAdvancedStats.tvlOverTime.tvls, $avaxAdvancedStats.tvlOverTime.tvls, $opAdvancedStats.tvlOverTime.tvls] : [$ethStats.tvlOverTime.tvls, $polyStats.tvlOverTime.tvls, $avaxStats.tvlOverTime.tvls, $opStats.tvlOverTime.tvls];
+			const [ethDepositsOverTime, polyDepositsOverTime, avaxDepositsOverTime, opDepositsOverTime] = usingAdvancedStats ? [$ethAdvancedStats.depositsOverTime, $polyAdvancedStats.depositsOverTime, $avaxAdvancedStats.depositsOverTime, $opAdvancedStats.depositsOverTime] : [$ethStats.depositsOverTime, $polyStats.depositsOverTime, $avaxStats.depositsOverTime, $opStats.depositsOverTime];
+			const [ethWithdrawalsOverTime, polyWithdrawalsOverTime, avaxWithdrawalsOverTime, opWithdrawalsOverTime] = usingAdvancedStats ? [$ethAdvancedStats.withdrawalsOverTime, $polyAdvancedStats.withdrawalsOverTime, $avaxAdvancedStats.withdrawalsOverTime, $opAdvancedStats.withdrawalsOverTime] : [$ethStats.withdrawalsOverTime, $polyStats.withdrawalsOverTime, $avaxStats.withdrawalsOverTime, $opStats.withdrawalsOverTime];
+			const [ethClaimsOverTime, polyClaimsOverTime, avaxClaimsOverTime, opClaimsOverTime] = usingAdvancedStats ? [$ethAdvancedStats.claimsOverTime, $polyAdvancedStats.claimsOverTime, $avaxAdvancedStats.claimsOverTime, $opAdvancedStats.claimsOverTime] : [$ethStats.claimsOverTime, $polyStats.claimsOverTime, $avaxStats.claimsOverTime, $opStats.claimsOverTime];
+			const [ethDelegationsOverTime, polyDelegationsOverTime, avaxDelegationsOverTime, opDelegationsOverTime] = usingAdvancedStats ? [$ethAdvancedStats.delegationsOverTime, $polyAdvancedStats.delegationsOverTime, $avaxAdvancedStats.delegationsOverTime, $opAdvancedStats.delegationsOverTime] : [$ethStats.delegationsOverTime, $polyStats.delegationsOverTime, $avaxStats.delegationsOverTime, $opStats.delegationsOverTime];
+			const [ethYieldOverTime, polyYieldOverTime, avaxYieldOverTime, opYieldOverTime] = usingAdvancedStats ? [$ethAdvancedStats.yieldOverTime, $polyAdvancedStats.yieldOverTime, $avaxAdvancedStats.yieldOverTime, $opAdvancedStats.yieldOverTime] : [$ethStats.yieldOverTime, $polyStats.yieldOverTime, $avaxStats.yieldOverTime, $opStats.yieldOverTime];
 	
 			// Setting Chart Data:
 			tvlChart.data[0].data = ethTVLs.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? polyTVLs[i] : 0) + ($selectedChains.avax ? avaxTVLs[i] : 0) + ($selectedChains.op ? opTVLs[i] : 0));
@@ -327,6 +328,7 @@
 	const calculateCumulativeDepositDistributions = () => {
 
 		// Initializations:
+		const usingAdvancedStats = $advancedMode && advancedStatsLoaded;
 		const cumulativeDepositDistributions: Line[] = [
 			{ label: '<$10', data: [], lineColor: '#ffb636' },
 			{ label: '$10-$100', data: [], lineColor: '#ffbe4d' },
@@ -337,10 +339,10 @@
 		];
 
 		// Setting Stats:
-		const ethDistributions = $advancedMode ? $ethAdvancedStats.depositsOverTime.cumulativeDistributions : $ethStats.depositsOverTime.cumulativeDistributions;
-		const polyDistributions = $advancedMode ? $polyAdvancedStats.depositsOverTime.cumulativeDistributions : $polyStats.depositsOverTime.cumulativeDistributions;
-		const avaxDistributions = $advancedMode ? $avaxAdvancedStats.depositsOverTime.cumulativeDistributions : $avaxStats.depositsOverTime.cumulativeDistributions;
-		const opDistributions = $advancedMode ? $opAdvancedStats.depositsOverTime.cumulativeDistributions : $opStats.depositsOverTime.cumulativeDistributions;
+		const ethDistributions = usingAdvancedStats ? $ethAdvancedStats.depositsOverTime.cumulativeDistributions : $ethStats.depositsOverTime.cumulativeDistributions;
+		const polyDistributions = usingAdvancedStats ? $polyAdvancedStats.depositsOverTime.cumulativeDistributions : $polyStats.depositsOverTime.cumulativeDistributions;
+		const avaxDistributions = usingAdvancedStats ? $avaxAdvancedStats.depositsOverTime.cumulativeDistributions : $avaxStats.depositsOverTime.cumulativeDistributions;
+		const opDistributions = usingAdvancedStats ? $opAdvancedStats.depositsOverTime.cumulativeDistributions : $opStats.depositsOverTime.cumulativeDistributions;
 
 		// Adding Cumulative Deposit Distributions:
 		cumulativeDepositDistributions[0].data = ethDistributions[1].map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? polyDistributions[1][i] : 0) + ($selectedChains.avax ? avaxDistributions[1][i] : 0) + ($selectedChains.op ? opDistributions[1][i] : 0));
@@ -357,6 +359,7 @@
 	const calculateDepositDistributions = () => {
 
 		// Initializations:
+		const usingAdvancedStats = $advancedMode && advancedStatsLoaded;
 		const depositDistributions: Line[] = [
 			{ label: '<$10', data: [], lineColor: '#ffb636' },
 			{ label: '$10-$100', data: [], lineColor: '#ffbe4d' },
@@ -367,10 +370,10 @@
 		];
 
 		// Setting Stats:
-		const ethDistributions = $advancedMode ? $ethAdvancedStats.depositsOverTime.distributions : $ethStats.depositsOverTime.distributions;
-		const polyDistributions = $advancedMode ? $polyAdvancedStats.depositsOverTime.distributions : $polyStats.depositsOverTime.distributions;
-		const avaxDistributions = $advancedMode ? $avaxAdvancedStats.depositsOverTime.distributions : $avaxStats.depositsOverTime.distributions;
-		const opDistributions = $advancedMode ? $opAdvancedStats.depositsOverTime.distributions : $opStats.depositsOverTime.distributions;
+		const ethDistributions = usingAdvancedStats ? $ethAdvancedStats.depositsOverTime.distributions : $ethStats.depositsOverTime.distributions;
+		const polyDistributions = usingAdvancedStats ? $polyAdvancedStats.depositsOverTime.distributions : $polyStats.depositsOverTime.distributions;
+		const avaxDistributions = usingAdvancedStats ? $avaxAdvancedStats.depositsOverTime.distributions : $avaxStats.depositsOverTime.distributions;
+		const opDistributions = usingAdvancedStats ? $opAdvancedStats.depositsOverTime.distributions : $opStats.depositsOverTime.distributions;
 
 		// Adding Deposit Distributions:
 		depositDistributions[0].data = ethDistributions[1].map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? polyDistributions[1][i] : 0) + ($selectedChains.avax ? avaxDistributions[1][i] : 0) + ($selectedChains.op ? opDistributions[1][i] : 0));
@@ -457,37 +460,31 @@
 
 <!-- Charts & Highlights -->
 <LineChart {...tvlChart} />
-{#if !customEndTimestampSelected}
-	<Highlight>
-		<span class="big">There are currently</span>
-		<span class="big highlight">{numDepositors.toLocaleString(undefined)}+ Depositors</span>
-		<span class="big">on {numChainsSelected !== 1 ? 'PoolTogether V4' : getSingleSelectedChain()}!</span>
-	</Highlight>
-{/if}
-<LineChart {...chainDistributionChart} />
+<Highlight hide={customEndTimestampSelected}>
+	<span class="big">There are currently</span>
+	<span class="big highlight">{numDepositors.toLocaleString(undefined)}+ Depositors</span>
+	<span class="big">on {numChainsSelected !== 1 ? 'PoolTogether V4' : getSingleSelectedChain()}!</span>
+</Highlight>
+<LineChart {...chainDistributionChart} hide={numChainsSelected < 2} />
 <LineChart {...cumulativeDepositAmountsChart} />
 <LineChart {...cumulativeDepositCountsChart} />
 <LineChart {...depositAmountsChart} />
 <LineChart {...depositCountsChart} />
-{#if !customEndTimestampSelected}
-	<Highlight>
-		<span class="big">Top 5 Whales:</span>
-		<span class="list">
-			{#each topWhales as whale}
-				<span>
-					<a href="{`/${whale.wallet}`}" class="highlight" title="{whale.wallet}">{getShortWallet(whale.wallet)}</a>
-					<span>${whale.balance.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-				</span>
-			{/each}
-		</span>
-	</Highlight>
-{/if}
+<Highlight hide={customEndTimestampSelected}>
+	<span class="big">Top 5 Whales:</span>
+	<span class="list">
+		{#each topWhales as whale}
+			<span>
+				<a href="{`/${whale.wallet}`}" class="highlight" title="{whale.wallet}">{getShortWallet(whale.wallet)}</a>
+				<span>${whale.balance.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+			</span>
+		{/each}
+	</span>
+</Highlight>
 <LineChart {...avgDepositAmountsChart} />
 <LineChart {...cumulativeUniqueWalletsChart} />
-{#if !customEndTimestampSelected}
-	<PieChart {...tvlDistributionChart} />
-	<PieChart {...multichainUsersChart} />
-{/if}
+<PieChart {...tvlDistributionChart} hide={customEndTimestampSelected} />
+<PieChart {...multichainUsersChart} hide={customEndTimestampSelected || numChainsSelected < 2} />
 <LineChart {...cumulativeDepositDistributionsChart} />
 <LineChart {...depositDistributionsChart} />
 <LineChart {...cumulativeWithdrawalAmountsChart} />
@@ -499,9 +496,7 @@
 <LineChart {...claimAmountsChart} />
 <LineChart {...claimCountsChart} />
 <LineChart {...avgClaimAmountsChart} />
-{#if !customEndTimestampSelected}
-	<PieChart {...claimDistributionChart} />
-{/if}
+<PieChart {...claimDistributionChart} hide={customEndTimestampSelected} />
 <LineChart {...delegationTvlChart} />
 <LineChart {...cumulativeDelegationAmountsChart} />
 <LineChart {...cumulativeDelegationCountsChart} />

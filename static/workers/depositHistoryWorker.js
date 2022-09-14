@@ -20,7 +20,9 @@ onmessage = function (event) {
     chains.forEach(function (chain) {
         if (data.selectedChains[chain]) {
             data.deposits[chain].forEach(function (deposit) {
-                allDeposits.push(__assign(__assign({}, deposit), { chain: chain }));
+                if (deposit.timestamp && deposit.timestamp >= data.minTimestamp && deposit.timestamp <= data.maxTimestamp) {
+                    allDeposits.push(__assign(__assign({}, deposit), { chain: chain }));
+                }
             });
         }
     });

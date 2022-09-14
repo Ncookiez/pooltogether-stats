@@ -20,7 +20,9 @@ onmessage = function (event) {
     chains.forEach(function (chain) {
         if (data.selectedChains[chain]) {
             data.delegations[chain].forEach(function (delegation) {
-                allDelegations.push(__assign(__assign({}, delegation), { chain: chain }));
+                if (delegation.timestamp && delegation.timestamp >= data.minTimestamp && delegation.timestamp <= data.maxTimestamp) {
+                    allDelegations.push(__assign(__assign({}, delegation), { chain: chain }));
+                }
             });
         }
     });
