@@ -20,7 +20,7 @@
 
 	// Charts:
 	const tvlChart: LineChartInfo = { name: `tvlChart`, title: 'TVL Over Time', xAxisValues: [], data: [{ label: 'TVL', data: [] }], dollarValues: true };
-	const chainDistributionChart: LineChartInfo = { name: `chainDistributionChart`, title: 'TVL Chain Distribution Over Time', xAxisValues: [], data: [{ label: 'Ethereum', data: [], lineColor: '#627ee980', backgroundColor: '#627ee9' }, { label: 'Avalanche', data: [], lineColor: '#e7404280', backgroundColor: '#e74042' }, { label: 'Polygon', data: [], lineColor: '#7a3ee380', backgroundColor: '#7a3ee3' }, { label: 'Optimism', data: [], lineColor: '#ff042080', backgroundColor: '#ff0420' }], stacked: true };
+	const chainDistributionChart: LineChartInfo = { name: `chainDistributionChart`, title: 'TVL Chain Distribution Over Time', xAxisValues: [], data: [], stacked: true };
 	const cumulativeDepositAmountsChart: LineChartInfo = { name: `cumulativeDepositAmountsChart`, title: 'Cumulative Deposit Amounts Over Time', xAxisValues: [], data: [{ label: 'Deposit Amounts', data: [] }], dollarValues: true };
 	const cumulativeDepositCountsChart: LineChartInfo = { name: `cumulativeDepositCountsChart`, title: 'Cumulative Deposits Over Time', xAxisValues: [], data: [{ label: 'Deposits', data: [] }] };
 	const depositAmountsChart: LineChartInfo = { name: `depositAmountsChart`, title: 'Deposit Amounts Over Time', xAxisValues: [], data: [{ label: 'Deposit Amounts', data: [] }], dollarValues: true };
@@ -50,7 +50,7 @@
 	$: customEndTimestampSelected = $advancedMode && $endTimestamp < (Date.now() / 1000);
 
 	// Reactive Chain Selections:
-	$: numChainsSelected = Object.values($selectedChains).reduce((a: boolean, b: boolean) => (a ? 1 : 0) + (b ? 1 : 0), 0) as number;
+	$: numChainsSelected = Object.values($selectedChains).reduce((a: number, b: boolean) => a + (b ? 1 : 0), 0) as number;
 
 	// Reactive Loading Checks:
 	$: advancedStatsLoaded = $advancedMode && chains.every(chain => $loading[chain].advanced.stats === 'done');
@@ -154,6 +154,7 @@
 			const cumulativeDepositDistributionsChartData = calculateCumulativeDepositDistributions();
 			const depositDistributionsChartData = calculateDepositDistributions();
 			const claimDistributionChartData = calculateClaimDistributions();
+			chainDistributionChart.data = [];
 
 			// Setting Chart X Axis Values / Section Labels:
 			tvlChart.xAxisValues = dateTimestamps;
@@ -193,10 +194,10 @@
 	
 			// Setting Chart Data:
 			tvlChart.data[0].data = ethTVLs.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? polyTVLs[i] : 0) + ($selectedChains.avax ? avaxTVLs[i] : 0) + ($selectedChains.op ? opTVLs[i] : 0));
-			chainDistributionChart.data[0].data = ethTVLs.map((val, i) => $selectedChains.eth ? (val / tvlChart.data[0].data[i]) * 100 : 0);
-			chainDistributionChart.data[1].data = avaxTVLs.map((val, i) => $selectedChains.avax ? (val / tvlChart.data[0].data[i]) * 100 : 0);
-			chainDistributionChart.data[2].data = polyTVLs.map((val, i) => $selectedChains.poly ? (val / tvlChart.data[0].data[i]) * 100 : 0);
-			chainDistributionChart.data[3].data = opTVLs.map((val, i) => $selectedChains.op ? (val / tvlChart.data[0].data[i]) * 100 : 0);
+			if($selectedChains.eth) { chainDistributionChart.data.push({ label: 'Ethereum', data: ethTVLs, lineColor: '#627ee980', backgroundColor: '#627ee9' }); };
+			if($selectedChains.avax) { chainDistributionChart.data.push({ label: 'Avalanche', data: avaxTVLs, lineColor: '#e7404280', backgroundColor: '#e74042' }); };
+			if($selectedChains.poly) { chainDistributionChart.data.push({ label: 'Polygon', data: polyTVLs, lineColor: '#7a3ee380', backgroundColor: '#7a3ee3' }); };
+			if($selectedChains.op) { chainDistributionChart.data.push({ label: 'Optimism', data: opTVLs, lineColor: '#ff042080', backgroundColor: '#ff0420' }); };
 			cumulativeDepositAmountsChart.data[0].data = ethDepositsOverTime.cumulativeDepositAmounts.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? polyDepositsOverTime.cumulativeDepositAmounts[i] : 0) + ($selectedChains.avax ? avaxDepositsOverTime.cumulativeDepositAmounts[i] : 0) + ($selectedChains.op ? opDepositsOverTime.cumulativeDepositAmounts[i] : 0));
 			cumulativeDepositCountsChart.data[0].data = ethDepositsOverTime.cumulativeDepositCounts.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? polyDepositsOverTime.cumulativeDepositCounts[i] : 0) + ($selectedChains.avax ? avaxDepositsOverTime.cumulativeDepositCounts[i] : 0) + ($selectedChains.op ? opDepositsOverTime.cumulativeDepositCounts[i] : 0));
 			depositAmountsChart.data[0].data = ethDepositsOverTime.depositAmounts.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? polyDepositsOverTime.depositAmounts[i] : 0) + ($selectedChains.avax ? avaxDepositsOverTime.depositAmounts[i] : 0) + ($selectedChains.op ? opDepositsOverTime.depositAmounts[i] : 0));

@@ -8,29 +8,48 @@ const ticks = 50;
 onmessage = (event) => {
 
   // Initializations:
-  const data: ChainData = event.data[0];
-  const advancedStats: AdvancedChainStats | undefined = event.data[1];
-  const minTimestamp: number = event.data[2];
-  const maxTimestamp: number = event.data[3];
+  let data: ChainData | undefined = event.data[0];
+  let advancedStats: AdvancedChainStats | undefined = event.data[1];
+  let minTimestamp: number = event.data[2];
+  let maxTimestamp: number = event.data[3];
 
   // Getting Timestamps:
-  const timestamps = getTimestamps(minTimestamp, maxTimestamp);
+  let timestamps = getTimestamps(minTimestamp, maxTimestamp);
 
-  // Calculating Advanced Stats:
-  const depositsOverTime = calcDepositsOverTime(data, timestamps);
-  const withdrawalsOverTime = calcWithdrawalsOverTime(data, timestamps);
-  const claimsOverTime = calcClaimsOverTime(data, timestamps);
-  const tvlOverTime = calcTVLOverTime(depositsOverTime, withdrawalsOverTime, claimsOverTime);
-  const delegationsOverTime = calcDelegationsOverTime(data, timestamps);
-  const yieldOverTime = calcYieldOverTime(data, timestamps);
-  const wallets = advancedStats ? advancedStats.wallets : getWalletData(data);
-  const winlessWithdrawals = advancedStats ? advancedStats.winlessWithdrawals : calcWinlessWithdrawals(wallets);
-  const tvlDistribution = advancedStats ? advancedStats.tvlDistribution : calcTVLDistribution(data.balances.data);
+  if(data) {
 
-  // Setting Advanced Stats:
-  const newAdvancedStats: AdvancedChainStats = { minTimestamp, maxTimestamp, depositsOverTime, withdrawalsOverTime, claimsOverTime, tvlOverTime, delegationsOverTime, yieldOverTime, wallets, winlessWithdrawals, tvlDistribution };
+    // Calculating Advanced Stats:
+    let depositsOverTime: DepositsOverTime | undefined = calcDepositsOverTime(data, timestamps);
+    let withdrawalsOverTime: WithdrawalsOverTime | undefined = calcWithdrawalsOverTime(data, timestamps);
+    let claimsOverTime: ClaimsOverTime | undefined = calcClaimsOverTime(data, timestamps);
+    let tvlOverTime: TVLOverTime | undefined = calcTVLOverTime(data, timestamps, depositsOverTime, withdrawalsOverTime, claimsOverTime);
+    let delegationsOverTime: DelegationsOverTime | undefined = calcDelegationsOverTime(data, timestamps);
+    let yieldOverTime: YieldOverTime | undefined = calcYieldOverTime(data, timestamps);
+    let wallets = advancedStats ? advancedStats.wallets : getWalletData(data);
+    let winlessWithdrawals = advancedStats ? advancedStats.winlessWithdrawals : calcWinlessWithdrawals(wallets);
+    let tvlDistribution: TVLDistribution | undefined = advancedStats ? advancedStats.tvlDistribution : calcTVLDistribution(data.balances.data);
+  
+    // Setting Advanced Stats:
+    let newAdvancedStats: AdvancedChainStats | undefined = { minTimestamp, maxTimestamp, depositsOverTime, withdrawalsOverTime, claimsOverTime, tvlOverTime, delegationsOverTime, yieldOverTime, wallets, winlessWithdrawals, tvlDistribution };
+  
+    postMessage(newAdvancedStats);
+  
+    // Resetting Memory:
+    data = undefined;
+    advancedStats = undefined;
+    timestamps = [];
+    depositsOverTime = undefined;
+    withdrawalsOverTime = undefined;
+    claimsOverTime = undefined;
+    tvlOverTime = undefined;
+    delegationsOverTime = undefined;
+    yieldOverTime = undefined;
+    wallets = {};
+    winlessWithdrawals = [];
+    tvlDistribution = undefined;
+    newAdvancedStats = undefined;
 
-  postMessage(newAdvancedStats);
+  }
 }
 
 /* ====================================================================================================================================================== */
@@ -298,17 +317,69 @@ const calcClaimsOverTime = (chainData: ChainData, timestamps: number[]) => {
 /* ====================================================================================================================================================== */
 
 // Function to calculate TVL over time:
-const calcTVLOverTime = (deposits: DepositsOverTime, withdrawals: WithdrawalsOverTime, claims: ClaimsOverTime) => {
+const calcTVLOverTime = (chainData: ChainData, timestamps: number[], depositsOverTime: DepositsOverTime, withdrawalsOverTime: WithdrawalsOverTime, claimsOverTime: ClaimsOverTime) => {
 
   // Initializations:
   const tvlOverTime: TVLOverTime = {
-    timestamps: deposits.timestamps,
+    timestamps: timestamps,
     tvls: []
   }
+  const preTick = timestamps[0] - (timestamps[1] - timestamps[0]);
+  
+  // Calculating Past Cumulative Deposit Amount:
+  let depositIndex = 0;
+  let lastDepositTimestamp = 0;
+  let pastCumulativeDepositAmount = 0;
+  let reversedDeposits = chainData.deposits.data.slice().reverse();
+  while(lastDepositTimestamp < preTick && depositIndex < chainData.deposits.data.length) {
+    const deposit = reversedDeposits[depositIndex];
+    if(deposit.timestamp) {
+      if(deposit.timestamp < preTick) {
+        pastCumulativeDepositAmount += deposit.amount;
+      }
+      lastDepositTimestamp = deposit.timestamp;
+    }
+    depositIndex++;
+  }
+
+  // Calculating Past Cumulative Withdrawal Amount:
+  let withdrawalIndex = 0;
+  let lastWithdrawalTimestamp = 0;
+  let pastCumulativeWithdrawalAmount = 0;
+  let reversedWithdrawals = chainData.withdrawals.data.slice().reverse();
+  while(lastWithdrawalTimestamp < preTick && withdrawalIndex < chainData.withdrawals.data.length) {
+    const withdrawal = reversedWithdrawals[withdrawalIndex];
+    if(withdrawal.timestamp) {
+      if(withdrawal.timestamp < preTick) {
+        pastCumulativeWithdrawalAmount += withdrawal.amount;
+      }
+      lastWithdrawalTimestamp = withdrawal.timestamp;
+    }
+    withdrawalIndex++;
+  }
+
+  // Calculating Past Cumulative Claim Amount:
+  let claimIndex = 0;
+  let lastClaimTimestamp = 0;
+  let pastCumulativeClaimAmount = 0;
+  let reversedClaims = chainData.claims.data.slice().reverse();
+  while(lastClaimTimestamp < preTick && claimIndex < chainData.claims.data.length) {
+    const claim = reversedClaims[claimIndex];
+    if(claim.timestamp) {
+      if(claim.timestamp < preTick) {
+        pastCumulativeClaimAmount += claim.prizes.reduce((a, b) => a + b, 0);
+      }
+      lastClaimTimestamp = claim.timestamp;
+    }
+    claimIndex++;
+  }
+
+  // Calculating Past TVL:
+  const pastTVL = pastCumulativeDepositAmount + pastCumulativeClaimAmount - pastCumulativeWithdrawalAmount;
 
   // Calculating TVL Over Time:
   for(let i = 0; i < tvlOverTime.timestamps.length; i++) {
-    const tvl = deposits.cumulativeDepositAmounts[i] + claims.cumulativeClaimAmounts[i] - withdrawals.cumulativeWithdrawalAmounts[i];
+    const tvl = pastTVL + depositsOverTime.cumulativeDepositAmounts[i] + claimsOverTime.cumulativeClaimAmounts[i] - withdrawalsOverTime.cumulativeWithdrawalAmounts[i];
     tvlOverTime.tvls.push(tvl);
   }
 
@@ -450,17 +521,17 @@ const getWalletData = (chainData: ChainData) => {
     wallets[entry.wallet] = { txs: [], currentBalance: entry.balance };
   });
   chainData.deposits.data.forEach(deposit => {
-    if(deposit.timestamp) {
+    if(wallets[deposit.wallet] && deposit.timestamp) {
       wallets[deposit.wallet].txs.push({ type: 'deposit', data: deposit });
     }
   });
   chainData.withdrawals.data.forEach(withdrawal => {
-    if(withdrawal.timestamp) {
+    if(wallets[withdrawal.wallet] && withdrawal.timestamp) {
       wallets[withdrawal.wallet].txs.push({ type: 'withdrawal', data: withdrawal });
     }
   });
   chainData.claims.data.forEach(claim => {
-    if(claim.timestamp) {
+    if(wallets[claim.wallet] && claim.timestamp) {
       wallets[claim.wallet].txs.push({ type: 'claim', data: claim });
     }
   });

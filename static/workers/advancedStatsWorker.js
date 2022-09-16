@@ -11,19 +11,35 @@ onmessage = function (event) {
     var maxTimestamp = event.data[3];
     // Getting Timestamps:
     var timestamps = getTimestamps(minTimestamp, maxTimestamp);
-    // Calculating Advanced Stats:
-    var depositsOverTime = calcDepositsOverTime(data, timestamps);
-    var withdrawalsOverTime = calcWithdrawalsOverTime(data, timestamps);
-    var claimsOverTime = calcClaimsOverTime(data, timestamps);
-    var tvlOverTime = calcTVLOverTime(depositsOverTime, withdrawalsOverTime, claimsOverTime);
-    var delegationsOverTime = calcDelegationsOverTime(data, timestamps);
-    var yieldOverTime = calcYieldOverTime(data, timestamps);
-    var wallets = advancedStats ? advancedStats.wallets : getWalletData(data);
-    var winlessWithdrawals = advancedStats ? advancedStats.winlessWithdrawals : calcWinlessWithdrawals(wallets);
-    var tvlDistribution = advancedStats ? advancedStats.tvlDistribution : calcTVLDistribution(data.balances.data);
-    // Setting Advanced Stats:
-    var newAdvancedStats = { minTimestamp: minTimestamp, maxTimestamp: maxTimestamp, depositsOverTime: depositsOverTime, withdrawalsOverTime: withdrawalsOverTime, claimsOverTime: claimsOverTime, tvlOverTime: tvlOverTime, delegationsOverTime: delegationsOverTime, yieldOverTime: yieldOverTime, wallets: wallets, winlessWithdrawals: winlessWithdrawals, tvlDistribution: tvlDistribution };
-    postMessage(newAdvancedStats);
+    if (data) {
+        // Calculating Advanced Stats:
+        var depositsOverTime = calcDepositsOverTime(data, timestamps);
+        var withdrawalsOverTime = calcWithdrawalsOverTime(data, timestamps);
+        var claimsOverTime = calcClaimsOverTime(data, timestamps);
+        var tvlOverTime = calcTVLOverTime(data, timestamps, depositsOverTime, withdrawalsOverTime, claimsOverTime);
+        var delegationsOverTime = calcDelegationsOverTime(data, timestamps);
+        var yieldOverTime = calcYieldOverTime(data, timestamps);
+        var wallets = advancedStats ? advancedStats.wallets : getWalletData(data);
+        var winlessWithdrawals = advancedStats ? advancedStats.winlessWithdrawals : calcWinlessWithdrawals(wallets);
+        var tvlDistribution = advancedStats ? advancedStats.tvlDistribution : calcTVLDistribution(data.balances.data);
+        // Setting Advanced Stats:
+        var newAdvancedStats = { minTimestamp: minTimestamp, maxTimestamp: maxTimestamp, depositsOverTime: depositsOverTime, withdrawalsOverTime: withdrawalsOverTime, claimsOverTime: claimsOverTime, tvlOverTime: tvlOverTime, delegationsOverTime: delegationsOverTime, yieldOverTime: yieldOverTime, wallets: wallets, winlessWithdrawals: winlessWithdrawals, tvlDistribution: tvlDistribution };
+        postMessage(newAdvancedStats);
+        // Resetting Memory:
+        data = undefined;
+        advancedStats = undefined;
+        timestamps = [];
+        depositsOverTime = undefined;
+        withdrawalsOverTime = undefined;
+        claimsOverTime = undefined;
+        tvlOverTime = undefined;
+        delegationsOverTime = undefined;
+        yieldOverTime = undefined;
+        wallets = {};
+        winlessWithdrawals = [];
+        tvlDistribution = undefined;
+        newAdvancedStats = undefined;
+    }
 };
 /* ====================================================================================================================================================== */
 // Function to calculate deposits over time:
@@ -294,15 +310,63 @@ var calcClaimsOverTime = function (chainData, timestamps) {
 };
 /* ====================================================================================================================================================== */
 // Function to calculate TVL over time:
-var calcTVLOverTime = function (deposits, withdrawals, claims) {
+var calcTVLOverTime = function (chainData, timestamps, depositsOverTime, withdrawalsOverTime, claimsOverTime) {
     // Initializations:
     var tvlOverTime = {
-        timestamps: deposits.timestamps,
+        timestamps: timestamps,
         tvls: []
     };
+    var preTick = timestamps[0] - (timestamps[1] - timestamps[0]);
+    // Calculating Past Cumulative Deposit Amount:
+    var depositIndex = 0;
+    var lastDepositTimestamp = 0;
+    var pastCumulativeDepositAmount = 0;
+    var reversedDeposits = chainData.deposits.data.slice().reverse();
+    while (lastDepositTimestamp < preTick && depositIndex < chainData.deposits.data.length) {
+        var deposit = reversedDeposits[depositIndex];
+        if (deposit.timestamp) {
+            if (deposit.timestamp < preTick) {
+                pastCumulativeDepositAmount += deposit.amount;
+            }
+            lastDepositTimestamp = deposit.timestamp;
+        }
+        depositIndex++;
+    }
+    // Calculating Past Cumulative Withdrawal Amount:
+    var withdrawalIndex = 0;
+    var lastWithdrawalTimestamp = 0;
+    var pastCumulativeWithdrawalAmount = 0;
+    var reversedWithdrawals = chainData.withdrawals.data.slice().reverse();
+    while (lastWithdrawalTimestamp < preTick && withdrawalIndex < chainData.withdrawals.data.length) {
+        var withdrawal = reversedWithdrawals[withdrawalIndex];
+        if (withdrawal.timestamp) {
+            if (withdrawal.timestamp < preTick) {
+                pastCumulativeWithdrawalAmount += withdrawal.amount;
+            }
+            lastWithdrawalTimestamp = withdrawal.timestamp;
+        }
+        withdrawalIndex++;
+    }
+    // Calculating Past Cumulative Claim Amount:
+    var claimIndex = 0;
+    var lastClaimTimestamp = 0;
+    var pastCumulativeClaimAmount = 0;
+    var reversedClaims = chainData.claims.data.slice().reverse();
+    while (lastClaimTimestamp < preTick && claimIndex < chainData.claims.data.length) {
+        var claim = reversedClaims[claimIndex];
+        if (claim.timestamp) {
+            if (claim.timestamp < preTick) {
+                pastCumulativeClaimAmount += claim.prizes.reduce(function (a, b) { return a + b; }, 0);
+            }
+            lastClaimTimestamp = claim.timestamp;
+        }
+        claimIndex++;
+    }
+    // Calculating Past TVL:
+    var pastTVL = pastCumulativeDepositAmount + pastCumulativeClaimAmount - pastCumulativeWithdrawalAmount;
     // Calculating TVL Over Time:
     for (var i = 0; i < tvlOverTime.timestamps.length; i++) {
-        var tvl = deposits.cumulativeDepositAmounts[i] + claims.cumulativeClaimAmounts[i] - withdrawals.cumulativeWithdrawalAmounts[i];
+        var tvl = pastTVL + depositsOverTime.cumulativeDepositAmounts[i] + claimsOverTime.cumulativeClaimAmounts[i] - withdrawalsOverTime.cumulativeWithdrawalAmounts[i];
         tvlOverTime.tvls.push(tvl);
     }
     return tvlOverTime;
@@ -435,17 +499,17 @@ var getWalletData = function (chainData) {
         wallets[entry.wallet] = { txs: [], currentBalance: entry.balance };
     });
     chainData.deposits.data.forEach(function (deposit) {
-        if (deposit.timestamp) {
+        if (wallets[deposit.wallet] && deposit.timestamp) {
             wallets[deposit.wallet].txs.push({ type: 'deposit', data: deposit });
         }
     });
     chainData.withdrawals.data.forEach(function (withdrawal) {
-        if (withdrawal.timestamp) {
+        if (wallets[withdrawal.wallet] && withdrawal.timestamp) {
             wallets[withdrawal.wallet].txs.push({ type: 'withdrawal', data: withdrawal });
         }
     });
     chainData.claims.data.forEach(function (claim) {
-        if (claim.timestamp) {
+        if (wallets[claim.wallet] && claim.timestamp) {
             wallets[claim.wallet].txs.push({ type: 'claim', data: claim });
         }
     });

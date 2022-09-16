@@ -77,7 +77,7 @@
 			chart.options.scales.x.ticks.maxTicksLimit = Math.min(Math.ceil(((Date.parse(xAxisValues[xAxisValues.length - 1]) / 1000) - (Date.parse(xAxisValues[0]) / 1000)) / dayInSeconds) + 1, maxTicks);
 			if(dollarValues) {
 				chart.options.plugins.tooltip.callbacks = { label: (item) => { return `${item.dataset.label}: $${(item.raw as number).toLocaleString(undefined)}` } };
-				chart.options.scales.y.ticks.callback = (value) => { return '$' + value.toLocaleString(undefined) };
+				chart.options.scales.y.ticks.callback = (value) => { return (value < 0 ? '-$' : '$') + Math.abs(parseInt(value as string)).toLocaleString(undefined) };
 			}
 			if(stacked) {
 				chart.options.scales.y.min = 0;
@@ -85,6 +85,21 @@
 				// @ts-ignore
 				chart.options.scales.y.stacked = true;
 				chart.options.plugins.tooltip.callbacks = { label: (item) => { return `${item.dataset.label}: ${(item.raw as number).toFixed(2)}%` } };
+				let totalValues: number[] = [];
+				lines.forEach(line => {
+					line.data.forEach((value, i) => {
+						if(totalValues[i]) {
+							totalValues[i] += value;
+						} else {
+							totalValues.push(value);
+						}
+					});
+				});
+				lines.forEach(line => {
+					line.data.forEach((value, i) => {
+						line.data[i] = (value / totalValues[i]) * 100;
+					});
+				});
 			}
 		}
 	}

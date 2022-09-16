@@ -257,6 +257,7 @@
 						ethAdvancedStats.set(event.data);
 						$loading.eth.advanced.stats = 'done';
 						$loading.eth.advanced.progress++;
+						dataWorker.terminate();
 						resolve();
 					}
 				});
@@ -271,6 +272,7 @@
 						polyAdvancedStats.set(event.data);
 						$loading.poly.advanced.stats = 'done';
 						$loading.poly.advanced.progress++;
+						dataWorker.terminate();
 						resolve();
 					}
 				});
@@ -285,6 +287,7 @@
 						avaxAdvancedStats.set(event.data);
 						$loading.avax.advanced.stats = 'done';
 						$loading.avax.advanced.progress++;
+						dataWorker.terminate();
 						resolve();
 					}
 				});
@@ -299,6 +302,7 @@
 						opAdvancedStats.set(event.data);
 						$loading.op.advanced.stats = 'done';
 						$loading.op.advanced.progress++;
+						dataWorker.terminate();
 						resolve();
 					}
 				});

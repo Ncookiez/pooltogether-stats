@@ -60,6 +60,7 @@
 				dataWorker.onmessage = (event) => {
 					clearTimeout(timeout);
 					draws = event.data;
+					dataWorker.terminate();
 					resolve();
 				}
 			});
@@ -82,6 +83,7 @@
 				dataWorker.onmessage = (event) => {
 					clearTimeout(timeout);
 					deposits = event.data;
+					dataWorker.terminate();
 					resolve();
 				}
 			});
@@ -104,6 +106,7 @@
 				dataWorker.onmessage = (event) => {
 					clearTimeout(timeout);
 					delegations = event.data;
+					dataWorker.terminate();
 					resolve();
 				}
 			});
@@ -219,7 +222,7 @@
 							<a class="blockExplorerLink" href="{getBlockExplorerLink(deposit.chain, deposit.txHash)}" target="__blank"><i class="icofont-external-link" /></a>
 						</span>
 					{/each}
-					{#if deposits.length > listLength}
+					{#if deposits.filter(deposit => deposit.amount > depositFilter).length > listLength}
 						<span class="loadMore" on:click={() => listLength += pageSize}><i class="icofont-arrow-down" /> Load More <i class="icofont-arrow-down" /></span>
 					{/if}
 				{/if}

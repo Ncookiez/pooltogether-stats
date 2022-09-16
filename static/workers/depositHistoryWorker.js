@@ -18,13 +18,16 @@ onmessage = function (event) {
     var allDeposits = [];
     // Adding Deposits:
     chains.forEach(function (chain) {
-        if (data.selectedChains[chain]) {
+        if (data === null || data === void 0 ? void 0 : data.selectedChains[chain]) {
             data.deposits[chain].forEach(function (deposit) {
-                if (deposit.timestamp && deposit.timestamp >= data.minTimestamp && deposit.timestamp <= data.maxTimestamp) {
+                if (data && deposit.timestamp && deposit.timestamp >= data.minTimestamp && deposit.timestamp <= data.maxTimestamp) {
                     allDeposits.push(__assign(__assign({}, deposit), { chain: chain }));
                 }
             });
         }
     });
     postMessage(allDeposits.sort(function (a, b) { return b.timestamp - a.timestamp; }));
+    // Resetting Memory:
+    data = undefined;
+    allDeposits = [];
 };
