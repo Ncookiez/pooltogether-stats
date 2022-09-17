@@ -332,11 +332,11 @@
 		const usingAdvancedStats = $advancedMode && advancedStatsLoaded;
 		const cumulativeDepositDistributions: Line[] = [
 			{ label: '<$10', data: [], lineColor: '#ffb636' },
-			{ label: '$10-$100', data: [], lineColor: '#ffbe4d' },
-			{ label: '$100-$1k', data: [], lineColor: '#ffc766' },
-			{ label: '$1k-$10k', data: [], lineColor: '#ffd080' },
-			{ label: '$10k-$100k', data: [], lineColor: '#ffda99' },
-			{ label: '>$100k', data: [], lineColor: '#ffe3b3' }
+			{ label: '$10-$100', data: [], lineColor: '#ff4336' },
+			{ label: '$100-$1k', data: [], lineColor: '#ffda36' },
+			{ label: '$1k-$10k', data: [], lineColor: '#d782aa' },
+			{ label: '$10k-$100k', data: [], lineColor: '#9f82d7' },
+			{ label: '>$100k', data: [], lineColor: '#35f0d0' }
 		];
 
 		// Setting Stats:
@@ -363,11 +363,11 @@
 		const usingAdvancedStats = $advancedMode && advancedStatsLoaded;
 		const depositDistributions: Line[] = [
 			{ label: '<$10', data: [], lineColor: '#ffb636' },
-			{ label: '$10-$100', data: [], lineColor: '#ffbe4d' },
-			{ label: '$100-$1k', data: [], lineColor: '#ffc766' },
-			{ label: '$1k-$10k', data: [], lineColor: '#ffd080' },
-			{ label: '$10k-$100k', data: [], lineColor: '#ffda99' },
-			{ label: '>$100k', data: [], lineColor: '#ffe3b3' }
+			{ label: '$10-$100', data: [], lineColor: '#ff4336' },
+			{ label: '$100-$1k', data: [], lineColor: '#ffda36' },
+			{ label: '$1k-$10k', data: [], lineColor: '#d782aa' },
+			{ label: '$10k-$100k', data: [], lineColor: '#9f82d7' },
+			{ label: '>$100k', data: [], lineColor: '#35f0d0' }
 		];
 
 		// Setting Stats:

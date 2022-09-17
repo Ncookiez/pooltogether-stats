@@ -396,6 +396,38 @@ var calcDelegationsOverTime = function (chainData, timestamps) {
     var cumulativeDelegationWithdrawalAmount = 0;
     var cumulativeDelegationWithdrawalCount = 0;
     var cumulativeUniqueWallets = [];
+    // Calculating Past Cumulative Funded Delegation Amount:
+    var fundedDelegationsIndex = 0;
+    var lastFundedDelegationTimestamp = 0;
+    var pastCumulativeFundedDelegationAmount = 0;
+    var reversedFundedDelegations = chainData.delegationsFunded.data.slice().reverse();
+    while (lastFundedDelegationTimestamp < preTick && fundedDelegationsIndex < chainData.delegationsFunded.data.length) {
+        var delegation = reversedFundedDelegations[fundedDelegationsIndex];
+        if (delegation.timestamp) {
+            if (delegation.timestamp < preTick) {
+                pastCumulativeFundedDelegationAmount += delegation.amount;
+            }
+            lastFundedDelegationTimestamp = delegation.timestamp;
+        }
+        fundedDelegationsIndex++;
+    }
+    // Calculating Past Cumulative Delegation Withdrawal Amount:
+    var delegationWithdrawalIndex = 0;
+    var lastDelegationWithdrawalTimestamp = 0;
+    var pastCumulativeDelegationWithdrawalAmount = 0;
+    var reversedDelegationWithdrawals = chainData.delegationsWithdrawn.data.slice().reverse();
+    while (lastDelegationWithdrawalTimestamp < preTick && delegationWithdrawalIndex < chainData.delegationsWithdrawn.data.length) {
+        var delegation = reversedDelegationWithdrawals[delegationWithdrawalIndex];
+        if (delegation.timestamp) {
+            if (delegation.timestamp < preTick) {
+                pastCumulativeDelegationWithdrawalAmount += delegation.amount;
+            }
+            lastDelegationWithdrawalTimestamp = delegation.timestamp;
+        }
+        delegationWithdrawalIndex++;
+    }
+    // Calculating Past Delegation TVL:
+    var pastDelegationTVL = pastCumulativeFundedDelegationAmount - pastCumulativeDelegationWithdrawalAmount;
     var _loop_4 = function (i) {
         var delegationAmount = 0;
         var delegationCount = 0;
@@ -443,7 +475,7 @@ var calcDelegationsOverTime = function (chainData, timestamps) {
         delegationsOverTime.cumulativeDelegationWithdrawalAmounts.push(Math.floor(cumulativeDelegationWithdrawalAmount));
         delegationsOverTime.cumulativeDelegationWithdrawalCounts.push(cumulativeDelegationWithdrawalCount);
         delegationsOverTime.cumulativeUniqueWallets.push(cumulativeUniqueWallets.length);
-        delegationsOverTime.tvls.push(Math.floor(cumulativeDelegationAmount - cumulativeDelegationWithdrawalAmount));
+        delegationsOverTime.tvls.push(Math.floor(pastDelegationTVL + cumulativeDelegationAmount - cumulativeDelegationWithdrawalAmount));
     };
     // Filtering Data:
     for (var i = 0; i < ticks; i++) {

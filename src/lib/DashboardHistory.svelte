@@ -492,6 +492,13 @@
 		margin-top: 1em;
 	}
 
+	@media screen and (max-width: 1350px) {
+		div.history {
+			width: 90vw;
+			margin: 0 5vw;
+		}
+	}
+
 	@media screen and (max-width: 600px) {
 		div.tabs {
 			padding: 0;
