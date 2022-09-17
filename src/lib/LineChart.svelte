@@ -24,7 +24,6 @@
 	// Line Chart Settings:
 	const baseColor = 'white';
 	const defaultLineColor = '#FFB636';
-	const defaultBackgroundColor = defaultLineColor + '80';
 	const defaultLineWidth = 2;
 	const defaultPointRadius = 0;
 	const defaultPointHoverRadius = 5;
@@ -62,9 +61,9 @@
 		lines.forEach(line => {
 			chart.data.datasets.push({
 				label: line.label,
-				data: line.data,
-				backgroundColor: line.backgroundColor ?? defaultBackgroundColor,
+				data: line.data.slice(),
 				borderColor: line.lineColor ?? defaultLineColor,
+				backgroundColor: line.backgroundColor ?? (line.lineColor ?? defaultLineColor) + '80',
 				borderWidth: line.lineWidth ?? defaultLineWidth,
 				pointRadius: line.pointRadius ?? defaultPointRadius,
 				pointHoverRadius: line.pointHoverRadius ?? defaultPointHoverRadius,
@@ -77,14 +76,30 @@
 			chart.options.scales.x.ticks.maxTicksLimit = Math.min(Math.ceil(((Date.parse(xAxisValues[xAxisValues.length - 1]) / 1000) - (Date.parse(xAxisValues[0]) / 1000)) / dayInSeconds) + 1, maxTicks);
 			if(dollarValues) {
 				chart.options.plugins.tooltip.callbacks = { label: (item) => { return `${item.dataset.label}: $${(item.raw as number).toLocaleString(undefined)}` } };
-				chart.options.scales.y.ticks.callback = (value) => { return '$' + value.toLocaleString(undefined) };
+				chart.options.scales.y.ticks.callback = (value) => { return (value < 0 ? '-$' : '$') + Math.abs(parseInt(value as string)).toLocaleString(undefined) };
 			}
 			if(stacked) {
 				chart.options.scales.y.min = 0;
 				chart.options.scales.y.max = 100;
+				chart.options.scales.y.ticks.callback = (value) => { return value + '%' };
 				// @ts-ignore
 				chart.options.scales.y.stacked = true;
 				chart.options.plugins.tooltip.callbacks = { label: (item) => { return `${item.dataset.label}: ${(item.raw as number).toFixed(2)}%` } };
+				let totalValues: number[] = [];
+				chart.data.datasets.forEach(dataset => {
+					(dataset.data as number[]).forEach((value, i) => {
+						if(totalValues[i]) {
+							totalValues[i] += value;
+						} else {
+							totalValues.push(value);
+						}
+					});
+				});
+				chart.data.datasets.forEach(dataset => {
+					(dataset.data as number[]).forEach((value, i) => {
+						dataset.data[i] = (value / totalValues[i]) * 100;
+					});
+				});
 			}
 		}
 	}

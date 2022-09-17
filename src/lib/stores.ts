@@ -4,7 +4,7 @@ import { browser } from '$app/env';
 import { writable } from 'svelte/store';
 
 // Type Imports:
-import type { ChainStats, ChainData, SelectedChains, Loading } from '$lib/types';
+import type { ChainStats, AdvancedChainStats, ChainData, SelectedChains, Loading } from '$lib/types';
 
 /* ========================================================================================================================================================================= */
 
@@ -54,48 +54,36 @@ const defaultLoadingStatus: Loading = {
 
 /* ========================================================================================================================================================================= */
 
-// Ethereum Stats:
+// Chain Stats:
 export const ethStats = writable<ChainStats>();
-
-// Polygon Stats:
 export const polyStats = writable<ChainStats>();
-
-// Avalanche Stats:
 export const avaxStats = writable<ChainStats>();
-
-// Optimism Stats:
 export const opStats = writable<ChainStats>();
+
+// Advanced Chain Stats:
+export const ethAdvancedStats = writable<AdvancedChainStats>();
+export const polyAdvancedStats = writable<AdvancedChainStats>();
+export const avaxAdvancedStats = writable<AdvancedChainStats>();
+export const opAdvancedStats = writable<AdvancedChainStats>();
 
 /* ========================================================================================================================================================================= */
 
-// Ethereum Data:
+// Chain Data:
 export const ethData = writable<ChainData>(JSON.parse(JSON.stringify(defaultChainData)));
-
-// Polygon Data:
 export const polyData = writable<ChainData>(JSON.parse(JSON.stringify(defaultChainData)));
-
-// Avalanche Data:
 export const avaxData = writable<ChainData>(JSON.parse(JSON.stringify(defaultChainData)));
-
-// Optimism Data:
 export const opData = writable<ChainData>(JSON.parse(JSON.stringify(defaultChainData)));
 
 /* ========================================================================================================================================================================= */
 
-// Start Timestamp:
-export const startTimestamp = writable<number>(0);
-
-// End Timestamp:
+// Timestamps:
+export const startTimestamp = writable<number>(1_634_256_000);
 export const endTimestamp = writable<number>(9_999_999_999);
 
 /* ========================================================================================================================================================================= */
 
 // Selected Chains:
-const storedSelectedChains: SelectedChains = browser ? JSON.parse(localStorage.getItem('selectedChains') ?? JSON.stringify(defaultSelectedChains)) : defaultSelectedChains;
-export const selectedChains = writable<SelectedChains>(storedSelectedChains);
-selectedChains.subscribe((value) => {
-  if(browser) { localStorage.setItem('selectedChains', JSON.stringify(value)); };
-});
+export const selectedChains = writable<SelectedChains>(defaultSelectedChains);
 
 /* ========================================================================================================================================================================= */
 
@@ -105,8 +93,4 @@ export const loading = writable<Loading>(defaultLoadingStatus);
 /* ========================================================================================================================================================================= */
 
 // Advanced Mode:
-const storedAdvancedMode: boolean = browser ? JSON.parse(localStorage.getItem('advancedMode') ?? 'false') : false;
-export const advancedMode = writable<boolean>(storedAdvancedMode);
-advancedMode.subscribe((value) => {
-  if(browser) { localStorage.setItem('advancedMode', JSON.stringify(value)); };
-});
+export const advancedMode = writable<boolean>(false);

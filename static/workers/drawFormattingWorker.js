@@ -46,4 +46,7 @@ onmessage = function (event) {
         draws.op.data.push({ draw: draw, timestamp: timestamp, result: opResults });
     });
     postMessage(draws);
+    // Resetting Memory:
+    data = [];
+    draws = { eth: { data: [] }, poly: { data: [] }, avax: { data: [] }, op: { data: [] } };
 };

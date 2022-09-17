@@ -4,17 +4,24 @@ onmessage = (event) => {
 
   // Initializations:
   const chains: Chain[] = ['eth', 'poly', 'avax', 'op'];
-  const data: DepositHistoryEventData = event.data;
-  const allDeposits: DepositData[] = [];
+  let data: DepositHistoryEventData | undefined = event.data;
+  let allDeposits: DepositData[] = [];
 
   // Adding Deposits:
   chains.forEach(chain => {
-    if(data.selectedChains[chain]) {
+    if(data?.selectedChains[chain]) {
       data.deposits[chain].forEach(deposit => {
-        allDeposits.push({ ...deposit, chain });
+        if(data && deposit.timestamp && deposit.timestamp >= data.minTimestamp && deposit.timestamp <= data.maxTimestamp) {
+          allDeposits.push({ ...deposit, chain });
+        }
       });
     }
   });
 
   postMessage(allDeposits.sort((a, b) => (b.timestamp as number) - (a.timestamp as number)));
+
+  // Resetting Memory:
+  data = undefined;
+  allDeposits = [];
+
 }

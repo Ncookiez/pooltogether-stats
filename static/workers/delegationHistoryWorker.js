@@ -18,11 +18,16 @@ onmessage = function (event) {
     var allDelegations = [];
     // Adding Delegations:
     chains.forEach(function (chain) {
-        if (data.selectedChains[chain]) {
+        if (data === null || data === void 0 ? void 0 : data.selectedChains[chain]) {
             data.delegations[chain].forEach(function (delegation) {
-                allDelegations.push(__assign(__assign({}, delegation), { chain: chain }));
+                if (data && delegation.timestamp && delegation.timestamp >= data.minTimestamp && delegation.timestamp <= data.maxTimestamp) {
+                    allDelegations.push(__assign(__assign({}, delegation), { chain: chain }));
+                }
             });
         }
     });
     postMessage(allDelegations.sort(function (a, b) { return b.timestamp - a.timestamp; }));
+    // Resetting Memory:
+    data = undefined;
+    allDelegations = [];
 };

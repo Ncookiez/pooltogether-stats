@@ -2,31 +2,34 @@
 
 	// Imports:
 	import { onMount } from 'svelte';
-	import { ethStats, ethData, polyStats, polyData, avaxStats, avaxData, opStats, opData, selectedChains, loading, advancedMode } from '$lib/stores';
+	import { ethStats, ethAdvancedStats, ethData, polyStats, polyAdvancedStats, polyData, avaxStats, avaxAdvancedStats, avaxData, opStats, opAdvancedStats, opData, selectedChains, loading, advancedMode, startTimestamp, endTimestamp } from '$lib/stores';
 	import * as api from '$lib/data';
 	import Navbar from '$lib/Navbar.svelte';
 	import Footer from '$lib/Footer.svelte';
 	import '../app.css';
 
 	// Type Imports:
-	import type { Chain, ChainData, ChainLoading } from '$lib/types';
+	import type { Chain, ChainData } from '$lib/types';
 
 	// Initializations:
 	const chains: Chain[] = ['eth', 'poly', 'avax', 'op'];
-	const advancedDataLoadingTypes: (keyof ChainLoading['advanced'])[] = ['deposits', 'withdrawals', 'claims', 'delegationsCreated', 'delegationsFunded', 'delegationsUpdated', 'delegationsWithdrawn', 'yield', 'supply', 'balances'];
-	const advancedStatsWorkerPath: string = '/workers/statsWorker.js';
+	const maxChainLoadingProgress: number = 11;
+	const requireDrawsForAdvancedStats: boolean = false;
+	const advancedStatsWorkerPath: string = '/workers/advancedStatsWorker.js';
 	const advancedStatsWorkerTimeout: number = 120000;
 	let basicStatsErrored: boolean = false;
 	let mainContent: HTMLElement;
 	let mainContentScrollY: number = 0;
-	let loadingAdvancedData: boolean = false;
+	let loadedAdvancedData: boolean = false;
+	let cacheAdvancedMinTimestamp: number | undefined;
+	let cacheAdvancedMaxTimestamp: number | undefined;
 
 	// Reactive Loading Checks:
 	$: basicStatsLoaded = chains.every(chain => !$selectedChains[chain] || $loading[chain].basic.stats === 'done');
 
 	// Reactive Advanced Mode Functions:
 	$: $advancedMode, loadAdvancedData();
-	$: $ethData, $polyData, $avaxData, $opData, calculateAdvancedStats();
+	$: $ethData, $polyData, $avaxData, $opData, $startTimestamp, $endTimestamp, calculateAdvancedStats();
 
 	// Function to load draws:
 	const loadDraws = async () => {
@@ -94,8 +97,8 @@
 
 	// Function to load advanced data:
 	const loadAdvancedData = async () => {
-		if($advancedMode && !loadingAdvancedData) {
-			loadingAdvancedData = true;
+		if($advancedMode && !loadedAdvancedData) {
+			loadedAdvancedData = true;
 			let promises = chains.map(chain => (async () => {
 
 				// Fetching Deposits:
@@ -104,6 +107,7 @@
 					const deposits = await api.fetchDeposits(chain);
 					assignData(chain, 'deposits', deposits);
 					$loading[chain].advanced.deposits = 'done';
+					$loading[chain].advanced.progress++;
 				} catch(err) {
 					console.error(err);
 					$loading[chain].advanced.deposits = 'failed';
@@ -115,6 +119,7 @@
 					const withdrawals = await api.fetchWithdrawals(chain);
 					assignData(chain, 'withdrawals', withdrawals);
 					$loading[chain].advanced.withdrawals = 'done';
+					$loading[chain].advanced.progress++;
 				} catch(err) {
 					console.error(err);
 					$loading[chain].advanced.withdrawals = 'failed';
@@ -126,6 +131,7 @@
 					const claims = await api.fetchClaims(chain);
 					assignData(chain, 'claims', claims);
 					$loading[chain].advanced.claims = 'done';
+					$loading[chain].advanced.progress++;
 				} catch(err) {
 					console.error(err);
 					$loading[chain].advanced.claims = 'failed';
@@ -137,6 +143,7 @@
 					const delegationsCreated = await api.fetchDelegationsCreated(chain);
 					assignData(chain, 'delegationsCreated', delegationsCreated);
 					$loading[chain].advanced.delegationsCreated = 'done';
+					$loading[chain].advanced.progress++;
 				} catch(err) {
 					console.error(err);
 					$loading[chain].advanced.delegationsCreated = 'failed';
@@ -148,6 +155,7 @@
 					const delegationsFunded = await api.fetchDelegationsFunded(chain);
 					assignData(chain, 'delegationsFunded', delegationsFunded);
 					$loading[chain].advanced.delegationsFunded = 'done';
+					$loading[chain].advanced.progress++;
 				} catch(err) {
 					console.error(err);
 					$loading[chain].advanced.delegationsFunded = 'failed';
@@ -159,6 +167,7 @@
 					const delegationsUpdated = await api.fetchDelegationsUpdated(chain);
 					assignData(chain, 'delegationsUpdated', delegationsUpdated);
 					$loading[chain].advanced.delegationsUpdated = 'done';
+					$loading[chain].advanced.progress++;
 				} catch(err) {
 					console.error(err);
 					$loading[chain].advanced.delegationsUpdated = 'failed';
@@ -170,6 +179,7 @@
 					const delegationsWithdrawn = await api.fetchDelegationsWithdrawn(chain);
 					assignData(chain, 'delegationsWithdrawn', delegationsWithdrawn);
 					$loading[chain].advanced.delegationsWithdrawn = 'done';
+					$loading[chain].advanced.progress++;
 				} catch(err) {
 					console.error(err);
 					$loading[chain].advanced.delegationsWithdrawn = 'failed';
@@ -181,6 +191,7 @@
 					const yields = await api.fetchYield(chain);
 					assignData(chain, 'yields', yields);
 					$loading[chain].advanced.yield = 'done';
+					$loading[chain].advanced.progress++;
 				} catch(err) {
 					console.error(err);
 					$loading[chain].advanced.yield = 'failed';
@@ -192,6 +203,7 @@
 					const supply = await api.fetchSupply(chain);
 					assignData(chain, 'supply', supply);
 					$loading[chain].advanced.supply = 'done';
+					$loading[chain].advanced.progress++;
 				} catch(err) {
 					console.error(err);
 					$loading[chain].advanced.supply = 'failed';
@@ -203,6 +215,7 @@
 					const balances = await api.fetchBalances(chain);
 					assignData(chain, 'balances', balances);
 					$loading[chain].advanced.balances = 'done';
+					$loading[chain].advanced.progress++;
 				} catch(err) {
 					console.error(err);
 					$loading[chain].advanced.balances = 'failed';
@@ -215,66 +228,85 @@
 
 	// Function to calculate advanced stats:
 	const calculateAdvancedStats = async () => {
-		if($advancedMode && $loading.draws === 'done') {
+		if($advancedMode && $startTimestamp !== undefined && $endTimestamp !== undefined && (requireDrawsForAdvancedStats ? $loading.draws === 'done' : true) && chains.every(chain => $loading[chain].advanced.stats !== 'loading' && $loading[chain].advanced.progress >= (maxChainLoadingProgress - 1))) {
+			if(cacheAdvancedMinTimestamp !== $startTimestamp || cacheAdvancedMaxTimestamp !== $endTimestamp) {
 
-			// Ethereum Stats:
-			if($loading.eth.advanced.stats !== 'done' && $loading.eth.advanced.stats !== 'loading' && advancedDataLoadingTypes.every(type => $loading.eth.advanced[type] === 'done')) {
+				// Setting Cache:
+				cacheAdvancedMinTimestamp = $startTimestamp;
+				cacheAdvancedMaxTimestamp = $endTimestamp;
+
+				// Setting Loading Status:
+				chains.forEach(chain => {
+					$loading[chain].advanced.stats = 'loading';
+					$loading[chain].advanced.progress = maxChainLoadingProgress - 1;
+				});
+
+				// Setting Timestamps:
+				const defaultMinTimestamp = $ethData.deposits.data[$ethData.deposits.data.length - 1].timestamp as number;
+				const defaultMaxTimestamp = $ethData.balances.timestamp as number;
+				const minTimestamp = $startTimestamp > defaultMinTimestamp ? $startTimestamp : defaultMinTimestamp;
+				const maxTimestamp = $endTimestamp < defaultMaxTimestamp ? $endTimestamp : defaultMaxTimestamp;
+
+				// Ethereum Stats:
 				await new Promise<void>((resolve, reject) => {
 					const timeout = setTimeout(() => { $loading.eth.advanced.stats = 'failed'; reject(`ETH: Timed out while calculating advanced stats.`); }, advancedStatsWorkerTimeout);
 					const dataWorker = new Worker(advancedStatsWorkerPath);
-					dataWorker.postMessage($ethData);
+					dataWorker.postMessage([$ethData, $ethAdvancedStats, minTimestamp, maxTimestamp]);
 					dataWorker.onmessage = (event) => {
 						clearTimeout(timeout);
-						ethData.set(event.data);
+						ethAdvancedStats.set(event.data);
 						$loading.eth.advanced.stats = 'done';
+						$loading.eth.advanced.progress++;
+						dataWorker.terminate();
 						resolve();
 					}
 				});
-			}
 
-			// Polygon Stats:
-			if($loading.poly.advanced.stats !== 'done' && $loading.poly.advanced.stats !== 'loading' && advancedDataLoadingTypes.every(type => $loading.poly.advanced[type] === 'done')) {
+				// Polygon Stats:
 				await new Promise<void>((resolve, reject) => {
 					const timeout = setTimeout(() => { $loading.poly.advanced.stats = 'failed'; reject(`POLY: Timed out while calculating advanced stats.`); }, advancedStatsWorkerTimeout);
 					const dataWorker = new Worker(advancedStatsWorkerPath);
-					dataWorker.postMessage($polyData);
+					dataWorker.postMessage([$polyData, $polyAdvancedStats, minTimestamp, maxTimestamp]);
 					dataWorker.onmessage = (event) => {
 						clearTimeout(timeout);
-						polyData.set(event.data);
+						polyAdvancedStats.set(event.data);
 						$loading.poly.advanced.stats = 'done';
+						$loading.poly.advanced.progress++;
+						dataWorker.terminate();
 						resolve();
 					}
 				});
-			}
 
-			// Avalanche Stats:
-			if($loading.avax.advanced.stats !== 'done' && $loading.avax.advanced.stats !== 'loading' && advancedDataLoadingTypes.every(type => $loading.avax.advanced[type] === 'done')) {
+				// Avalanche Stats:
 				await new Promise<void>((resolve, reject) => {
 					const timeout = setTimeout(() => { $loading.avax.advanced.stats = 'failed'; reject(`AVAX: Timed out while calculating advanced stats.`); }, advancedStatsWorkerTimeout);
 					const dataWorker = new Worker(advancedStatsWorkerPath);
-					dataWorker.postMessage($avaxData);
+					dataWorker.postMessage([$avaxData, $avaxAdvancedStats, minTimestamp, maxTimestamp]);
 					dataWorker.onmessage = (event) => {
 						clearTimeout(timeout);
-						avaxData.set(event.data);
+						avaxAdvancedStats.set(event.data);
 						$loading.avax.advanced.stats = 'done';
+						$loading.avax.advanced.progress++;
+						dataWorker.terminate();
 						resolve();
 					}
 				});
-			}
 
-			// Optimism Stats:
-			if($loading.op.advanced.stats !== 'done' && $loading.op.advanced.stats !== 'loading' && advancedDataLoadingTypes.every(type => $loading.op.advanced[type] === 'done')) {
+				// Optimism Stats:
 				await new Promise<void>((resolve, reject) => {
 					const timeout = setTimeout(() => { $loading.op.advanced.stats = 'failed'; reject(`OP: Timed out while calculating advanced stats.`); }, advancedStatsWorkerTimeout);
 					const dataWorker = new Worker(advancedStatsWorkerPath);
-					dataWorker.postMessage($opData);
+					dataWorker.postMessage([$opData, $opAdvancedStats, minTimestamp, maxTimestamp]);
 					dataWorker.onmessage = (event) => {
 						clearTimeout(timeout);
-						opData.set(event.data);
+						opAdvancedStats.set(event.data);
 						$loading.op.advanced.stats = 'done';
+						$loading.op.advanced.progress++;
+						dataWorker.terminate();
 						resolve();
 					}
 				});
+
 			}
 		}
 	}

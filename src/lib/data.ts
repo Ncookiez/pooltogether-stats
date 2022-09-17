@@ -448,6 +448,7 @@ export const fetchDraws = async () => {
             });
           });
         });
+        dataWorker.terminate();
         resolve();
       }
     });

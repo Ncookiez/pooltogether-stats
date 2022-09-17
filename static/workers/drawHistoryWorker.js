@@ -17,12 +17,14 @@ onmessage = function (event) {
     var data = event.data;
     var allDraws = [];
     // Setting Up Draw IDs:
-    data.draws.eth.forEach(function (entry) {
-        allDraws.push({ draw: entry.draw, timestamp: entry.timestamp, result: [] });
-    });
+    if (data) {
+        data.draws.eth.forEach(function (entry) {
+            allDraws.push({ draw: entry.draw, timestamp: entry.timestamp, result: [] });
+        });
+    }
     // Adding Draws:
     chains.forEach(function (chain) {
-        if (data.selectedChains[chain]) {
+        if (data === null || data === void 0 ? void 0 : data.selectedChains[chain]) {
             data.draws[chain].forEach(function (entry, i) {
                 var _a;
                 (_a = allDraws[i].result).push.apply(_a, entry.result.map(function (result) { return (__assign(__assign({}, result), { chain: chain })); }));
@@ -30,4 +32,7 @@ onmessage = function (event) {
         }
     });
     postMessage(allDraws.reverse());
+    // Resetting Memory:
+    data = undefined;
+    allDraws = [];
 };

@@ -3,8 +3,8 @@
 onmessage = (event) => {
 
   // Initializations:
-  const data: ExplorerAPIDrawResponse[] = event.data;
-  const draws: Record<Chain, { data: DrawData[] }> = {
+  let data: ExplorerAPIDrawResponse[] = event.data;
+  let draws: Record<Chain, { data: DrawData[] }> = {
     eth: { data: [] },
     poly: { data: [] },
     avax: { data: [] },
@@ -46,4 +46,9 @@ onmessage = (event) => {
   });
 
   postMessage(draws);
+
+  // Resetting Memory:
+  data = [];
+  draws = { eth: { data: [] }, poly: { data: [] }, avax: { data: [] }, op: { data: [] } };
+
 }

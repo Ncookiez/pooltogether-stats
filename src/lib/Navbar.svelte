@@ -4,14 +4,16 @@
 	import { goto } from '$app/navigation';
 	import { slide } from 'svelte/transition';
 	import { getChainName, timestampToISO } from "$lib/functions";
-	import { ethData, startTimestamp, endTimestamp, selectedChains, loading, advancedMode } from '$lib/stores';
+	import { ethData, polyData, avaxData, opData, startTimestamp, endTimestamp, selectedChains, loading, advancedMode } from '$lib/stores';
 
 	// Type Imports:
-	import type { Chain } from '$lib/types';
+	import type { Chain, ChainData } from '$lib/types';
 
 	// Initializations:
 	const chains: Chain[] = ['eth', 'poly', 'avax', 'op'];
 	const maxChainLoadingProgress = 11;
+	const requireDrawsForAdvancedStats: boolean = false;
+	const defaultMinTimestamp = 1_634_256_000;
 	const defaultMaxTimestamp = 9_999_999_999;
 	const dayInSeconds = 86400;
 	let searchModalOpen = false;
@@ -20,15 +22,31 @@
 	let minDateValue: string | undefined;
 	let maxDateValue: string | undefined;
 	let chainDownload: Chain = 'eth';
-	let typeDownload: string = 'deposits';
+	let typeDownload: keyof ChainData = 'deposits';
+
+	// Downloads Available:
+	const downloadsAvailable: { file: keyof ChainData, name: string }[] = [
+		{ file: 'deposits', name: 'Deposits' },
+		{ file: 'withdrawals', name: 'Withdrawals' },
+		{ file: 'claims', name: 'Claims' },
+		{ file: 'delegationsCreated', name: 'Delegations Created' },
+		{ file: 'delegationsFunded', name: 'Delegations Funded' },
+		{ file: 'delegationsUpdated', name: 'Delegations Updated' },
+		{ file: 'delegationsWithdrawn', name: 'Delegations Withdrawn' },
+		{ file: 'yields', name: 'Yield Collected' },
+		{ file: 'supply', name: 'Token Supplies' },
+		{ file: 'balances', name: 'Player Balances' },
+		{ file: 'draws', name: 'Draws' }
+	];
 
 	// Reactive Loading Checks:
+	$: advancedDataLoaded = $advancedMode && chains.every(chain => $loading[chain].advanced.progress >= (maxChainLoadingProgress - 1));
 	$: advancedStatsLoaded = $advancedMode && chains.every(chain => $loading[chain].advanced.stats === 'done');
 	$: advancedStatsErrored = $advancedMode && !chains.every(chain => Object.values($loading[chain].advanced).every(value => value !== 'failed'));
 
 	// Reactive Min/Max Timestamps:
-	$: minDate = advancedStatsLoaded ? timestampToISO($ethData.minTimestamp as number) : timestampToISO(0);
-	$: maxDate = advancedStatsLoaded ? timestampToISO($ethData.maxTimestamp as number) : timestampToISO(defaultMaxTimestamp);
+	$: minDate = timestampToISO(defaultMinTimestamp);
+	$: maxDate = timestampToISO((Date.now() / 1000) + dayInSeconds);
 
 	// Function to search for given wallet:
 	const search = () => {
@@ -43,7 +61,7 @@
 	const updateTimestampStores = () => {
 		const minTimeValue = minDateValue ? Date.parse(minDateValue) / 1000 : undefined;
 		const maxTimeValue = maxDateValue ? (Date.parse(maxDateValue) / 1000) + (dayInSeconds - 1) : undefined;
-		minTimeValue ? startTimestamp.set(minTimeValue) : startTimestamp.set(0);
+		minTimeValue ? startTimestamp.set(minTimeValue) : startTimestamp.set(defaultMinTimestamp);
 		if(maxTimeValue) {
 			if(minTimeValue) {
 				if(maxTimeValue > minTimeValue) {
@@ -61,7 +79,24 @@
 
 	// Function to download data:
 	const downloadData = () => {
-		// TODO>
+		let chainData: ChainData | undefined;
+		if(chainDownload === 'eth') {
+			chainData = $ethData;
+		} else if(chainDownload === 'poly') {
+			chainData = $polyData;
+		} else if(chainDownload === 'avax') {
+			chainData = $avaxData;
+		} else if(chainDownload === 'op') {
+			chainData = $opData;
+		}
+		if(chainData) {
+			let jsonContent = 'data:text/json;charset=utf-8,' + encodeURI(JSON.stringify(chainData[typeDownload], null, ' '));
+			let fileName = `${chainDownload}${typeDownload.charAt(0).toUpperCase() + typeDownload.slice(1)}.json`;
+			let link = document.createElement('a');
+			link.setAttribute('href', jsonContent);
+			link.setAttribute('download', fileName);
+			link.click();
+		}
 	}
 	
 </script>
@@ -95,7 +130,7 @@
 
 	<!-- Advanced Mode -->
 	<div class="advancedMode" on:click={() => { searchModalOpen = false; advancedModeModalOpen = !advancedModeModalOpen; }}>
-		<!-- <i class="icofont-instrument" /> -->
+		<i class="icofont-instrument" />
 	</div>
 
 	<!-- Player Search Modal -->
@@ -121,9 +156,9 @@
 					<!-- Time Controls -->
 					<div class="timeControls">
 						<span>Timespan:</span>
-						<input type="date" min="{minDate}" max="{maxDate}" bind:value={minDateValue}>
+						<input type="date" min="{minDate}" max="{maxDateValue ?? maxDate}" bind:value={minDateValue}>
 						<i class="icofont-arrow-right" />
-						<input type="date" min="{minDate}" max="{maxDate}" bind:value={maxDateValue}>
+						<input type="date" min="{minDateValue ?? minDate}" max="{maxDate}" bind:value={maxDateValue}>
 						<span on:click={() => updateTimestampStores()}><i class="icofont-clock-time" /></span>
 					</div>
 
@@ -136,17 +171,9 @@
 							{/each}
 						</select>
 						<select class="typeDownload" bind:value={typeDownload}>
-							<option value="deposits">Deposits</option>
-							<option value="withdrawals">Withdrawals</option>
-							<option value="claims">Claims</option>
-							<option value="delegationsCreated">Delegations Created</option>
-							<option value="delegationsFunded">Delegations Funded</option>
-							<option value="delegationsUpdated">Delegations Updated</option>
-							<option value="delegationsWithdrawn">Delegations Withdrawn</option>
-							<option value="yields">Yield Collected</option>
-							<option value="supply">Token Supplies</option>
-							<option value="balances">Player Balances</option>
-							<option value="draws">Draws</option>
+							{#each downloadsAvailable as download}
+								<option value="{download.file}">{download.name}</option>
+							{/each}
 						</select>
 						<span on:click={() => downloadData()}><i class="icofont-download" /></span>
 					</div>
@@ -154,27 +181,35 @@
 					<!-- Disable Advanced Mode Button -->
 					<span class="disableAdvanced button" on:click={() => $advancedMode = false}>Disable Advanced Mode</span>
 
-				{:else if advancedStatsErrored}
-					<!-- TODO - check if this is displaying correctly -->
+				{:else if advancedStatsErrored || (requireDrawsForAdvancedStats && $loading.draws === 'failed')}
 					<img src="/images/ngmi.webp" alt="Whoops">
 					<span>Something went wrong 0.o</span>
 				{:else}
 
 					<!-- Loading Display -->
-					{#each chains as chain}
-						{#if $loading[chain].advanced.progress < maxChainLoadingProgress}
-							<span class="loadingProgress" transition:slide|local>
-								{#if $loading[chain].advanced.progress !== (maxChainLoadingProgress - 1)}
-									<span class="chainLoading">Loading {getChainName(chain)} Data...</span>
-									<img src="/images/excitedPooly.gif" alt="Pooly">
-									<span class="chainLoadingPercentage">{(($loading[chain].advanced.progress / (maxChainLoadingProgress - 1)) * 100).toFixed(0)}%</span>
-								{:else}
-									<span class="chainLoading">Calculating {getChainName(chain)} Stats...</span>
-									<img src="/images/excitedPooly.gif" alt="Pooly">
-								{/if}
-							</span>
-						{/if}
-					{/each}
+					{#if !advancedDataLoaded}
+						{#each chains as chain}
+							{#if $loading[chain].advanced.progress < (maxChainLoadingProgress - 1)}
+								<span class="loadingProgress" transition:slide|local>
+									{#if $loading[chain].advanced.progress !== (maxChainLoadingProgress - 1)}
+										<span class="chainLoading">Loading {getChainName(chain)} Data...</span>
+										<img src="/images/excitedPooly.gif" alt="Pooly">
+										<span class="chainLoadingPercentage">{(($loading[chain].advanced.progress / (maxChainLoadingProgress - 1)) * 100).toFixed(0)}%</span>
+									{/if}
+								</span>
+							{/if}
+						{/each}
+					{:else if requireDrawsForAdvancedStats && $loading.draws !== 'done'}
+						<span class="loadingProgress">
+							<span class="chainLoading">Waiting For Draw Data...</span>
+							<img src="/images/excitedPooly.gif" alt="Pooly">
+						</span>
+					{:else}
+						<span class="loadingProgress">
+							<span class="chainLoading">Calculating Stats...</span>
+							<img src="/images/excitedPooly.gif" alt="Pooly">
+						</span>
+					{/if}
 
 				{/if}
 			{:else}
@@ -422,15 +457,6 @@
 		}
 		#altLogo {
 			display: block;
-		}
-		div.chains {
-			margin: 0 2em;
-		}
-	}
-
-	@media screen and (max-width: 850px) {
-		div.playerSearch {
-			margin-left: auto;
 		}
 	}
 

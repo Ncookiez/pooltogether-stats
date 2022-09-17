@@ -58,9 +58,7 @@
 
 <!-- Charts & Highlights -->
 <LineChart {...balanceChart} />
-{#if playerData.balances.eth > 0 || playerData.balances.poly > 0 || playerData.balances.avax > 0 || playerData.balances.op > 0}
-	<PieChart {...chainAllocationsChart} />
-{/if}
+<PieChart {...chainAllocationsChart} hide={!(playerData.balances.eth > 0 || playerData.balances.poly > 0 || playerData.balances.avax > 0 || playerData.balances.op > 0)} />
 <LineChart {...depositsChart} />
 <LineChart {...claimsChart} />
 <LineChart {...withdrawalsChart} />
