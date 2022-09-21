@@ -1,6 +1,6 @@
 {
 	"name": "pooltogether-stats",
-	"version": "2.16.5",
+	"version": "2.16.6",
 	"type": "module",
 	"private": true,
 	"scripts": {
