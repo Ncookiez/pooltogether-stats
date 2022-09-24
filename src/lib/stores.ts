@@ -1,6 +1,5 @@
 
 // Imports:
-import { browser } from '$app/env';
 import { writable } from 'svelte/store';
 
 // Type Imports:

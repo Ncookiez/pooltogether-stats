@@ -213,7 +213,7 @@
 
 				{/if}
 			{:else}
-				<span>Want time controls and raw data downloads?</span>
+				<span class="prompt">Want time controls and raw data downloads?</span>
 				<span class="enableAdvanced button" on:click={() => $advancedMode = true}>Enable Advanced Mode</span>
 				<span class="small">It might take a little bit to load though :)</span>
 			{/if}
@@ -319,6 +319,7 @@
 		inset: calc(var(--navbar-height) + 2em) 2em auto auto;
 		flex-direction: column;
 		gap: .7em;
+		max-width: 85vw;
 		padding: 1em;
 		background: var(--dark-purple);
 		border: 2px solid var(--light-purple);
@@ -347,6 +348,10 @@
 		border: none;
 		border-radius: 0 .5em .5em 0;
 		cursor: pointer;
+	}
+
+	div.advancedModeModal > span.prompt {
+		text-align: center;
 	}
 
 	span.button {
