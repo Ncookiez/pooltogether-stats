@@ -452,7 +452,8 @@ export const fetchDraws = async () => {
         resolve();
       }
     });
-  } catch {
+  } catch(err) {
+    console.error(err);
     throw new Error(`Error querying draw data.`);
   }
 
