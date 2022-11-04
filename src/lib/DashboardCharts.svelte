@@ -3,7 +3,7 @@
 	// Imports:
 	import { onMount } from 'svelte';
 	import { getChainName, timestampsToDates, getShortWallet } from '$lib/functions';
-	import { ethStats, ethAdvancedStats, polyStats, polyAdvancedStats, avaxStats, avaxAdvancedStats, opStats, opAdvancedStats, selectedChains, endTimestamp, loading, advancedMode } from '$lib/stores';
+	import { ethStats, polyStats, avaxStats, opStats, selectedChains } from '$lib/stores';
 	import PieChart from '$lib/PieChart.svelte';
 	import LineChart from '$lib/LineChart.svelte';
 	import Highlight from '$lib/Highlight.svelte';
@@ -12,7 +12,6 @@
 	import type { Chain, Hash, LineChartInfo, PieChartInfo, Line, BalanceData, MultichainDistribution } from '$lib/types';
 
 	// Initializations:
-	const chains: Chain[] = ['eth', 'poly', 'avax', 'op'];
 	const ticks: number = 50;
 	let mounted: boolean = false;
 	let numDepositors: number = 0;
@@ -46,19 +45,13 @@
 	const cumulativeDelegationCountsChart: LineChartInfo = { name: `cumulativeDelegationCountsChart`, title: 'Cumulative Delegations Over Time', xAxisValues: [], data: [{ label: 'Delegations', data: [] }] };
 	const yieldChart: LineChartInfo = { name: `yieldChart`, title: 'Yield vs Prizes', xAxisValues: [], data: [{ label: 'Yield', data: [] }, { label: 'Prizes', data: [], lineColor: '#FFB63680', backgroundColor: '#FFB636' }], dollarValues: true };
 
-	// Reactive Timestamp Selections:
-	$: customEndTimestampSelected = $advancedMode && $endTimestamp < (Date.now() / 1000);
-
 	// Reactive Chain Selections:
 	$: numChainsSelected = Object.values($selectedChains).reduce((a: number, b: boolean) => a + (b ? 1 : 0), 0) as number;
-
-	// Reactive Loading Checks:
-	$: advancedStatsLoaded = $advancedMode && chains.every(chain => $loading[chain].advanced.stats === 'done');
 
 	// Reactive Data:
 	$: $selectedChains, getNumDepositors();
 	$: $selectedChains, getTopWhales();
-	$: $selectedChains, advancedStatsLoaded, setChartData();
+	$: $selectedChains, setChartData();
 
 	// Function to get number of depositors:
 	const getNumDepositors = () => {
@@ -140,8 +133,7 @@
 		if(mounted && $ethStats && $polyStats && $avaxStats && $opStats) {
 
 			// Initializations:
-			const usingAdvancedStats = $advancedMode && advancedStatsLoaded;
-			const dateTimestamps = usingAdvancedStats ? timestampsToDates($ethAdvancedStats.depositsOverTime.timestamps) : timestampsToDates($ethStats.depositsOverTime.timestamps);
+			const dateTimestamps = timestampsToDates($ethStats.depositsOverTime.timestamps);
 
 			// Initializing Chart Section Labels:
 			const tvlDistributionChartLabels: string[] = ['<$10', '$10-$100', '$100-$1k', '$1k-$10k', '$10k-$100k', '$100k-$1M', '>$1M'];
@@ -185,12 +177,12 @@
 			yieldChart.xAxisValues = dateTimestamps;
 
 			// Setting Stats:
-			const [ethTVLs, polyTVLs, avaxTVLs, opTVLs] = usingAdvancedStats ? [$ethAdvancedStats.tvlOverTime.tvls, $polyAdvancedStats.tvlOverTime.tvls, $avaxAdvancedStats.tvlOverTime.tvls, $opAdvancedStats.tvlOverTime.tvls] : [$ethStats.tvlOverTime.tvls, $polyStats.tvlOverTime.tvls, $avaxStats.tvlOverTime.tvls, $opStats.tvlOverTime.tvls];
-			const [ethDepositsOverTime, polyDepositsOverTime, avaxDepositsOverTime, opDepositsOverTime] = usingAdvancedStats ? [$ethAdvancedStats.depositsOverTime, $polyAdvancedStats.depositsOverTime, $avaxAdvancedStats.depositsOverTime, $opAdvancedStats.depositsOverTime] : [$ethStats.depositsOverTime, $polyStats.depositsOverTime, $avaxStats.depositsOverTime, $opStats.depositsOverTime];
-			const [ethWithdrawalsOverTime, polyWithdrawalsOverTime, avaxWithdrawalsOverTime, opWithdrawalsOverTime] = usingAdvancedStats ? [$ethAdvancedStats.withdrawalsOverTime, $polyAdvancedStats.withdrawalsOverTime, $avaxAdvancedStats.withdrawalsOverTime, $opAdvancedStats.withdrawalsOverTime] : [$ethStats.withdrawalsOverTime, $polyStats.withdrawalsOverTime, $avaxStats.withdrawalsOverTime, $opStats.withdrawalsOverTime];
-			const [ethClaimsOverTime, polyClaimsOverTime, avaxClaimsOverTime, opClaimsOverTime] = usingAdvancedStats ? [$ethAdvancedStats.claimsOverTime, $polyAdvancedStats.claimsOverTime, $avaxAdvancedStats.claimsOverTime, $opAdvancedStats.claimsOverTime] : [$ethStats.claimsOverTime, $polyStats.claimsOverTime, $avaxStats.claimsOverTime, $opStats.claimsOverTime];
-			const [ethDelegationsOverTime, polyDelegationsOverTime, avaxDelegationsOverTime, opDelegationsOverTime] = usingAdvancedStats ? [$ethAdvancedStats.delegationsOverTime, $polyAdvancedStats.delegationsOverTime, $avaxAdvancedStats.delegationsOverTime, $opAdvancedStats.delegationsOverTime] : [$ethStats.delegationsOverTime, $polyStats.delegationsOverTime, $avaxStats.delegationsOverTime, $opStats.delegationsOverTime];
-			const [ethYieldOverTime, polyYieldOverTime, avaxYieldOverTime, opYieldOverTime] = usingAdvancedStats ? [$ethAdvancedStats.yieldOverTime, $polyAdvancedStats.yieldOverTime, $avaxAdvancedStats.yieldOverTime, $opAdvancedStats.yieldOverTime] : [$ethStats.yieldOverTime, $polyStats.yieldOverTime, $avaxStats.yieldOverTime, $opStats.yieldOverTime];
+			const [ethTVLs, polyTVLs, avaxTVLs, opTVLs] = [$ethStats.tvlOverTime.tvls, $polyStats.tvlOverTime.tvls, $avaxStats.tvlOverTime.tvls, $opStats.tvlOverTime.tvls];
+			const [ethDepositsOverTime, polyDepositsOverTime, avaxDepositsOverTime, opDepositsOverTime] = [$ethStats.depositsOverTime, $polyStats.depositsOverTime, $avaxStats.depositsOverTime, $opStats.depositsOverTime];
+			const [ethWithdrawalsOverTime, polyWithdrawalsOverTime, avaxWithdrawalsOverTime, opWithdrawalsOverTime] = [$ethStats.withdrawalsOverTime, $polyStats.withdrawalsOverTime, $avaxStats.withdrawalsOverTime, $opStats.withdrawalsOverTime];
+			const [ethClaimsOverTime, polyClaimsOverTime, avaxClaimsOverTime, opClaimsOverTime] = [$ethStats.claimsOverTime, $polyStats.claimsOverTime, $avaxStats.claimsOverTime, $opStats.claimsOverTime];
+			const [ethDelegationsOverTime, polyDelegationsOverTime, avaxDelegationsOverTime, opDelegationsOverTime] = [$ethStats.delegationsOverTime, $polyStats.delegationsOverTime, $avaxStats.delegationsOverTime, $opStats.delegationsOverTime];
+			const [ethYieldOverTime, polyYieldOverTime, avaxYieldOverTime, opYieldOverTime] = [$ethStats.yieldOverTime, $polyStats.yieldOverTime, $avaxStats.yieldOverTime, $opStats.yieldOverTime];
 	
 			// Setting Chart Data:
 			tvlChart.data[0].data = ethTVLs.map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? polyTVLs[i] : 0) + ($selectedChains.avax ? avaxTVLs[i] : 0) + ($selectedChains.op ? opTVLs[i] : 0));
@@ -235,27 +227,25 @@
 		const wallets: Record<Hash, number> = {};
 
 		// Sorting Wallets:
-		if(!customEndTimestampSelected) {
-			if($selectedChains.eth) {
-				$ethStats.currentUsers.forEach(wallet => {
-					wallets[wallet] ? wallets[wallet]++ : wallets[wallet] = 1;
-				});
-			}
-			if($selectedChains.poly) {
-				$polyStats.currentUsers.forEach(wallet => {
-					wallets[wallet] ? wallets[wallet]++ : wallets[wallet] = 1;
-				});
-			}
-			if($selectedChains.avax) {
-				$avaxStats.currentUsers.forEach(wallet => {
-					wallets[wallet] ? wallets[wallet]++ : wallets[wallet] = 1;
-				});
-			}
-			if($selectedChains.op) {
-				$opStats.currentUsers.forEach(wallet => {
-					wallets[wallet] ? wallets[wallet]++ : wallets[wallet] = 1;
-				});
-			}
+		if($selectedChains.eth) {
+			$ethStats.currentUsers.forEach(wallet => {
+				wallets[wallet] ? wallets[wallet]++ : wallets[wallet] = 1;
+			});
+		}
+		if($selectedChains.poly) {
+			$polyStats.currentUsers.forEach(wallet => {
+				wallets[wallet] ? wallets[wallet]++ : wallets[wallet] = 1;
+			});
+		}
+		if($selectedChains.avax) {
+			$avaxStats.currentUsers.forEach(wallet => {
+				wallets[wallet] ? wallets[wallet]++ : wallets[wallet] = 1;
+			});
+		}
+		if($selectedChains.op) {
+			$opStats.currentUsers.forEach(wallet => {
+				wallets[wallet] ? wallets[wallet]++ : wallets[wallet] = 1;
+			});
 		}
 
 		// Updating Data:
@@ -283,43 +273,41 @@
 		const tvlDistribution: number[] = [0, 0, 0, 0, 0, 0, 0];
 
 		// Adding TVL Distributions:
-		if(!customEndTimestampSelected) {
-			if($selectedChains.eth) {
-				tvlDistribution[0] += $ethStats.tvlDistribution[1].amount;
-				tvlDistribution[1] += $ethStats.tvlDistribution[10].amount;
-				tvlDistribution[2] += $ethStats.tvlDistribution[100].amount;
-				tvlDistribution[3] += $ethStats.tvlDistribution[1000].amount;
-				tvlDistribution[4] += $ethStats.tvlDistribution[10000].amount;
-				tvlDistribution[5] += $ethStats.tvlDistribution[100000].amount;
-				tvlDistribution[6] += $ethStats.tvlDistribution[1000000].amount;
-			}
-			if($selectedChains.poly) {
-				tvlDistribution[0] += $polyStats.tvlDistribution[1].amount;
-				tvlDistribution[1] += $polyStats.tvlDistribution[10].amount;
-				tvlDistribution[2] += $polyStats.tvlDistribution[100].amount;
-				tvlDistribution[3] += $polyStats.tvlDistribution[1000].amount;
-				tvlDistribution[4] += $polyStats.tvlDistribution[10000].amount;
-				tvlDistribution[5] += $polyStats.tvlDistribution[100000].amount;
-				tvlDistribution[6] += $polyStats.tvlDistribution[1000000].amount;
-			}
-			if($selectedChains.avax) {
-				tvlDistribution[0] += $avaxStats.tvlDistribution[1].amount;
-				tvlDistribution[1] += $avaxStats.tvlDistribution[10].amount;
-				tvlDistribution[2] += $avaxStats.tvlDistribution[100].amount;
-				tvlDistribution[3] += $avaxStats.tvlDistribution[1000].amount;
-				tvlDistribution[4] += $avaxStats.tvlDistribution[10000].amount;
-				tvlDistribution[5] += $avaxStats.tvlDistribution[100000].amount;
-				tvlDistribution[6] += $avaxStats.tvlDistribution[1000000].amount;
-			}
-			if($selectedChains.op) {
-				tvlDistribution[0] += $opStats.tvlDistribution[1].amount;
-				tvlDistribution[1] += $opStats.tvlDistribution[10].amount;
-				tvlDistribution[2] += $opStats.tvlDistribution[100].amount;
-				tvlDistribution[3] += $opStats.tvlDistribution[1000].amount;
-				tvlDistribution[4] += $opStats.tvlDistribution[10000].amount;
-				tvlDistribution[5] += $opStats.tvlDistribution[100000].amount;
-				tvlDistribution[6] += $opStats.tvlDistribution[1000000].amount;
-			}
+		if($selectedChains.eth) {
+			tvlDistribution[0] += $ethStats.tvlDistribution[1].amount;
+			tvlDistribution[1] += $ethStats.tvlDistribution[10].amount;
+			tvlDistribution[2] += $ethStats.tvlDistribution[100].amount;
+			tvlDistribution[3] += $ethStats.tvlDistribution[1000].amount;
+			tvlDistribution[4] += $ethStats.tvlDistribution[10000].amount;
+			tvlDistribution[5] += $ethStats.tvlDistribution[100000].amount;
+			tvlDistribution[6] += $ethStats.tvlDistribution[1000000].amount;
+		}
+		if($selectedChains.poly) {
+			tvlDistribution[0] += $polyStats.tvlDistribution[1].amount;
+			tvlDistribution[1] += $polyStats.tvlDistribution[10].amount;
+			tvlDistribution[2] += $polyStats.tvlDistribution[100].amount;
+			tvlDistribution[3] += $polyStats.tvlDistribution[1000].amount;
+			tvlDistribution[4] += $polyStats.tvlDistribution[10000].amount;
+			tvlDistribution[5] += $polyStats.tvlDistribution[100000].amount;
+			tvlDistribution[6] += $polyStats.tvlDistribution[1000000].amount;
+		}
+		if($selectedChains.avax) {
+			tvlDistribution[0] += $avaxStats.tvlDistribution[1].amount;
+			tvlDistribution[1] += $avaxStats.tvlDistribution[10].amount;
+			tvlDistribution[2] += $avaxStats.tvlDistribution[100].amount;
+			tvlDistribution[3] += $avaxStats.tvlDistribution[1000].amount;
+			tvlDistribution[4] += $avaxStats.tvlDistribution[10000].amount;
+			tvlDistribution[5] += $avaxStats.tvlDistribution[100000].amount;
+			tvlDistribution[6] += $avaxStats.tvlDistribution[1000000].amount;
+		}
+		if($selectedChains.op) {
+			tvlDistribution[0] += $opStats.tvlDistribution[1].amount;
+			tvlDistribution[1] += $opStats.tvlDistribution[10].amount;
+			tvlDistribution[2] += $opStats.tvlDistribution[100].amount;
+			tvlDistribution[3] += $opStats.tvlDistribution[1000].amount;
+			tvlDistribution[4] += $opStats.tvlDistribution[10000].amount;
+			tvlDistribution[5] += $opStats.tvlDistribution[100000].amount;
+			tvlDistribution[6] += $opStats.tvlDistribution[1000000].amount;
 		}
 
 		return tvlDistribution;
@@ -329,7 +317,6 @@
 	const calculateCumulativeDepositDistributions = () => {
 
 		// Initializations:
-		const usingAdvancedStats = $advancedMode && advancedStatsLoaded;
 		const cumulativeDepositDistributions: Line[] = [
 			{ label: '<$10', data: [], lineColor: '#ffb636' },
 			{ label: '$10-$100', data: [], lineColor: '#ff4336' },
@@ -340,10 +327,10 @@
 		];
 
 		// Setting Stats:
-		const ethDistributions = usingAdvancedStats ? $ethAdvancedStats.depositsOverTime.cumulativeDistributions : $ethStats.depositsOverTime.cumulativeDistributions;
-		const polyDistributions = usingAdvancedStats ? $polyAdvancedStats.depositsOverTime.cumulativeDistributions : $polyStats.depositsOverTime.cumulativeDistributions;
-		const avaxDistributions = usingAdvancedStats ? $avaxAdvancedStats.depositsOverTime.cumulativeDistributions : $avaxStats.depositsOverTime.cumulativeDistributions;
-		const opDistributions = usingAdvancedStats ? $opAdvancedStats.depositsOverTime.cumulativeDistributions : $opStats.depositsOverTime.cumulativeDistributions;
+		const ethDistributions = $ethStats.depositsOverTime.cumulativeDistributions;
+		const polyDistributions = $polyStats.depositsOverTime.cumulativeDistributions;
+		const avaxDistributions = $avaxStats.depositsOverTime.cumulativeDistributions;
+		const opDistributions = $opStats.depositsOverTime.cumulativeDistributions;
 
 		// Adding Cumulative Deposit Distributions:
 		cumulativeDepositDistributions[0].data = ethDistributions[1].map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? polyDistributions[1][i] : 0) + ($selectedChains.avax ? avaxDistributions[1][i] : 0) + ($selectedChains.op ? opDistributions[1][i] : 0));
@@ -360,7 +347,6 @@
 	const calculateDepositDistributions = () => {
 
 		// Initializations:
-		const usingAdvancedStats = $advancedMode && advancedStatsLoaded;
 		const depositDistributions: Line[] = [
 			{ label: '<$10', data: [], lineColor: '#ffb636' },
 			{ label: '$10-$100', data: [], lineColor: '#ff4336' },
@@ -371,10 +357,10 @@
 		];
 
 		// Setting Stats:
-		const ethDistributions = usingAdvancedStats ? $ethAdvancedStats.depositsOverTime.distributions : $ethStats.depositsOverTime.distributions;
-		const polyDistributions = usingAdvancedStats ? $polyAdvancedStats.depositsOverTime.distributions : $polyStats.depositsOverTime.distributions;
-		const avaxDistributions = usingAdvancedStats ? $avaxAdvancedStats.depositsOverTime.distributions : $avaxStats.depositsOverTime.distributions;
-		const opDistributions = usingAdvancedStats ? $opAdvancedStats.depositsOverTime.distributions : $opStats.depositsOverTime.distributions;
+		const ethDistributions = $ethStats.depositsOverTime.distributions;
+		const polyDistributions = $polyStats.depositsOverTime.distributions;
+		const avaxDistributions = $avaxStats.depositsOverTime.distributions;
+		const opDistributions = $opStats.depositsOverTime.distributions;
 
 		// Adding Deposit Distributions:
 		depositDistributions[0].data = ethDistributions[1].map((val, i) => ($selectedChains.eth ? val : 0) + ($selectedChains.poly ? polyDistributions[1][i] : 0) + ($selectedChains.avax ? avaxDistributions[1][i] : 0) + ($selectedChains.op ? opDistributions[1][i] : 0));
@@ -394,43 +380,41 @@
 		const claimDistribution: number[] = [0, 0, 0, 0, 0, 0, 0];
 
 		// Adding Claim Distributions:
-		if(!customEndTimestampSelected) {
-			if($selectedChains.eth) {
-				claimDistribution[0] += $ethStats.claimsOverTime.cumulativeDistributions[1][ticks - 1];
-				claimDistribution[1] += $ethStats.claimsOverTime.cumulativeDistributions[5][ticks - 1];
-				claimDistribution[2] += $ethStats.claimsOverTime.cumulativeDistributions[10][ticks - 1];
-				claimDistribution[3] += $ethStats.claimsOverTime.cumulativeDistributions[50][ticks - 1];
-				claimDistribution[4] += $ethStats.claimsOverTime.cumulativeDistributions[100][ticks - 1];
-				claimDistribution[5] += $ethStats.claimsOverTime.cumulativeDistributions[500][ticks - 1];
-				claimDistribution[6] += $ethStats.claimsOverTime.cumulativeDistributions[1000][ticks - 1];
-			}
-			if($selectedChains.poly) {
-				claimDistribution[0] += $polyStats.claimsOverTime.cumulativeDistributions[1][ticks - 1];
-				claimDistribution[1] += $polyStats.claimsOverTime.cumulativeDistributions[5][ticks - 1];
-				claimDistribution[2] += $polyStats.claimsOverTime.cumulativeDistributions[10][ticks - 1];
-				claimDistribution[3] += $polyStats.claimsOverTime.cumulativeDistributions[50][ticks - 1];
-				claimDistribution[4] += $polyStats.claimsOverTime.cumulativeDistributions[100][ticks - 1];
-				claimDistribution[5] += $polyStats.claimsOverTime.cumulativeDistributions[500][ticks - 1];
-				claimDistribution[6] += $polyStats.claimsOverTime.cumulativeDistributions[1000][ticks - 1];
-			}
-			if($selectedChains.avax) {
-				claimDistribution[0] += $avaxStats.claimsOverTime.cumulativeDistributions[1][ticks - 1];
-				claimDistribution[1] += $avaxStats.claimsOverTime.cumulativeDistributions[5][ticks - 1];
-				claimDistribution[2] += $avaxStats.claimsOverTime.cumulativeDistributions[10][ticks - 1];
-				claimDistribution[3] += $avaxStats.claimsOverTime.cumulativeDistributions[50][ticks - 1];
-				claimDistribution[4] += $avaxStats.claimsOverTime.cumulativeDistributions[100][ticks - 1];
-				claimDistribution[5] += $avaxStats.claimsOverTime.cumulativeDistributions[500][ticks - 1];
-				claimDistribution[6] += $avaxStats.claimsOverTime.cumulativeDistributions[1000][ticks - 1];
-			}
-			if($selectedChains.op) {
-				claimDistribution[0] += $opStats.claimsOverTime.cumulativeDistributions[1][ticks - 1];
-				claimDistribution[1] += $opStats.claimsOverTime.cumulativeDistributions[5][ticks - 1];
-				claimDistribution[2] += $opStats.claimsOverTime.cumulativeDistributions[10][ticks - 1];
-				claimDistribution[3] += $opStats.claimsOverTime.cumulativeDistributions[50][ticks - 1];
-				claimDistribution[4] += $opStats.claimsOverTime.cumulativeDistributions[100][ticks - 1];
-				claimDistribution[5] += $opStats.claimsOverTime.cumulativeDistributions[500][ticks - 1];
-				claimDistribution[6] += $opStats.claimsOverTime.cumulativeDistributions[1000][ticks - 1];
-			}
+		if($selectedChains.eth) {
+			claimDistribution[0] += $ethStats.claimsOverTime.cumulativeDistributions[1][ticks - 1];
+			claimDistribution[1] += $ethStats.claimsOverTime.cumulativeDistributions[5][ticks - 1];
+			claimDistribution[2] += $ethStats.claimsOverTime.cumulativeDistributions[10][ticks - 1];
+			claimDistribution[3] += $ethStats.claimsOverTime.cumulativeDistributions[50][ticks - 1];
+			claimDistribution[4] += $ethStats.claimsOverTime.cumulativeDistributions[100][ticks - 1];
+			claimDistribution[5] += $ethStats.claimsOverTime.cumulativeDistributions[500][ticks - 1];
+			claimDistribution[6] += $ethStats.claimsOverTime.cumulativeDistributions[1000][ticks - 1];
+		}
+		if($selectedChains.poly) {
+			claimDistribution[0] += $polyStats.claimsOverTime.cumulativeDistributions[1][ticks - 1];
+			claimDistribution[1] += $polyStats.claimsOverTime.cumulativeDistributions[5][ticks - 1];
+			claimDistribution[2] += $polyStats.claimsOverTime.cumulativeDistributions[10][ticks - 1];
+			claimDistribution[3] += $polyStats.claimsOverTime.cumulativeDistributions[50][ticks - 1];
+			claimDistribution[4] += $polyStats.claimsOverTime.cumulativeDistributions[100][ticks - 1];
+			claimDistribution[5] += $polyStats.claimsOverTime.cumulativeDistributions[500][ticks - 1];
+			claimDistribution[6] += $polyStats.claimsOverTime.cumulativeDistributions[1000][ticks - 1];
+		}
+		if($selectedChains.avax) {
+			claimDistribution[0] += $avaxStats.claimsOverTime.cumulativeDistributions[1][ticks - 1];
+			claimDistribution[1] += $avaxStats.claimsOverTime.cumulativeDistributions[5][ticks - 1];
+			claimDistribution[2] += $avaxStats.claimsOverTime.cumulativeDistributions[10][ticks - 1];
+			claimDistribution[3] += $avaxStats.claimsOverTime.cumulativeDistributions[50][ticks - 1];
+			claimDistribution[4] += $avaxStats.claimsOverTime.cumulativeDistributions[100][ticks - 1];
+			claimDistribution[5] += $avaxStats.claimsOverTime.cumulativeDistributions[500][ticks - 1];
+			claimDistribution[6] += $avaxStats.claimsOverTime.cumulativeDistributions[1000][ticks - 1];
+		}
+		if($selectedChains.op) {
+			claimDistribution[0] += $opStats.claimsOverTime.cumulativeDistributions[1][ticks - 1];
+			claimDistribution[1] += $opStats.claimsOverTime.cumulativeDistributions[5][ticks - 1];
+			claimDistribution[2] += $opStats.claimsOverTime.cumulativeDistributions[10][ticks - 1];
+			claimDistribution[3] += $opStats.claimsOverTime.cumulativeDistributions[50][ticks - 1];
+			claimDistribution[4] += $opStats.claimsOverTime.cumulativeDistributions[100][ticks - 1];
+			claimDistribution[5] += $opStats.claimsOverTime.cumulativeDistributions[500][ticks - 1];
+			claimDistribution[6] += $opStats.claimsOverTime.cumulativeDistributions[1000][ticks - 1];
 		}
 
 		return claimDistribution;
@@ -461,7 +445,7 @@
 
 <!-- Charts & Highlights -->
 <LineChart {...tvlChart} />
-<Highlight hide={customEndTimestampSelected}>
+<Highlight>
 	<span class="big">There are currently</span>
 	<span class="big highlight">{numDepositors.toLocaleString(undefined)}+ Depositors</span>
 	<span class="big">on {numChainsSelected !== 1 ? 'PoolTogether V4' : getSingleSelectedChain()}!</span>
@@ -471,7 +455,7 @@
 <LineChart {...cumulativeDepositCountsChart} />
 <LineChart {...depositAmountsChart} />
 <LineChart {...depositCountsChart} />
-<Highlight hide={customEndTimestampSelected}>
+<Highlight>
 	<span class="big">Top 5 Whales:</span>
 	<span class="list">
 		{#each topWhales as whale}
@@ -484,8 +468,8 @@
 </Highlight>
 <LineChart {...avgDepositAmountsChart} />
 <LineChart {...cumulativeUniqueWalletsChart} />
-<PieChart {...tvlDistributionChart} hide={customEndTimestampSelected} />
-<PieChart {...multichainUsersChart} hide={customEndTimestampSelected || numChainsSelected < 2} />
+<PieChart {...tvlDistributionChart} />
+<PieChart {...multichainUsersChart} hide={numChainsSelected < 2} />
 <LineChart {...cumulativeDepositDistributionsChart} />
 <LineChart {...depositDistributionsChart} />
 <LineChart {...cumulativeWithdrawalAmountsChart} />
@@ -497,7 +481,7 @@
 <LineChart {...claimAmountsChart} />
 <LineChart {...claimCountsChart} />
 <LineChart {...avgClaimAmountsChart} />
-<PieChart {...claimDistributionChart} hide={customEndTimestampSelected} />
+<PieChart {...claimDistributionChart} />
 <LineChart {...delegationTvlChart} />
 <LineChart {...cumulativeDelegationAmountsChart} />
 <LineChart {...cumulativeDelegationCountsChart} />

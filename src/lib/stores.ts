@@ -3,7 +3,7 @@
 import { writable } from 'svelte/store';
 
 // Type Imports:
-import type { ChainStats, AdvancedChainStats, ChainData, SelectedChains, Loading } from '$lib/types';
+import type { ChainStats, ChainData, SelectedChains, Loading } from '$lib/types';
 
 /* ========================================================================================================================================================================= */
 
@@ -33,22 +33,10 @@ const defaultSelectedChains: SelectedChains = {
 // Default Loading Status:
 const defaultLoadingStatus: Loading = {
   draws: 'none',
-  eth: {
-    basic: { stats: 'none', deposits: 'none', delegations: 'none' },
-    advanced: { stats: 'none', deposits: 'none', withdrawals: 'none', claims: 'none', delegationsCreated: 'none', delegationsFunded: 'none', delegationsUpdated: 'none', delegationsWithdrawn: 'none', yield: 'none', supply: 'none', balances: 'none', progress: 0 }
-  },
-  poly: {
-    basic: { stats: 'none', deposits: 'none', delegations: 'none' },
-    advanced: { stats: 'none', deposits: 'none', withdrawals: 'none', claims: 'none', delegationsCreated: 'none', delegationsFunded: 'none', delegationsUpdated: 'none', delegationsWithdrawn: 'none', yield: 'none', supply: 'none', balances: 'none', progress: 0 }
-  },
-  avax: {
-    basic: { stats: 'none', deposits: 'none', delegations: 'none' },
-    advanced: { stats: 'none', deposits: 'none', withdrawals: 'none', claims: 'none', delegationsCreated: 'none', delegationsFunded: 'none', delegationsUpdated: 'none', delegationsWithdrawn: 'none', yield: 'none', supply: 'none', balances: 'none', progress: 0 }
-  },
-  op: {
-    basic: { stats: 'none', deposits: 'none', delegations: 'none' },
-    advanced: { stats: 'none', deposits: 'none', withdrawals: 'none', claims: 'none', delegationsCreated: 'none', delegationsFunded: 'none', delegationsUpdated: 'none', delegationsWithdrawn: 'none', yield: 'none', supply: 'none', balances: 'none', progress: 0 }
-  }
+  eth: { stats: 'none', deposits: 'none', delegations: 'none' },
+  poly: {stats: 'none', deposits: 'none', delegations: 'none' },
+  avax: {stats: 'none', deposits: 'none', delegations: 'none' },
+  op: {stats: 'none', deposits: 'none', delegations: 'none' }
 }
 
 /* ========================================================================================================================================================================= */
@@ -58,12 +46,6 @@ export const ethStats = writable<ChainStats>();
 export const polyStats = writable<ChainStats>();
 export const avaxStats = writable<ChainStats>();
 export const opStats = writable<ChainStats>();
-
-// Advanced Chain Stats:
-export const ethAdvancedStats = writable<AdvancedChainStats>();
-export const polyAdvancedStats = writable<AdvancedChainStats>();
-export const avaxAdvancedStats = writable<AdvancedChainStats>();
-export const opAdvancedStats = writable<AdvancedChainStats>();
 
 /* ========================================================================================================================================================================= */
 
@@ -75,12 +57,6 @@ export const opData = writable<ChainData>(JSON.parse(JSON.stringify(defaultChain
 
 /* ========================================================================================================================================================================= */
 
-// Timestamps:
-export const startTimestamp = writable<number>(1_634_256_000);
-export const endTimestamp = writable<number>(9_999_999_999);
-
-/* ========================================================================================================================================================================= */
-
 // Selected Chains:
 export const selectedChains = writable<SelectedChains>(defaultSelectedChains);
 
@@ -88,8 +64,3 @@ export const selectedChains = writable<SelectedChains>(defaultSelectedChains);
 
 // Loading Status:
 export const loading = writable<Loading>(defaultLoadingStatus);
-
-/* ========================================================================================================================================================================= */
-
-// Advanced Mode:
-export const advancedMode = writable<boolean>(false);

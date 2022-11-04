@@ -29,21 +29,6 @@ export interface ChainStats {
   topWhales: BalanceData[]
 }
 
-// Advanced Chain Stats Interface:
-export interface AdvancedChainStats {
-  minTimestamp: number
-  maxTimestamp: number
-  depositsOverTime: DepositsOverTime
-  withdrawalsOverTime: WithdrawalsOverTime
-  claimsOverTime: ClaimsOverTime
-  tvlOverTime: TVLOverTime
-  delegationsOverTime: DelegationsOverTime
-  yieldOverTime: YieldOverTime
-  wallets: Record<Hash, WalletData>
-  winlessWithdrawals: WinlessWithdrawals[]
-  tvlDistribution: TVLDistribution
-}
-
 /* ========================================================================================================================================================================= */
 
 // Chain Data Interface:
@@ -379,23 +364,7 @@ export interface Loading {
   op: ChainLoading
 }
 export interface ChainLoading {
-  basic: {
-    stats: LoadingStatus
-    deposits: LoadingStatus
-    delegations: LoadingStatus
-  }
-  advanced: {
-    stats: LoadingStatus
-    deposits: LoadingStatus
-    withdrawals: LoadingStatus
-    claims: LoadingStatus
-    delegationsCreated: LoadingStatus
-    delegationsFunded: LoadingStatus
-    delegationsUpdated: LoadingStatus
-    delegationsWithdrawn: LoadingStatus
-    yield: LoadingStatus
-    supply: LoadingStatus
-    balances: LoadingStatus
-    progress: number
-  }
+  stats: LoadingStatus
+  deposits: LoadingStatus
+  delegations: LoadingStatus
 }

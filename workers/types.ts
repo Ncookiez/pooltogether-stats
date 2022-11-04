@@ -25,21 +25,6 @@ interface ChainData {
   draws: { data: DrawData[] }
 }
 
-// Advanced Chain Stats Interface:
-interface AdvancedChainStats {
-  minTimestamp: number
-  maxTimestamp: number
-  depositsOverTime: DepositsOverTime
-  withdrawalsOverTime: WithdrawalsOverTime
-  claimsOverTime: ClaimsOverTime
-  tvlOverTime: TVLOverTime
-  delegationsOverTime: DelegationsOverTime
-  yieldOverTime: YieldOverTime
-  wallets: Record<Hash, WalletData>
-  winlessWithdrawals: WinlessWithdrawals[]
-  tvlDistribution: TVLDistribution
-}
-
 /* ====================================================================================================================================================== */
 
 // Data Type Interfaces:
@@ -300,14 +285,10 @@ interface DrawHistoryEventData {
 interface DepositHistoryEventData {
   deposits: Record<Chain, DepositData[]>
   selectedChains: Record<Chain, boolean>
-  minTimestamp: number
-  maxTimestamp: number
 }
 
 // Delegation History Event Data Interface:
 interface DelegationHistoryEventData {
   delegations: Record<Chain, DelegationFundedData[]>
   selectedChains: Record<Chain, boolean>
-  minTimestamp: number
-  maxTimestamp: number
 }

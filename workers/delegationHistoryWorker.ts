@@ -11,7 +11,7 @@ onmessage = (event) => {
   chains.forEach(chain => {
     if(data?.selectedChains[chain]) {
       data.delegations[chain].forEach(delegation => {
-        if(data && delegation.timestamp && delegation.timestamp >= data.minTimestamp && delegation.timestamp <= data.maxTimestamp) {
+        if(data && delegation.timestamp) {
           allDelegations.push({ ...delegation, chain });
         }
       });

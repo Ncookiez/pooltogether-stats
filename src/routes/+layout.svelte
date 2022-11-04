@@ -2,7 +2,7 @@
 
 	// Imports:
 	import { onMount } from 'svelte';
-	import { ethStats, ethAdvancedStats, ethData, polyStats, polyAdvancedStats, polyData, avaxStats, avaxAdvancedStats, avaxData, opStats, opAdvancedStats, opData, selectedChains, loading, advancedMode, startTimestamp, endTimestamp } from '$lib/stores';
+	import { ethStats, ethData, polyStats, polyData, avaxStats, avaxData, opStats, opData, selectedChains, loading } from '$lib/stores';
 	import * as api from '$lib/data';
 	import Navbar from '$lib/Navbar.svelte';
 	import Footer from '$lib/Footer.svelte';
@@ -13,24 +13,13 @@
 
 	// Initializations:
 	const chains: Chain[] = ['eth', 'poly', 'avax', 'op'];
-	const maxChainLoadingProgress: number = 11;
-	const requireDrawsForAdvancedStats: boolean = false;
-	const advancedStatsWorkerPath: string = '/workers/advancedStatsWorker.js';
-	const advancedStatsWorkerTimeout: number = 120000;
 	const maintenanceMode: boolean = true;
 	let basicStatsErrored: boolean = false;
 	let mainContent: HTMLElement;
 	let mainContentScrollY: number = 0;
-	let loadedAdvancedData: boolean = false;
-	let cacheAdvancedMinTimestamp: number | undefined;
-	let cacheAdvancedMaxTimestamp: number | undefined;
 
 	// Reactive Loading Checks:
-	$: basicStatsLoaded = chains.every(chain => !$selectedChains[chain] || $loading[chain].basic.stats === 'done');
-
-	// Reactive Advanced Mode Functions:
-	$: $advancedMode, loadAdvancedData();
-	$: $ethData, $polyData, $avaxData, $opData, $startTimestamp, $endTimestamp, calculateAdvancedStats();
+	$: basicStatsLoaded = chains.every(chain => !$selectedChains[chain] || $loading[chain].stats === 'done');
 
 	// Function to load draws:
 	const loadDraws = async () => {
@@ -51,7 +40,7 @@
 	// Function to load basic stats:
 	const loadBasicStats = async (chain: Chain) => {
 		try {
-			$loading[chain].basic.stats = 'loading';
+			$loading[chain].stats = 'loading';
 			const stats = await api.fetchStats(chain);
 			if(chain === 'eth') {
 				ethStats.set(stats);
@@ -62,10 +51,10 @@
 			} else if(chain === 'op') {
 				opStats.set(stats);
 			}
-			$loading[chain].basic.stats = 'done';
+			$loading[chain].stats = 'done';
 		} catch(err) {
 			console.error(err);
-			$loading[chain].basic.stats = 'failed';
+			$loading[chain].stats = 'failed';
 			basicStatsErrored = true;
 		}
 	}
@@ -73,242 +62,26 @@
 	// Function to load latest deposits:
 	const loadLatestDeposits = async (chain: Chain) => {
 		try {
-			$loading[chain].basic.deposits = 'loading';
+			$loading[chain].deposits = 'loading';
 			const latestDeposits = await api.fetchLastDeposits(chain);
 			assignData(chain, 'deposits', latestDeposits);
-			$loading[chain].basic.deposits = 'done';
+			$loading[chain].deposits = 'done';
 		} catch(err) {
 			console.error(err);
-			$loading[chain].basic.deposits = 'failed';
+			$loading[chain].deposits = 'failed';
 		}
 	}
 
 	// Function to load latest delegations:
 	const loadLatestDelegations = async (chain: Chain) => {
 		try {
-			$loading[chain].basic.delegations = 'loading';
+			$loading[chain].delegations = 'loading';
 			const latestDelegations = await api.fetchLastDelegations(chain);
 			assignData(chain, 'delegationsFunded', latestDelegations);
-			$loading[chain].basic.delegations = 'done';
+			$loading[chain].delegations = 'done';
 		} catch(err) {
 			console.error(err);
-			$loading[chain].basic.delegations = 'failed';
-		}
-	}
-
-	// Function to load advanced data:
-	const loadAdvancedData = async () => {
-		if($advancedMode && !loadedAdvancedData) {
-			loadedAdvancedData = true;
-			let promises = chains.map(chain => (async () => {
-
-				// Fetching Deposits:
-				try {
-					$loading[chain].advanced.deposits = 'loading';
-					const deposits = await api.fetchDeposits(chain);
-					assignData(chain, 'deposits', deposits);
-					$loading[chain].advanced.deposits = 'done';
-					$loading[chain].advanced.progress++;
-				} catch(err) {
-					console.error(err);
-					$loading[chain].advanced.deposits = 'failed';
-				}
-
-				// Fetching Withdrawals:
-				try {
-					$loading[chain].advanced.withdrawals = 'loading';
-					const withdrawals = await api.fetchWithdrawals(chain);
-					assignData(chain, 'withdrawals', withdrawals);
-					$loading[chain].advanced.withdrawals = 'done';
-					$loading[chain].advanced.progress++;
-				} catch(err) {
-					console.error(err);
-					$loading[chain].advanced.withdrawals = 'failed';
-				}
-
-				// Fetching Claims:
-				try {
-					$loading[chain].advanced.claims = 'loading';
-					const claims = await api.fetchClaims(chain);
-					assignData(chain, 'claims', claims);
-					$loading[chain].advanced.claims = 'done';
-					$loading[chain].advanced.progress++;
-				} catch(err) {
-					console.error(err);
-					$loading[chain].advanced.claims = 'failed';
-				}
-
-				// Fetching Delegations Created:
-				try {
-					$loading[chain].advanced.delegationsCreated = 'loading';
-					const delegationsCreated = await api.fetchDelegationsCreated(chain);
-					assignData(chain, 'delegationsCreated', delegationsCreated);
-					$loading[chain].advanced.delegationsCreated = 'done';
-					$loading[chain].advanced.progress++;
-				} catch(err) {
-					console.error(err);
-					$loading[chain].advanced.delegationsCreated = 'failed';
-				}
-
-				// Fetching Delegations Funded:
-				try {
-					$loading[chain].advanced.delegationsFunded = 'loading';
-					const delegationsFunded = await api.fetchDelegationsFunded(chain);
-					assignData(chain, 'delegationsFunded', delegationsFunded);
-					$loading[chain].advanced.delegationsFunded = 'done';
-					$loading[chain].advanced.progress++;
-				} catch(err) {
-					console.error(err);
-					$loading[chain].advanced.delegationsFunded = 'failed';
-				}
-
-				// Fetching Delegations Updated:
-				try {
-					$loading[chain].advanced.delegationsUpdated = 'loading';
-					const delegationsUpdated = await api.fetchDelegationsUpdated(chain);
-					assignData(chain, 'delegationsUpdated', delegationsUpdated);
-					$loading[chain].advanced.delegationsUpdated = 'done';
-					$loading[chain].advanced.progress++;
-				} catch(err) {
-					console.error(err);
-					$loading[chain].advanced.delegationsUpdated = 'failed';
-				}
-
-				// Fetching Delegations Withdrawn:
-				try {
-					$loading[chain].advanced.delegationsWithdrawn = 'loading';
-					const delegationsWithdrawn = await api.fetchDelegationsWithdrawn(chain);
-					assignData(chain, 'delegationsWithdrawn', delegationsWithdrawn);
-					$loading[chain].advanced.delegationsWithdrawn = 'done';
-					$loading[chain].advanced.progress++;
-				} catch(err) {
-					console.error(err);
-					$loading[chain].advanced.delegationsWithdrawn = 'failed';
-				}
-
-				// Fetching Yields:
-				try {
-					$loading[chain].advanced.yield = 'loading';
-					const yields = await api.fetchYield(chain);
-					assignData(chain, 'yields', yields);
-					$loading[chain].advanced.yield = 'done';
-					$loading[chain].advanced.progress++;
-				} catch(err) {
-					console.error(err);
-					$loading[chain].advanced.yield = 'failed';
-				}
-
-				// Fetching Supply:
-				try {
-					$loading[chain].advanced.supply = 'loading';
-					const supply = await api.fetchSupply(chain);
-					assignData(chain, 'supply', supply);
-					$loading[chain].advanced.supply = 'done';
-					$loading[chain].advanced.progress++;
-				} catch(err) {
-					console.error(err);
-					$loading[chain].advanced.supply = 'failed';
-				}
-
-				// Fetching Balances:
-				try {
-					$loading[chain].advanced.balances = 'loading';
-					const balances = await api.fetchBalances(chain);
-					assignData(chain, 'balances', balances);
-					$loading[chain].advanced.balances = 'done';
-					$loading[chain].advanced.progress++;
-				} catch(err) {
-					console.error(err);
-					$loading[chain].advanced.balances = 'failed';
-				}
-
-			})());
-			await Promise.all(promises);
-		}
-	}
-
-	// Function to calculate advanced stats:
-	const calculateAdvancedStats = async () => {
-		if($advancedMode && $startTimestamp !== undefined && $endTimestamp !== undefined && (requireDrawsForAdvancedStats ? $loading.draws === 'done' : true) && chains.every(chain => $loading[chain].advanced.stats !== 'loading' && $loading[chain].advanced.progress >= (maxChainLoadingProgress - 1))) {
-			if(cacheAdvancedMinTimestamp !== $startTimestamp || cacheAdvancedMaxTimestamp !== $endTimestamp) {
-
-				// Setting Cache:
-				cacheAdvancedMinTimestamp = $startTimestamp;
-				cacheAdvancedMaxTimestamp = $endTimestamp;
-
-				// Setting Loading Status:
-				chains.forEach(chain => {
-					$loading[chain].advanced.stats = 'loading';
-					$loading[chain].advanced.progress = maxChainLoadingProgress - 1;
-				});
-
-				// Setting Timestamps:
-				const defaultMinTimestamp = $ethData.deposits.data[$ethData.deposits.data.length - 1].timestamp as number;
-				const defaultMaxTimestamp = $ethData.balances.timestamp as number;
-				const minTimestamp = $startTimestamp > defaultMinTimestamp ? $startTimestamp : defaultMinTimestamp;
-				const maxTimestamp = $endTimestamp < defaultMaxTimestamp ? $endTimestamp : defaultMaxTimestamp;
-
-				// Ethereum Stats:
-				await new Promise<void>((resolve, reject) => {
-					const timeout = setTimeout(() => { $loading.eth.advanced.stats = 'failed'; reject(`ETH: Timed out while calculating advanced stats.`); }, advancedStatsWorkerTimeout);
-					const dataWorker = new Worker(advancedStatsWorkerPath);
-					dataWorker.postMessage([$ethData, $ethAdvancedStats, minTimestamp, maxTimestamp]);
-					dataWorker.onmessage = (event) => {
-						clearTimeout(timeout);
-						ethAdvancedStats.set(event.data);
-						$loading.eth.advanced.stats = 'done';
-						$loading.eth.advanced.progress++;
-						dataWorker.terminate();
-						resolve();
-					}
-				});
-
-				// Polygon Stats:
-				await new Promise<void>((resolve, reject) => {
-					const timeout = setTimeout(() => { $loading.poly.advanced.stats = 'failed'; reject(`POLY: Timed out while calculating advanced stats.`); }, advancedStatsWorkerTimeout);
-					const dataWorker = new Worker(advancedStatsWorkerPath);
-					dataWorker.postMessage([$polyData, $polyAdvancedStats, minTimestamp, maxTimestamp]);
-					dataWorker.onmessage = (event) => {
-						clearTimeout(timeout);
-						polyAdvancedStats.set(event.data);
-						$loading.poly.advanced.stats = 'done';
-						$loading.poly.advanced.progress++;
-						dataWorker.terminate();
-						resolve();
-					}
-				});
-
-				// Avalanche Stats:
-				await new Promise<void>((resolve, reject) => {
-					const timeout = setTimeout(() => { $loading.avax.advanced.stats = 'failed'; reject(`AVAX: Timed out while calculating advanced stats.`); }, advancedStatsWorkerTimeout);
-					const dataWorker = new Worker(advancedStatsWorkerPath);
-					dataWorker.postMessage([$avaxData, $avaxAdvancedStats, minTimestamp, maxTimestamp]);
-					dataWorker.onmessage = (event) => {
-						clearTimeout(timeout);
-						avaxAdvancedStats.set(event.data);
-						$loading.avax.advanced.stats = 'done';
-						$loading.avax.advanced.progress++;
-						dataWorker.terminate();
-						resolve();
-					}
-				});
-
-				// Optimism Stats:
-				await new Promise<void>((resolve, reject) => {
-					const timeout = setTimeout(() => { $loading.op.advanced.stats = 'failed'; reject(`OP: Timed out while calculating advanced stats.`); }, advancedStatsWorkerTimeout);
-					const dataWorker = new Worker(advancedStatsWorkerPath);
-					dataWorker.postMessage([$opData, $opAdvancedStats, minTimestamp, maxTimestamp]);
-					dataWorker.onmessage = (event) => {
-						clearTimeout(timeout);
-						opAdvancedStats.set(event.data);
-						$loading.op.advanced.stats = 'done';
-						$loading.op.advanced.progress++;
-						dataWorker.terminate();
-						resolve();
-					}
-				});
-
-			}
+			$loading[chain].delegations = 'failed';
 		}
 	}
 
@@ -333,7 +106,6 @@
 				loadLatestDeposits(chain);
 				loadLatestDelegations(chain);
 			});
-			loadAdvancedData();
 		}
 	});
 	
@@ -361,7 +133,7 @@
 					<span class="error">
 						<img src="/images/ngmi.webp" alt="Whoops">
 						<h2>There was an issue loading data.</h2>
-						<span>Refresh the page to try again, or scream at @Ncookie on Discord.</span>
+						<span>Refresh the page to try again, or scream at Ncookie on Discord.</span>
 					</span>
 				{/if}
 			</div>

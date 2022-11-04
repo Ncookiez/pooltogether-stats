@@ -13,7 +13,6 @@
 		"depositHistoryWorker.ts",
 		"delegationHistoryWorker.ts",
 		"drawFormattingWorker.ts",
-		"advancedStatsWorker.ts",
 		"types.ts"
 	]
 }

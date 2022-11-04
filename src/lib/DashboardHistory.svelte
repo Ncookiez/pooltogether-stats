@@ -2,7 +2,7 @@
 
 	// Imports:
 	import { getBlockExplorerLink, getTimeDisplay, getShortWallet } from '$lib/functions';
-	import { ethData, polyData, avaxData, opData, startTimestamp, endTimestamp, selectedChains, loading, advancedMode } from '$lib/stores';
+	import { ethData, polyData, avaxData, opData, selectedChains, loading } from '$lib/stores';
 
 	// Type Imports:
 	import type { Chain, DrawData, DepositData, DelegationFundedData } from '$lib/types';
@@ -10,7 +10,6 @@
 	// Initializations:
 	const chains: Chain[] = ['eth', 'poly', 'avax', 'op'];
 	const pageSize: number = 25;
-	const defaultMaxTimestamp = 9_999_999_999;
 	const drawHistoryWorkerPath: string = '/workers/drawHistoryWorker.js';
 	const depositHistoryWorkerPath: string = '/workers/depositHistoryWorker.js';
 	const delegationHistoryWorkerPath: string = '/workers/delegationHistoryWorker.js';
@@ -20,25 +19,20 @@
 	let delegations: (DelegationFundedData & { chain: Chain })[] = [];
 	let tabSelected: 'winners' | 'deposits' | 'delegations' = 'deposits';
 	let listLength: number = pageSize;
+	let selectedDraw: number = 0;
 	let depositFilter: number = 0;
 
 	// Reactive Loading Checks:
-	$: latestDepositsLoaded = chains.every(chain => $loading[chain].basic.deposits === 'done');
-	$: latestDelegationsLoaded = chains.every(chain => $loading[chain].basic.delegations === 'done');
-	$: latestDepositsErrored = !chains.every(chain => $loading[chain].basic.deposits !== 'failed');
-	$: latestDelegationsErrored = !chains.every(chain => $loading[chain].basic.delegations !== 'failed');
-	$: depositsLoaded = chains.every(chain => $loading[chain].advanced.deposits === 'done');
-	$: delegationsLoaded = chains.every(chain => $loading[chain].advanced.delegationsFunded === 'done');
-	$: depositsErrored = !chains.every(chain => $loading[chain].advanced.deposits !== 'failed');
-	$: delegationsErrored = !chains.every(chain => $loading[chain].advanced.delegationsFunded !== 'failed');
+	$: latestDepositsLoaded = chains.every(chain => $loading[chain].deposits === 'done');
+	$: latestDelegationsLoaded = chains.every(chain => $loading[chain].delegations === 'done');
+	$: latestDepositsErrored = !chains.every(chain => $loading[chain].deposits !== 'failed');
+	$: latestDelegationsErrored = !chains.every(chain => $loading[chain].delegations !== 'failed');
 
 	// Reactive Data:
 	$: $selectedChains, $loading, getDraws();
-	$: $selectedChains, $loading, $startTimestamp, $endTimestamp, getDeposits();
-	$: $selectedChains, $loading, $startTimestamp, $endTimestamp, getDelegations();
-	$: firstValidDraw = draws.findIndex(draw => draw.timestamp >= $startTimestamp && draw.timestamp <= $endTimestamp);
-	$: selectedDraw = firstValidDraw !== -1 ? firstValidDraw : 0;
-	$: winners = draws.length > 0 && firstValidDraw !== -1 ? draws[selectedDraw].result.sort((a, b) => b.claimable.reduce((a, b) => a + b, 0) - a.claimable.reduce((a, b) => a + b, 0)) : undefined;
+	$: $selectedChains, $loading, getDeposits();
+	$: $selectedChains, $loading, getDelegations();
+	$: winners = draws.length > 0 ? draws[selectedDraw].result.sort((a, b) => b.claimable.reduce((a, b) => a + b, 0) - a.claimable.reduce((a, b) => a + b, 0)) : undefined;
 
 	// Draw Info:
 	$: claimable = winners ? winners.reduce((a, b) => a + (b.claimable.reduce((a, b) => a + b, 0)), 0) : 0;
@@ -69,15 +63,13 @@
 
 	// Function to get aggregated and sorted deposits:
 	const getDeposits = async () => {
-		if(latestDepositsLoaded && (!$advancedMode || depositsLoaded)) {
+		if(latestDepositsLoaded) {
 			await new Promise<void>((resolve, reject) => {
 				const timeout = setTimeout(() => reject(`Timed out while handling deposit history.`), workerTimeout);
 				const dataWorker = new Worker(depositHistoryWorkerPath);
 				const dataToPassToWorker = {
 					deposits: { eth: $ethData.deposits.data, poly: $polyData.deposits.data, avax: $avaxData.deposits.data, op: $opData.deposits.data },
-					selectedChains: $selectedChains,
-					minTimestamp: $advancedMode ? $startTimestamp : 0,
-					maxTimestamp: $advancedMode ? $endTimestamp : defaultMaxTimestamp
+					selectedChains: $selectedChains
 				}
 				dataWorker.postMessage(dataToPassToWorker);
 				dataWorker.onmessage = (event) => {
@@ -92,15 +84,13 @@
 
 	// Function to get aggregated and sorted delegations:
 	const getDelegations = async () => {
-		if(latestDelegationsLoaded && (!$advancedMode || delegationsLoaded)) {
+		if(latestDelegationsLoaded) {
 			await new Promise<void>((resolve, reject) => {
 				const timeout = setTimeout(() => reject(`Timed out while handling delegation history.`), workerTimeout);
 				const dataWorker = new Worker(delegationHistoryWorkerPath);
 				const dataToPassToWorker = {
 					delegations: { eth: $ethData.delegationsFunded.data, poly: $polyData.delegationsFunded.data, avax: $avaxData.delegationsFunded.data, op: $opData.delegationsFunded.data },
-					selectedChains: $selectedChains,
-					minTimestamp: $advancedMode ? $startTimestamp : 0,
-					maxTimestamp: $advancedMode ? $endTimestamp : defaultMaxTimestamp
+					selectedChains: $selectedChains
 				}
 				dataWorker.postMessage(dataToPassToWorker);
 				dataWorker.onmessage = (event) => {
@@ -124,14 +114,12 @@
 	<div class="header">
 		<h2>PoolTogether V4 History</h2>
 		<h2 id="altHeader">History</h2>
-		{#if tabSelected === 'winners' && draws.length > 0 && firstValidDraw !== -1}
+		{#if tabSelected === 'winners' && draws.length > 0}
 			<div id="drawSelector">
 				<span>Draw:</span>
 				<select bind:value={selectedDraw}>
 					{#each draws as draw, i}
-						{#if draw.timestamp >= $startTimestamp && draw.timestamp <= $endTimestamp}
-							<option value="{i}">{draw.draw}</option>
-						{/if}
+						<option value="{i}">{draw.draw}</option>
 					{/each}
 				</select>
 			</div>
@@ -144,12 +132,6 @@
 					<span>Winners: {winning.toLocaleString(undefined)}</span>
 					<span>When: {when}</span>
 				</div>
-			</div>
-		{:else if tabSelected === 'deposits' && deposits.length > 0 && $advancedMode && depositsLoaded}
-			<div id="depositFilter">
-				<span>Filter:</span>
-				<span class="dollar">$</span>
-				<input type="number" bind:value={depositFilter}>
 			</div>
 		{/if}
 	</div>
@@ -193,9 +175,6 @@
 					{#if $loading.draws === 'failed'}
 						<img src="/images/ngmi.webp" alt="Whoops">
 						<span>Something went wrong 0.o</span>
-					{:else if firstValidDraw === -1}
-						<img id="sleepingPooly" src="/images/sleeping.png" alt="Sleeping Pooly">
-						<span>No draws within your selected time period.</span>
 					{:else}
 						<img src="/images/loading.gif" alt="Loading">
 						<span>Loading...</span>
@@ -205,7 +184,7 @@
 
 		<!-- Deposits Tab -->
 		{:else if tabSelected === 'deposits'}
-			{#if latestDepositsLoaded && (!$advancedMode || depositsLoaded)}
+			{#if latestDepositsLoaded}
 				{#if deposits.length === 0}
 					<img id="sleepingPooly" src="/images/sleeping.png" alt="Sleeping Pooly">
 					<span>No deposits found...</span>
@@ -228,7 +207,7 @@
 				{/if}
 			{:else}
 				<span class="loadingInfo">
-					{#if latestDepositsErrored || ($advancedMode && depositsErrored)}
+					{#if latestDepositsErrored}
 						<img src="/images/ngmi.webp" alt="Whoops">
 						<span>Something went wrong 0.o</span>
 					{:else}
@@ -240,7 +219,7 @@
 
 		<!-- Delegations Tab -->
 		{:else if tabSelected === 'delegations'}
-			{#if latestDelegationsLoaded && (!$advancedMode || delegationsLoaded)}
+			{#if latestDelegationsLoaded}
 				{#if delegations.length === 0}
 					<img id="sleepingPooly" src="/images/sleeping.png" alt="Sleeping Pooly">
 					<span>No delegations found...</span>
@@ -263,7 +242,7 @@
 				{/if}
 			{:else}
 				<span class="loadingInfo">
-					{#if latestDelegationsErrored || ($advancedMode && delegationsErrored)}
+					{#if latestDelegationsErrored}
 						<img src="/images/ngmi.webp" alt="Whoops">
 						<span>Something went wrong 0.o</span>
 					{:else}
@@ -391,32 +370,6 @@
 		margin-top: .5em;
 		padding-top: .5em;
 		border-top: 2px solid currentColor;
-	}
-
-	#depositFilter {
-		display: flex;
-		align-items: center;
-	}
-
-	#depositFilter > span.dollar {
-		margin-left: .5em;
-		padding: 0 .2em 0 .5em;
-		background: var(--light-purple);
-		border-radius: .5em 0 0 .5em;
-	}
-
-	#depositFilter > input {
-		width: 5em;
-		padding-right: .5em;
-		font-family: inherit;
-		font-size: inherit;
-		background: var(--light-purple);
-		border: none;
-		border-radius: 0 .5em .5em 0;
-	}
-
-	#depositFilter > input:focus {
-		outline: none;
 	}
 
 	div.header i.icofont-list:hover + #drawInfo {
