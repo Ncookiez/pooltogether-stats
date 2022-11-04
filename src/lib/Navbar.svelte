@@ -107,7 +107,7 @@
 <nav>
 
 	<!-- Banner -->
-	<div class="banner" on:click={() => goto('/')}>
+	<div class="banner" on:click={() => goto('/')} on:keydown={() => goto('/')}>
 		<img id="altLogo" src="/images/trophy.webp" alt="PoolTogether">
 		<img src="/images/pooltogether-logo.svg" alt="PoolTogether">
 		<span>Stats</span>
@@ -118,7 +118,7 @@
 		<!-- Chain Selection -->
 		<div class="chains">
 			{#each chains as chain}
-				<span class="{chain}" class:selected={$selectedChains[chain]} on:click={() => $selectedChains[chain] = !$selectedChains[chain]}>
+				<span class="{chain}" class:selected={$selectedChains[chain]} on:click={() => $selectedChains[chain] = !$selectedChains[chain]} on:keydown={() => $selectedChains[chain] = !$selectedChains[chain]}>
 					<img src="/images/{chain}.svg" alt="{chain.toUpperCase()}">
 					<span>{getChainName(chain)}</span>
 				</span>
@@ -126,19 +126,19 @@
 		</div>
 
 		<!-- Player Search -->
-		<div class="playerSearch" on:click={() => { advancedModeModalOpen = false; searchModalOpen = !searchModalOpen; }}>
+		<div class="playerSearch" on:click={() => { advancedModeModalOpen = false; searchModalOpen = !searchModalOpen; }} on:keydown={() => { advancedModeModalOpen = false; searchModalOpen = !searchModalOpen; }}>
 			<span>Search</span>
 			<i class="icofont-ui-search" />
 		</div>
 
 		<!-- Advanced Mode -->
-		<div class="advancedMode" on:click={() => { searchModalOpen = false; advancedModeModalOpen = !advancedModeModalOpen; }}>
+		<div class="advancedMode" on:click={() => { searchModalOpen = false; advancedModeModalOpen = !advancedModeModalOpen; }} on:keydown={() => { searchModalOpen = false; advancedModeModalOpen = !advancedModeModalOpen; }}>
 			<i class="icofont-instrument" />
 		</div>
 
 		<!-- Player Search Modal -->
 		{#if searchModalOpen}
-			<div class="cover" on:click={() => searchModalOpen = false} />
+			<div class="cover" on:click={() => searchModalOpen = false} on:keydown={() => searchModalOpen = false} />
 			<div class="playerSearchModal">
 				<span>Enter a wallet to search for:</span>
 				<form on:submit|preventDefault={() => search()}>
@@ -150,7 +150,7 @@
 
 		<!-- Advanced Mode Modal -->
 		{#if advancedModeModalOpen}
-			<div class="cover" on:click={() => advancedModeModalOpen = false} />
+			<div class="cover" on:click={() => advancedModeModalOpen = false} on:keydown={() => advancedModeModalOpen = false} />
 			<div class="advancedModeModal">
 				{#if $advancedMode}
 					<h3>Advanced Mode</h3>
@@ -162,7 +162,7 @@
 							<input type="date" min="{minDate}" max="{maxDateValue ?? maxDate}" bind:value={minDateValue}>
 							<i class="icofont-arrow-right" />
 							<input type="date" min="{minDateValue ?? minDate}" max="{maxDate}" bind:value={maxDateValue}>
-							<span on:click={() => updateTimestampStores()}><i class="icofont-clock-time" /></span>
+							<span on:click={() => updateTimestampStores()} on:keydown={() => updateTimestampStores()}><i class="icofont-clock-time" /></span>
 						</div>
 
 						<!-- Data Downloads -->
@@ -178,11 +178,11 @@
 									<option value="{download.file}">{download.name}</option>
 								{/each}
 							</select>
-							<span on:click={() => downloadData()}><i class="icofont-download" /></span>
+							<span on:click={() => downloadData()} on:keydown={() => downloadData()}><i class="icofont-download" /></span>
 						</div>
 
 						<!-- Disable Advanced Mode Button -->
-						<span class="disableAdvanced button" on:click={() => $advancedMode = false}>Disable Advanced Mode</span>
+						<span class="disableAdvanced button" on:click={() => $advancedMode = false} on:keydown={() => $advancedMode = false}>Disable Advanced Mode</span>
 
 					{:else if advancedStatsErrored || (requireDrawsForAdvancedStats && $loading.draws === 'failed')}
 						<img src="/images/ngmi.webp" alt="Whoops">
@@ -217,7 +217,7 @@
 					{/if}
 				{:else}
 					<span class="prompt">Want time controls and raw data downloads?</span>
-					<span class="enableAdvanced button" on:click={() => $advancedMode = true}>Enable Advanced Mode</span>
+					<span class="enableAdvanced button" on:click={() => $advancedMode = true} on:keydown={() => $advancedMode = true}>Enable Advanced Mode</span>
 					<span class="small">It might take a little bit to load though :)</span>
 				{/if}
 			</div>

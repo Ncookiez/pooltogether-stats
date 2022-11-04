@@ -156,9 +156,9 @@
 
 	<!-- Tab Selection -->
 	<div class="tabs">
-		<span class:selected={tabSelected === 'deposits'} on:click={() => { tabSelected = 'deposits'; listLength = pageSize; }}>Deposits</span>
-		<span class:selected={tabSelected === 'delegations'} on:click={() => { tabSelected = 'delegations'; listLength = pageSize; }}>Delegations</span>
-		<span class:selected={tabSelected === 'winners'} on:click={() => { tabSelected = 'winners'; listLength = pageSize; }}>Winners</span>
+		<span class:selected={tabSelected === 'deposits'} on:click={() => { tabSelected = 'deposits'; listLength = pageSize; }} on:keydown={() => { tabSelected = 'deposits'; listLength = pageSize; }}>Deposits</span>
+		<span class:selected={tabSelected === 'delegations'} on:click={() => { tabSelected = 'delegations'; listLength = pageSize; }} on:keydown={() => { tabSelected = 'delegations'; listLength = pageSize; }}>Delegations</span>
+		<span class:selected={tabSelected === 'winners'} on:click={() => { tabSelected = 'winners'; listLength = pageSize; }} on:keydown={() => { tabSelected = 'winners'; listLength = pageSize; }}>Winners</span>
 	</div>
 
 	<!-- Content -->
@@ -185,7 +185,7 @@
 						</span>
 					{/each}
 					{#if winners.length > listLength}
-						<span class="loadMore" on:click={() => listLength += pageSize}><i class="icofont-arrow-down" /> Load More <i class="icofont-arrow-down" /></span>
+						<span class="loadMore" on:click={() => listLength += pageSize} on:keydown={() => listLength += pageSize}><i class="icofont-arrow-down" /> Load More <i class="icofont-arrow-down" /></span>
 					{/if}
 				{/if}
 			{:else}
@@ -223,7 +223,7 @@
 						</span>
 					{/each}
 					{#if deposits.filter(deposit => deposit.amount > depositFilter).length > listLength}
-						<span class="loadMore" on:click={() => listLength += pageSize}><i class="icofont-arrow-down" /> Load More <i class="icofont-arrow-down" /></span>
+						<span class="loadMore" on:click={() => listLength += pageSize} on:keydown={() => listLength += pageSize}><i class="icofont-arrow-down" /> Load More <i class="icofont-arrow-down" /></span>
 					{/if}
 				{/if}
 			{:else}
@@ -258,7 +258,7 @@
 						</span>
 					{/each}
 					{#if delegations.length > listLength}
-						<span class="loadMore" on:click={() => listLength += pageSize}><i class="icofont-arrow-down" /> Load More <i class="icofont-arrow-down" /></span>
+						<span class="loadMore" on:click={() => listLength += pageSize} on:keydown={() => listLength += pageSize}><i class="icofont-arrow-down" /> Load More <i class="icofont-arrow-down" /></span>
 					{/if}
 				{/if}
 			{:else}

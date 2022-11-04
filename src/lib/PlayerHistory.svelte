@@ -80,7 +80,7 @@
 				</span>
 			{/each}
 			{#if playerData.txs.length > listLength}
-				<span class="loadMore" on:click={() => listLength += pageSize}><i class="icofont-arrow-down" /> Load More <i class="icofont-arrow-down" /></span>
+				<span class="loadMore" on:click={() => listLength += pageSize} on:keydown={() => listLength += pageSize}><i class="icofont-arrow-down" /> Load More <i class="icofont-arrow-down" /></span>
 			{/if}
 		{/if}
 	</div>
