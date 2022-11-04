@@ -10,6 +10,7 @@
 	import type { Chain, ChainData } from '$lib/types';
 
 	// Initializations:
+	export let maintenanceMode: boolean = false;
 	const chains: Chain[] = ['eth', 'poly', 'avax', 'op'];
 	const maxChainLoadingProgress = 11;
 	const requireDrawsForAdvancedStats: boolean = false;
@@ -112,112 +113,115 @@
 		<span>Stats</span>
 	</div>
 
-	<!-- Chain Selection -->
-	<div class="chains">
-		{#each chains as chain}
-			<span class="{chain}" class:selected={$selectedChains[chain]} on:click={() => $selectedChains[chain] = !$selectedChains[chain]}>
-				<img src="/images/{chain}.svg" alt="{chain.toUpperCase()}">
-				<span>{getChainName(chain)}</span>
-			</span>
-		{/each}
-	</div>
-
-	<!-- Player Search -->
-	<div class="playerSearch" on:click={() => { advancedModeModalOpen = false; searchModalOpen = !searchModalOpen; }}>
-		<span>Search</span>
-		<i class="icofont-ui-search" />
-	</div>
-
-	<!-- Advanced Mode -->
-	<div class="advancedMode" on:click={() => { searchModalOpen = false; advancedModeModalOpen = !advancedModeModalOpen; }}>
-		<i class="icofont-instrument" />
-	</div>
-
-	<!-- Player Search Modal -->
-	{#if searchModalOpen}
-		<div class="cover" on:click={() => searchModalOpen = false} />
-		<div class="playerSearchModal">
-			<span>Enter a wallet to search for:</span>
-			<form on:submit|preventDefault={() => search()}>
-				<input type="text" bind:value={searchWallet} placeholder="0x...">
-				<button type="submit"><i class="icofont-arrow-right" /></button>
-			</form>
+	{#if !maintenanceMode}
+	
+		<!-- Chain Selection -->
+		<div class="chains">
+			{#each chains as chain}
+				<span class="{chain}" class:selected={$selectedChains[chain]} on:click={() => $selectedChains[chain] = !$selectedChains[chain]}>
+					<img src="/images/{chain}.svg" alt="{chain.toUpperCase()}">
+					<span>{getChainName(chain)}</span>
+				</span>
+			{/each}
 		</div>
-	{/if}
 
-	<!-- Advanced Mode Modal -->
-	{#if advancedModeModalOpen}
-		<div class="cover" on:click={() => advancedModeModalOpen = false} />
-		<div class="advancedModeModal">
-			{#if $advancedMode}
-				<h3>Advanced Mode</h3>
-				{#if advancedStatsLoaded}
+		<!-- Player Search -->
+		<div class="playerSearch" on:click={() => { advancedModeModalOpen = false; searchModalOpen = !searchModalOpen; }}>
+			<span>Search</span>
+			<i class="icofont-ui-search" />
+		</div>
 
-					<!-- Time Controls -->
-					<div class="timeControls">
-						<span>Timespan:</span>
-						<input type="date" min="{minDate}" max="{maxDateValue ?? maxDate}" bind:value={minDateValue}>
-						<i class="icofont-arrow-right" />
-						<input type="date" min="{minDateValue ?? minDate}" max="{maxDate}" bind:value={maxDateValue}>
-						<span on:click={() => updateTimestampStores()}><i class="icofont-clock-time" /></span>
-					</div>
+		<!-- Advanced Mode -->
+		<div class="advancedMode" on:click={() => { searchModalOpen = false; advancedModeModalOpen = !advancedModeModalOpen; }}>
+			<i class="icofont-instrument" />
+		</div>
 
-					<!-- Data Downloads -->
-					<div class="downloads">
-						<span>Download:</span>
-						<select class="chainDownload" bind:value={chainDownload}>
-							{#each chains as chain}
-								<option value="{chain}">{getChainName(chain)}</option>
-							{/each}
-						</select>
-						<select class="typeDownload" bind:value={typeDownload}>
-							{#each downloadsAvailable as download}
-								<option value="{download.file}">{download.name}</option>
-							{/each}
-						</select>
-						<span on:click={() => downloadData()}><i class="icofont-download" /></span>
-					</div>
+		<!-- Player Search Modal -->
+		{#if searchModalOpen}
+			<div class="cover" on:click={() => searchModalOpen = false} />
+			<div class="playerSearchModal">
+				<span>Enter a wallet to search for:</span>
+				<form on:submit|preventDefault={() => search()}>
+					<input type="text" bind:value={searchWallet} placeholder="0x...">
+					<button type="submit"><i class="icofont-arrow-right" /></button>
+				</form>
+			</div>
+		{/if}
 
-					<!-- Disable Advanced Mode Button -->
-					<span class="disableAdvanced button" on:click={() => $advancedMode = false}>Disable Advanced Mode</span>
+		<!-- Advanced Mode Modal -->
+		{#if advancedModeModalOpen}
+			<div class="cover" on:click={() => advancedModeModalOpen = false} />
+			<div class="advancedModeModal">
+				{#if $advancedMode}
+					<h3>Advanced Mode</h3>
+					{#if advancedStatsLoaded}
 
-				{:else if advancedStatsErrored || (requireDrawsForAdvancedStats && $loading.draws === 'failed')}
-					<img src="/images/ngmi.webp" alt="Whoops">
-					<span>Something went wrong 0.o</span>
-				{:else}
+						<!-- Time Controls -->
+						<div class="timeControls">
+							<span>Timespan:</span>
+							<input type="date" min="{minDate}" max="{maxDateValue ?? maxDate}" bind:value={minDateValue}>
+							<i class="icofont-arrow-right" />
+							<input type="date" min="{minDateValue ?? minDate}" max="{maxDate}" bind:value={maxDateValue}>
+							<span on:click={() => updateTimestampStores()}><i class="icofont-clock-time" /></span>
+						</div>
 
-					<!-- Loading Display -->
-					{#if !advancedDataLoaded}
-						{#each chains as chain}
-							{#if $loading[chain].advanced.progress < (maxChainLoadingProgress - 1)}
-								<span class="loadingProgress" transition:slide|local>
-									{#if $loading[chain].advanced.progress !== (maxChainLoadingProgress - 1)}
-										<span class="chainLoading">Loading {getChainName(chain)} Data...</span>
-										<img src="/images/excitedPooly.gif" alt="Pooly">
-										<span class="chainLoadingPercentage">{(($loading[chain].advanced.progress / (maxChainLoadingProgress - 1)) * 100).toFixed(0)}%</span>
-									{/if}
-								</span>
-							{/if}
-						{/each}
-					{:else if requireDrawsForAdvancedStats && $loading.draws !== 'done'}
-						<span class="loadingProgress">
-							<span class="chainLoading">Waiting For Draw Data...</span>
-							<img src="/images/excitedPooly.gif" alt="Pooly">
-						</span>
+						<!-- Data Downloads -->
+						<div class="downloads">
+							<span>Download:</span>
+							<select class="chainDownload" bind:value={chainDownload}>
+								{#each chains as chain}
+									<option value="{chain}">{getChainName(chain)}</option>
+								{/each}
+							</select>
+							<select class="typeDownload" bind:value={typeDownload}>
+								{#each downloadsAvailable as download}
+									<option value="{download.file}">{download.name}</option>
+								{/each}
+							</select>
+							<span on:click={() => downloadData()}><i class="icofont-download" /></span>
+						</div>
+
+						<!-- Disable Advanced Mode Button -->
+						<span class="disableAdvanced button" on:click={() => $advancedMode = false}>Disable Advanced Mode</span>
+
+					{:else if advancedStatsErrored || (requireDrawsForAdvancedStats && $loading.draws === 'failed')}
+						<img src="/images/ngmi.webp" alt="Whoops">
+						<span>Something went wrong 0.o</span>
 					{:else}
-						<span class="loadingProgress">
-							<span class="chainLoading">Calculating Stats...</span>
-							<img src="/images/excitedPooly.gif" alt="Pooly">
-						</span>
-					{/if}
 
+						<!-- Loading Display -->
+						{#if !advancedDataLoaded}
+							{#each chains as chain}
+								{#if $loading[chain].advanced.progress < (maxChainLoadingProgress - 1)}
+									<span class="loadingProgress" transition:slide|local>
+										{#if $loading[chain].advanced.progress !== (maxChainLoadingProgress - 1)}
+											<span class="chainLoading">Loading {getChainName(chain)} Data...</span>
+											<img src="/images/excitedPooly.gif" alt="Pooly">
+											<span class="chainLoadingPercentage">{(($loading[chain].advanced.progress / (maxChainLoadingProgress - 1)) * 100).toFixed(0)}%</span>
+										{/if}
+									</span>
+								{/if}
+							{/each}
+						{:else if requireDrawsForAdvancedStats && $loading.draws !== 'done'}
+							<span class="loadingProgress">
+								<span class="chainLoading">Waiting For Draw Data...</span>
+								<img src="/images/excitedPooly.gif" alt="Pooly">
+							</span>
+						{:else}
+							<span class="loadingProgress">
+								<span class="chainLoading">Calculating Stats...</span>
+								<img src="/images/excitedPooly.gif" alt="Pooly">
+							</span>
+						{/if}
+
+					{/if}
+				{:else}
+					<span class="prompt">Want time controls and raw data downloads?</span>
+					<span class="enableAdvanced button" on:click={() => $advancedMode = true}>Enable Advanced Mode</span>
+					<span class="small">It might take a little bit to load though :)</span>
 				{/if}
-			{:else}
-				<span class="prompt">Want time controls and raw data downloads?</span>
-				<span class="enableAdvanced button" on:click={() => $advancedMode = true}>Enable Advanced Mode</span>
-				<span class="small">It might take a little bit to load though :)</span>
-			{/if}
-		</div>
+			</div>
+		{/if}
 	{/if}
 
 </nav>

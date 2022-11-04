@@ -17,6 +17,7 @@
 	const requireDrawsForAdvancedStats: boolean = false;
 	const advancedStatsWorkerPath: string = '/workers/advancedStatsWorker.js';
 	const advancedStatsWorkerTimeout: number = 120000;
+	const maintenanceMode: boolean = true;
 	let basicStatsErrored: boolean = false;
 	let mainContent: HTMLElement;
 	let mainContentScrollY: number = 0;
@@ -325,13 +326,15 @@
 	}
 
 	onMount(() => {
-		loadDraws();
-		chains.forEach(chain => {
-			loadBasicStats(chain);
-			loadLatestDeposits(chain);
-			loadLatestDelegations(chain);
-		});
-		loadAdvancedData();
+		if(!maintenanceMode) {
+			loadDraws();
+			chains.forEach(chain => {
+				loadBasicStats(chain);
+				loadLatestDeposits(chain);
+				loadLatestDelegations(chain);
+			});
+			loadAdvancedData();
+		}
 	});
 	
 </script>
@@ -339,27 +342,35 @@
 <!-- #################################################################################################### -->
 
 <!-- Navbar -->
-<Navbar />
+<Navbar {maintenanceMode} />
 
 <!-- App Content -->
 <main bind:this={mainContent} on:scroll={() => mainContentScrollY = mainContent.scrollTop}>
-	{#if basicStatsLoaded}
-		<slot />
-		<div id="scrollButton" class:hide={mainContentScrollY >= mainContent.scrollHeight - window.innerHeight} on:click={() => mainContent.scrollTo({ top: mainContent.scrollHeight, behavior: 'smooth' })}>
-			<i class="icofont-arrow-down" />
-		</div>
+	{#if !maintenanceMode}
+		{#if basicStatsLoaded}
+			<slot />
+			<div id="scrollButton" class:hide={mainContentScrollY >= mainContent.scrollHeight - window.innerHeight} on:click={() => mainContent.scrollTo({ top: mainContent.scrollHeight, behavior: 'smooth' })}>
+				<i class="icofont-arrow-down" />
+			</div>
+		{:else}
+			<div id="loadingModal">
+				{#if !basicStatsErrored}
+					<img src="/images/loading.gif" alt="Loading">
+					<h2>Looking for some data...</h2>
+				{:else}
+					<span class="error">
+						<img src="/images/ngmi.webp" alt="Whoops">
+						<h2>There was an issue loading data.</h2>
+						<span>Refresh the page to try again, or scream at @Ncookie on Discord.</span>
+					</span>
+				{/if}
+			</div>
+		{/if}
 	{:else}
-		<div id="loadingModal">
-			{#if !basicStatsErrored}
-				<img src="/images/loading.gif" alt="Loading">
-				<h2>Looking for some data...</h2>
-			{:else}
-				<span class="error">
-					<img src="/images/ngmi.webp" alt="Whoops">
-					<h2>There was an issue loading data.</h2>
-					<span>Refresh the page to try again, or scream at @Ncookie on Discord.</span>
-				</span>
-			{/if}
+		<div id="maintenanceMode">
+			<h3>Pooly is currently sleeping.</h3>
+			<img src="/images/sleeping.png" alt="Sleeping Pooly">
+			<span>The site will be back up shortly - for any questions please reach out to Ncookie on Discord.</span>
 		</div>
 	{/if}
 </main>
@@ -419,6 +430,20 @@
 
 	span.error img {
 		height: 7em;
+	}
+
+	#maintenanceMode {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 2em;
+		margin-top: 5em;
+		text-align: center;
+	}
+
+	#maintenanceMode > img {
+		height: 5em;
+		width: auto;
 	}
 
 </style>
