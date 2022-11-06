@@ -179,16 +179,6 @@ interface YieldOverTime {
 
 /* ========================================================================================================================================================================= */
 
-// Winless Withdrawals Interface:
-interface WinlessWithdrawals {
-  wallet: Hash
-  maxBalance: number
-  firstDepositTimestamp: number
-  lastWithdrawalTimestamp: number
-}
-
-/* ========================================================================================================================================================================= */
-
 // Distribution Interfaces:
 interface DepositDistribution {
   1: number[]
