@@ -13,7 +13,7 @@
 	<!-- Footer Content -->
 	<span>Made with </span>
 	<i id="heart" />
-	<span> by <a href="{githubLink}/Ncookiez">Ncookie</a> and <a href="{githubLink}/underethsea">Underthesea</a></span>
+	<span> by <a href="{githubLink}/Ncookiez">Ncookie</a></span>
 
 	<!-- Vibing GIF -->
 	<img id="vibing" src="/images/vibing.gif" alt="We Do Be Vibin'">

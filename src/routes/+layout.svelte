@@ -6,20 +6,22 @@
 	import * as api from '$lib/data';
 	import Navbar from '$lib/Navbar.svelte';
 	import Footer from '$lib/Footer.svelte';
+  import ShutDownMode from '$lib/ShutDownMode.svelte';
+	import MaintenanceMode from '$lib/MaintenanceMode.svelte';
 	import '../app.css';
 
 	// Type Imports:
-	import type { Chain, ChainData } from '$lib/types';
+	import type { Chain, AppStatus, ChainData } from '$lib/types';
 
 	// Initializations:
 	const chains: Chain[] = ['eth', 'poly', 'avax', 'op'];
-	const maintenanceMode: boolean = true;
-	let basicStatsErrored: boolean = false;
+	let statsErrored: boolean = false;
 	let mainContent: HTMLElement;
 	let mainContentScrollY: number = 0;
+	let appStatus: AppStatus = 'shuttingDown';
 
 	// Reactive Loading Checks:
-	$: basicStatsLoaded = chains.every(chain => !$selectedChains[chain] || $loading[chain].stats === 'done');
+	$: statsLoaded = chains.every(chain => !$selectedChains[chain] || $loading[chain].stats === 'done');
 
 	// Function to load draws:
 	const loadDraws = async () => {
@@ -37,8 +39,8 @@
 		}
 	}
 
-	// Function to load basic stats:
-	const loadBasicStats = async (chain: Chain) => {
+	// Function to load stats:
+	const loadStats = async (chain: Chain) => {
 		try {
 			$loading[chain].stats = 'loading';
 			const stats = await api.fetchStats(chain);
@@ -55,7 +57,7 @@
 		} catch(err) {
 			console.error(err);
 			$loading[chain].stats = 'failed';
-			basicStatsErrored = true;
+			statsErrored = true;
 		}
 	}
 
@@ -99,10 +101,10 @@
 	}
 
 	onMount(() => {
-		if(!maintenanceMode) {
+		if(appStatus === 'online') {
 			loadDraws();
 			chains.forEach(chain => {
-				loadBasicStats(chain);
+				loadStats(chain);
 				loadLatestDeposits(chain);
 				loadLatestDelegations(chain);
 			});
@@ -114,19 +116,19 @@
 <!-- #################################################################################################### -->
 
 <!-- Navbar -->
-<Navbar {maintenanceMode} />
+<Navbar {appStatus} />
 
 <!-- App Content -->
 <main bind:this={mainContent} on:scroll={() => mainContentScrollY = mainContent.scrollTop}>
-	{#if !maintenanceMode}
-		{#if basicStatsLoaded}
+	{#if appStatus === 'online'}
+		{#if statsLoaded}
 			<slot />
 			<div id="scrollButton" class:hide={mainContentScrollY >= mainContent.scrollHeight - window.innerHeight} on:click={() => mainContent.scrollTo({ top: mainContent.scrollHeight, behavior: 'smooth' })} on:keydown={() => mainContent.scrollTo({ top: mainContent.scrollHeight, behavior: 'smooth' })}>
 				<i class="icofont-arrow-down" />
 			</div>
 		{:else}
 			<div id="loadingModal">
-				{#if !basicStatsErrored}
+				{#if !statsErrored}
 					<img src="/images/loading.gif" alt="Loading">
 					<h2>Looking for some data...</h2>
 				{:else}
@@ -138,12 +140,10 @@
 				{/if}
 			</div>
 		{/if}
-	{:else}
-		<div id="maintenanceMode">
-			<h3>Pooly is currently sleeping.</h3>
-			<img src="/images/sleeping.png" alt="Sleeping Pooly">
-			<span>The site will be back up shortly - for any questions please reach out to Ncookie on Discord.</span>
-		</div>
+	{:else if appStatus === 'maintenance'}
+		<MaintenanceMode />
+	{:else if appStatus === 'shuttingDown'}
+		<ShutDownMode />
 	{/if}
 </main>
 
@@ -202,20 +202,6 @@
 
 	span.error img {
 		height: 7em;
-	}
-
-	#maintenanceMode {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 2em;
-		margin-top: 5em;
-		text-align: center;
-	}
-
-	#maintenanceMode > img {
-		height: 5em;
-		width: auto;
 	}
 
 </style>

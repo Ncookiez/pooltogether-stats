@@ -6,10 +6,10 @@
 	import { getChainName } from '$lib/functions';
 
 	// Type Imports:
-	import type { Chain } from '$lib/types';
+	import type { Chain, AppStatus } from '$lib/types';
 
 	// Initializations:
-	export let maintenanceMode: boolean = false;
+	export let appStatus: AppStatus;
 	const chains: Chain[] = ['eth', 'poly', 'avax', 'op'];
 	let searchModalOpen = false;
 	let searchWallet = '';
@@ -36,7 +36,7 @@
 		<span>Stats</span>
 	</div>
 
-	{#if !maintenanceMode}
+	{#if appStatus === 'online'}
 	
 		<!-- Chain Selection -->
 		<div class="chains">

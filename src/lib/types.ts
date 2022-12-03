@@ -11,6 +11,9 @@ export type TX = DepositTX | WithdrawalTX | ClaimTX | DelegationCreatedTX | Dele
 // Loading Status Type:
 export type LoadingStatus = 'done' | 'loading' | 'failed' | 'none';
 
+// App Status Type:
+export type AppStatus = 'online' | 'maintenance' | 'shuttingDown';
+
 /* ========================================================================================================================================================================= */
 
 // Chain Stats Interface:
